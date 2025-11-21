@@ -60,10 +60,14 @@ jobs:
           
           # Clone gpgpu-sim with fork-aware branch selection
           echo "Cloning gpgpu-sim with fork-aware branch selection..."
-          git clone --quiet https://github.com/accel-sim/gpgpu-sim_distribution.git ./gpu-simulator/gpgpu-sim
+          git clone --quiet git@github.com:accel-sim/gpgpu-sim_distribution.git ./gpu-simulator/gpgpu-sim
           
           # Try to checkout the same branch from the same owner's fork first
-          current_owner=$(echo ${{ github.repository }} | cut -d'/' -f1)
+          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+            current_owner=$(echo ${{ github.event.pull_request.head.repo.full_name }} | cut -d'/' -f1)
+          else
+            current_owner=$(echo ${{ github.repository }} | cut -d'/' -f1)
+          fi
           current_repo=$(echo ${{ github.repository }} | cut -d'/' -f2)
 
           gpgpusim_repo=$(echo $current_repo | sed 's/accel-sim-framework/gpgpu-sim_distribution/')
@@ -71,21 +75,21 @@ jobs:
           echo "Attempting to checkout branch '$BRANCH_NAME' from '$current_owner/$gpgpusim_repo'"
           
           # First, try to add the fork owner's repository as a remote and check if the branch exists
-          if git -C ./gpu-simulator/gpgpu-sim/ remote add fork-owner https://github.com/$current_owner/$gpgpusim_repo.git 2>/dev/null; then
+          if git -C ./gpu-simulator/gpgpu-sim/ remote add fork-owner git@github.com:$current_owner/$gpgpusim_repo.git 2>/dev/null; then
             # Check if the branch exists in the fork owner's repository
             if git -C ./gpu-simulator/gpgpu-sim/ ls-remote fork-owner | grep -q "refs/heads/$BRANCH_NAME"; then
               echo "Found branch '$BRANCH_NAME' in '$current_owner/$gpgpusim_repo' repository, checking it out"
               git -C ./gpu-simulator/gpgpu-sim/ fetch fork-owner
-              git -C ./gpu-simulator/gpgpu-sim/ checkout -b $BRANCH_NAME fork-owner/$BRANCH_NAME
+              git -C ./gpu-simulator/gpgpu-sim/ checkout -B $BRANCH_NAME fork-owner/$BRANCH_NAME
             else
               echo "Branch '$BRANCH_NAME' not found in '$current_owner/$gpgpusim_repo' repository, falling back to upstream dev branch"
-              git -C ./gpu-simulator/gpgpu-sim/ checkout dev
+              git -C ./gpu-simulator/gpgpu-sim/ checkout -B dev origin/dev
             fi
             # Remove the temporary remote
             git -C ./gpu-simulator/gpgpu-sim/ remote remove fork-owner
           else
             echo "Could not add '$current_owner/$gpgpusim_repo' remote, falling back to upstream dev branch"
-            git -C ./gpu-simulator/gpgpu-sim/ checkout dev
+            git -C ./gpu-simulator/gpgpu-sim/ checkout -B dev origin/dev
           fi
           
           source ./gpu-simulator/setup_environment.sh
@@ -194,10 +198,14 @@ jobs:
           
           # Clone gpgpu-sim with fork-aware branch selection
           echo "Cloning gpgpu-sim with fork-aware branch selection..."
-          git clone --quiet https://github.com/accel-sim/gpgpu-sim_distribution.git ./gpu-simulator/gpgpu-sim
+          git clone --quiet git@github.com:accel-sim/gpgpu-sim_distribution.git ./gpu-simulator/gpgpu-sim
           
           # Try to checkout the same branch from the same owner's fork first
-          current_owner=$(echo $GITHUB_REPOSITORY | cut -d'/' -f1)
+          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+            current_owner=$(echo ${{ github.event.pull_request.head.repo.full_name }} | cut -d'/' -f1)
+          else
+            current_owner=$(echo ${{ github.repository }} | cut -d'/' -f1)
+          fi
           current_branch=$BRANCH_NAME
           current_repo=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
           
@@ -206,21 +214,21 @@ jobs:
           echo "Attempting to checkout branch '$BRANCH_NAME' from '$current_owner/$gpgpusim_repo'"
           
           # First, try to add the fork owner's repository as a remote and check if the branch exists
-          if git -C ./gpu-simulator/gpgpu-sim/ remote add fork-owner https://github.com/$current_owner/$gpgpusim_repo.git 2>/dev/null; then
+          if git -C ./gpu-simulator/gpgpu-sim/ remote add fork-owner git@github.com:$current_owner/$gpgpusim_repo.git 2>/dev/null; then
             # Check if the branch exists in the fork owner's repository
             if git -C ./gpu-simulator/gpgpu-sim/ ls-remote fork-owner | grep -q "refs/heads/$BRANCH_NAME"; then
               echo "Found branch '$BRANCH_NAME' in '$current_owner/$gpgpusim_repo' repository, checking it out"
               git -C ./gpu-simulator/gpgpu-sim/ fetch fork-owner
-              git -C ./gpu-simulator/gpgpu-sim/ checkout -b $BRANCH_NAME fork-owner/$BRANCH_NAME
+              git -C ./gpu-simulator/gpgpu-sim/ checkout -B $BRANCH_NAME fork-owner/$BRANCH_NAME
             else
               echo "Branch '$BRANCH_NAME' not found in '$current_owner/$gpgpusim_repo' repository, falling back to accel-sim dev branch"
-              git -C ./gpu-simulator/gpgpu-sim/ checkout dev
+              git -C ./gpu-simulator/gpgpu-sim/ checkout -B dev origin/dev
             fi
             # Remove the temporary remote
             git -C ./gpu-simulator/gpgpu-sim/ remote remove fork-owner
           else
             echo "Could not add '$current_owner/$gpgpusim_repo' remote, falling back to upstream dev branch"
-            git -C ./gpu-simulator/gpgpu-sim/ checkout dev
+            git -C ./gpu-simulator/gpgpu-sim/ checkout -B dev origin/dev
           fi
           
           source ./gpu-simulator/setup_environment.sh
@@ -259,6 +267,41 @@ jobs:
         run: |
           source ./env-setup/12.8_env_setup.sh
           rm -rf ./gpu-simulator/gpgpu-sim
+
+          # Clone gpgpu-sim with fork-aware branch selection
+          echo "Cloning gpgpu-sim with fork-aware branch selection..."
+          git clone --quiet git@github.com:accel-sim/gpgpu-sim_distribution.git ./gpu-simulator/gpgpu-sim
+
+          # Try to checkout the same branch from the same owner's fork first
+          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+            current_owner=$(echo ${{ github.event.pull_request.head.repo.full_name }} | cut -d'/' -f1)
+          else
+            current_owner=$(echo ${{ github.repository }} | cut -d'/' -f1)
+          fi
+          current_repo=$(echo ${{ github.repository }} | cut -d'/' -f2)
+
+          gpgpusim_repo=$(echo $current_repo | sed 's/accel-sim-framework/gpgpu-sim_distribution/')
+
+          echo "Attempting to checkout branch '$BRANCH_NAME' from '$current_owner/$gpgpusim_repo'"
+
+          # First, try to add the fork owner's repository as a remote and check if the branch exists
+          if git -C ./gpu-simulator/gpgpu-sim/ remote add fork-owner git@github.com:$current_owner/$gpgpusim_repo.git 2>/dev/null; then
+            # Check if the branch exists in the fork owner's repository
+            if git -C ./gpu-simulator/gpgpu-sim/ ls-remote fork-owner | grep -q "refs/heads/$BRANCH_NAME"; then
+              echo "Found branch '$BRANCH_NAME' in '$current_owner/$gpgpusim_repo' repository, checking it out"
+              git -C ./gpu-simulator/gpgpu-sim/ fetch fork-owner
+              git -C ./gpu-simulator/gpgpu-sim/ checkout -B $BRANCH_NAME fork-owner/$BRANCH_NAME
+            else
+              echo "Branch '$BRANCH_NAME' not found in '$current_owner/$gpgpusim_repo' repository, falling back to upstream dev branch"
+              git -C ./gpu-simulator/gpgpu-sim/ checkout -B dev origin/dev
+            fi
+            # Remove the temporary remote
+            git -C ./gpu-simulator/gpgpu-sim/ remote remove fork-owner
+          else
+            echo "Could not add '$current_owner/$gpgpusim_repo' remote, falling back to upstream dev branch"
+            git -C ./gpu-simulator/gpgpu-sim/ checkout -B dev origin/dev
+          fi
+
           source ./gpu-simulator/setup_environment.sh
           make clean -C gpu-simulator
           make -j20 -C gpu-simulator
@@ -269,7 +312,7 @@ jobs:
           ./get-accel-sim-traces.py -a tesla-v100/rodinia_2.0-ft
           cd hw_run; tar -xzvf rodinia_2.0-ft.tgz; cd -
           ./util/job_launching/run_simulations.py -B rodinia_2.0-ft -C QV100-SASS -T ./hw_run/ -N rodinia_2.0-ft-online-$$
-          ./util/job_launching/monitor_func_test.py -N rodinia_2.0-ft-online-$$ -v
+          ./util/job_launching/monitor_func_test.py --sleep_time 300 -N rodinia_2.0-ft-online-$$ -v
           rm -rf hw_run
           rm -rf sim_run_11.0
       - name: Build Tracer
@@ -291,7 +334,7 @@ jobs:
           source ./env-setup/12.8_env_setup.sh
           source ./gpu-app-collection/src/setup_environment
           rm -rf ./hw_run/
-          ./util/tracer_nvbit/run_hw_trace.py -B rodinia_2.0-ft -D 7 --spinlock_handling none
+          ./util/tracer_nvbit/run_hw_trace.py -B rodinia_2.0-ft -D 7
       - name: generate-rodinia_2.0-ft-hw_stats
         run: |
           source ./env-setup/12.8_env_setup.sh
@@ -302,7 +345,7 @@ jobs:
           source ./env-setup/12.8_env_setup.sh
           source ./gpu-simulator/setup_environment.sh
           ./util/job_launching/run_simulations.py -B rodinia_2.0-ft -C QV100-SASS -T ./hw_run/traces/device-7/ -N rodinia_2.0-ft-$$
-          ./util/job_launching/monitor_func_test.py -I -v -s rodinia-stats-per-app.csv -N rodinia_2.0-ft-$$
+          ./util/job_launching/monitor_func_test.py --sleep_time 300 -v -s rodinia-stats-per-app.csv -N rodinia_2.0-ft-$$
   SASS-Simulation-Docker:
     needs: [check-format]
     runs-on: ubuntu-latest
