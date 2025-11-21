@@ -8,7 +8,6 @@ sim_run_*
 4.2/
 gpucomputingsdk_4.2.9_linux.run
 util/job_launching/*.txt
-gpu-simulator/gpgpu-sim
 .vscode/*
 extern
 gpu-simulator/accel_sim.pyi
@@ -16,3 +15,6 @@ compile_commands.json
 .cache
 .cursorrules
 CLAUDE.md
+./result/*.csv
+./result/*.log
+./result/*.trace

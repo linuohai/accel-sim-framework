@@ -1,0 +1,210 @@
+#!/bin/bash
+
+# Accel-Sim 运行脚本，支持trace切换和自动更新CSV文件名
+
+# 设置基础路径
+BASE_DIR="/home/sunhaonan.111/workbench/prefetch_accel-sim"
+ACCEL_SIM_BIN="$BASE_DIR/gpu-simulator/bin/release/accel-sim.out"
+TRACE_CONFIG="$BASE_DIR/gpu-simulator/configs/tested-cfgs/SM7_QV100/trace.config"
+GPGPU_CONFIG="$BASE_DIR/gpu-simulator/gpgpu-sim/configs/tested-cfgs/SM7_QV100/gpgpusim.config"
+TRACE_BASE_DIR="$BASE_DIR/hw_run/traces/device-0/12.8"
+RESULT_LOG_DIR="$BASE_DIR/result/log"
+RESULT_L1_DIR="$BASE_DIR/result/L1cache_trace"
+RESULT_ISSUE_DIR="$BASE_DIR/result/issue_trace"
+
+# 创建结果目录（如果不存在）
+mkdir -p "$RESULT_LOG_DIR"
+mkdir -p "$RESULT_L1_DIR"
+mkdir -p "$RESULT_ISSUE_DIR"
+
+# 定义trace词表和对应的路径
+declare -A TRACE_MAP=(
+    # GEMM系列
+    ["gemm128"]="gemm128/NO_ARGS/traces/kernelslist.g"
+    ["gemm256"]="gemm256/NO_ARGS/traces/kernelslist.g"
+    ["gemm384"]="gemm384/NO_ARGS/traces/kernelslist.g"
+    ["gemm512"]="gemm512/NO_ARGS/traces/kernelslist.g"
+    ["gemm768"]="gemm768/NO_ARGS/traces/kernelslist.g"
+    ["gemm1024"]="gemm1024/NO_ARGS/traces/kernelslist.g"
+    ["gemm1536"]="gemm1536/NO_ARGS/traces/kernelslist.g"
+    ["gemm2048"]="gemm2048/NO_ARGS/traces/kernelslist.g"
+    ["gemm4096"]="gemm4096/NO_ARGS/traces/kernelslist.g"
+    ["gemm_cublas"]="gemm_cublas/NO_ARGS/traces/kernelslist.g"
+    
+    # Rodinia基准测试系列
+    ["btree"]="b+tree-rodinia-3.1/file___data_mil_txt_command___data_command_txt/traces/kernelslist.g"
+    ["btree_s20"]="b+tree-rodinia-3.1/file___data_mil_20_txt_command___data_command_txt/traces/kernelslist.g"       #随机种子是20
+    ["btree_s123"]="b+tree-rodinia-3.1/file___data_mil_123_txt_command___data_command_txt/traces/kernelslist.g"     #随机种子是123
+    ["btree_5900"]="b+tree-rodinia-3.1/file___data_mil_txt_command___data_j5900k9900_txt/traces/kernelslist.g"      #范围搜索执行5900
+    ["btree_6100"]="b+tree-rodinia-3.1/file___data_mil_txt_command___data_j6100k10100_txt/traces/kernelslist.g"     #范围搜索执行6100
+    ["backprop"]="backprop-rodinia-3.1/65536/traces/kernelslist.g"
+    # ["bfs"]="bfs-rodinia-3.1/__data_graph65536_txt/traces/kernelslist.g"
+    ["bfs"]="bfs-rodinia-3.1/__data_graph1MW_6_txt/traces/kernelslist.g"
+    ["gaussian"]="gaussian-rodinia-3.1/_s_256/traces/kernelslist.g"
+    ["hotspot"]="hotspot-rodinia-3.1/512_2_2___data_temp_512___data_power_512_output_out/traces/kernelslist.g"
+    ["hotspot_7"]="hotspot-rodinia-3.1/512_7_2___data_temp_512___data_power_512_output_out/traces/kernelslist.g"
+    ["hotspot_3"]="hotspot-rodinia-3.1/512_3_2___data_temp_512___data_power_512_output_out/traces/kernelslist.g"
+    ["lavaMD"]="lavaMD-rodinia-3.1/_boxes1d_10/traces/kernelslist.g"
+    ["lud"]="lud-rodinia-3.1/_s_256__v/traces/kernelslist.g"
+    ["nw"]="nw-rodinia-3.1/2048_10/traces/kernelslist.g"
+    ["pathfinder"]="pathfinder-rodinia-3.1/100000_100_20___result_txt/traces/kernelslist.g"
+    ["pathfinder22"]="pathfinder-rodinia-3.1/100000_100_22___result_txt/traces/kernelslist.g"       #金字塔高度是22
+    ["pathfinder18"]="pathfinder-rodinia-3.1/100000_100_18___result_txt/traces/kernelslist.g"       #金字塔高度是18
+    ["pathfinder_s1"]="pathfinder-rodinia-3.1/100000_100_20_1___result_txt/traces/kernelslist.g"    #随机种子是1
+    ["pathfinder_s2"]="pathfinder-rodinia-3.1/100000_100_20_2___result_txt/traces/kernelslist.g"    #随机种子是2
+    ["streamcluster"]="streamcluster-rodinia-3.1/10000_20_32_2000_10_1/traces/kernelslist.g"
+    ["srad"]="srad_v1-rodinia-3.1/100_0_5_502_458/traces/kernelslist.g"
+    ["myocyte"]="myocyte-rodinia-3.1/100_1_0/traces/kernelslist.g"
+    ["nn"]="nn-rodinia-3.1/__data_filelist_4__r_5__lat_30__lng_90/traces/kernelslist.g"
+    ["particlefilter_float"]="particlefilter_float-rodinia-3.1/_x_128__y_128__z_10__np_1000/traces/kernelslist.g"
+    ["particlefilter_naive"]="particlefilter_naive-rodinia-3.1/_x_128__y_128__z_10__np_1000/traces/kernelslist.g"
+    ["dwt2d"]="dwt2d-rodinia-3.1/NO_ARGS/traces/kernelslist.g"
+    
+    # Polybench系列
+    ["2mm"]="polybench-2mm/NO_ARGS/traces/kernelslist.g"
+    ["3mm"]="polybench-3mm/NO_ARGS/traces/kernelslist.g"
+    ["gemm_poly"]="polybench-gemm/NO_ARGS/traces/kernelslist.g"
+    ["atax"]="polybench-atax/NO_ARGS/traces/kernelslist.g"
+    ["bicg"]="polybench-bicg/NO_ARGS/traces/kernelslist.g"
+    ["correlation"]="polybench-correlation/NO_ARGS/traces/kernelslist.g"
+    ["covariance"]="polybench-covariance/NO_ARGS/traces/kernelslist.g"
+    ["fdtd2d"]="polybench-fdtd2d/NO_ARGS/traces/kernelslist.g"
+    ["gesummv"]="polybench-gesummv/NO_ARGS/traces/kernelslist.g"
+    ["gramschmidt"]="polybench-gramschmidt/NO_ARGS/traces/kernelslist.g"
+    ["mvt"]="polybench-mvt/NO_ARGS/traces/kernelslist.g"
+    ["syr2k"]="polybench-syr2k/NO_ARGS/traces/kernelslist.g"
+    ["syrk"]="polybench-syrk/NO_ARGS/traces/kernelslist.g"
+    ["2DConvolution"]="polybench-2DConvolution/NO_ARGS/traces/kernelslist.g"
+    ["3DConvolution"]="polybench-3DConvolution/NO_ARGS/traces/kernelslist.g"
+    
+    # 其他应用
+    ["bc"]="bc/__data_2k_1M_gr/traces/kernelslist.g"
+    ["fw"]="fw/__data_256_16384_gr/traces/kernelslist.g"
+    ["fw_block"]="fw_block/__data_256_16384_gr/traces/kernelslist.g"
+    ["color_max"]="color_max/__data_ecology1_graph_1/traces/kernelslist.g"
+    ["color_maxmin"]="color_maxmin/__data_ecology1_graph_1/traces/kernelslist.g"
+    ["mis"]="mis/__data_ecology1_graph_1/traces/kernelslist.g"
+    ["pagerank"]="pagerank/__data_coAuthorsDBLP_graph_1/traces/kernelslist.g"
+    ["pagerank_spmv"]="pagerank_spmv/NO_ARGS/traces/kernelslist.g"
+    ["l1_bw_32f"]="l1_bw_32f/NO_ARGS/traces/kernelslist.g"
+)
+
+# 显示使用说明
+show_usage() {
+    echo "使用方法: $0 <trace_key> [log_name]"
+    echo ""
+    echo "参数说明:"
+    echo "  trace_key  - 必需，要运行的trace键值"
+    echo "  log_name   - 可选，自定义日志文件名（不含扩展名）"
+    echo ""
+    echo "可用的trace键值:"
+    for key in "${!TRACE_MAP[@]}"; do
+        echo "  $key"
+    done | sort
+    echo ""
+    echo "示例:"
+    echo "  $0 gemm128              # 运行GEMM128基准测试，使用默认日志名"
+    echo "  $0 btree my_test        # 运行B+Tree基准测试，使用自定义日志名"
+    echo "  $0 2mm 2mm_experiment   # 运行Polybench 2MM基准测试，使用自定义日志名"
+    echo ""
+    echo "L1/ISSUE Trace 后处理 (生成带 L1 命中信息的 CSV):"
+    echo "  python result/issue_trace/issue_trace_l1_match.py <issue_csv> [选项]"
+    echo "    --l1-dir <dir>       # 指定 L1 trace CSV 目录，默认 result/L1cache_trace"
+    echo "    --output-tag <tag>   # 输出目录/文件后缀，默认 per_sm"
+    echo "    --output-mode <mode> # per-sm(默认) 逐 SM 输出，single 生成单个合并 CSV"
+    echo "    --split-l1-trace     # 额外把 L1 trace 本身按 SM 拆分成独立 CSV"
+    echo "  匹配规则: 只处理 mask 非 0 的 GLOBAL/LOCAL LOAD/STORE；需整 warp 全 HIT 才记 HIT；"
+    echo "  输出列包含 l1_cycle、l1_sector_addresses、l1_lane_ids、l1_cycle_delta 及其状态，并在 cycle 差超过 100 时自动告警。"
+    echo "  若存在未消费的 L1 事件，会在 unmatched_l1_events.csv（或 single 模式对应文件）中列出以便调试。"
+    echo "  若某些 issue 在 200 cycle 内未匹配完全部 sector，会生成 matching_warnings.csv 供排查。"
+}
+
+# 检查参数
+if [ $# -eq 0 ]; then
+    show_usage
+    exit 1
+fi
+
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    show_usage
+    exit 0
+fi
+
+TRACE_KEY=$1
+
+# 检查trace键值是否存在
+if [ -z "${TRACE_MAP[$TRACE_KEY]}" ]; then
+    echo "错误: 未知的trace键值 '$TRACE_KEY'"
+    echo ""
+    show_usage
+    exit 1
+fi
+
+# 设置日志文件名（如果提供了第二个参数，则使用它作为日志文件名，否则使用trace键值）
+if [ $# -gt 1 ]; then
+    LOG_NAME=$2
+else
+    LOG_NAME=$TRACE_KEY
+fi
+
+# 构建完整的trace路径
+TRACE_PATH="$TRACE_BASE_DIR/${TRACE_MAP[$TRACE_KEY]}"
+
+# 检查trace文件是否存在
+if [ ! -f "$TRACE_PATH" ]; then
+    echo "错误: Trace文件不存在: $TRACE_PATH"
+    exit 1
+fi
+
+# 设置输出文件名
+LOG_FILE="$RESULT_LOG_DIR/${LOG_NAME}.log"
+CSV_FILE="$RESULT_L1_DIR/${LOG_NAME}_l1.csv"
+ISSUE_FILE="$RESULT_ISSUE_DIR/${LOG_NAME}_issue.csv"
+
+# 创建临时配置文件，更新L1 trace路径
+TEMP_GPGPU_CONFIG=$(mktemp)
+trap "rm -f $TEMP_GPGPU_CONFIG" EXIT
+
+# 复制原始配置文件并更新L1 trace路径
+sed -e "s|-l1_trace_path .*|-l1_trace_path \"$CSV_FILE\"|g" \
+    -e "s|-issue_trace_path .*|-issue_trace_path \"$ISSUE_FILE\"|g" \
+    "$GPGPU_CONFIG" > "$TEMP_GPGPU_CONFIG"
+
+# 调试信息：显示更新后的L1 trace路径
+echo "配置文件中的L1 trace路径已更新为: $CSV_FILE"
+
+# 显示运行信息
+echo "=========================================="
+echo "运行 Accel-Sim 模拟器"
+echo "=========================================="
+echo "Trace键值: $TRACE_KEY"
+echo "Trace路径: $TRACE_PATH"
+echo "日志文件名: $LOG_NAME"
+echo "日志文件: $LOG_FILE"
+echo "CSV文件: $CSV_FILE"
+echo "Issue CSV文件: $ISSUE_FILE"
+echo "=========================================="
+
+# 运行模拟器
+"$ACCEL_SIM_BIN" \
+    -trace "$TRACE_PATH" \
+    -config "$TRACE_CONFIG" \
+    -config "$TEMP_GPGPU_CONFIG" |& tee "$LOG_FILE"
+
+# 检查运行结果
+if [ ${PIPESTATUS[0]} -eq 0 ]; then
+    echo ""
+    echo "=========================================="
+    echo "模拟完成！"
+    echo "结果已保存到:"
+    echo "  日志: $LOG_FILE"
+    echo "  CSV: $CSV_FILE"
+    echo "  Issue CSV: $ISSUE_FILE"
+    echo "=========================================="
+else
+    echo ""
+    echo "=========================================="
+    echo "模拟运行失败，请检查日志文件: $LOG_FILE"
+    echo "=========================================="
+    exit 1
+fi
