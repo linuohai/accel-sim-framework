@@ -25,15 +25,15 @@ from typing import Dict, List, Optional, Sequence, Tuple
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_L1_ROOT = SCRIPT_DIR.parent / "L1cache_trace"
-DEFAULT_OUTPUT_TAG = "per_sm"
+DEFAULT_OUTPUT_TAG = "with_l1trace"
 
 MatchKey = Tuple[str, str, str, str]
 AddressKey = Tuple[str, str, str, str, str]
 MEMORY_OPS = {"LOAD_OP", "STORE_OP"}
 MEMORY_SPACES = {"GLOBAL", "LOCAL"}
 ISSUE_TO_L1_OP = {"LOAD_OP": "LD", "STORE_OP": "ST"}
-CYCLE_WARN_THRESHOLD = 200
-CYCLE_SEARCH_WINDOW = 200
+CYCLE_SEARCH_WINDOW = 3000
+CYCLE_WARN_THRESHOLD = CYCLE_SEARCH_WINDOW
 STATUS_PRIORITY = {
     "RESERVATION_FAIL": 3,
     "MISS": 2,
@@ -180,7 +180,15 @@ def parse_args() -> argparse.Namespace:
             "  * Requires all lanes of a warp to hit before marking the instruction as HIT\n"
             "  * Logs cycle deltas greater than 100 cycles and dumps unmatched L1 events\n"
             "  * Can optionally split the L1 trace by SM for additional analysis\n"
-            "  * Supports per-SM CSV splitting (default) or combined single-file output"
+            "  * Supports combined single-file output (default) or per-SM CSV splitting\n\n"
+            "Outputs (defaults: --output-mode single, --output-tag per_sm):\n"
+            "  * single: <issue>_<tag>.csv annotated with l1_status_at_issue and l1_cycle_delta\n"
+            "            <issue>_<tag>_matching_warnings.csv for sector misses\n"
+            "            <issue>_<tag>_unmatched_l1_events.csv for unused L1 rows\n"
+            "  * per-sm: <issue>_<tag>/sm_<id>.csv annotated per SM\n"
+            "            <issue>_<tag>/matching_warnings.csv for sector misses\n"
+            "            <issue>_<tag>/unmatched_l1_events.csv for unused L1 rows\n"
+            "            with --split-l1-trace: <issue>_<tag>/l1_trace_per_sm/sm_<id>.csv"
         ),
     )
     parser.add_argument(
@@ -209,10 +217,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-mode",
         choices=("per-sm", "single"),
-        default="per-sm",
+        default="single",
         help=(
-            "Choose 'per-sm' to split rows into one CSV per SM (default) or "
-            "'single' to emit one annotated CSV that keeps all SMs together."
+            "Choose 'per-sm' to split rows into one CSV per SM or "
+            "'single' (default) to emit one annotated CSV that keeps all SMs together."
         ),
     )
     parser.add_argument(
@@ -224,19 +232,16 @@ def parse_args() -> argparse.Namespace:
 
 
 def discover_l1_csv(issue_csv: Path, l1_dir: Path) -> Path:
-    """Return the L1 trace CSV path that matches *issue_csv*."""
+    """Return the L1 trace CSV path that matches *issue_csv* (only _l1 suffixed)."""
     candidates: List[Path] = []
     issue_stem = issue_csv.stem
-    candidates.append(l1_dir / f"{issue_stem}.csv")
     candidates.append(l1_dir / f"{issue_stem}_l1.csv")
     if issue_stem.endswith("_issue"):
         base = issue_stem[:-6]
-        candidates.append(l1_dir / f"{base}.csv")
         candidates.append(l1_dir / f"{base}_l1.csv")
     # Allow using the stem without the last suffix (e.g. foo_issue_extra)
     if "_" in issue_stem:
         prefix = issue_stem.split("_", 1)[0]
-        candidates.append(l1_dir / f"{prefix}.csv")
         candidates.append(l1_dir / f"{prefix}_l1.csv")
     for candidate in candidates:
         if candidate.exists():
@@ -619,15 +624,11 @@ def process_issue_file(
     if output_mode == "per-sm":
         output_destination = ensure_output_dir(issue_csv, output_tag)
         writer_manager = PerSMWriterManager(output_destination)
-        summary_path = output_destination / "summary.csv"
         leftover_path = output_destination / "unmatched_l1_events.csv"
         l1_split_dir = output_destination / "l1_trace_per_sm"
     else:
         output_destination = issue_csv.parent / f"{issue_csv.stem}_{output_tag}.csv"
         writer_manager = SingleFileWriterManager(output_destination)
-        summary_path = (
-            output_destination.parent / f"{output_destination.stem}_summary.csv"
-        )
         leftover_path = (
             output_destination.parent
             / f"{output_destination.stem}_unmatched_l1_events.csv"
@@ -677,7 +678,6 @@ def process_issue_file(
             f"[WARN] {len(warnings)} issue rows exceeded the "
             f"{CYCLE_SEARCH_WINDOW}-cycle window (details in {warnings_path})"
         )
-    write_summary(stats, summary_path, issue_csv.name)
     print(f"[INFO] Output written to {output_destination}")
 
 

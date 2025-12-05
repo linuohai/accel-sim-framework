@@ -56,6 +56,9 @@ function read_user_input {
     echo $user_input
 }
 
+unset GPGPUSIM_ROOT
+unset GPGPUSIM_SETUP_ENVIRONMENT_WAS_RUN
+unset ACCELSIM_SETUP_ENVIRONMENT_WAS_RUN
 # Get the location of this script when sourcing
 SCRIPT_LOC=$(get_script_location) || (echo "ERROR getting script location" && return 1)
 
@@ -65,7 +68,7 @@ export ACCELSIM_ROOT="$( cd "$( dirname "$SCRIPT_LOC" )" && pwd )"
 #   Different branches of Accel-Sim should have different values here
 #   For development, we use our internal repo and the dev branch
 #       Ideally, when we release, it should be based off a GPGPU-Sim release.
-export GPGPUSIM_REPO="${GPGPUSIM_REPO:=https://github.com/accel-sim/gpgpu-sim_distribution.git}"
+export GPGPUSIM_REPO="${GPGPUSIM_REPO:=https://github.com/linuohai/gpgpu-sim_distribution.git}"
 export GPGPUSIM_BRANCH="${GPGPUSIM_BRANCH:=dev}"
 
 # Help the user out by setting the default CUDA_INSTALL_PATH, if it is not already set

@@ -15,6 +15,7 @@ compile_commands.json
 .cache
 .cursorrules
 CLAUDE.md
-./result/*.csv
-./result/*.log
-./result/*.trace
+result/*.csv
+result/*.log
+result/*.trace
+result/log/*.log
