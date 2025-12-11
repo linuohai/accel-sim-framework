@@ -2,12 +2,51 @@
 
 # Accel-Sim 运行脚本，支持trace切换和自动更新CSV文件名
 
-# 设置基础路径
-BASE_DIR="/home/sunhaonan.111/workbench/prefetch_accel-sim"
+# 获取脚本所在目录作为基础路径
+BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
+# 默认配置
+CONFIG_MODEL="SM80_A100"
+# TRACE_BASE_DIR 默认使用脚本所在目录
+# 尝试自动检测 hw_run 下的 trace 目录
+if [ -d "$BASE_DIR/hw_run/traces/device-0" ]; then
+    CUDA_VERSION=$(ls "$BASE_DIR/hw_run/traces/device-0/" | head -n 1)
+    if [ -n "$CUDA_VERSION" ]; then
+        TRACE_BASE_DIR="$BASE_DIR/hw_run/traces/device-0/$CUDA_VERSION"
+    else
+        TRACE_BASE_DIR="$BASE_DIR"
+    fi
+else
+    TRACE_BASE_DIR="$BASE_DIR"
+fi
+
+# 解析命令行参数 (在定义路径之前解析，以便 CONFIG_MODEL 生效)
+POSITIONAL_ARGS=()
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -c|--config)
+      CONFIG_MODEL="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -h|--help)
+      SHOW_HELP=true
+      shift # past argument
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift # past argument
+      ;;
+  esac
+done
+
+# 恢复位置参数
+set -- "${POSITIONAL_ARGS[@]}"
+
+# 定义路径
 ACCEL_SIM_BIN="$BASE_DIR/gpu-simulator/bin/release/accel-sim.out"
-TRACE_CONFIG="$BASE_DIR/gpu-simulator/configs/tested-cfgs/SM7_QV100/trace.config"
-GPGPU_CONFIG="$BASE_DIR/gpu-simulator/gpgpu-sim/configs/tested-cfgs/SM7_QV100/gpgpusim.config"
-TRACE_BASE_DIR="$BASE_DIR/hw_run/traces/device-0/12.8"
+TRACE_CONFIG="$BASE_DIR/gpu-simulator/configs/tested-cfgs/$CONFIG_MODEL/trace.config"
+GPGPU_CONFIG="$BASE_DIR/gpu-simulator/gpgpu-sim/configs/tested-cfgs/$CONFIG_MODEL/gpgpusim.config"
 RESULT_LOG_DIR="$BASE_DIR/result/log"
 RESULT_L1_DIR="$BASE_DIR/result/L1cache_trace"
 RESULT_ISSUE_DIR="$BASE_DIR/result/issue_trace"
@@ -19,6 +58,11 @@ mkdir -p "$RESULT_ISSUE_DIR"
 
 # 定义trace词表和对应的路径
 declare -A TRACE_MAP=(
+    # flash attention
+    ["fa"]="fa/NO_ARGS/traces/kernelslist.g"
+    ["fa4k"]="fa_4096seq/NO_ARGS/traces/kernelslist.g"
+
+
     # GEMM系列
     ["gemm128"]="gemm128/NO_ARGS/traces/kernelslist.g"
     ["gemm256"]="gemm256/NO_ARGS/traces/kernelslist.g"
@@ -91,7 +135,11 @@ declare -A TRACE_MAP=(
 
 # 显示使用说明
 show_usage() {
-    echo "使用方法: $0 <trace_key> [log_name]"
+    echo "使用方法: $0 [选项] <trace_key> [log_name]"
+    echo ""
+    echo "选项:"
+    echo "  -c, --config <model>  指定GPU配置模型 (默认: SM80_A100)"
+    echo "                        支持: SM7_QV100, SM80_A100"
     echo ""
     echo "参数说明:"
     echo "  trace_key  - 必需，要运行的trace键值"
@@ -103,7 +151,8 @@ show_usage() {
     done | sort
     echo ""
     echo "示例:"
-    echo "  $0 gemm128              # 运行GEMM128基准测试，使用默认日志名"
+    echo "  $0 gemm128              # 运行GEMM128基准测试，使用默认配置"
+    echo "  $0 -c SM80_A100 gemm128 # 使用 SM80_A100 配置运行"
     echo "  $0 btree my_test        # 运行B+Tree基准测试，使用自定义日志名"
     echo "  $0 2mm 2mm_experiment   # 运行Polybench 2MM基准测试，使用自定义日志名"
     echo ""
@@ -120,12 +169,7 @@ show_usage() {
 }
 
 # 检查参数
-if [ $# -eq 0 ]; then
-    show_usage
-    exit 1
-fi
-
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+if [ "$SHOW_HELP" = true ] || [ $# -eq 0 ]; then
     show_usage
     exit 0
 fi
@@ -177,6 +221,7 @@ echo "配置文件中的L1 trace路径已更新为: $CSV_FILE"
 echo "=========================================="
 echo "运行 Accel-Sim 模拟器"
 echo "=========================================="
+echo "配置模型: $CONFIG_MODEL"
 echo "Trace键值: $TRACE_KEY"
 echo "Trace路径: $TRACE_PATH"
 echo "日志文件名: $LOG_NAME"
