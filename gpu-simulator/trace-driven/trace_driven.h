@@ -40,6 +40,7 @@
 #include "../ISA_Def/trace_opcode.h"
 #include "../trace-parser/trace_parser.h"
 #include "abstract_hardware_model.h"
+#include "gpgpu-sim/l2_tracer.h"
 #include "gpgpu-sim/shader.h"
 
 class trace_function_info : public function_info {
@@ -166,6 +167,9 @@ class trace_gpgpu_sim : public gpgpu_sim {
  public:
   trace_gpgpu_sim(const gpgpu_sim_config &config, gpgpu_context *ctx)
       : gpgpu_sim(config, ctx) {
+    l2_tracer::init(config.l2_trace_enabled(), config.l2_trace_path(),
+                    config.num_shader(), config.l2_trace_print_bw(),
+                    config.l2_trace_print_compute());
     createSIMTCluster();
   }
 

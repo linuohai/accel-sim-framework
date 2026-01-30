@@ -19,3 +19,7 @@ result/*.csv
 result/*.log
 result/*.trace
 result/log/*.log
+result/n-level-agent/
+result/issue_trace/plot/script/__pycache__
+result/issue_trace/plot/script/_pydeps
+*.svg

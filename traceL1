@@ -7,6 +7,47 @@ BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 # 默认配置
 CONFIG_MODEL="SM80_A100"
+NLEVEL_ENABLED=false
+GTO_ENABLED=false
+NLEVEL_DEFAULT_SCHEDULER="lrr"
+PLOT_TMUX_ENABLED=false
+PLOT_ENABLED=false
+PLOT_BACKEND="local"     # session|local
+PLOT_BACKGROUND=false    # local backend only
+PLOT_FORMAT="svg"
+PLOT_SESSION=""
+PLOT_ATTACH=false
+PLOT_KILL_EXISTING=false
+PLOT_TMUX_AUTO_CLOSE=false
+PLOT_TMUX_MONITOR=false
+
+# Ideal L1D cache (force eligible global reads to L1D HIT)
+IDEAL_L1D_ENABLED=false
+
+# 额外控制（用于减小仿真时间/输出体量）
+MAX_CYCLE=0
+MAX_INSN=0
+MAX_CTA=0
+MAX_COMPLETED_CTA=0
+ISSUE_TRACE_ENABLED=false
+L1_TRACE_ENABLED=true
+L2_TRACE_ENABLED=true
+HBM_TRACE_ENABLED=true
+HBM_TRACE_PERIOD=1
+ICNT_BW_TRACE_ENABLED=false
+L2_BW_TRACE_ENABLED=false
+ICNT_BW_TRACE_PERIOD=500
+L2_BW_TRACE_PERIOD=500
+
+# 轻量级 stall reason / pc 统计（替代巨型 issue_trace）
+STALL_REASON_PC_STATS_ENABLED=true
+STALL_REASON_PC_STATS_TOPK=5
+
+# Issue trace 边运行边压缩（默认关闭；仅影响 issue trace）
+# 说明：gpgpu-sim 的 issue_tracer 会“多次 open/close 追加写入”，因此需要 FIFO + 常驻写端避免压缩进程提前 EOF 退出。
+ISSUE_TRACE_COMPRESS="none"         # none|gzip|zstd
+ISSUE_TRACE_COMPRESS_LEVEL=""       # gzip: 1~9; zstd: 1~19 (未指定则使用默认)
+ISSUE_TRACE_COMPRESS_THREADS=1      # zstd only
 # TRACE_BASE_DIR 默认使用脚本所在目录
 # 尝试自动检测 hw_run 下的 trace 目录
 if [ -d "$BASE_DIR/hw_run/traces/device-0" ]; then
@@ -29,9 +70,200 @@ while [[ $# -gt 0 ]]; do
       shift # past argument
       shift # past value
       ;;
+    --ideal-l1d)
+      IDEAL_L1D_ENABLED=true
+      shift # past argument
+      ;;
+  -nl|--nlevel)
+      NLEVEL_ENABLED=true
+      shift # past argument
+      ;;
+    -gto|--gto)
+      GTO_ENABLED=true
+      shift # past argument
+      ;;
+    -nls|--nlevel-scheduler)
+      if [ -z "$2" ]; then
+        echo "错误: --nlevel-scheduler 需要参数 (lrr|gto)"
+        exit 1
+      fi
+      NLEVEL_DEFAULT_SCHEDULER="$2"
+      shift # past argument
+      shift # past value
+      ;;
     -h|--help)
       SHOW_HELP=true
       shift # past argument
+      ;;
+    --plot)
+      PLOT_ENABLED=true
+      PLOT_BACKEND="local"
+      shift # past argument
+      ;;
+    --plot-backend)
+      if [ -z "$2" ]; then
+        echo "错误: --plot-backend 需要参数 (session|local)"
+        exit 1
+      fi
+      PLOT_ENABLED=true
+      PLOT_BACKEND="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    --plot-background)
+      PLOT_ENABLED=true
+      PLOT_BACKEND="local"
+      PLOT_BACKGROUND=true
+      shift # past argument
+      ;;
+    # Backward-compatible aliases (not advertised)
+    --tmux-plots)
+      PLOT_ENABLED=true
+      PLOT_BACKEND="session"
+      shift # past argument
+      ;;
+    --plots)
+      PLOT_ENABLED=true
+      PLOT_BACKEND="local"
+      shift # past argument
+      ;;
+    --plots-parallel)
+      PLOT_ENABLED=true
+      PLOT_BACKEND="local"
+      shift # past argument
+      ;;
+    --plot-format)
+      if [ -z "$2" ]; then
+        echo "错误: --plot-format 需要参数 (svg|png|both)"
+        exit 1
+      fi
+      PLOT_FORMAT="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    --plot-auto-close)
+      PLOT_TMUX_AUTO_CLOSE=true
+      shift # past argument
+      ;;
+    --plot-monitor)
+      PLOT_TMUX_MONITOR=true
+      shift # past argument
+      ;;
+    --plot-session)
+      if [ -z "$2" ]; then
+        echo "错误: --plot-session 需要参数"
+        exit 1
+      fi
+      PLOT_SESSION="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    --plot-attach)
+      PLOT_ATTACH=true
+      shift # past argument
+      ;;
+    --plot-kill-existing)
+      PLOT_KILL_EXISTING=true
+      shift # past argument
+      ;;
+    --max-cycle)
+      MAX_CYCLE="$2"
+      shift
+      shift
+      ;;
+    --max-insn)
+      MAX_INSN="$2"
+      shift
+      shift
+      ;;
+    --max-cta)
+      MAX_CTA="$2"
+      shift
+      shift
+      ;;
+    --max-completed-cta)
+      MAX_COMPLETED_CTA="$2"
+      shift
+      shift
+      ;;
+    --issue-trace)
+      ISSUE_TRACE_ENABLED=true
+      shift
+      ;;
+    --no-issue-trace)
+      ISSUE_TRACE_ENABLED=false
+      shift
+      ;;
+    --no-stall-reason-pc-stats)
+      STALL_REASON_PC_STATS_ENABLED=false
+      shift
+      ;;
+    --stall-reason-pc-stats-topk)
+      STALL_REASON_PC_STATS_TOPK="$2"
+      shift
+      shift
+      ;;
+    --no-l1-trace)
+      L1_TRACE_ENABLED=false
+      shift
+      ;;
+    --no-l2-trace)
+      L2_TRACE_ENABLED=false
+      shift
+      ;;
+    --no-hbm-trace)
+      HBM_TRACE_ENABLED=false
+      shift
+      ;;
+    --no-icnt-bw-trace)
+      ICNT_BW_TRACE_ENABLED=false
+      shift
+      ;;
+    --no-l2-bw-trace)
+      L2_BW_TRACE_ENABLED=false
+      shift
+      ;;
+    --hbm-trace-period)
+      HBM_TRACE_PERIOD="$2"
+      shift
+      shift
+      ;;
+    --icnt-bw-trace-period)
+      ICNT_BW_TRACE_PERIOD="$2"
+      shift
+      shift
+      ;;
+    --l2-bw-trace-period)
+      L2_BW_TRACE_PERIOD="$2"
+      shift
+      shift
+      ;;
+    --issue-trace-compress)
+      if [ -z "${2:-}" ]; then
+        echo "错误: --issue-trace-compress 需要参数 (none|gzip|zstd)"
+        exit 1
+      fi
+      ISSUE_TRACE_COMPRESS="$2"
+      shift
+      shift
+      ;;
+    --issue-trace-compress-level)
+      if [ -z "${2:-}" ]; then
+        echo "错误: --issue-trace-compress-level 需要参数 (gzip:1~9, zstd:1~19)"
+        exit 1
+      fi
+      ISSUE_TRACE_COMPRESS_LEVEL="$2"
+      shift
+      shift
+      ;;
+    --issue-trace-compress-threads)
+      if [ -z "${2:-}" ]; then
+        echo "错误: --issue-trace-compress-threads 需要参数 (zstd only)"
+        exit 1
+      fi
+      ISSUE_TRACE_COMPRESS_THREADS="$2"
+      shift
+      shift
       ;;
     *)
       POSITIONAL_ARGS+=("$1") # save positional arg
@@ -49,20 +281,83 @@ TRACE_CONFIG="$BASE_DIR/gpu-simulator/configs/tested-cfgs/$CONFIG_MODEL/trace.co
 GPGPU_CONFIG="$BASE_DIR/gpu-simulator/gpgpu-sim/configs/tested-cfgs/$CONFIG_MODEL/gpgpusim.config"
 RESULT_LOG_DIR="$BASE_DIR/result/log"
 RESULT_L1_DIR="$BASE_DIR/result/L1cache_trace"
+RESULT_L2_DIR="$BASE_DIR/result/L2cache_trace"
 RESULT_ISSUE_DIR="$BASE_DIR/result/issue_trace"
+RESULT_STALL_REASON_PC_STATS_BASE_DIR="$RESULT_ISSUE_DIR/stall_reason_pc_stats"
+RESULT_BW_DIR="$BASE_DIR/result/bandwidth"
+RESULT_ICNT_BW_DIR="$BASE_DIR/result/icnt_bw"
+RESULT_L2_BW_DIR="$BASE_DIR/result/l2_bw"
 
 # 创建结果目录（如果不存在）
 mkdir -p "$RESULT_LOG_DIR"
 mkdir -p "$RESULT_L1_DIR"
+mkdir -p "$RESULT_L2_DIR"
 mkdir -p "$RESULT_ISSUE_DIR"
+mkdir -p "$RESULT_STALL_REASON_PC_STATS_BASE_DIR"
+mkdir -p "$RESULT_BW_DIR"
+mkdir -p "$RESULT_ICNT_BW_DIR"
+mkdir -p "$RESULT_L2_BW_DIR"
 
 # 定义trace词表和对应的路径
 declare -A TRACE_MAP=(
+    #gardenia
+    ["bfs_usa"]="bfs_linear_base/mtx___data_road_usa_0_0_0/traces/kernelslist.g"
+    ["bfs_web"]="bfs_linear_base/mtx___data_web_Google_0_0_0/traces/kernelslist.g"
+    ["bfs_socLive"]="bfs_linear_base/mtx___data_soc_LiveJournal1_0_0_0/traces/kernelslist.g"
+    ["bfs_cit"]="bfs_linear_base/mtx___data_cit_Patents_0_0_0/traces/kernelslist.g"
+    # IMA 配置（cit-Patents, symmetrize=1, source=3569341）
+    ["bfs_cit_ima"]="bfs_linear_base/mtx___data_cit_Patents_1_0_3569341/traces/kernelslist.g"
+    # IMA tiers（与 define-all-apps.yml 对齐；source sensitive）
+    ["bfs_ima_high"]="bfs_linear_base/mtx___data_cit_Patents_1_0_3569341/traces/kernelslist.g"
+    ["bfs_ima_med"]="bfs_linear_base/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["bfs_ima_small"]="bfs_linear_base/mtx___data_web_Google_0_0_506742/traces/kernelslist.g"
+    # IMA（更友善）：cit-Patents, symmetrize=0（有向）, source=3569341（需先生成对应 traces）
+    ["bfs_cit_ima_dir"]="bfs_linear_base/mtx___data_cit_Patents_0_0_3569341/traces/kernelslist.g"
+    ["bfs_roadnet"]="bfs_linear_base/mtx___data_roadNet_CA_0_0_0/traces/kernelslist.g"
+    ["bfs_flickr"]="bfs_linear_base/mtx___data_flickr_0_0_0/traces/kernelslist.g"
+    ["spmv_cu"]="spmv_cusparse/mtx___data_web_Google_1_0/traces/kernelslist.g"
+    ["spmv"]="spmv_base/mtx___data_web_Google_1_0/traces/kernelslist.g"
+    # IMA tiers（direction sensitive；spmv 输入必须无向/对称 => 2 tiers）
+    ["spmv_ima_high"]="spmv_base/mtx___data_cit_Patents_1_0/traces/kernelslist.g"
+    ["spmv_ima_small"]="spmv_base/mtx___data_web_Google_1_0/traces/kernelslist.g"
+    # IMA（smaller, faster）：web-Google（no symmetrize）（需先生成对应 traces）
+    ["spmv_web_ima_small"]="spmv_base/mtx___data_web_Google_0_0/traces/kernelslist.g"
+    # IMA 配置（cit-Patents, symmetrize=1）
+    ["spmv_cit_ima"]="spmv_base/mtx___data_cit_Patents_1_0/traces/kernelslist.g"
+
+    # IMA tiers（与 define-all-apps.yml 对齐；source sensitive）
+    ["sssp_ima_high"]="sssp_linear_base/mtx___data_cit_Patents_1_0_3569341/traces/kernelslist.g"
+    ["sssp_ima_med"]="sssp_linear_base/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["sssp_ima_small"]="sssp_linear_base/mtx___data_web_Google_0_0_506742/traces/kernelslist.g"
+
+    # IMA tiers（source & direction insensitive => 2 tiers）
+    ["tc_ima_high"]="tc_gpu_base/__data_cit_Patents/traces/kernelslist.g"
+    ["tc_ima_low"]="tc_gpu_base/__data_web_Google/traces/kernelslist.g"
+    ["tc"]="tc_gpu_base/__data_web_Google/traces/kernelslist.g"
+
+    ["cc"]="cc_base/mtx___data_web_Google_1_1/traces/kernelslist.g"
+    # IMA tiers（与 define-all-apps.yml 对齐；direction sensitive）
+    ["cc_ima_high"]="cc_base/mtx___data_cit_Patents_1_0/traces/kernelslist.g"
+    ["cc_ima_med"]="cc_base/mtx___data_web_Google_1_0/traces/kernelslist.g"
+    ["cc_ima_small"]="cc_base/mtx___data_web_Google_0_0/traces/kernelslist.g"
+
+    ["bc"]="bc_linear_base/mtx___data_web_Google_0/traces/kernelslist.g"
+    # IMA tiers（与 define-all-apps.yml 对齐；source sensitive）
+    ["bc_ima_high"]="bc_linear_base/mtx___data_cit_Patents_1_0_3569341/traces/kernelslist.g"
+    ["bc_ima_med"]="bc_linear_base/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["bc_ima_small"]="bc_linear_base/mtx___data_web_Google_0_0_506742/traces/kernelslist.g"
+
+
     # flash attention
     ["fa"]="fa/NO_ARGS/traces/kernelslist.g"
     ["fa4k"]="fa_4096seq/NO_ARGS/traces/kernelslist.g"
 
+    #cache strategy
+    ["wb"]="/strategybench.sm80/__test_alloc___store_wb/traces/kernelslist.g"
+    ["wb2"]="/strategybench.sm80/__test_alloc2___store_wb/traces/kernelslist.g"
+    ["cg"]="/strategybench.sm80/__test_alloc___store_cg/traces/kernelslist.g"
 
+    
     # GEMM系列
     ["gemm128"]="gemm128/NO_ARGS/traces/kernelslist.g"
     ["gemm256"]="gemm256/NO_ARGS/traces/kernelslist.g"
@@ -122,7 +417,6 @@ declare -A TRACE_MAP=(
     ["3DConvolution"]="polybench-3DConvolution/NO_ARGS/traces/kernelslist.g"
     
     # 其他应用
-    ["bc"]="bc/__data_2k_1M_gr/traces/kernelslist.g"
     ["fw"]="fw/__data_256_16384_gr/traces/kernelslist.g"
     ["fw_block"]="fw_block/__data_256_16384_gr/traces/kernelslist.g"
     ["color_max"]="color_max/__data_ecology1_graph_1/traces/kernelslist.g"
@@ -133,6 +427,14 @@ declare -A TRACE_MAP=(
     ["l1_bw_32f"]="l1_bw_32f/NO_ARGS/traces/kernelslist.g"
 )
 
+# n_level warp alloc 文件映射（默认使用 trace_key，gto 使用 <trace_key>gto）
+declare -A NLEVEL_WARP_ALLOC_MAP=(
+    ["fa"]="gpu-simulator/gpgpu-sim/n-level/output/fa_issue_warp_allocate.csv"
+    ["fa4k"]="gpu-simulator/gpgpu-sim/n-level/output/fa4k_issue_warp_allocate.csv"
+    ["fa4kgto"]="gpu-simulator/gpgpu-sim/n-level/output/fa4k_gto_issue_warp_allocate.csv"
+    ["smpv_cu"]="gpu-simulator/gpgpu-sim/n-level/output/smpv_cu_issue_warp_allocate.csv"
+)
+
 # 显示使用说明
 show_usage() {
     echo "使用方法: $0 [选项] <trace_key> [log_name]"
@@ -140,6 +442,43 @@ show_usage() {
     echo "选项:"
     echo "  -c, --config <model>  指定GPU配置模型 (默认: SM80_A100)"
     echo "                        支持: SM7_QV100, SM80_A100"
+    echo "  --ideal-l1d            启用 Ideal L1D：强制 eligible global read 为 L1D HIT（上界实验）"
+    echo "  -nl, --nlevel         启用 n_level 调度器（日志名自动加 _nl 后缀，与 -gto 互斥）"
+    echo "  -nls, --nlevel-scheduler <lrr|gto>"
+    echo "                        选择 n_level 默认调度器并匹配 warp alloc 文件 (默认: lrr)"
+    echo "  -gto, --gto           启用 gto 调度器（日志名自动加 _gto 后缀，与 -nl 互斥）"
+    echo "  --plot                模拟结束后自动并行绘图并显示进度（推荐，一键模式）"
+    echo "  --plot-backend <session|local>  选择绘图后端 (默认: local)"
+    echo "  --plot-background      local 后端并行绘图并后台 detach（写日志后立即返回）"
+    echo "  --plot-format <svg|png|both>  绘图输出格式 (默认: svg；png/both 可能需要 matplotlib+numpy)"
+    echo "  --plot-session <name>         指定 session 名称（默认自动生成）"
+    echo "  --plot-kill-existing          如果 session 已存在则先 kill"
+    echo "  --plot-attach                 运行完后直接 attach 到 session"
+    echo "  --plot-auto-close             session 后端下绘图结束后自动关闭窗口（session 保留）"
+    echo "  --plot-monitor                session 后端下增加一个 monitor 窗口显示日志尾部（用于看进度）"
+    echo ""
+    echo "  # 体量控制（强烈建议用于图负载，避免输出 TB 级 CSV）"
+    echo "  --issue-trace                 开启 issue trace（默认关闭；最占空间/最慢）"
+    echo "  --no-issue-trace              关闭 issue trace（默认关闭；最占空间/最慢）"
+    echo "  --no-stall-reason-pc-stats    关闭轻量 stall reason->pc 统计（默认开启；替代 issue trace）"
+    echo "  --stall-reason-pc-stats-topk <K>  设置每个 reason 的 topK（默认 5；0=不输出 topk_other.csv）"
+    echo "  --no-l1-trace                 关闭 L1 trace（默认开启）"
+    echo "  --no-l2-trace                 关闭 L2 trace（默认开启）"
+    echo "  --no-hbm-trace                关闭 HBM 分区带宽 trace（默认开启）"
+    echo "  --no-icnt-bw-trace            关闭 ICNT 带宽 trace（默认关闭）"
+    echo "  --no-l2-bw-trace              关闭 L2 端口带宽 trace（默认关闭）"
+    echo "  --hbm-trace-period <N>        HBM trace 采样周期（默认 1；建议 100/1000）"
+    echo "  --icnt-bw-trace-period <N>    ICNT 带宽 trace 采样周期（默认 500）"
+    echo "  --l2-bw-trace-period <N>      L2 端口带宽 trace 采样周期（默认 500）"
+    echo ""
+    echo "  # Issue trace 边运行边压缩（避免生成超大 CSV；输出为 .csv.gz/.csv.zst）"
+    echo "  --issue-trace-compress <none|gzip|zstd>   issue trace 压缩方式（默认: none）"
+    echo "  --issue-trace-compress-level <N>          压缩级别（gzip:1~9；zstd:1~19；未指定则用默认）"
+    echo "  --issue-trace-compress-threads <N>        zstd 线程数（默认 1；并行跑时建议 1）"
+    echo "  --max-cycle <N>               提前结束：最多仿真 N 个 cycle（0=不限）"
+    echo "  --max-insn <N>                提前结束：最多仿真 N 条指令（0=不限）"
+    echo "  --max-cta <N>                 提前结束：最多启动 N 个 CTA（0=不限）"
+    echo "  --max-completed-cta <N>       提前结束：最多完成 N 个 CTA（0=不限）"
     echo ""
     echo "参数说明:"
     echo "  trace_key  - 必需，要运行的trace键值"
@@ -155,6 +494,19 @@ show_usage() {
     echo "  $0 -c SM80_A100 gemm128 # 使用 SM80_A100 配置运行"
     echo "  $0 btree my_test        # 运行B+Tree基准测试，使用自定义日志名"
     echo "  $0 2mm 2mm_experiment   # 运行Polybench 2MM基准测试，使用自定义日志名"
+    echo "  $0 -gto fa              # 启用 gto 调度器运行 FA"
+    echo "  $0 -nl fa               # 启用 n_level 调度器运行 FA"
+    echo "  $0 -nl -nls gto fa4k     # n_level 使用 gto 默认调度器并匹配对应 warp alloc 文件"
+    echo "  $0 -nl -nls lrr fa4k     # n_level 使用 lrr 默认调度器（默认行为）"
+    echo "  $0 --plot sssp           # 结束后自动并行绘图并显示进度"
+    echo "  $0 --plot --plot-format png sssp     # 自动绘图输出 PNG"
+    echo "  $0 --plot --plot-format both sssp    # 自动绘图同时输出 SVG+PNG"
+    echo "  $0 --plot-backend session --plot-monitor sssp  # 用 session 后台跑，并在 monitor 看进度"
+    echo "  $0 --no-issue-trace bfs_web                     # 关闭 issue trace，显著提速/减小输出"
+    echo "  $0 --issue-trace-compress gzip bfs_roadnet bfs_roadnet_gz   # issue trace 边运行边压缩（推荐用于大规模）"
+    echo "  $0 --max-completed-cta 200 bfs_web              # 只跑前 200 个 CTA（快速看 IMA 趋势）"
+    echo "  $0 --hbm-trace-period 100 spmv                  # 带宽 trace 按 100 cycle 采样"
+    echo "  $0 --ideal-l1d bfs_usa bfs_usa_ideal_l1d        # Ideal L1D 上界实验"
     echo ""
     echo "L1/ISSUE Trace 后处理 (生成带 L1 命中信息的 CSV):"
     echo "  python result/issue_trace/issue_trace_l1_match.py <issue_csv> [选项]"
@@ -170,8 +522,60 @@ show_usage() {
 
 # 检查参数
 if [ "$SHOW_HELP" = true ] || [ $# -eq 0 ]; then
+  show_usage
+  exit 0
+fi
+
+# 调度器选项互斥检查
+if [ "$NLEVEL_ENABLED" = true ] && [ "$GTO_ENABLED" = true ]; then
+    echo "错误: -nl 和 -gto 不能同时使用"
+    echo ""
     show_usage
-    exit 0
+    exit 1
+fi
+
+PLOT_BACKEND="$(echo "$PLOT_BACKEND" | tr 'A-Z' 'a-z')"
+if [ "$PLOT_BACKEND" != "session" ] && [ "$PLOT_BACKEND" != "local" ]; then
+    echo "错误: --plot-backend 仅支持 session|local (当前: $PLOT_BACKEND)"
+    exit 1
+fi
+
+NLEVEL_DEFAULT_SCHEDULER="$(echo "$NLEVEL_DEFAULT_SCHEDULER" | tr 'A-Z' 'a-z')"
+if [ "$NLEVEL_DEFAULT_SCHEDULER" != "lrr" ] && [ "$NLEVEL_DEFAULT_SCHEDULER" != "gto" ]; then
+    echo "错误: n_level 默认调度器仅支持 lrr 或 gto (当前: $NLEVEL_DEFAULT_SCHEDULER)"
+    exit 1
+fi
+
+PLOT_FORMAT="$(echo "$PLOT_FORMAT" | tr 'A-Z' 'a-z')"
+if [ "$PLOT_FORMAT" != "svg" ] && [ "$PLOT_FORMAT" != "png" ] && [ "$PLOT_FORMAT" != "both" ]; then
+    echo "错误: --plot-format 仅支持 svg|png|both (当前: $PLOT_FORMAT)"
+    exit 1
+fi
+
+# Issue trace 压缩参数检查
+ISSUE_TRACE_COMPRESS="$(echo "$ISSUE_TRACE_COMPRESS" | tr 'A-Z' 'a-z')"
+if [ "$ISSUE_TRACE_COMPRESS" != "none" ] && [ "$ISSUE_TRACE_COMPRESS" != "gzip" ] && [ "$ISSUE_TRACE_COMPRESS" != "zstd" ]; then
+    echo "错误: --issue-trace-compress 仅支持 none|gzip|zstd (当前: $ISSUE_TRACE_COMPRESS)"
+    exit 1
+fi
+if [ -n "${ISSUE_TRACE_COMPRESS_LEVEL}" ]; then
+    if ! [[ "${ISSUE_TRACE_COMPRESS_LEVEL}" =~ ^[0-9]+$ ]]; then
+        echo "错误: --issue-trace-compress-level 必须为整数 (当前: $ISSUE_TRACE_COMPRESS_LEVEL)"
+        exit 1
+    fi
+fi
+if [ -n "${ISSUE_TRACE_COMPRESS_THREADS}" ]; then
+    if ! [[ "${ISSUE_TRACE_COMPRESS_THREADS}" =~ ^[0-9]+$ ]]; then
+        echo "错误: --issue-trace-compress-threads 必须为整数 (当前: $ISSUE_TRACE_COMPRESS_THREADS)"
+        exit 1
+    fi
+fi
+
+if [ -n "${STALL_REASON_PC_STATS_TOPK}" ]; then
+    if ! [[ "${STALL_REASON_PC_STATS_TOPK}" =~ ^[0-9]+$ ]]; then
+        echo "错误: --stall-reason-pc-stats-topk 必须为非负整数 (当前: $STALL_REASON_PC_STATS_TOPK)"
+        exit 1
+    fi
 fi
 
 TRACE_KEY=$1
@@ -190,6 +594,24 @@ if [ $# -gt 1 ]; then
 else
     LOG_NAME=$TRACE_KEY
 fi
+if [ "$NLEVEL_ENABLED" = true ]; then
+    if [ "$NLEVEL_DEFAULT_SCHEDULER" = "gto" ]; then
+        if [[ "$LOG_NAME" == *_nl_gto ]]; then
+            :
+        elif [[ "$LOG_NAME" == *_nl ]]; then
+            LOG_NAME="${LOG_NAME}_gto"
+        else
+            LOG_NAME="${LOG_NAME}_nl_gto"
+        fi
+    else
+        if [[ "$LOG_NAME" != *_nl ]]; then
+            LOG_NAME="${LOG_NAME}_nl"
+        fi
+    fi
+fi
+if [ "$GTO_ENABLED" = true ] && [[ "$LOG_NAME" != *_gto ]]; then
+    LOG_NAME="${LOG_NAME}_gto"
+fi
 
 # 构建完整的trace路径
 TRACE_PATH="$TRACE_BASE_DIR/${TRACE_MAP[$TRACE_KEY]}"
@@ -200,22 +622,309 @@ if [ ! -f "$TRACE_PATH" ]; then
     exit 1
 fi
 
+if [ "$NLEVEL_ENABLED" = true ]; then
+    if [ "$NLEVEL_DEFAULT_SCHEDULER" = "gto" ]; then
+        NLEVEL_WARP_ALLOC_REL="${NLEVEL_WARP_ALLOC_MAP[${TRACE_KEY}gto]}"
+        if [ -z "$NLEVEL_WARP_ALLOC_REL" ]; then
+            echo "错误: 未配置 trace_key=$TRACE_KEY 的 n_level gto warp alloc 文件"
+            echo "请在脚本中补充 NLEVEL_WARP_ALLOC_MAP 的 ${TRACE_KEY}gto 映射，或改用 --nlevel-scheduler lrr"
+            exit 1
+        fi
+    else
+        NLEVEL_WARP_ALLOC_REL="${NLEVEL_WARP_ALLOC_MAP[$TRACE_KEY]}"
+        if [ -z "$NLEVEL_WARP_ALLOC_REL" ]; then
+            echo "错误: 未配置 trace_key=$TRACE_KEY 的 n_level warp alloc 文件"
+            echo "请在脚本中补充 NLEVEL_WARP_ALLOC_MAP 映射"
+            exit 1
+        fi
+    fi
+    NLEVEL_WARP_ALLOC_FILE="$BASE_DIR/$NLEVEL_WARP_ALLOC_REL"
+    if [ ! -f "$NLEVEL_WARP_ALLOC_FILE" ]; then
+        echo "错误: n_level warp alloc 文件不存在: $NLEVEL_WARP_ALLOC_FILE"
+        exit 1
+    fi
+fi
+
 # 设置输出文件名
 LOG_FILE="$RESULT_LOG_DIR/${LOG_NAME}.log"
 CSV_FILE="$RESULT_L1_DIR/${LOG_NAME}_l1.csv"
-ISSUE_FILE="$RESULT_ISSUE_DIR/${LOG_NAME}_issue.csv"
+L2_CSV_FILE="$RESULT_L2_DIR/${LOG_NAME}_l2.csv"
+ISSUE_FILE_RAW="$RESULT_ISSUE_DIR/${LOG_NAME}_issue.csv"
+ISSUE_FILE_GZ="$RESULT_ISSUE_DIR/${LOG_NAME}_issue.csv.gz"
+ISSUE_FILE_ZST="$RESULT_ISSUE_DIR/${LOG_NAME}_issue.csv.zst"
+ISSUE_FIFO_REL="result/issue_trace/${LOG_NAME}_issue.csv.fifo"
+ISSUE_FIFO_ABS="$BASE_DIR/$ISSUE_FIFO_REL"
+ISSUE_COMPRESS_LOG="$RESULT_LOG_DIR/${LOG_NAME}_issue_trace_compress.log"
+ISSUE_FILE="$ISSUE_FILE_RAW"
+BANDWIDTH_FILE="$RESULT_BW_DIR/${LOG_NAME}_hbm_partition.csv"
+ICNT_BW_FILE="$RESULT_ICNT_BW_DIR/${LOG_NAME}_icnt_bw.csv"
+L2_BW_FILE="$RESULT_L2_BW_DIR/${LOG_NAME}_l2_bw.csv"
+
+# 每次运行的 stall reason/pc stats 输出目录（避免并发/多算法覆盖）
+RESULT_STALL_REASON_PC_STATS_DIR="$RESULT_STALL_REASON_PC_STATS_BASE_DIR/$LOG_NAME"
+mkdir -p "$RESULT_STALL_REASON_PC_STATS_DIR"
+
+REL_L1_FILE="result/L1cache_trace/${LOG_NAME}_l1.csv"
+REL_L2_FILE="result/L2cache_trace/${LOG_NAME}_l2.csv"
+REL_ISSUE_FILE="result/issue_trace/${LOG_NAME}_issue.csv"
+REL_STALL_REASON_PC_STATS_DIR="result/issue_trace/stall_reason_pc_stats/${LOG_NAME}"
+REL_BW_FILE="result/bandwidth/${LOG_NAME}_hbm_partition.csv"
+REL_ICNT_BW_FILE="result/icnt_bw/${LOG_NAME}_icnt_bw.csv"
+REL_L2_BW_FILE="result/l2_bw/${LOG_NAME}_l2_bw.csv"
+
+STALL_REASON_PC_STATS_BREAKDOWN="$RESULT_STALL_REASON_PC_STATS_DIR/stall_reason_breakdown.csv"
+STALL_REASON_PC_STATS_HIST="$RESULT_STALL_REASON_PC_STATS_DIR/stall_reason_pc_hist.csv"
+STALL_REASON_PC_STATS_TOPK_FILE="$RESULT_STALL_REASON_PC_STATS_DIR/stall_reason_pc_topk_other.csv"
+
+# 便于在 IDE 中区分：把 stats CSV 重命名为带 log-name 前缀的文件名（只保留前缀版）
+STALL_REASON_PC_STATS_BREAKDOWN_PREFIXED="$RESULT_STALL_REASON_PC_STATS_DIR/${LOG_NAME}_stall_reason_breakdown.csv"
+STALL_REASON_PC_STATS_HIST_PREFIXED="$RESULT_STALL_REASON_PC_STATS_DIR/${LOG_NAME}_stall_reason_pc_hist.csv"
+STALL_REASON_PC_STATS_TOPK_PREFIXED="$RESULT_STALL_REASON_PC_STATS_DIR/${LOG_NAME}_stall_reason_pc_topk_other.csv"
 
 # 创建临时配置文件，更新L1 trace路径
 TEMP_GPGPU_CONFIG=$(mktemp)
-trap "rm -f $TEMP_GPGPU_CONFIG" EXIT
+ISSUE_TRACE_COMPRESS_PID=""
+ISSUE_TRACE_KEEPFD=""
+cleanup() {
+    # 关闭 FIFO 常驻写端（如存在），让压缩器收到 EOF 并退出
+    if [ -n "${ISSUE_TRACE_KEEPFD:-}" ]; then
+        exec {ISSUE_TRACE_KEEPFD}>&- 2>/dev/null || true
+        ISSUE_TRACE_KEEPFD=""
+    fi
+    # 如果压缩器仍在运行，尽量等待其退出；若仍未退出则尝试终止
+    if [ -n "${ISSUE_TRACE_COMPRESS_PID:-}" ]; then
+        if kill -0 "$ISSUE_TRACE_COMPRESS_PID" 2>/dev/null; then
+            wait "$ISSUE_TRACE_COMPRESS_PID" 2>/dev/null || true
+        fi
+        ISSUE_TRACE_COMPRESS_PID=""
+    fi
+    # 清理 FIFO
+    if [ -n "${ISSUE_FIFO_ABS:-}" ] && [ -p "${ISSUE_FIFO_ABS}" ]; then
+        rm -f "$ISSUE_FIFO_ABS" 2>/dev/null || true
+    fi
+    rm -f "$TEMP_GPGPU_CONFIG" 2>/dev/null || true
+}
+trap cleanup EXIT
 
-# 复制原始配置文件并更新L1 trace路径
-sed -e "s|-l1_trace_path .*|-l1_trace_path \"$CSV_FILE\"|g" \
-    -e "s|-issue_trace_path .*|-issue_trace_path \"$ISSUE_FILE\"|g" \
+# 如果启用 issue trace 边运行边压缩：把 -issue_trace_path 指向 FIFO，并把最终输出路径切换为压缩文件
+ISSUE_TRACE_COMPRESS_EFFECTIVE="$ISSUE_TRACE_COMPRESS"
+if [ "$ISSUE_TRACE_ENABLED" != true ]; then
+    ISSUE_TRACE_COMPRESS_EFFECTIVE="none"
+fi
+if [ "$ISSUE_TRACE_COMPRESS_EFFECTIVE" = "gzip" ]; then
+    REL_ISSUE_FILE="$ISSUE_FIFO_REL"
+    ISSUE_FILE="$ISSUE_FILE_GZ"
+elif [ "$ISSUE_TRACE_COMPRESS_EFFECTIVE" = "zstd" ]; then
+    REL_ISSUE_FILE="$ISSUE_FIFO_REL"
+    ISSUE_FILE="$ISSUE_FILE_ZST"
+fi
+
+# 复制原始配置文件并更新 trace 输出路径（icnt/l2_bw 由后续开关块决定是否写入/启用）
+sed -e "s|-l1_trace_path .*|-l1_trace_path \"$REL_L1_FILE\"|g" \
+    -e "s|-l2_trace_path .*|-l2_trace_path \"$REL_L2_FILE\"|g" \
+    -e "s|-issue_trace_path .*|-issue_trace_path \"$REL_ISSUE_FILE\"|g" \
+    -e "s|-hbm_partition_trace_path .*|-hbm_partition_trace_path \"$REL_BW_FILE\"|g" \
+    -e "s|-hbm_partition_trace_enable .*|-hbm_partition_trace_enable 1|g" \
+    -e "s|-hbm_partition_trace_period .*|-hbm_partition_trace_period 1|g" \
     "$GPGPU_CONFIG" > "$TEMP_GPGPU_CONFIG"
 
-# 调试信息：显示更新后的L1 trace路径
+# 如果原始 config 没有 L2 trace 相关项，则补全（保持与 L1/issue 同样的“脚本控制输出路径”行为）
+if ! grep -q '^-l2_trace_enable[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+    echo "-l2_trace_enable 1" >> "$TEMP_GPGPU_CONFIG"
+fi
+if ! grep -q '^-l2_trace_path[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+    echo "-l2_trace_path \"$REL_L2_FILE\"" >> "$TEMP_GPGPU_CONFIG"
+fi
+if [ "$HBM_TRACE_ENABLED" = true ]; then
+    if ! grep -q '^-hbm_partition_trace_enable[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        echo "-hbm_partition_trace_enable 1" >> "$TEMP_GPGPU_CONFIG"
+    else
+        sed -i "s|^-hbm_partition_trace_enable[[:space:]].*|-hbm_partition_trace_enable 1|g" "$TEMP_GPGPU_CONFIG"
+    fi
+    if ! grep -q '^-hbm_partition_trace_path[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        echo "-hbm_partition_trace_path \"$REL_BW_FILE\"" >> "$TEMP_GPGPU_CONFIG"
+    fi
+    if ! grep -q '^-hbm_partition_trace_period[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        echo "-hbm_partition_trace_period $HBM_TRACE_PERIOD" >> "$TEMP_GPGPU_CONFIG"
+    else
+        sed -i "s|^-hbm_partition_trace_period[[:space:]].*|-hbm_partition_trace_period $HBM_TRACE_PERIOD|g" "$TEMP_GPGPU_CONFIG"
+    fi
+else
+    if grep -q '^-hbm_partition_trace_enable[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        sed -i "s|^-hbm_partition_trace_enable[[:space:]].*|-hbm_partition_trace_enable 0|g" "$TEMP_GPGPU_CONFIG"
+    else
+        echo "-hbm_partition_trace_enable 0" >> "$TEMP_GPGPU_CONFIG"
+    fi
+fi
+
+# ICNT BW trace
+if [ "$ICNT_BW_TRACE_ENABLED" = true ]; then
+    if ! grep -q '^-icnt_trace_enable[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        echo "-icnt_trace_enable 1" >> "$TEMP_GPGPU_CONFIG"
+    else
+        sed -i "s|^-icnt_trace_enable[[:space:]].*|-icnt_trace_enable 1|g" "$TEMP_GPGPU_CONFIG"
+    fi
+    if ! grep -q '^-icnt_trace_path[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        echo "-icnt_trace_path \"$REL_ICNT_BW_FILE\"" >> "$TEMP_GPGPU_CONFIG"
+    fi
+    if ! grep -q '^-icnt_trace_period[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        echo "-icnt_trace_period $ICNT_BW_TRACE_PERIOD" >> "$TEMP_GPGPU_CONFIG"
+    else
+        sed -i "s|^-icnt_trace_period[[:space:]].*|-icnt_trace_period $ICNT_BW_TRACE_PERIOD|g" "$TEMP_GPGPU_CONFIG"
+    fi
+else
+    if grep -q '^-icnt_trace_enable[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        sed -i "s|^-icnt_trace_enable[[:space:]].*|-icnt_trace_enable 0|g" "$TEMP_GPGPU_CONFIG"
+    else
+        echo "-icnt_trace_enable 0" >> "$TEMP_GPGPU_CONFIG"
+    fi
+fi
+
+# L2 BW trace
+if [ "$L2_BW_TRACE_ENABLED" = true ]; then
+    if ! grep -q '^-l2_bw_enable[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        echo "-l2_bw_enable 1" >> "$TEMP_GPGPU_CONFIG"
+    else
+        sed -i "s|^-l2_bw_enable[[:space:]].*|-l2_bw_enable 1|g" "$TEMP_GPGPU_CONFIG"
+    fi
+    if ! grep -q '^-l2_bw_path[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        echo "-l2_bw_path \"$REL_L2_BW_FILE\"" >> "$TEMP_GPGPU_CONFIG"
+    fi
+    if ! grep -q '^-l2_bw_period[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        echo "-l2_bw_period $L2_BW_TRACE_PERIOD" >> "$TEMP_GPGPU_CONFIG"
+    else
+        sed -i "s|^-l2_bw_period[[:space:]].*|-l2_bw_period $L2_BW_TRACE_PERIOD|g" "$TEMP_GPGPU_CONFIG"
+    fi
+else
+    if grep -q '^-l2_bw_enable[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        sed -i "s|^-l2_bw_enable[[:space:]].*|-l2_bw_enable 0|g" "$TEMP_GPGPU_CONFIG"
+    else
+        echo "-l2_bw_enable 0" >> "$TEMP_GPGPU_CONFIG"
+    fi
+fi
+
+# Ideal L1D: force eligible global reads to L1D HIT (timing upper bound).
+if [ "$IDEAL_L1D_ENABLED" = true ]; then
+    if grep -q '^[[:space:]]*-gpgpu_perfect_l1d[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        sed -i "s|^[[:space:]]*-gpgpu_perfect_l1d[[:space:]].*|-gpgpu_perfect_l1d 1|g" "$TEMP_GPGPU_CONFIG"
+    else
+        echo "-gpgpu_perfect_l1d 1" >> "$TEMP_GPGPU_CONFIG"
+    fi
+else
+    if grep -q '^[[:space:]]*-gpgpu_perfect_l1d[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        sed -i "s|^[[:space:]]*-gpgpu_perfect_l1d[[:space:]].*|-gpgpu_perfect_l1d 0|g" "$TEMP_GPGPU_CONFIG"
+    else
+        echo "-gpgpu_perfect_l1d 0" >> "$TEMP_GPGPU_CONFIG"
+    fi
+fi
+
+# trace enable 开关（默认与原 config 一致；这里允许从命令行覆盖）
+if [ "$ISSUE_TRACE_ENABLED" = true ]; then
+    sed -i "s|^-issue_trace_enable[[:space:]].*|-issue_trace_enable 1|g" "$TEMP_GPGPU_CONFIG" || true
+else
+    if grep -q '^-issue_trace_enable[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        sed -i "s|^-issue_trace_enable[[:space:]].*|-issue_trace_enable 0|g" "$TEMP_GPGPU_CONFIG"
+    else
+        echo "-issue_trace_enable 0" >> "$TEMP_GPGPU_CONFIG"
+    fi
+    if grep -q '^-issue_trace_path[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        sed -i "s|^-issue_trace_path[[:space:]].*|-issue_trace_path \"\"|g" "$TEMP_GPGPU_CONFIG"
+    fi
+fi
+
+# 轻量级 stall reason / pc 统计（输出为固定文件名，位于 issue_trace 目录下的子目录）
+if [ "$STALL_REASON_PC_STATS_ENABLED" = true ]; then
+    if grep -q '^-stall_reason_pc_stats_enable[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        sed -i "s|^-stall_reason_pc_stats_enable[[:space:]].*|-stall_reason_pc_stats_enable 1|g" "$TEMP_GPGPU_CONFIG"
+    else
+        echo "-stall_reason_pc_stats_enable 1" >> "$TEMP_GPGPU_CONFIG"
+    fi
+    if grep -q '^-stall_reason_pc_stats_path[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        sed -i "s|^-stall_reason_pc_stats_path[[:space:]].*|-stall_reason_pc_stats_path \"$REL_STALL_REASON_PC_STATS_DIR\"|g" "$TEMP_GPGPU_CONFIG"
+    else
+        echo "-stall_reason_pc_stats_path \"$REL_STALL_REASON_PC_STATS_DIR\"" >> "$TEMP_GPGPU_CONFIG"
+    fi
+    if grep -q '^-stall_reason_pc_stats_topk[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        sed -i "s|^-stall_reason_pc_stats_topk[[:space:]].*|-stall_reason_pc_stats_topk $STALL_REASON_PC_STATS_TOPK|g" "$TEMP_GPGPU_CONFIG"
+    else
+        echo "-stall_reason_pc_stats_topk $STALL_REASON_PC_STATS_TOPK" >> "$TEMP_GPGPU_CONFIG"
+    fi
+else
+    if grep -q '^-stall_reason_pc_stats_enable[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        sed -i "s|^-stall_reason_pc_stats_enable[[:space:]].*|-stall_reason_pc_stats_enable 0|g" "$TEMP_GPGPU_CONFIG"
+    else
+        echo "-stall_reason_pc_stats_enable 0" >> "$TEMP_GPGPU_CONFIG"
+    fi
+fi
+
+if [ "$L1_TRACE_ENABLED" = true ]; then
+    sed -i "s|^-l1_trace_enable[[:space:]].*|-l1_trace_enable 1|g" "$TEMP_GPGPU_CONFIG" || true
+else
+    if grep -q '^-l1_trace_enable[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        sed -i "s|^-l1_trace_enable[[:space:]].*|-l1_trace_enable 0|g" "$TEMP_GPGPU_CONFIG"
+    else
+        echo "-l1_trace_enable 0" >> "$TEMP_GPGPU_CONFIG"
+    fi
+fi
+if [ "$L2_TRACE_ENABLED" = true ]; then
+    sed -i "s|^-l2_trace_enable[[:space:]].*|-l2_trace_enable 1|g" "$TEMP_GPGPU_CONFIG" || true
+else
+    if grep -q '^-l2_trace_enable[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        sed -i "s|^-l2_trace_enable[[:space:]].*|-l2_trace_enable 0|g" "$TEMP_GPGPU_CONFIG"
+    else
+        echo "-l2_trace_enable 0" >> "$TEMP_GPGPU_CONFIG"
+    fi
+fi
+
+# 提前结束（减少仿真/输出体量；0 表示不限）
+if [ "${MAX_CYCLE:-0}" != "0" ] || [ "${MAX_INSN:-0}" != "0" ] || [ "${MAX_CTA:-0}" != "0" ] || [ "${MAX_COMPLETED_CTA:-0}" != "0" ]; then
+    sed -i "/^[[:space:]]*-gpgpu_max_cycle[[:space:]]/d" "$TEMP_GPGPU_CONFIG"
+    sed -i "/^[[:space:]]*-gpgpu_max_insn[[:space:]]/d" "$TEMP_GPGPU_CONFIG"
+    sed -i "/^[[:space:]]*-gpgpu_max_cta[[:space:]]/d" "$TEMP_GPGPU_CONFIG"
+    sed -i "/^[[:space:]]*-gpgpu_max_completed_cta[[:space:]]/d" "$TEMP_GPGPU_CONFIG"
+    {
+        echo "-gpgpu_max_cycle $MAX_CYCLE"
+        echo "-gpgpu_max_insn $MAX_INSN"
+        echo "-gpgpu_max_cta $MAX_CTA"
+        echo "-gpgpu_max_completed_cta $MAX_COMPLETED_CTA"
+    } >> "$TEMP_GPGPU_CONFIG"
+fi
+
+if [ "$NLEVEL_ENABLED" = true ]; then
+    sed -i "/^[[:space:]]*-gpgpu_scheduler[[:space:]]/d" "$TEMP_GPGPU_CONFIG"
+    sed -i "/^[[:space:]]*-gpgpu_n_level_warp_alloc_file[[:space:]]/d" "$TEMP_GPGPU_CONFIG"
+    sed -i "/^[[:space:]]*-gpgpu_n_level_default_scheduler[[:space:]]/d" "$TEMP_GPGPU_CONFIG"
+    {
+        echo "-gpgpu_scheduler n_level"
+        echo "-gpgpu_n_level_warp_alloc_file \"$NLEVEL_WARP_ALLOC_FILE\""
+        echo "-gpgpu_n_level_default_scheduler $NLEVEL_DEFAULT_SCHEDULER"
+    } >> "$TEMP_GPGPU_CONFIG"
+fi
+
+if [ "$GTO_ENABLED" = true ]; then
+    sed -i "/^[[:space:]]*-gpgpu_scheduler[[:space:]]/d" "$TEMP_GPGPU_CONFIG"
+    sed -i "/^[[:space:]]*-gpgpu_n_level_warp_alloc_file[[:space:]]/d" "$TEMP_GPGPU_CONFIG"
+    sed -i "/^[[:space:]]*-gpgpu_n_level_default_scheduler[[:space:]]/d" "$TEMP_GPGPU_CONFIG"
+    {
+        echo "-gpgpu_scheduler gto"
+    } >> "$TEMP_GPGPU_CONFIG"
+fi
+
+# 调试信息：显示更新后的 trace 输出路径
 echo "配置文件中的L1 trace路径已更新为: $CSV_FILE"
+echo "配置文件中的HBM分区带宽 trace路径已更新为: $BANDWIDTH_FILE"
+if [ "$ICNT_BW_TRACE_ENABLED" = true ]; then
+    echo "配置文件中的ICNT带宽 trace路径已更新为: $ICNT_BW_FILE"
+fi
+if [ "$L2_BW_TRACE_ENABLED" = true ]; then
+    echo "配置文件中的L2带宽 trace路径已更新为: $L2_BW_FILE"
+fi
+if [ "$NLEVEL_ENABLED" = true ]; then
+    echo "n_level 调度器已启用: $NLEVEL_WARP_ALLOC_FILE (default=$NLEVEL_DEFAULT_SCHEDULER)"
+fi
+if [ "$GTO_ENABLED" = true ]; then
+    echo "gto 调度器已启用"
+fi
 
 # 显示运行信息
 echo "=========================================="
@@ -227,25 +936,189 @@ echo "Trace路径: $TRACE_PATH"
 echo "日志文件名: $LOG_NAME"
 echo "日志文件: $LOG_FILE"
 echo "CSV文件: $CSV_FILE"
-echo "Issue CSV文件: $ISSUE_FILE"
+echo "L2 CSV文件: $L2_CSV_FILE"
+if [ "$ISSUE_TRACE_ENABLED" = true ]; then
+    echo "Issue CSV文件: $ISSUE_FILE"
+else
+    echo "Issue CSV文件: (disabled)"
+fi
+if [ "$STALL_REASON_PC_STATS_ENABLED" = true ]; then
+    echo "Stall reason/PC stats dir: $RESULT_STALL_REASON_PC_STATS_DIR"
+fi
+echo "HBM分区带宽 CSV文件: $BANDWIDTH_FILE"
+if [ "$ICNT_BW_TRACE_ENABLED" = true ]; then
+    echo "ICNT带宽 CSV文件: $ICNT_BW_FILE"
+fi
+if [ "$L2_BW_TRACE_ENABLED" = true ]; then
+    echo "L2带宽 CSV文件: $L2_BW_FILE"
+fi
+if [ "$ISSUE_TRACE_COMPRESS_EFFECTIVE" != "none" ]; then
+    echo "Issue trace压缩: $ISSUE_TRACE_COMPRESS_EFFECTIVE (level=${ISSUE_TRACE_COMPRESS_LEVEL:-default}, threads=${ISSUE_TRACE_COMPRESS_THREADS})"
+    echo "Issue trace压缩日志: $ISSUE_COMPRESS_LOG"
+fi
+if [ "$NLEVEL_ENABLED" = true ]; then
+    echo "n_level warp alloc: $NLEVEL_WARP_ALLOC_FILE"
+    echo "n_level default scheduler: $NLEVEL_DEFAULT_SCHEDULER"
+fi
+if [ "$GTO_ENABLED" = true ]; then
+    echo "scheduler: gto"
+fi
 echo "=========================================="
 
+# 启动 issue trace 边运行边压缩（必须在 accel-sim 启动前完成，否则 issue_tracer 打开 FIFO 会阻塞）
+if [ "$ISSUE_TRACE_COMPRESS_EFFECTIVE" != "none" ]; then
+    if [ "$ISSUE_TRACE_COMPRESS_EFFECTIVE" = "zstd" ] && ! command -v zstd >/dev/null 2>&1; then
+        echo "错误: 选择了 zstd 压缩但系统未找到 zstd 命令。请安装 zstd 或改用 --issue-trace-compress gzip"
+        exit 1
+    fi
+
+    rm -f "$ISSUE_FIFO_ABS" 2>/dev/null || true
+    mkfifo "$ISSUE_FIFO_ABS"
+
+    rm -f "$ISSUE_FILE" 2>/dev/null || true
+    rm -f "$ISSUE_COMPRESS_LOG" 2>/dev/null || true
+
+    if [ "$ISSUE_TRACE_COMPRESS_EFFECTIVE" = "gzip" ]; then
+        level="${ISSUE_TRACE_COMPRESS_LEVEL:-1}"
+        (
+            gzip -"${level}" -c < "$ISSUE_FIFO_ABS" > "$ISSUE_FILE"
+        ) 2> "$ISSUE_COMPRESS_LOG" &
+        ISSUE_TRACE_COMPRESS_PID=$!
+    else
+        level="${ISSUE_TRACE_COMPRESS_LEVEL:-3}"
+        threads="${ISSUE_TRACE_COMPRESS_THREADS:-1}"
+        (
+            zstd -T"${threads}" -"${level}" -c < "$ISSUE_FIFO_ABS" > "$ISSUE_FILE"
+        ) 2> "$ISSUE_COMPRESS_LOG" &
+        ISSUE_TRACE_COMPRESS_PID=$!
+    fi
+
+    # 常驻写端：防止 issue_tracer 每次 flush 的 open/close 导致压缩器读到 EOF 提前退出
+    exec {ISSUE_TRACE_KEEPFD}> "$ISSUE_FIFO_ABS"
+fi
+
+# 确保 LD_LIBRARY_PATH 等环境已配置（否则可能误加载系统 libcudart 导致符号缺失）
+if [ -z "${ACCELSIM_SETUP_ENVIRONMENT_WAS_RUN:-}" ]; then
+    # shellcheck disable=SC1091
+    source "$BASE_DIR/gpu-simulator/setup_environment.sh" release || {
+        echo "错误: setup_environment.sh 失败，请先在当前 shell 手动执行:"
+        echo "  source gpu-simulator/setup_environment.sh release"
+        exit 1
+    }
+fi
+
 # 运行模拟器
-"$ACCEL_SIM_BIN" \
+(
+    cd "$BASE_DIR" || exit 1
+    "$ACCEL_SIM_BIN" \
     -trace "$TRACE_PATH" \
     -config "$TRACE_CONFIG" \
-    -config "$TEMP_GPGPU_CONFIG" |& tee "$LOG_FILE"
+    -config "$TEMP_GPGPU_CONFIG"
+) |& tee "$LOG_FILE"
 
 # 检查运行结果
 if [ ${PIPESTATUS[0]} -eq 0 ]; then
+    # 结束 issue trace 压缩：关闭常驻写端并等待压缩器退出，确保压缩文件完整
+    if [ "$ISSUE_TRACE_COMPRESS_EFFECTIVE" != "none" ]; then
+        exec {ISSUE_TRACE_KEEPFD}>&- 2>/dev/null || true
+        ISSUE_TRACE_KEEPFD=""
+        if [ -n "${ISSUE_TRACE_COMPRESS_PID:-}" ]; then
+            if ! wait "$ISSUE_TRACE_COMPRESS_PID"; then
+                echo "[warn] issue trace 压缩进程异常退出（仍可检查部分输出）: pid=$ISSUE_TRACE_COMPRESS_PID"
+                echo "[warn] 压缩日志: $ISSUE_COMPRESS_LOG"
+            fi
+            ISSUE_TRACE_COMPRESS_PID=""
+        fi
+        rm -f "$ISSUE_FIFO_ABS" 2>/dev/null || true
+    fi
+
+    # 轻量 stall stats：仿真结束后把固定文件名重命名为带前缀文件名（避免同名文件在 IDE 中难以区分）
+    if [ "$STALL_REASON_PC_STATS_ENABLED" = true ]; then
+        if [ -f "$STALL_REASON_PC_STATS_BREAKDOWN" ]; then
+            mv -f "$STALL_REASON_PC_STATS_BREAKDOWN" "$STALL_REASON_PC_STATS_BREAKDOWN_PREFIXED"
+        fi
+        if [ -f "$STALL_REASON_PC_STATS_HIST" ]; then
+            mv -f "$STALL_REASON_PC_STATS_HIST" "$STALL_REASON_PC_STATS_HIST_PREFIXED"
+        fi
+        if [ "${STALL_REASON_PC_STATS_TOPK:-0}" != "0" ] && [ -f "$STALL_REASON_PC_STATS_TOPK_FILE" ]; then
+            mv -f "$STALL_REASON_PC_STATS_TOPK_FILE" "$STALL_REASON_PC_STATS_TOPK_PREFIXED"
+        fi
+
+        # 更新变量，让后续打印/绘图都使用前缀版路径
+        STALL_REASON_PC_STATS_BREAKDOWN="$STALL_REASON_PC_STATS_BREAKDOWN_PREFIXED"
+        STALL_REASON_PC_STATS_HIST="$STALL_REASON_PC_STATS_HIST_PREFIXED"
+        STALL_REASON_PC_STATS_TOPK_FILE="$STALL_REASON_PC_STATS_TOPK_PREFIXED"
+    fi
+
     echo ""
     echo "=========================================="
     echo "模拟完成！"
     echo "结果已保存到:"
     echo "  日志: $LOG_FILE"
     echo "  CSV: $CSV_FILE"
-    echo "  Issue CSV: $ISSUE_FILE"
+    echo "  L2 CSV: $L2_CSV_FILE"
+    if [ "$ISSUE_TRACE_ENABLED" = true ]; then
+        echo "  Issue trace: $ISSUE_FILE"
+    else
+        echo "  Issue trace: (disabled)"
+    fi
+    if [ "$STALL_REASON_PC_STATS_ENABLED" = true ]; then
+        echo "  Stall reason/PC stats dir: $RESULT_STALL_REASON_PC_STATS_DIR"
+        echo "    - $STALL_REASON_PC_STATS_BREAKDOWN"
+        echo "    - $STALL_REASON_PC_STATS_HIST"
+        if [ "${STALL_REASON_PC_STATS_TOPK:-0}" != "0" ]; then
+            echo "    - $STALL_REASON_PC_STATS_TOPK_FILE"
+        fi
+    else
+        echo "  Stall reason/PC stats: (disabled)"
+    fi
+    echo "  HBM分区带宽 CSV: $BANDWIDTH_FILE"
+    if [ "$ICNT_BW_TRACE_ENABLED" = true ]; then
+        echo "  ICNT带宽 CSV: $ICNT_BW_FILE"
+    fi
+    if [ "$L2_BW_TRACE_ENABLED" = true ]; then
+        echo "  L2带宽 CSV: $L2_BW_FILE"
+    fi
     echo "=========================================="
+
+    if [ "$PLOT_ENABLED" = true ]; then
+        PLOT_SCRIPT="$BASE_DIR/result/plot/run_plots.sh"
+        if [ ! -x "$PLOT_SCRIPT" ]; then
+            echo "[warn] 未找到绘图脚本或不可执行: $PLOT_SCRIPT"
+        else
+            echo ""
+            echo "=========================================="
+            echo "启动绘图..."
+            echo "=========================================="
+            PLOT_ARGS=(--log-name "$LOG_NAME" --format "$PLOT_FORMAT" --backend "$PLOT_BACKEND")
+            if [ "$PLOT_BACKEND" = "local" ]; then
+                if [ "$PLOT_BACKGROUND" = true ]; then
+                    PLOT_ARGS+=(--background)
+                fi
+            else
+                if [ -n "$PLOT_SESSION" ]; then
+                    PLOT_ARGS+=(--session "$PLOT_SESSION")
+                fi
+                if [ "$PLOT_KILL_EXISTING" = true ]; then
+                    PLOT_ARGS+=(--kill-existing)
+                fi
+                if [ "$PLOT_ATTACH" = true ]; then
+                    PLOT_ARGS+=(--attach)
+                fi
+                if [ "$PLOT_TMUX_AUTO_CLOSE" = true ]; then
+                    PLOT_ARGS+=(--auto-close)
+                fi
+                if [ "$PLOT_TMUX_MONITOR" = true ]; then
+                    PLOT_ARGS+=(--monitor)
+                fi
+            fi
+
+            if ! "$PLOT_SCRIPT" "${PLOT_ARGS[@]}"; then
+                echo "[warn] 绘图启动失败（不影响模拟结果）。请手动运行:"
+                echo "  $PLOT_SCRIPT --log-name $LOG_NAME --format $PLOT_FORMAT --backend $PLOT_BACKEND"
+            fi
+        fi
+    fi
 else
     echo ""
     echo "=========================================="

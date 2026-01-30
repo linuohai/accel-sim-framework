@@ -120,6 +120,10 @@ void accel_sim_framework::parse_commandlist() {
 }
 
 void accel_sim_framework::cleanup(unsigned finished_kernel) {
+  if (kernels_info.empty()) {
+    // No kernels to clean up (e.g., only memcpy commands remain), nothing to do.
+    return;
+  }
   trace_kernel_info_t *k = NULL;
   unsigned long long finished_kernel_cuda_stream_id = -1;
   for (unsigned j = 0; j < kernels_info.size(); j++) {
@@ -216,6 +220,7 @@ gpgpu_sim *accel_sim_framework::gpgpu_trace_sim_init_perf_model(
   // system environment variables
   assert(setlocale(LC_NUMERIC, "C"));
   m_gpgpu_context->the_gpgpusim->g_the_gpu_config->init();
+  m_gpgpu_context->the_gpgpusim->g_the_gpu_config->set_trace_model(true);
 
   m_gpgpu_context->the_gpgpusim->g_the_gpu = new trace_gpgpu_sim(
       *(m_gpgpu_context->the_gpgpusim->g_the_gpu_config), m_gpgpu_context);
