@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <bitset>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <iterator>
 #include <map>
@@ -82,6 +83,14 @@ std::unordered_map<CUcontext, std::string> ctx_stats_location;
 std::unordered_map<CUcontext, int> ctx_kernelid;
 std::unordered_map<CUcontext, FILE *> ctx_resultsFile;
 std::unordered_map<CUcontext, std::string> ctx_current_kernel_name;
+
+struct runtime_artifact_info {
+  std::string cubin_file;
+  std::string static_map_file;
+};
+
+std::unordered_map<CUcontext, std::unordered_map<uint64_t, runtime_artifact_info>>
+    ctx_runtime_artifacts;
 
 std::string kernel_ranges = "";
 
@@ -190,6 +199,147 @@ bool should_trace_kernel(uint64_t kernel_id, const std::string &kernel_name) {
     }
   }
   return false;
+}
+
+std::string hex_u32(uint32_t value, int width = 4) {
+  std::stringstream ss;
+  ss << "0x" << std::hex << std::nouppercase << std::setfill('0')
+     << std::setw(width) << value;
+  return ss.str();
+}
+
+std::string hex_u64(uint64_t value, int width = 16) {
+  std::stringstream ss;
+  ss << "0x" << std::hex << std::nouppercase << std::setfill('0')
+     << std::setw(width) << value;
+  return ss.str();
+}
+
+std::string csv_escape(const std::string &value) {
+  std::string escaped = "\"";
+  for (char c : value) {
+    if (c == '"') {
+      escaped += "\"\"";
+    } else {
+      escaped += c;
+    }
+  }
+  escaped += "\"";
+  return escaped;
+}
+
+std::string memory_space_to_string(InstrType::MemorySpace space) {
+  size_t idx = static_cast<size_t>(space);
+  size_t count = sizeof(InstrType::MemorySpaceStr) /
+                 sizeof(InstrType::MemorySpaceStr[0]);
+  if (idx < count) {
+    return InstrType::MemorySpaceStr[idx];
+  }
+  return "UNKNOWN";
+}
+
+std::string runtime_artifact_basename(CUcontext ctx, uint64_t func_addr) {
+  std::stringstream ss;
+  ss << "runtime_func-" << hex_u64(func_addr) << "-ctx_" << hex_u64((uint64_t)ctx);
+  return ss.str();
+}
+
+std::string current_trace_dir() { return user_folder + "/traces/"; }
+
+void dump_runtime_static_map(CUcontext ctx, CUfunction kernel_func,
+                             int binary_version,
+                             const std::string &static_map_filename) {
+  std::ofstream out(current_trace_dir() + static_map_filename);
+  if (!out.is_open()) {
+    std::cerr << "Warning: unable to open runtime static map file "
+              << static_map_filename << std::endl;
+    return;
+  }
+
+  out << "root_kernel_name,root_kernel_addr,binary_version,function_name,"
+         "function_addr,function_role,instr_idx,pc_offset,opcode,opcode_short,"
+         "sass,memory_space,is_load,is_store,line_num,source_file\n";
+
+  std::vector<CUfunction> related_functions =
+      nvbit_get_related_functions(ctx, kernel_func);
+  related_functions.push_back(kernel_func);
+
+  std::unordered_set<uint64_t> seen_function_addrs;
+  const std::string root_kernel_name =
+      std::string(nvbit_get_func_name(ctx, kernel_func, true));
+  const uint64_t root_kernel_addr = nvbit_get_func_addr(ctx, kernel_func);
+
+  for (auto f : related_functions) {
+    uint64_t function_addr = nvbit_get_func_addr(ctx, f);
+    if (!seen_function_addrs.insert(function_addr).second) {
+      continue;
+    }
+
+    const std::string function_name = std::string(nvbit_get_func_name(ctx, f, true));
+    const std::string function_role = (f == kernel_func) ? "kernel" : "related";
+    const auto &instrs = nvbit_get_instrs(ctx, f);
+
+    for (auto instr : instrs) {
+      uint32_t line_num = 0;
+      std::string source_file = "";
+      if (lineinfo) {
+        char *file_name = NULL;
+        char *dir_name = NULL;
+        if (nvbit_get_line_info(ctx, f, instr->getOffset(), &file_name,
+                                &dir_name, &line_num)) {
+          if (dir_name && file_name) {
+            source_file = std::string(dir_name) + "/" + file_name;
+          } else if (file_name) {
+            source_file = std::string(file_name);
+          }
+        }
+      }
+
+      out << csv_escape(root_kernel_name) << ","
+          << csv_escape(hex_u64(root_kernel_addr)) << ","
+          << binary_version << ","
+          << csv_escape(function_name) << ","
+          << csv_escape(hex_u64(function_addr)) << ","
+          << csv_escape(function_role) << ","
+          << instr->getIdx() << ","
+          << csv_escape(hex_u32(instr->getOffset())) << ","
+          << csv_escape(instr->getOpcode()) << ","
+          << csv_escape(instr->getOpcodeShort()) << ","
+          << csv_escape(instr->getSass()) << ","
+          << csv_escape(memory_space_to_string(instr->getMemorySpace())) << ","
+          << (instr->isLoad() ? 1 : 0) << ","
+          << (instr->isStore() ? 1 : 0) << ","
+          << line_num << ","
+          << csv_escape(source_file) << "\n";
+    }
+  }
+}
+
+runtime_artifact_info ensure_runtime_artifacts(CUcontext ctx, CUfunction func,
+                                               int binary_version) {
+  const uint64_t func_addr = nvbit_get_func_addr(ctx, func);
+  auto &artifact_map = ctx_runtime_artifacts[ctx];
+  auto it = artifact_map.find(func_addr);
+  if (it != artifact_map.end()) {
+    return it->second;
+  }
+
+  runtime_artifact_info info;
+  const std::string base = runtime_artifact_basename(ctx, func_addr);
+  info.cubin_file = base + ".cubin";
+  info.static_map_file = base + ".static_map.csv";
+
+  const std::string cubin_path = current_trace_dir() + info.cubin_file;
+  bool dump_ok = nvbit_dump_cubin(ctx, func, cubin_path.c_str());
+  if (!dump_ok && !std::ifstream(cubin_path).good()) {
+    std::cerr << "Warning: failed to dump runtime cubin for function "
+              << nvbit_get_func_name(ctx, func, true) << " to " << cubin_path
+              << std::endl;
+  }
+
+  dump_runtime_static_map(ctx, func, binary_version, info.static_map_file);
+  artifact_map.insert({func_addr, info});
+  return info;
 }
 
 enum address_format { list_all = 0, base_stride = 1, base_delta = 2 };
@@ -530,8 +680,10 @@ static void enter_kernel_launch(CUcontext ctx, CUfunction func,
   std::string trace_filename = user_folder + "/traces/";
   sprintf(buffer, "%s/kernel-%d-ctx_0x%lx.trace", trace_filename.c_str(),
           ctx_kernelid[ctx], ctx);
+  runtime_artifact_info runtime_artifacts;
 
   if (!stop_report) {
+    runtime_artifacts = ensure_runtime_artifacts(ctx, func, binary_version);
     if (!xz_compress_trace) {
       ctx_resultsFile[ctx] = fopen(buffer, "w");
       printf("Writing results to %s\n", buffer);
@@ -554,6 +706,12 @@ static void enter_kernel_launch(CUcontext ctx, CUfunction func,
             shmem_static_nbytes + sharedMemBytes);
     fprintf(ctx_resultsFile[ctx], "-nregs = %d\n", nregs);
     fprintf(ctx_resultsFile[ctx], "-binary version = %d\n", binary_version);
+    fprintf(ctx_resultsFile[ctx], "-function addr = %s\n",
+            hex_u64(nvbit_get_func_addr(ctx, func)).c_str());
+    fprintf(ctx_resultsFile[ctx], "-runtime cubin = %s\n",
+            runtime_artifacts.cubin_file.c_str());
+    fprintf(ctx_resultsFile[ctx], "-runtime static map = %s\n",
+            runtime_artifacts.static_map_file.c_str());
     fprintf(ctx_resultsFile[ctx], "-cuda stream id = %lu\n", (uint64_t)hStream);
     fprintf(ctx_resultsFile[ctx], "-shmem base_addr = 0x%016lx\n",
             (uint64_t)nvbit_get_shmem_base_addr(ctx));
