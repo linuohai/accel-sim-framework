@@ -23,3 +23,8 @@ result/n-level-agent/
 result/issue_trace/plot/script/__pycache__
 result/issue_trace/plot/script/_pydeps
 *.svg
+*.gz
+*.pyc
+analyze/*
+result/*
+skills/*.bashrc
