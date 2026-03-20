@@ -1,0 +1,20 @@
+{
+  "bundle_id": "cta1_w8_wu8_ima16_tail8_dl64_seed1_gap1",
+  "trace_key": "ima_tiny_case",
+  "device_num": 0,
+  "plots_mode": "gantt",
+  "prefetch_mode": "baseline",
+  "scheduler_mode": "lrr",
+  "base_config": "SM80_A100_1SM_NOSUBCORE",
+  "prefetch_config": "SM80_A100_1SM_NOSUBCORE_IMAPF",
+  "params": {
+    "ctas": 1,
+    "warps_per_cta": 8,
+    "warmup_iters": 8,
+    "ima_iters": 16,
+    "tail_iters": 8,
+    "data_lines": 64,
+    "mapping_seed": 1,
+    "compute_gap": 1
+  }
+}

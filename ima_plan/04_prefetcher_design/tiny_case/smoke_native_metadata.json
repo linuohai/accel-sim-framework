@@ -1,0 +1,71 @@
+{
+  "benchmark": {
+    "name": "ima_tiny_case",
+    "version": 1
+  },
+  "args": {
+    "ctas": 1,
+    "warps_per_cta": 8,
+    "warmup_iters": 16,
+    "ima_iters": 64,
+    "tail_iters": 16,
+    "data_lines": 128,
+    "mapping_seed": 1,
+    "compute_gap": 2,
+    "metadata_out": "/workspace/prefetch/ima_plan/04_prefetcher_design/tiny_case/smoke_native_metadata.json"
+  },
+  "launch": {
+    "ctas": 1,
+    "warps_per_cta": 8,
+    "threads_per_cta": 256,
+    "total_threads": 256
+  },
+  "phases": {
+    "warmup": 16,
+    "ima": 64,
+    "tail": 16
+  },
+  "arrays": {
+  "warmup": {
+    "device_base_hex": "0x7ff5eb200000",
+    "bytes": 16384,
+    "element_bytes": 4
+  },
+  "index": {
+    "device_base_hex": "0x7ff5eb204000",
+    "bytes": 65536,
+    "element_bytes": 4
+  },
+  "data": {
+    "device_base_hex": "0x7ff5eb214000",
+    "bytes": 16384,
+    "element_bytes": 4
+  },
+  "tail": {
+    "device_base_hex": "0x7ff5eb218000",
+    "bytes": 16384,
+    "element_bytes": 4
+  },
+  "output": {
+    "device_base_hex": "0x7ff5eb21c000",
+    "bytes": 1024,
+    "element_bytes": 4
+  }
+  },
+  "mapping": {
+    "seed": 1,
+    "data_lines": 128,
+    "elements_per_line": 32,
+    "compute_gap": 2,
+    "line_bytes": 128,
+    "type": "deterministic_line_permutation",
+    "permutation_step": 3
+  },
+  "checksums": {
+    "warmup_sum_u64": 63645696,
+    "index_sum_u64": 33292288,
+    "data_sum_u64": 4402557900800,
+    "tail_sum_u64": 62752768,
+    "output_sum_u64": 282779648282
+  }
+}

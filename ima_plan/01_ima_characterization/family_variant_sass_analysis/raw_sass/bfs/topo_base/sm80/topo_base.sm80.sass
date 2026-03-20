@@ -1,0 +1,211 @@
+	.headerflags	@"EF_CUDA_TEXMODE_UNIFIED EF_CUDA_64BIT_ADDRESS EF_CUDA_SM80 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM80)"
+	.elftype	@"ET_EXEC"
+
+
+//--------------------- .text._Z6updateiPiPbS_S0_ --------------------------
+	.section	.text._Z6updateiPiPbS_S0_,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+
+
+
+
+        .global         _Z6updateiPiPbS_S0_
+        .type           _Z6updateiPiPbS_S0_,@function
+        .size           _Z6updateiPiPbS_S0_,(.L_x_6 - _Z6updateiPiPbS_S0_)
+        .other          _Z6updateiPiPbS_S0_,@"STO_CUDA_ENTRY STV_DEFAULT"
+_Z6updateiPiPbS_S0_:
+.text._Z6updateiPiPbS_S0_:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 24
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 25
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   S2R R3, SR_TID.X ;
+        /*0030*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 26
+        /*0040*/                   ISETP.GE.AND P0, PT, R0, c[0x0][0x160], PT ;
+        /*0050*/               @P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 27
+        /*0060*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x4 ;
+        /*0070*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0080*/                   IMAD.WIDE R2, R0, R3, c[0x0][0x168] ;
+        /*0090*/                   LDG.E R2, [R2.64] ;
+        /*00a0*/                   ISETP.NE.AND P0, PT, R2, 0x3b9aca00, PT ;
+        /*00b0*/              @!P0 EXIT ;
+        /*00c0*/                   SHF.R.S32.HI R5, RZ, 0x1f, R0 ;
+        /*00d0*/                   IADD3 R2, P0, R0, c[0x0][0x170], RZ ;
+        /*00e0*/                   IADD3.X R3, R5, c[0x0][0x174], RZ, P0, !PT ;
+        /*00f0*/                   LDG.E.U8 R4, [R2.64] ;
+        /*0100*/                   ISETP.NE.AND P0, PT, R4, RZ, PT ;
+        /*0110*/               @P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 29
+        /*0120*/                   LEA R6, P0, R0.reuse, c[0x0][0x178], 0x2 ;
+        /*0130*/                   IMAD.MOV.U32 R8, RZ, RZ, 0x1 ;
+        /*0140*/                   IMAD.MOV.U32 R9, RZ, RZ, 0x1 ;
+        /*0150*/                   LEA.HI.X R7, R0, c[0x0][0x17c], R5, 0x2, P0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 30
+        /*0160*/                   IMAD.MOV.U32 R4, RZ, RZ, c[0x0][0x180] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 28
+        /*0170*/                   STG.E.U8 [R2.64], R8 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 30
+        /*0180*/                   IMAD.MOV.U32 R5, RZ, RZ, c[0x0][0x184] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 29
+        /*0190*/                   STG.E [R6.64], R9 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 30
+        /*01a0*/                   STG.E.U8 [R4.64], R8 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 33
+        /*01b0*/                   EXIT ;
+.L_x_0:
+        /*01c0*/                   BRA `(.L_x_0);
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+        /*0200*/                   NOP;
+        /*0210*/                   NOP;
+        /*0220*/                   NOP;
+        /*0230*/                   NOP;
+        /*0240*/                   NOP;
+        /*0250*/                   NOP;
+        /*0260*/                   NOP;
+        /*0270*/                   NOP;
+.L_x_6:
+
+
+//--------------------- .text._Z8bfs_stepiPKiS0_PiS1_i --------------------------
+	.section	.text._Z8bfs_stepiPKiS0_PiS1_i,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=20"
+	.align	128
+
+
+
+
+        .global         _Z8bfs_stepiPKiS0_PiS1_i
+        .type           _Z8bfs_stepiPKiS0_PiS1_i,@function
+        .size           _Z8bfs_stepiPKiS0_PiS1_i,(.L_x_7 - _Z8bfs_stepiPKiS0_PiS1_i)
+        .other          _Z8bfs_stepiPKiS0_PiS1_i,@"STO_CUDA_ENTRY STV_DEFAULT"
+_Z8bfs_stepiPKiS0_PiS1_i:
+.text._Z8bfs_stepiPKiS0_PiS1_i:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 9
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 10
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   S2R R3, SR_TID.X ;
+        /*0030*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 11
+        /*0040*/                   ISETP.GE.AND P0, PT, R0, c[0x0][0x160], PT ;
+        /*0050*/               @P0 EXIT ;
+        /*0060*/                   IMAD.MOV.U32 R9, RZ, RZ, 0x4 ;
+        /*0070*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0080*/                   IMAD.WIDE R2, R0, R9, c[0x0][0x178] ;
+        /*0090*/                   LDG.E R2, [R2.64] ;
+        /*00a0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*00b0*/              @!P0 EXIT ;
+        /*00c0*/                   SHF.R.S32.HI R3, RZ, 0x1f, R0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 12
+        /*00d0*/                   LEA R2, P0, R0, c[0x0][0x168], 0x2 ;
+        /*00e0*/                   LEA.HI.X R3, R0, c[0x0][0x16c], R3, 0x2, P0 ;
+        /*00f0*/                   LDG.E R5, [R2.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 13
+        /*0100*/                   LDG.E R0, [R2.64+0x4] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 14
+        /*0110*/                   ISETP.GT.AND P0, PT, R0, R5, PT ;
+        /*0120*/              @!P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 16
+        /*0130*/                   IMAD.IADD R2, R0, 0x1, -R5 ;
+        /*0140*/                   LOP3.LUT R3, RZ, R5, RZ, 0x33, !PT ;
+        /*0150*/                   BSSY B0, `(.L_x_1) ;
+        /*0160*/                   LOP3.LUT P1, R4, R2, 0x3, RZ, 0xc0, !PT ;
+        /*0170*/                   IMAD.IADD R3, R0, 0x1, R3 ;
+        /*0180*/                   ISETP.GE.U32.AND P0, PT, R3, 0x3, PT ;
+        /*0190*/              @!P1 BRA `(.L_x_2) ;
+        /*01a0*/                   IMAD.WIDE R2, R5, R9, c[0x0][0x170] ;
+.L_x_3:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 15
+        /*01b0*/                   LDG.E R6, [R2.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 16
+        /*01c0*/                   IMAD.MOV.U32 R9, RZ, RZ, 0x4 ;
+        /*01d0*/                   IMAD.WIDE R6, R6, R9, c[0x0][0x180] ;
+        /*01e0*/                   LDG.E R8, [R6.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 14
+        /*01f0*/                   IADD3 R4, R4, -0x1, RZ ;
+        /*0200*/                   IADD3 R5, R5, 0x1, RZ ;
+        /*0210*/                   ISETP.NE.AND P2, PT, R4, RZ, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 16
+        /*0220*/                   ISETP.NE.AND P1, PT, R8, 0x3b9aca00, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 18
+        /*0230*/              @!P1 IMAD.MOV.U32 R11, RZ, RZ, c[0x0][0x188] ;
+        /*0240*/              @!P1 STG.E [R6.64], R11 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 14
+        /*0250*/                   IADD3 R2, P1, R2, 0x4, RZ ;
+        /*0260*/                   IADD3.X R3, RZ, R3, RZ, P1, !PT ;
+        /*0270*/               @P2 BRA `(.L_x_3) ;
+.L_x_2:
+        /*0280*/                   BSYNC B0 ;
+.L_x_1:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 16
+        /*0290*/              @!P0 EXIT ;
+        /*02a0*/                   IMAD.WIDE R2, R5, R9, c[0x0][0x170] ;
+.L_x_4:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 15
+        /*02b0*/                   LDG.E R6, [R2.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 16
+        /*02c0*/                   IMAD.MOV.U32 R13, RZ, RZ, 0x4 ;
+        /*02d0*/                   IMAD.WIDE R6, R6, R13, c[0x0][0x180] ;
+        /*02e0*/                   LDG.E R4, [R6.64] ;
+        /*02f0*/                   ISETP.NE.AND P0, PT, R4, 0x3b9aca00, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 18
+        /*0300*/              @!P0 IMAD.MOV.U32 R15, RZ, RZ, c[0x0][0x188] ;
+        /*0310*/              @!P0 STG.E [R6.64], R15 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 15
+        /*0320*/                   LDG.E R8, [R2.64+0x4] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 16
+        /*0330*/                   IMAD.WIDE R8, R8, R13, c[0x0][0x180] ;
+        /*0340*/                   LDG.E R4, [R8.64] ;
+        /*0350*/                   ISETP.NE.AND P0, PT, R4, 0x3b9aca00, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 18
+        /*0360*/              @!P0 IMAD.MOV.U32 R17, RZ, RZ, c[0x0][0x188] ;
+        /*0370*/              @!P0 STG.E [R8.64], R17 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 15
+        /*0380*/                   LDG.E R10, [R2.64+0x8] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 16
+        /*0390*/                   IMAD.WIDE R10, R10, R13, c[0x0][0x180] ;
+        /*03a0*/                   LDG.E R4, [R10.64] ;
+        /*03b0*/                   ISETP.NE.AND P0, PT, R4, 0x3b9aca00, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 18
+        /*03c0*/              @!P0 MOV R15, c[0x0][0x188] ;
+        /*03d0*/              @!P0 STG.E [R10.64], R15 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 15
+        /*03e0*/                   LDG.E R6, [R2.64+0xc] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 16
+        /*03f0*/                   IMAD.WIDE R6, R6, R13, c[0x0][0x180] ;
+        /*0400*/                   LDG.E R4, [R6.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 14
+        /*0410*/                   IADD3 R5, R5, 0x4, RZ ;
+        /*0420*/                   IADD3 R2, P1, R2, 0x10, RZ ;
+        /*0430*/                   IMAD.X R3, RZ, RZ, R3, P1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 16
+        /*0440*/                   ISETP.NE.AND P0, PT, R4, 0x3b9aca00, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 18
+        /*0450*/              @!P0 IMAD.MOV.U32 R9, RZ, RZ, c[0x0][0x188] ;
+        /*0460*/              @!P0 STG.E [R6.64], R9 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 14
+        /*0470*/                   ISETP.GE.AND P0, PT, R5, R0, PT ;
+        /*0480*/              @!P0 BRA `(.L_x_4) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/topo_base.cu", line 22
+        /*0490*/                   EXIT ;
+.L_x_5:
+        /*04a0*/                   BRA `(.L_x_5);
+        /*04b0*/                   NOP;
+        /*04c0*/                   NOP;
+        /*04d0*/                   NOP;
+        /*04e0*/                   NOP;
+        /*04f0*/                   NOP;
+        /*0500*/                   NOP;
+        /*0510*/                   NOP;
+        /*0520*/                   NOP;
+        /*0530*/                   NOP;
+        /*0540*/                   NOP;
+        /*0550*/                   NOP;
+        /*0560*/                   NOP;
+        /*0570*/                   NOP;
+.L_x_7:

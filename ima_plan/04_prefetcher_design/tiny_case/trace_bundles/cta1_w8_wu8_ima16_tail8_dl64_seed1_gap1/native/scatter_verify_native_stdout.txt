@@ -1,0 +1,1 @@
+ima_tiny_case completed ctas=1 warps_per_cta=8 total_threads=256 warmup_iters=8 ima_iters=16 tail_iters=8 data_lines=64 mapping_seed=1 compute_gap=1 checksum=282289449518 metadata=/workspace/prefetch/ima_plan/04_prefetcher_design/tiny_case/trace_bundles/cta1_w8_wu8_ima16_tail8_dl64_seed1_gap1/native/scatter_verify_native_metadata.json

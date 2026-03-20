@@ -1,0 +1,4 @@
+/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/merrill.cu:10:10: fatal error: b40c_test_util.h: No such file or directory
+   10 | #include <b40c_test_util.h>
+      |          ^~~~~~~~~~~~~~~~~~
+compilation terminated.

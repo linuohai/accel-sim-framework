@@ -1,0 +1,5 @@
+/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/partition.cu(209): error: argument of type "IndexT *" (aka "int *") is incompatible with parameter of type "const uint64_t *"
+   SpmvSerial(m, nnz, h_Ap, h_Aj, h_Ax, h_x, y_copy);
+                      ^
+
+1 error detected in the compilation of "/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/partition.cu".

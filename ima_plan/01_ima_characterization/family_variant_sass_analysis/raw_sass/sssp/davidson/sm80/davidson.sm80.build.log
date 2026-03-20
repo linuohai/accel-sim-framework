@@ -1,0 +1,193 @@
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(66): error: identifier "bellman_ford" is undefined
+   int max_blocks = maximum_residency(bellman_ford, nthreads, 0);
+                                      ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(72): error: identifier "Buckets" is undefined
+   Buckets<FarPile> m_b(source, 1, delta, nnz, m);
+   ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(72): error: identifier "FarPile" is undefined
+   Buckets<FarPile> m_b(source, 1, delta, nnz, m);
+           ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(72): error: identifier "delta" is undefined
+   Buckets<FarPile> m_b(source, 1, delta, nnz, m);
+                                   ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(72): error: identifier "m_b" is undefined
+   Buckets<FarPile> m_b(source, 1, delta, nnz, m);
+                    ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(82): error: identifier "nodeLock" is undefined
+   cudaMemset(nodeLock, 0xFF, m * sizeof(unsigned int));
+              ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(83): error: identifier "minBucket" is undefined
+   cudaMemset(minBucket, 0xFF, m * sizeof(unsigned int));
+              ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(94): error: identifier "relaxVertexFront" is undefined
+     relaxVertexFront<CT, WT, FarPile, true, BFSType, NT>
+     ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(94): error: identifier "CT" is undefined
+     relaxVertexFront<CT, WT, FarPile, true, BFSType, NT>
+                      ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(94): error: identifier "WT" is undefined
+     relaxVertexFront<CT, WT, FarPile, true, BFSType, NT>
+                          ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(94): error: identifier "BFSType" is undefined
+     relaxVertexFront<CT, WT, FarPile, true, BFSType, NT>
+                                             ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(94): error: identifier "NT" is undefined
+     relaxVertexFront<CT, WT, FarPile, true, BFSType, NT>
+                                                      ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(95): error: identifier "d_s" is undefined
+      (d_s, m_b, csr, workFront, sizeA, context, step);
+       ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(95): error: identifier "csr" is undefined
+      (d_s, m_b, csr, workFront, sizeA, context, step);
+                 ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(95): error: identifier "context" is undefined
+      (d_s, m_b, csr, workFront, sizeA, context, step);
+                                        ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(102): error: identifier "splitWork" is undefined
+      splitWork<CT, WT, NT, true, FarPile>(d_s, m_b, d_s.gpuOut.vertex,
+      ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(102): error: identifier "CT" is undefined
+      splitWork<CT, WT, NT, true, FarPile>(d_s, m_b, d_s.gpuOut.vertex,
+                ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(102): error: identifier "WT" is undefined
+      splitWork<CT, WT, NT, true, FarPile>(d_s, m_b, d_s.gpuOut.vertex,
+                    ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(102): error: identifier "NT" is undefined
+      splitWork<CT, WT, NT, true, FarPile>(d_s, m_b, d_s.gpuOut.vertex,
+                        ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(102): error: identifier "d_s" is undefined
+      splitWork<CT, WT, NT, true, FarPile>(d_s, m_b, d_s.gpuOut.vertex,
+                                           ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(103): error: identifier "context" is undefined
+        d_s.gpuOut.bucketId, workFront, farBucket[0]-1, farBucket[0], sizeA, farPile, context);
+                                                                                      ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(106): error: identifier "compactSet" is undefined
+      compactSet<CT, WT, NT, false, true>(d_s, d_s.gpuOut.vertex, 
+      ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(106): error: identifier "CT" is undefined
+      compactSet<CT, WT, NT, false, true>(d_s, d_s.gpuOut.vertex, 
+                 ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(106): error: identifier "WT" is undefined
+      compactSet<CT, WT, NT, false, true>(d_s, d_s.gpuOut.vertex, 
+                     ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(106): error: identifier "NT" is undefined
+      compactSet<CT, WT, NT, false, true>(d_s, d_s.gpuOut.vertex, 
+                         ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(106): error: identifier "d_s" is undefined
+      compactSet<CT, WT, NT, false, true>(d_s, d_s.gpuOut.vertex, 
+                                          ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(107): error: identifier "context" is undefined
+                           , d_s.gpuOut.validFlag, workFront, context, 0);
+                                                              ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(116): error: identifier "splitWork" is undefined
+      splitWork<CT, WT, NT, true>(d_s, m_b, d_s.gpuOut.vertex,
+      ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(116): error: identifier "CT" is undefined
+      splitWork<CT, WT, NT, true>(d_s, m_b, d_s.gpuOut.vertex,
+                ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(116): error: identifier "WT" is undefined
+      splitWork<CT, WT, NT, true>(d_s, m_b, d_s.gpuOut.vertex,
+                    ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(116): error: identifier "NT" is undefined
+      splitWork<CT, WT, NT, true>(d_s, m_b, d_s.gpuOut.vertex,
+                        ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(116): error: identifier "d_s" is undefined
+      splitWork<CT, WT, NT, true>(d_s, m_b, d_s.gpuOut.vertex,
+                                  ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(117): error: identifier "context" is undefined
+        d_s.gpuOut.bucketId, workFront, farBucket[0]-1, farBucket[0], sizeA, farPile, context);
+                                                                                      ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(119): error: identifier "NT" is undefined
+      int nB = (workFront + NT - 1)/NT;
+                            ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(120): error: identifier "d_s" is undefined
+      compactFlags<<<nB, NT>>> (d_s.gpuOut.validFlag, d_s.gpuOut.vertex, m_b.gpu.vertex, workFront);
+                                ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(120): error: identifier "compactFlags" is undefined
+      compactFlags<<<nB, NT>>> (d_s.gpuOut.validFlag, d_s.gpuOut.vertex, m_b.gpu.vertex, workFront);
+      ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(131): error: identifier "splitWork" is undefined
+       splitWork<CT, WT, NT, FarPile>
+       ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(131): error: identifier "CT" is undefined
+       splitWork<CT, WT, NT, FarPile>
+                 ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(131): error: identifier "WT" is undefined
+       splitWork<CT, WT, NT, FarPile>
+                     ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(131): error: identifier "NT" is undefined
+       splitWork<CT, WT, NT, FarPile>
+                         ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(132): error: identifier "d_s" is undefined
+        (d_s, m_b, m_b.gpu.farVertex, m_b.gpu.farBuckets, d_s.gpuOut.vertexTemp,
+         ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(135): error: identifier "context" is undefined
+         d_s.gpuOut.bucketIdTemp, m_b.farSize, 0, sizeA, context);
+                                                         ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(137): error: identifier "splitWork" is undefined
+       splitWork<CT, WT, NT, FarPile>
+       ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(137): error: identifier "CT" is undefined
+       splitWork<CT, WT, NT, FarPile>
+                 ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(137): error: identifier "WT" is undefined
+       splitWork<CT, WT, NT, FarPile>
+                     ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(137): error: identifier "NT" is undefined
+       splitWork<CT, WT, NT, FarPile>
+                         ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(138): error: identifier "d_s" is undefined
+        (d_s, m_b, d_s.gpuOut.vertexTemp, d_s.gpuOut.bucketIdTemp, m_b.gpu.farVertex,
+         ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu(140): error: identifier "context" is undefined
+         m_b.num_elements, 0, m_b.gpu.farVertex, m_b.gpu.farBuckets, m_b.farSize, 0, sizeA, context);
+                                                                                            ^
+
+48 errors detected in the compilation of "/workspace/prefetch/gpu-app-collection/gardenia/src/sssp/davidson.cu".

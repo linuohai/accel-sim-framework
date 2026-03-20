@@ -1,0 +1,1 @@
+ima_tiny_case completed ctas=1 warps_per_cta=8 total_threads=256 warmup_iters=16 ima_iters=64 tail_iters=16 data_lines=128 mapping_seed=1 compute_gap=2 checksum=282779648282 metadata=/workspace/prefetch/ima_plan/04_prefetcher_design/tiny_case/smoke_native_metadata.json

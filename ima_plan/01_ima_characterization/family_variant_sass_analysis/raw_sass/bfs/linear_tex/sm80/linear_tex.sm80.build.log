@@ -1,0 +1,50 @@
+/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/linear_tex.cu(10): error: texture is not a template
+  texture <int, 1, cudaReadModeElementType> row_offsets;
+  ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/linear_tex.cu(11): error: texture is not a template
+  texture <int, 1, cudaReadModeElementType> column_indices;
+  ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/linear_tex.cu(17): error: no instance of overloaded function "tex1Dfetch" matches the argument list
+            argument types are: (<error-type>, int)
+    int row_begin = tex1Dfetch(row_offsets, src);
+                    ^
+/usr/local/cuda/include/texture_indirect_functions.h(115): note #3327-D: candidate function template "tex1Dfetch<T>(cudaTextureObject_t, int)" failed deduction
+  static __attribute__((device)) T tex1Dfetch(cudaTextureObject_t texObject, int x)
+                                   ^
+/usr/local/cuda/include/texture_indirect_functions.h(109): note #3322-D: number of parameters of function template "tex1Dfetch(T *, cudaTextureObject_t, int)" does not match the call
+  static __attribute__((device)) typename __nv_itex_trait<T>::type tex1Dfetch(T *ptr, cudaTextureObject_t obj, int x)
+                                                                   ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/linear_tex.cu(18): error: no instance of overloaded function "tex1Dfetch" matches the argument list
+            argument types are: (<error-type>, int)
+    int row_end = tex1Dfetch(row_offsets, src + 1);
+                  ^
+/usr/local/cuda/include/texture_indirect_functions.h(115): note #3327-D: candidate function template "tex1Dfetch<T>(cudaTextureObject_t, int)" failed deduction
+  static __attribute__((device)) T tex1Dfetch(cudaTextureObject_t texObject, int x)
+                                   ^
+/usr/local/cuda/include/texture_indirect_functions.h(109): note #3322-D: number of parameters of function template "tex1Dfetch(T *, cudaTextureObject_t, int)" does not match the call
+  static __attribute__((device)) typename __nv_itex_trait<T>::type tex1Dfetch(T *ptr, cudaTextureObject_t obj, int x)
+                                                                   ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/linear_tex.cu(20): error: no instance of overloaded function "tex1Dfetch" matches the argument list
+            argument types are: (<error-type>, int)
+     int dst = tex1Dfetch(column_indices, offset);
+               ^
+/usr/local/cuda/include/texture_indirect_functions.h(115): note #3327-D: candidate function template "tex1Dfetch<T>(cudaTextureObject_t, int)" failed deduction
+  static __attribute__((device)) T tex1Dfetch(cudaTextureObject_t texObject, int x)
+                                   ^
+/usr/local/cuda/include/texture_indirect_functions.h(109): note #3322-D: number of parameters of function template "tex1Dfetch(T *, cudaTextureObject_t, int)" does not match the call
+  static __attribute__((device)) typename __nv_itex_trait<T>::type tex1Dfetch(T *ptr, cudaTextureObject_t obj, int x)
+                                                                   ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/linear_tex.cu(48): error: identifier "cudaBindTexture" is undefined
+   { cudaError err = cudaBindTexture(0, row_offsets, d_row_offsets, (m + 1) * sizeof(int)); if( cudaSuccess != err) { fprintf(
+                     ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/linear_tex.cu(49): error: identifier "cudaBindTexture" is undefined
+   { cudaError err = cudaBindTexture(0, column_indices, d_column_indices, nnz * sizeof(int)); if( cudaSuccess != err) { fprintf(
+                     ^
+
+7 errors detected in the compilation of "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/linear_tex.cu".

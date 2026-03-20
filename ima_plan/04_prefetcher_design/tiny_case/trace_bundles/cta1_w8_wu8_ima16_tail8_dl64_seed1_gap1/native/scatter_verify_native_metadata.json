@@ -1,0 +1,74 @@
+{
+  "benchmark": {
+    "name": "ima_tiny_case",
+    "version": 1
+  },
+  "args": {
+    "ctas": 1,
+    "warps_per_cta": 8,
+    "warmup_iters": 8,
+    "ima_iters": 16,
+    "tail_iters": 8,
+    "data_lines": 64,
+    "mapping_seed": 1,
+    "compute_gap": 1,
+    "metadata_out": "/workspace/prefetch/ima_plan/04_prefetcher_design/tiny_case/trace_bundles/cta1_w8_wu8_ima16_tail8_dl64_seed1_gap1/native/scatter_verify_native_metadata.json"
+  },
+  "launch": {
+    "ctas": 1,
+    "warps_per_cta": 8,
+    "threads_per_cta": 256,
+    "total_threads": 256
+  },
+  "phases": {
+    "warmup": 8,
+    "ima": 16,
+    "tail": 8
+  },
+  "arrays": {
+  "warmup": {
+    "device_base_hex": "0x7fb139200000",
+    "bytes": 8192,
+    "element_bytes": 4
+  },
+  "index": {
+    "device_base_hex": "0x7fb139202000",
+    "bytes": 16384,
+    "element_bytes": 4
+  },
+  "data": {
+    "device_base_hex": "0x7fb139206000",
+    "bytes": 8192,
+    "element_bytes": 4
+  },
+  "tail": {
+    "device_base_hex": "0x7fb139208000",
+    "bytes": 8192,
+    "element_bytes": 4
+  },
+  "output": {
+    "device_base_hex": "0x7fb13920a000",
+    "bytes": 1024,
+    "element_bytes": 4
+  }
+  },
+  "mapping": {
+    "seed": 1,
+    "data_lines": 64,
+    "elements_per_line": 32,
+    "compute_gap": 1,
+    "line_bytes": 128,
+    "type": "deterministic_scatter_mix",
+    "line_step_lane": 3,
+    "line_step_warp": 9,
+    "line_step_iter": 17,
+    "element_step": 25
+  },
+  "checksums": {
+    "warmup_sum_u64": 31708160,
+    "index_sum_u64": 4188160,
+    "data_sum_u64": 2200928726016,
+    "tail_sum_u64": 30721024,
+    "output_sum_u64": 282289449518
+  }
+}

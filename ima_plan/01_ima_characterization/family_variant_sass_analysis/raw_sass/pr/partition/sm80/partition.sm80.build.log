@@ -1,0 +1,5 @@
+ptxas /tmp/tmpxft_00233c33_00000000-6_partition.ptx, line 453; error   : Instruction 'vote' without '.sync' is not supported on .target sm_70 and higher from PTX ISA version 6.4
+ptxas /tmp/tmpxft_00233c33_00000000-6_partition.ptx, line 775; error   : Instruction 'vote' without '.sync' is not supported on .target sm_70 and higher from PTX ISA version 6.4
+ptxas /tmp/tmpxft_00233c33_00000000-6_partition.ptx, line 1256; error   : Instruction 'vote' without '.sync' is not supported on .target sm_70 and higher from PTX ISA version 6.4
+ptxas /tmp/tmpxft_00233c33_00000000-6_partition.ptx, line 1578; error   : Instruction 'vote' without '.sync' is not supported on .target sm_70 and higher from PTX ISA version 6.4
+ptxas fatal   : Ptx assembly aborted due to errors

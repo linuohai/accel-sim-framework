@@ -1,0 +1,28 @@
+/workspace/prefetch/gpu-app-collection/gardenia/src/pr/delta.cu(164): error: namespace "thrust" has no member "device"
+   thrust::sequence(thrust::device, frontier.d_queue, frontier.d_queue + m);
+                            ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/pr/delta.cu(164): error: no instance of overloaded function "thrust::sequence" matches the argument list
+            argument types are: (<error-type>, int *, int *)
+   thrust::sequence(thrust::device, frontier.d_queue, frontier.d_queue + m);
+   ^
+/usr/local/cuda/include/thrust/detail/sequence.inl(39): note #3327-D: candidate function template "thrust::THRUST_200500_800_NS::sequence(const thrust::THRUST_200500_800_NS::detail::execution_policy_base<DerivedPolicy> &, ForwardIterator, ForwardIterator)" failed deduction
+  sequence(const thrust::detail::execution_policy_base<DerivedPolicy>& exec, ForwardIterator first, ForwardIterator last)
+  ^
+/usr/local/cuda/include/thrust/detail/sequence.inl(68): note #3322-D: number of parameters of function template "thrust::THRUST_200500_800_NS::sequence(ForwardIterator, ForwardIterator)" does not match the call
+  void sequence(ForwardIterator first, ForwardIterator last)
+       ^
+/usr/local/cuda/include/thrust/detail/sequence.inl(47): note #3322-D: number of parameters of function template "thrust::THRUST_200500_800_NS::sequence(const thrust::THRUST_200500_800_NS::detail::execution_policy_base<DerivedPolicy> &, ForwardIterator, ForwardIterator, T)" does not match the call
+                   void sequence(
+                        ^
+/usr/local/cuda/include/thrust/detail/sequence.inl(80): note #3327-D: candidate function template "thrust::THRUST_200500_800_NS::sequence(ForwardIterator, ForwardIterator, T)" failed deduction
+  void sequence(ForwardIterator first, ForwardIterator last, T init)
+       ^
+/usr/local/cuda/include/thrust/detail/sequence.inl(56): note #3322-D: number of parameters of function template "thrust::THRUST_200500_800_NS::sequence(const thrust::THRUST_200500_800_NS::detail::execution_policy_base<DerivedPolicy> &, ForwardIterator, ForwardIterator, T, T)" does not match the call
+                   void sequence(
+                        ^
+/usr/local/cuda/include/thrust/detail/sequence.inl(92): note #3322-D: number of parameters of function template "thrust::THRUST_200500_800_NS::sequence(ForwardIterator, ForwardIterator, T, T)" does not match the call
+  void sequence(ForwardIterator first, ForwardIterator last, T init, T step)
+       ^
+
+2 errors detected in the compilation of "/workspace/prefetch/gpu-app-collection/gardenia/src/pr/delta.cu".

@@ -1,0 +1,1457 @@
+	.headerflags	@"EF_CUDA_TEXMODE_UNIFIED EF_CUDA_64BIT_ADDRESS EF_CUDA_SM80 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM80)"
+	.elftype	@"ET_EXEC"
+
+
+//--------------------- .text._ZN3cub17CUB_200500_800_NS11EmptyKernelIvEEvv --------------------------
+	.section	.text._ZN3cub17CUB_200500_800_NS11EmptyKernelIvEEvv,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=4"
+	.align	128
+
+
+
+
+        .global         _ZN3cub17CUB_200500_800_NS11EmptyKernelIvEEvv
+        .type           _ZN3cub17CUB_200500_800_NS11EmptyKernelIvEEvv,@function
+        .size           _ZN3cub17CUB_200500_800_NS11EmptyKernelIvEEvv,(.L_x_76 - _ZN3cub17CUB_200500_800_NS11EmptyKernelIvEEvv)
+        .other          _ZN3cub17CUB_200500_800_NS11EmptyKernelIvEEvv,@"STO_CUDA_ENTRY STV_DEFAULT"
+_ZN3cub17CUB_200500_800_NS11EmptyKernelIvEEvv:
+.text._ZN3cub17CUB_200500_800_NS11EmptyKernelIvEEvv:
+	//## File "/usr/local/cuda/include/cub/util_device.cuh", line 88
+        /*0000*/                   MOV R1, c[0x0][0x28] ;
+	//## File "/usr/local/cuda/include/cub/util_device.cuh", line 89
+        /*0010*/                   EXIT ;
+.L_x_0:
+        /*0020*/                   BRA `(.L_x_0);
+        /*0030*/                   NOP;
+        /*0040*/                   NOP;
+        /*0050*/                   NOP;
+        /*0060*/                   NOP;
+        /*0070*/                   NOP;
+        /*0080*/                   NOP;
+        /*0090*/                   NOP;
+        /*00a0*/                   NOP;
+        /*00b0*/                   NOP;
+        /*00c0*/                   NOP;
+        /*00d0*/                   NOP;
+        /*00e0*/                   NOP;
+        /*00f0*/                   NOP;
+.L_x_76:
+
+
+//--------------------- .text._Z10bfs_kerneliPiS_S_9Worklist2S0_i13GlobalBarrier --------------------------
+	.section	.text._Z10bfs_kerneliPiS_S_9Worklist2S0_i13GlobalBarrier,"ax",@progbits
+	.sectionflags	@"SHF_BARRIERS=1"
+	.sectioninfo	@"SHI_REGISTERS=46"
+	.align	128
+
+
+
+
+        .global         _Z10bfs_kerneliPiS_S_9Worklist2S0_i13GlobalBarrier
+        .type           _Z10bfs_kerneliPiS_S_9Worklist2S0_i13GlobalBarrier,@function
+        .size           _Z10bfs_kerneliPiS_S_9Worklist2S0_i13GlobalBarrier,(.L_x_75 - _Z10bfs_kerneliPiS_S_9Worklist2S0_i13GlobalBarrier)
+        .other          _Z10bfs_kerneliPiS_S_9Worklist2S0_i13GlobalBarrier,@"STO_CUDA_ENTRY STV_DEFAULT"
+_Z10bfs_kerneliPiS_S_9Worklist2S0_i13GlobalBarrier:
+.text._Z10bfs_kerneliPiS_S_9Worklist2S0_i13GlobalBarrier:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 163
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+        /*0010*/                   IMAD.MOV.U32 R8, RZ, RZ, c[0x0][0x198] ;
+        /*0020*/                   ULDC.64 UR36, c[0x0][0x118] ;
+        /*0030*/                   IMAD.MOV.U32 R9, RZ, RZ, c[0x0][0x19c] ;
+        /*0040*/                   IADD3 R1, R1, -0x58, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 168
+        /*0050*/                   LDG.E R0, [R8.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 163
+        /*0060*/                   IMAD.MOV.U32 R2, RZ, RZ, c[0x0][0x180] ;
+        /*0070*/                   MOV R10, c[0x0][0x1a0] ;
+        /*0080*/                   IMAD.MOV.U32 R3, RZ, RZ, c[0x0][0x184] ;
+        /*0090*/                   STL.64 [R1+0x30], R8 ;
+        /*00a0*/                   IMAD.MOV.U32 R4, RZ, RZ, c[0x0][0x188] ;
+        /*00b0*/                   R2UR UR41, R1 ;
+        /*00c0*/                   IMAD.MOV.U32 R5, RZ, RZ, c[0x0][0x18c] ;
+        /*00d0*/                   STL.64 [R1+0x18], R2 ;
+        /*00e0*/                   IMAD.MOV.U32 R6, RZ, RZ, c[0x0][0x190] ;
+        /*00f0*/                   IMAD.MOV.U32 R7, RZ, RZ, c[0x0][0x194] ;
+        /*0100*/                   STL.64 [R1+0x20], R4 ;
+        /*0110*/                   IMAD.MOV.U32 R11, RZ, RZ, c[0x0][0x1a4] ;
+        /*0120*/                   IMAD.MOV.U32 R12, RZ, RZ, c[0x0][0x1a8] ;
+        /*0130*/                   STL.64 [R1+0x28], R6 ;
+        /*0140*/                   IMAD.MOV.U32 R13, RZ, RZ, c[0x0][0x1ac] ;
+        /*0150*/                   IMAD.MOV.U32 R14, RZ, RZ, c[0x0][0x1b0] ;
+        /*0160*/                   STL.64 [R1+0x38], R10 ;
+        /*0170*/                   IMAD.MOV.U32 R15, RZ, RZ, c[0x0][0x1b4] ;
+        /*0180*/                   IMAD.MOV.U32 R16, RZ, RZ, c[0x0][0x1b8] ;
+        /*0190*/                   STL.64 [R1+0x40], R12 ;
+        /*01a0*/                   IMAD.MOV.U32 R17, RZ, RZ, c[0x0][0x1bc] ;
+        /*01b0*/                   STL.64 [R1+0x48], R14 ;
+        /*01c0*/                   STL.64 [R1+0x50], R16 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 168
+        /*01d0*/                   ISETP.GE.AND P0, PT, R0, 0x1, PT ;
+        /*01e0*/              @!P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 13
+        /*01f0*/                   S2R R18, SR_TID.X ;
+        /*0200*/                   S2UR UR4, SR_CTAID.X ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 163
+        /*0210*/                   IADD3 R2, R1.reuse, 0x18, RZ ;
+        /*0220*/                   ULDC UR7, c[0x0][0x20] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 13
+        /*0230*/                   S2R R19, SR_CTAID.X ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 163
+        /*0240*/                   UIADD3 UR41, UP0, UR41, UR7, URZ ;
+        /*0250*/                   IADD3 R0, R1, 0x38, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 168
+        /*0260*/                   IMAD.MOV.U32 R4, RZ, RZ, c[0x0][0x198] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 116
+        /*0270*/                   IADD3 R24, R2, 0x18, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 168
+        /*0280*/                   IMAD.MOV.U32 R5, RZ, RZ, c[0x0][0x19c] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 116
+        /*0290*/                   ULDC UR40, c[0x0][0xc] ;
+        /*02a0*/                   ULDC UR6, c[0x0][0x0] ;
+        /*02b0*/                   UMOV UR5, 0x4 ;
+        /*02c0*/                   ULDC.64 UR38, c[0x0][0x1c8] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 163
+        /*02d0*/                   ULDC UR42, c[0x0][0x24] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 116
+        /*02e0*/                   UIMAD UR40, UR40, UR6, URZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 163
+        /*02f0*/                   UIADD3.X UR42, URZ, UR42, URZ, UP0, !UPT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 13
+        /*0300*/                   LEA.HI R22, R18.reuse, R18, RZ, 0x1d ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 116
+        /*0310*/                   IMAD R23, R18, 0x24, RZ ;
+        /*0320*/                   UIMAD.WIDE.U32 UR38, UR4, UR5, UR38 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 13
+        /*0330*/                   IMAD R19, R19, c[0x0][0x0], R18 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 168
+        /*0340*/                   ULDC UR43, c[0x0][0x1c0] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 13
+        /*0350*/                   SHF.R.S32.HI R26, RZ, 0x1f, R19 ;
+.L_x_64:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 17
+        /*0360*/                   MOV R3, 0xffffffff ;
+        /*0370*/                   STS [RZ], R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 116
+        /*0380*/                   LD.E R4, [R4.64] ;
+        /*0390*/                   YIELD ;
+        /*03a0*/                   IMAD.MOV.U32 R25, RZ, RZ, R2 ;
+        /*03b0*/                   IMAD.MOV.U32 R2, RZ, RZ, R0 ;
+        /*03c0*/                   ISETP.GT.AND P0, PT, R4, R19, PT ;
+        /*03d0*/              @!P0 IMAD.MOV.U32 R29, RZ, RZ, RZ ;
+        /*03e0*/              @!P0 BRA `(.L_x_1) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 118
+        /*03f0*/                   LDL.64 R4, [R25] ;
+        /*0400*/                   LEA R6, P0, R19, R4, 0x2 ;
+        /*0410*/                   LEA.HI.X R7, R19, R5, R26, 0x2, P0 ;
+        /*0420*/                   LD.E R27, [R6.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 20
+        /*0430*/                   IMAD.MOV.U32 R4, RZ, RZ, 0x4 ;
+        /*0440*/                   IMAD.WIDE R4, R27, R4, c[0x0][0x168] ;
+        /*0450*/                   LDG.E R29, [R4.64] ;
+        /*0460*/                   LDG.E R0, [R4.64+0x4] ;
+        /*0470*/                   IMAD.IADD R29, R0, 0x1, -R29 ;
+.L_x_1:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 23
+        /*0480*/                   ISETP.GE.AND P0, PT, R29, 0x101, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 25
+        /*0490*/                   WARPSYNC 0xffffffff ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 24
+        /*04a0*/               @P0 STS [RZ], R18 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 25
+        /*04b0*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 26
+        /*04c0*/                   LDS R0, [RZ] ;
+        /*04d0*/                   ISETP.NE.AND P0, PT, R0, -0x1, PT ;
+        /*04e0*/              @!P0 BRA `(.L_x_2) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 28
+        /*04f0*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 29
+        /*0500*/                   LDS R3, [RZ] ;
+        /*0510*/                   ISETP.NE.AND P0, PT, R3, R18, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 31
+        /*0520*/              @!P0 LDL.64 R4, [R25] ;
+        /*0530*/              @!P0 IMAD.MOV.U32 R9, RZ, RZ, -0x1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 30
+        /*0540*/              @!P0 STS [0x4], R27 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 31
+        /*0550*/              @!P0 LEA R6, P1, R19, R4, 0x2 ;
+        /*0560*/              @!P0 LEA.HI.X R7, R19, R5, RZ, 0x2, P1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 36
+        /*0570*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x4 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 31
+        /*0580*/              @!P0 ST.E [R6.64], R9 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 32
+        /*0590*/              @!P0 STS [RZ], R9 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 35
+        /*05a0*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 36
+        /*05b0*/                   LDS R4, [0x4] ;
+        /*05c0*/                   IMAD.WIDE R4, R4, R5, c[0x0][0x168] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 37
+        /*05d0*/                   LDG.E R30, [R4.64+0x4] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 36
+        /*05e0*/                   LDG.E R3, [R4.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 39
+        /*05f0*/                   I2F.U32.RP R0, c[0x0][0x0] ;
+        /*0600*/                   IMAD.MOV.U32 R31, RZ, RZ, 0x1 ;
+        /*0610*/                   ISETP.NE.U32.AND P2, PT, RZ, c[0x0][0x0], PT ;
+        /*0620*/                   IMAD.MOV.U32 R6, RZ, RZ, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 32
+        /*0630*/              @!P0 IMAD.MOV.U32 R29, RZ, RZ, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 39
+        /*0640*/                   MUFU.RCP R0, R0 ;
+        /*0650*/                   IADD3 R8, R0, 0xffffffe, RZ ;
+        /*0660*/                   F2I.FTZ.U32.TRUNC.NTZ R7, R8 ;
+        /*0670*/                   IMAD.MOV R9, RZ, RZ, -R7 ;
+        /*0680*/                   IMAD R9, R9, c[0x0][0x0], RZ ;
+        /*0690*/                   IMAD.HI.U32 R6, R7, R9, R6 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 38
+        /*06a0*/                   IADD3 R30, R30, -R3, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 39
+        /*06b0*/                   IADD3 R31, R30, c[0x0][0x0], -R31 ;
+        /*06c0*/                   IMAD.HI.U32 R6, R6, R31, RZ ;
+        /*06d0*/                   IMAD.MOV R6, RZ, RZ, -R6 ;
+        /*06e0*/                   IMAD R0, R6, c[0x0][0x0], R31 ;
+        /*06f0*/                   ISETP.GE.U32.AND P1, PT, R0, c[0x0][0x0], PT ;
+        /*0700*/               @P1 IADD3 R0, R0, -c[0x0][0x0], RZ ;
+        /*0710*/                   ISETP.GE.U32.AND P1, PT, R0, c[0x0][0x0], PT ;
+        /*0720*/               @P1 IADD3 R0, R0, -c[0x0][0x0], RZ ;
+        /*0730*/              @!P2 LOP3.LUT R0, RZ, c[0x0][0x0], RZ, 0x33, !PT ;
+        /*0740*/                   IMAD.IADD R31, R31, 0x1, -R0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 40
+        /*0750*/                   ISETP.GE.AND P1, PT, R18, R31, PT ;
+        /*0760*/               @P1 BRA `(.L_x_1) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 44
+        /*0770*/                   IMAD.IADD R32, R3, 0x1, R18.reuse ;
+        /*0780*/                   IMAD.MOV.U32 R33, RZ, RZ, R18 ;
+.L_x_15:
+        /*0790*/                   ISETP.GE.AND P0, PT, R33.reuse, R30, PT ;
+        /*07a0*/                   YIELD ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 40
+        /*07b0*/                   IADD3 R33, R33, c[0x0][0x0], RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 44
+        /*07c0*/                   BSSY B7, `(.L_x_3) ;
+        /*07d0*/                   IMAD.MOV.U32 R35, RZ, RZ, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 40
+        /*07e0*/                   ISETP.GE.AND P1, PT, R33, R31, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 44
+        /*07f0*/                   IMAD.MOV.U32 R36, RZ, RZ, RZ ;
+        /*0800*/                   P2R R34, PR, RZ, 0x2 ;
+        /*0810*/               @P0 BRA `(.L_x_4) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 45
+        /*0820*/                   IMAD.MOV.U32 R37, RZ, RZ, 0x4 ;
+        /*0830*/                   IMAD.WIDE R36, R32, R37, c[0x0][0x170] ;
+        /*0840*/                   LDG.E R36, [R36.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 46
+        /*0850*/                   BSSY B6, `(.L_x_5) ;
+        /*0860*/                   ISETP.GE.AND P0, PT, R36, c[0x0][0x160], PT ;
+        /*0870*/              @!P0 BRA `(.L_x_6) ;
+        /*0880*/                   MOV R14, 0xa0 ;
+        /*0890*/                   IMAD.MOV.U32 R5, RZ, RZ, c[0x4][0x84] ;
+        /*08a0*/                   MOV R4, c[0x4][0x80] ;
+        /*08b0*/                   IMAD.MOV.U32 R6, RZ, RZ, c[0x4][0x88] ;
+        /*08c0*/                   IMAD.MOV.U32 R7, RZ, RZ, c[0x4][0x8c] ;
+        /*08d0*/                   LDC.64 R14, c[0x4][R14] ;
+        /*08e0*/                   IMAD.MOV.U32 R8, RZ, RZ, 0x2e ;
+        /*08f0*/                   IMAD.MOV.U32 R10, RZ, RZ, c[0x4][0x0] ;
+        /*0900*/                   IMAD.MOV.U32 R11, RZ, RZ, c[0x4][0x4] ;
+        /*0910*/                   IMAD.MOV.U32 R12, RZ, RZ, 0x1 ;
+        /*0920*/                   IMAD.MOV.U32 R13, RZ, RZ, RZ ;
+        /*0930*/                   LEPC R16 ;
+        /*0940*/                   MOV R3, 0x9b0 ;
+        /*0950*/                   MOV R20, 0x930 ;
+        /*0960*/                   MOV R21, 0x0 ;
+        /*0970*/                   MOV R0, 0x0 ;
+        /*0980*/                   IADD3 R20, P0, P1, -R20, R3, R16 ;
+        /*0990*/                   IADD3.X R21, ~R0, R21, R17, P0, P1 ;
+        /*09a0*/                   CALL.ABS.NOINC R14 ;
+.L_x_6:
+        /*09b0*/                   BSYNC B6 ;
+.L_x_5:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 47
+        /*09c0*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x4 ;
+        /*09d0*/                   IMAD.WIDE R4, R36, R5, c[0x0][0x178] ;
+        /*09e0*/                   LDG.E R0, [R4.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 169
+        /*09f0*/                   MOV R3, UR43 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 47
+        /*0a00*/                   ISETP.NE.AND P0, PT, R0, 0x3b9aca00, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 169
+        /*0a10*/              @!P0 IADD3 R3, R3, 0x1, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 48
+        /*0a20*/              @!P0 IMAD.MOV.U32 R35, RZ, RZ, 0x1 ;
+        /*0a30*/              @!P0 STG.E [R4.64], R3 ;
+.L_x_4:
+        /*0a40*/                   BSYNC B7 ;
+.L_x_3:
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 240
+        /*0a50*/                   ISETP.GT.U32.AND P0, PT, R18, 0x1f, PT ;
+	//## File "/usr/local/cuda/include/cub/detail/uninitialized_copy.cuh", line 61
+        /*0a60*/                   STS [R22.X4+0x8c0], R35 ;
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 240
+        /*0a70*/                   WARPSYNC 0xffffffff ;
+        /*0a80*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 484
+        /*0a90*/               @P0 BRA `(.L_x_7) ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*0aa0*/                   LDS R0, [R23+0x8c4] ;
+        /*0ab0*/                   LDS R3, [R23+0x8c0] ;
+        /*0ac0*/                   LDS R4, [R23+0x8c8] ;
+        /*0ad0*/                   LDS R5, [R23+0x8cc] ;
+        /*0ae0*/                   LDS R6, [R23+0x8d0] ;
+        /*0af0*/                   LDS R7, [R23+0x8d4] ;
+        /*0b00*/                   LDS R8, [R23+0x8d8] ;
+        /*0b10*/                   LDS R9, [R23+0x8dc] ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*0b20*/                   IADD3 R0, R4, R0, R3 ;
+        /*0b30*/                   IADD3 R0, R6, R0, R5 ;
+        /*0b40*/                   IADD3 R0, R8, R0, R7 ;
+        /*0b50*/                   IMAD.IADD R0, R0, 0x1, R9 ;
+	//## File "/usr/local/cuda/include/cub/warp/specializations/warp_scan_shfl.cuh", line 163
+        /*0b60*/                   BRA.DIV ~URZ, `(.L_x_8) ;
+        /*0b70*/                   SHFL.UP P0, R3, R0, 0x1, RZ ;
+.L_x_65:
+        /*0b80*/                   IMAD.MOV.U32 R10, RZ, RZ, R3 ;
+        /*0b90*/               @P0 IMAD.IADD R10, R0, 0x1, R10 ;
+        /*0ba0*/                   BRA.DIV ~URZ, `(.L_x_9) ;
+        /*0bb0*/                   SHFL.UP P0, R3, R10, 0x2, RZ ;
+        /*0bc0*/               @P0 IMAD.IADD R3, R10, 0x1, R3 ;
+        /*0bd0*/                   SHFL.UP P0, R4, R3, 0x4, RZ ;
+        /*0be0*/               @P0 IMAD.IADD R4, R3, 0x1, R4 ;
+        /*0bf0*/                   SHFL.UP P0, R5, R4, 0x8, RZ ;
+        /*0c00*/               @P0 IMAD.IADD R5, R4, 0x1, R5 ;
+        /*0c10*/                   SHFL.UP P0, R6, R5, 0x10, RZ ;
+        /*0c20*/               @P0 IADD3 R6, R5, R6, RZ ;
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 323
+        /*0c30*/                   SHFL.IDX PT, R8, R6, 0x1f, 0x1f ;
+        /*0c40*/                   IMAD.MOV.U32 R7, RZ, RZ, R6 ;
+.L_x_66:
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*0c50*/                   LDS R3, [R23+0x8c0] ;
+	//## File "/usr/local/cuda/include/cub/warp/specializations/warp_scan_shfl.cuh", line 645
+        /*0c60*/                   IMAD.IADD R0, R7, 0x1, -R0 ;
+        /*0c70*/                   ISETP.NE.AND P0, PT, R18, RZ, PT ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*0c80*/                   LDS R5, [R23+0x8c4] ;
+        /*0c90*/                   LDS R9, [R23+0x8c8] ;
+        /*0ca0*/                   LDS R11, [R23+0x8cc] ;
+        /*0cb0*/                   LDS R13, [R23+0x8d0] ;
+        /*0cc0*/                   LDS R15, [R23+0x8d4] ;
+        /*0cd0*/                   LDS R17, [R23+0x8d8] ;
+        /*0ce0*/                   STS [R23+0x8c0], R0 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*0cf0*/                   IMAD.IADD R4, R0, 0x1, R3 ;
+        /*0d00*/                   IMAD.IADD R6, R4, 0x1, R5 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*0d10*/                   STS [R23+0x8c4], R4 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*0d20*/                   IMAD.IADD R10, R6, 0x1, R9 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*0d30*/                   STS [R23+0x8c8], R6 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*0d40*/                   IMAD.IADD R12, R10, 0x1, R11 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*0d50*/                   STS [R23+0x8cc], R10 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*0d60*/                   IMAD.IADD R14, R12, 0x1, R13 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*0d70*/                   STS [R23+0x8d0], R12 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*0d80*/                   IMAD.IADD R16, R14, 0x1, R15 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*0d90*/                   STS [R23+0x8d4], R14 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*0da0*/                   IMAD.IADD R20, R16, 0x1, R17 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*0db0*/                   STS [R23+0x8d8], R16 ;
+        /*0dc0*/                   STS [R23+0x8dc], R20 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 500
+        /*0dd0*/              @!P0 STS [0xd40], R8 ;
+.L_x_7:
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 240
+        /*0de0*/                   WARPSYNC 0xffffffff ;
+        /*0df0*/                   ISETP.NE.AND P0, PT, R18, RZ, PT ;
+        /*0e00*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 74
+        /*0e10*/                   BSSY B0, `(.L_x_10) ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 507
+        /*0e20*/                   LDS R13, [R22.X4+0x8c0] ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 510
+        /*0e30*/                   LDS R11, [0xd40] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 74
+        /*0e40*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 75
+        /*0e50*/               @P0 BRA `(.L_x_11) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 76
+        /*0e60*/                   LDL.64 R4, [R2+0x18] ;
+	//## File "/usr/local/cuda/include/device_atomic_functions.hpp", line 107
+        /*0e70*/                   ATOM.E.ADD.STRONG.GPU PT, R4, [R4.64], R11 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 76
+        /*0e80*/                   STS [0xd50], R4 ;
+.L_x_11:
+        /*0e90*/                   BSYNC B0 ;
+.L_x_10:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 78
+        /*0ea0*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 79
+        /*0eb0*/                   ISETP.NE.AND P0, PT, R35, RZ, PT ;
+        /*0ec0*/              @!P0 BRA `(.L_x_12) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 80
+        /*0ed0*/                   LDL.64 R4, [R2+0x10] ;
+        /*0ee0*/                   LDS R12, [0xd50] ;
+        /*0ef0*/                   LD.E R10, [R4.64] ;
+        /*0f00*/                   IADD3 R3, R13, R12, RZ ;
+        /*0f10*/                   ISETP.GE.AND P0, PT, R3, R10, PT ;
+        /*0f20*/              @!P0 BRA `(.L_x_13) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 81
+        /*0f30*/                   LDL.64 R14, [R2+0x18] ;
+        /*0f40*/                   MOV R8, 0x98 ;
+        /*0f50*/                   LD.E R14, [R14.64] ;
+        /*0f60*/                   LDC.64 R8, c[0x4][R8] ;
+        /*0f70*/                   IMAD.MOV.U32 R4, RZ, RZ, c[0x4][0x90] ;
+        /*0f80*/                   STL.64 [R1], R12 ;
+        /*0f90*/                   IMAD.MOV.U32 R5, RZ, RZ, c[0x4][0x94] ;
+        /*0fa0*/                   IMAD.U32 R6, RZ, RZ, UR41 ;
+        /*0fb0*/                   STL.64 [R1+0x8], R10 ;
+        /*0fc0*/                   IMAD.U32 R7, RZ, RZ, UR42 ;
+        /*0fd0*/                   STL [R1+0x10], R14 ;
+        /*0fe0*/                   LEPC R10 ;
+        /*0ff0*/                   MOV R3, 0x1060 ;
+        /*1000*/                   MOV R20, 0xfe0 ;
+        /*1010*/                   MOV R21, 0x0 ;
+        /*1020*/                   MOV R0, 0x0 ;
+        /*1030*/                   IADD3 R20, P0, P1, -R20, R3, R10 ;
+        /*1040*/                   IADD3.X R21, ~R0, R21, R11, P0, P1 ;
+        /*1050*/                   CALL.ABS.NOINC R8 ;
+        /*1060*/                   BRA `(.L_x_14) ;
+.L_x_13:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 85
+        /*1070*/                   LDL.64 R4, [R2] ;
+        /*1080*/                   IMAD.WIDE R4, R3, 0x4, R4 ;
+        /*1090*/                   ST.E [R4.64], R36 ;
+.L_x_12:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 87
+        /*10a0*/                   WARPSYNC 0xffffffff ;
+        /*10b0*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+.L_x_14:
+        /*10c0*/                   ISETP.NE.AND P0, PT, R34, RZ, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 40
+        /*10d0*/                   IADD3 R32, R32, c[0x0][0x0], RZ ;
+        /*10e0*/              @!P0 BRA `(.L_x_15) ;
+        /*10f0*/                   BRA `(.L_x_1) ;
+.L_x_2:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 116
+        /*1100*/                   LDL.64 R4, [R24] ;
+	//## File "/usr/local/cuda/include/sm_30_intrinsics.hpp", line 122
+        /*1110*/                   BRA.CONV ~URZ, `(.L_x_16) ;
+        /*1120*/                   MOV R6, 0x1140 ;
+        /*1130*/                   CALL.REL.NOINC `($__internal_2_$__cuda_sm70_votesync_any) ;
+.L_x_16:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 115
+        /*1140*/                   STS [R18.X4+0x4b0], RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 116
+        /*1150*/                   LD.E R4, [R4.64] ;
+        /*1160*/                   I2F.U32.RP R3, UR40 ;
+        /*1170*/                   IMAD R9, RZ, RZ, -UR40 ;
+        /*1180*/                   ISETP.NE.U32.AND P2, PT, RZ, UR40, PT ;
+        /*1190*/                   MUFU.RCP R3, R3 ;
+        /*11a0*/                   IADD3 R6, R3, 0xffffffe, RZ ;
+        /*11b0*/                   F2I.FTZ.U32.TRUNC.NTZ R7, R6 ;
+        /*11c0*/                   IMAD.MOV.U32 R6, RZ, RZ, RZ ;
+        /*11d0*/                   IMAD R9, R9, R7, RZ ;
+        /*11e0*/                   IMAD.HI.U32 R7, R7, R9, R6 ;
+        /*11f0*/                   IADD3 R0, R4, -0x1, RZ ;
+        /*1200*/                   IMAD.HI.U32 R7, R7, R0, RZ ;
+        /*1210*/                   IMAD.MOV R5, RZ, RZ, -R7 ;
+        /*1220*/                   IMAD R0, R5, UR40, R0 ;
+        /*1230*/                   ISETP.GE.U32.AND P0, PT, R0, UR40, PT ;
+        /*1240*/               @P0 IADD3 R0, R0, -UR40, RZ ;
+        /*1250*/               @P0 IADD3 R7, R7, 0x1, RZ ;
+        /*1260*/                   ISETP.GE.U32.AND P1, PT, R0, UR40, PT ;
+        /*1270*/               @P1 IADD3 R7, R7, 0x1, RZ ;
+        /*1280*/              @!P2 LOP3.LUT R7, RZ, UR40, RZ, 0x33, !PT ;
+        /*1290*/                   IADD3 R29, R7, 0x1, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 117
+        /*12a0*/                   ISETP.GE.AND P0, PT, R29, 0x1, PT ;
+        /*12b0*/              @!P0 BRA `(.L_x_17) ;
+        /*12c0*/                   IMAD.MOV.U32 R30, RZ, RZ, R19 ;
+.L_x_51:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 116
+        /*12d0*/                   LDL.64 R4, [R24] ;
+        /*12e0*/                   LD.E R5, [R4.64] ;
+        /*12f0*/                   ISETP.GT.AND P0, PT, R5, R30, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 118
+        /*1300*/               @P0 LDL.64 R6, [R25] ;
+        /*1310*/               @P0 IMAD.WIDE R6, R30, 0x4, R6 ;
+        /*1320*/               @P0 LD.E R28, [R6.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 122
+        /*1330*/                   HFMA2.MMA R31, -RZ, RZ, 0, 0 ;
+        /*1340*/                   ISETP.EQ.OR P0, PT, R28, -0x1, !P0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 124
+        /*1350*/              @!P0 IMAD.MOV.U32 R9, RZ, RZ, 0x4 ;
+        /*1360*/              @!P0 IMAD.WIDE R8, R28, R9, c[0x0][0x168] ;
+        /*1370*/              @!P0 LDG.E R31, [R8.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 125
+        /*1380*/              @!P0 LDG.E R0, [R8.64+0x4] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 122
+        /*1390*/                   IMAD.MOV.U32 R33, RZ, RZ, RZ ;
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 240
+        /*13a0*/                   WARPSYNC 0xffffffff ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 117
+        /*13b0*/                   ISETP.GT.AND P1, PT, R29.reuse, 0x1, PT ;
+        /*13c0*/                   IADD3 R29, R29, -0x1, RZ ;
+        /*13d0*/                   P2R R38, PR, RZ, 0x2 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 125
+        /*13e0*/              @!P0 IMAD.IADD R33, R0, 0x1, -R31 ;
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 240
+        /*13f0*/                   ISETP.GT.U32.AND P0, PT, R18, 0x1f, PT ;
+	//## File "/usr/local/cuda/include/cub/detail/uninitialized_copy.cuh", line 61
+        /*1400*/                   STS [R22.X4+0x20], R33 ;
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 240
+        /*1410*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 484
+        /*1420*/               @P0 BRA `(.L_x_18) ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*1430*/                   LDS R0, [R23+0x24] ;
+        /*1440*/                   LDS R3, [R23+0x20] ;
+        /*1450*/                   LDS R4, [R23+0x28] ;
+        /*1460*/                   LDS R5, [R23+0x2c] ;
+        /*1470*/                   LDS R6, [R23+0x30] ;
+        /*1480*/                   LDS R7, [R23+0x34] ;
+        /*1490*/                   LDS R8, [R23+0x38] ;
+        /*14a0*/                   LDS R9, [R23+0x3c] ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*14b0*/                   IADD3 R0, R4, R0, R3 ;
+        /*14c0*/                   IADD3 R0, R6, R0, R5 ;
+        /*14d0*/                   IADD3 R0, R8, R0, R7 ;
+        /*14e0*/                   IMAD.IADD R0, R0, 0x1, R9 ;
+	//## File "/usr/local/cuda/include/cub/warp/specializations/warp_scan_shfl.cuh", line 163
+        /*14f0*/                   BRA.DIV ~URZ, `(.L_x_19) ;
+        /*1500*/                   SHFL.UP P0, R3, R0, 0x1, RZ ;
+.L_x_67:
+        /*1510*/                   IMAD.MOV.U32 R10, RZ, RZ, R3 ;
+        /*1520*/               @P0 IADD3 R10, R0, R10, RZ ;
+        /*1530*/                   BRA.DIV ~URZ, `(.L_x_20) ;
+        /*1540*/                   SHFL.UP P0, R3, R10, 0x2, RZ ;
+        /*1550*/               @P0 IMAD.IADD R3, R10, 0x1, R3 ;
+        /*1560*/                   SHFL.UP P0, R4, R3, 0x4, RZ ;
+        /*1570*/               @P0 IMAD.IADD R4, R3, 0x1, R4 ;
+        /*1580*/                   SHFL.UP P0, R5, R4, 0x8, RZ ;
+        /*1590*/               @P0 IMAD.IADD R5, R4, 0x1, R5 ;
+        /*15a0*/                   SHFL.UP P0, R6, R5, 0x10, RZ ;
+        /*15b0*/               @P0 IMAD.IADD R6, R5, 0x1, R6 ;
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 323
+        /*15c0*/                   IMAD.MOV.U32 R7, RZ, RZ, R6 ;
+        /*15d0*/                   SHFL.IDX PT, R8, R6, 0x1f, 0x1f ;
+.L_x_68:
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*15e0*/                   LDS R3, [R23+0x20] ;
+	//## File "/usr/local/cuda/include/cub/warp/specializations/warp_scan_shfl.cuh", line 645
+        /*15f0*/                   IMAD.IADD R0, R7, 0x1, -R0 ;
+        /*1600*/                   ISETP.NE.AND P0, PT, R18, RZ, PT ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*1610*/                   LDS R5, [R23+0x24] ;
+        /*1620*/                   LDS R9, [R23+0x28] ;
+        /*1630*/                   LDS R11, [R23+0x2c] ;
+        /*1640*/                   LDS R13, [R23+0x30] ;
+        /*1650*/                   LDS R15, [R23+0x34] ;
+        /*1660*/                   LDS R17, [R23+0x38] ;
+        /*1670*/                   STS [R23+0x20], R0 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*1680*/                   IMAD.IADD R4, R0, 0x1, R3 ;
+        /*1690*/                   IMAD.IADD R6, R4, 0x1, R5 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*16a0*/                   STS [R23+0x24], R4 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*16b0*/                   IADD3 R10, R6, R9, RZ ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*16c0*/                   STS [R23+0x28], R6 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*16d0*/                   IMAD.IADD R12, R10, 0x1, R11 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*16e0*/                   STS [R23+0x2c], R10 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*16f0*/                   IMAD.IADD R14, R12, 0x1, R13 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*1700*/                   STS [R23+0x30], R12 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*1710*/                   IMAD.IADD R16, R14, 0x1, R15 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*1720*/                   STS [R23+0x34], R14 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*1730*/                   IMAD.IADD R20, R16, 0x1, R17 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*1740*/                   STS [R23+0x38], R16 ;
+        /*1750*/                   STS [R23+0x3c], R20 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 500
+        /*1760*/              @!P0 STS [0x4a0], R8 ;
+.L_x_18:
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 240
+        /*1770*/                   WARPSYNC 0xffffffff ;
+        /*1780*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 510
+        /*1790*/                   LDS R35, [0x4a0] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 131
+        /*17a0*/                   ISETP.GE.AND P0, PT, R35, 0x1, PT ;
+        /*17b0*/              @!P0 BRA `(.L_x_21) ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 507
+        /*17c0*/                   LDS R3, [R22.X4+0x20] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*17d0*/                   IMAD.MOV.U32 R32, RZ, RZ, RZ ;
+        /*17e0*/                   IMAD.MOV.U32 R0, RZ, RZ, RZ ;
+        /*17f0*/                   IMAD.MOV.U32 R34, RZ, RZ, RZ ;
+        /*1800*/                   IMAD.MOV.U32 R36, RZ, RZ, RZ ;
+        /*1810*/                   MOV R37, R3 ;
+.L_x_50:
+        /*1820*/                   IMAD.IADD R4, R3, 0x1, -R34 ;
+        /*1830*/                   YIELD ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 132
+        /*1840*/                   WARPSYNC 0xffffffff ;
+        /*1850*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1860*/                   ISETP.GT.AND P0, PT, R4, 0xff, PT ;
+        /*1870*/                   ISETP.GE.OR P0, PT, R0, R33, P0 ;
+        /*1880*/                   BSSY B3, `(.L_x_22) ;
+        /*1890*/               @P0 BRA `(.L_x_23) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 132
+        /*18a0*/                   IMAD R5, R32, -0x100, R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*18b0*/                   BSSY B2, `(.L_x_24) ;
+        /*18c0*/                   IMAD.IADD R6, R0.reuse, 0x1, -R33 ;
+        /*18d0*/                   IMAD.MOV.U32 R8, RZ, RZ, R4 ;
+        /*18e0*/                   IADD3 R5, R5, -0x100, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 132
+        /*18f0*/                   IMAD.IADD R4, R0, 0x1, R31 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1900*/                   IMNMX.U32 R5, R5, R6, !PT ;
+        /*1910*/                   ISETP.GT.U32.AND P0, PT, R5, -0x4, PT ;
+        /*1920*/                   IMAD.MOV R7, RZ, RZ, -R5 ;
+        /*1930*/                   IMAD.MOV.U32 R5, RZ, RZ, RZ ;
+        /*1940*/                   LOP3.LUT R6, R7, 0x3, RZ, 0xc0, !PT ;
+        /*1950*/               @P0 BRA `(.L_x_25) ;
+        /*1960*/                   IMAD.IADD R7, R7, 0x1, -R6 ;
+        /*1970*/                   BSSY B1, `(.L_x_26) ;
+        /*1980*/                   BSSY B0, `(.L_x_27) ;
+        /*1990*/                   IMAD.MOV.U32 R5, RZ, RZ, RZ ;
+        /*19a0*/                   ISETP.GT.AND P0, PT, R7, RZ, PT ;
+        /*19b0*/              @!P0 BRA `(.L_x_28) ;
+        /*19c0*/                   ISETP.GT.AND P1, PT, R7, 0xc, PT ;
+        /*19d0*/                   BSSY B4, `(.L_x_29) ;
+        /*19e0*/                   PLOP3.LUT P0, PT, PT, PT, PT, 0x80, 0x0 ;
+        /*19f0*/              @!P1 BRA `(.L_x_30) ;
+        /*1a00*/                   BSSY B5, `(.L_x_30) ;
+        /*1a10*/                   PLOP3.LUT P0, PT, PT, PT, PT, 0x8, 0x0 ;
+.L_x_31:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*1a20*/                   IADD3 R9, R4, R5, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1a30*/                   IADD3 R17, R5, 0x4, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*1a40*/                   IADD3 R15, R9.reuse, 0x3, RZ ;
+        /*1a50*/                   STS [R8.X4+0x4b0], R9 ;
+        /*1a60*/                   IADD3 R11, R9.reuse, 0x1, RZ ;
+        /*1a70*/                   IADD3 R13, R9.reuse, 0x2, RZ ;
+        /*1a80*/                   STS [R8.X4+0x4bc], R15 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1a90*/                   IADD3 R10, -R34, R17, R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*1aa0*/                   IMAD.IADD R17, R4, 0x1, R17 ;
+        /*1ab0*/                   IADD3 R21, R9.reuse, 0x5, RZ ;
+        /*1ac0*/                   STS [R8.X4+0x4b4], R11 ;
+        /*1ad0*/                   IADD3 R37, R9, 0x6, RZ ;
+        /*1ae0*/                   IADD3 R39, R9.reuse, 0x9, RZ ;
+        /*1af0*/                   STS [R8.X4+0x4b8], R13 ;
+        /*1b00*/                   IADD3 R41, R9.reuse, 0xa, RZ ;
+        /*1b10*/                   IADD3 R15, R9.reuse, 0x7, RZ ;
+        /*1b20*/                   STS [R10.X4+0x4b4], R21 ;
+        /*1b30*/                   IADD3 R43, R9, 0xe, RZ ;
+        /*1b40*/                   IADD3 R11, R4, 0x8, R5 ;
+        /*1b50*/                   STS [R10.X4+0x4b0], R17 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1b60*/                   IADD3 R7, R7, -0x10, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*1b70*/                   IADD3 R13, R9, 0xb, RZ ;
+        /*1b80*/                   STS [R10.X4+0x4bc], R15 ;
+        /*1b90*/                   ISETP.GT.AND P1, PT, R7, 0xc, PT ;
+        /*1ba0*/                   IADD3 R21, R9.reuse, 0xd, RZ ;
+        /*1bb0*/                   STS [R10.X4+0x4c0], R11 ;
+        /*1bc0*/                   IADD3 R9, R9, 0xf, RZ ;
+        /*1bd0*/                   IADD3 R17, R4, 0xc, R5 ;
+        /*1be0*/                   STS [R10.X4+0x4c4], R39 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1bf0*/                   IADD3 R5, R5, 0x10, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*1c00*/                   STS [R10.X4+0x4c8], R41 ;
+        /*1c10*/                   STS [R10.X4+0x4cc], R13 ;
+        /*1c20*/                   STS [R10.X4+0x4d0], R17 ;
+        /*1c30*/                   STS [R10.X4+0x4d4], R21 ;
+        /*1c40*/                   STS [R10.X4+0x4d8], R43 ;
+        /*1c50*/                   STS [R10.X4+0x4dc], R9 ;
+        /*1c60*/                   STS [R10.X4+0x4b8], R37 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1c70*/                   IMAD.IADD R37, R5, 0x1, R3 ;
+        /*1c80*/                   IMAD.IADD R8, R37, 0x1, -R34 ;
+        /*1c90*/               @P1 BRA `(.L_x_31) ;
+        /*1ca0*/                   BSYNC B5 ;
+.L_x_30:
+        /*1cb0*/                   BSYNC B4 ;
+.L_x_29:
+        /*1cc0*/                   ISETP.GT.AND P1, PT, R7, 0x4, PT ;
+        /*1cd0*/                   BSSY B4, `(.L_x_32) ;
+        /*1ce0*/              @!P1 BRA `(.L_x_33) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*1cf0*/                   IMAD.IADD R9, R4, 0x1, R5 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1d00*/                   IADD3 R17, R5.reuse, 0x4, RZ ;
+        /*1d10*/                   IADD3 R5, R5, 0x8, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*1d20*/                   IADD3 R15, R9.reuse, 0x3, RZ ;
+        /*1d30*/                   STS [R8.X4+0x4b0], R9 ;
+        /*1d40*/                   IADD3 R11, R9, 0x1, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1d50*/                   IMAD.IADD R37, R5, 0x1, R3.reuse ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*1d60*/                   IADD3 R13, R9.reuse, 0x2, RZ ;
+        /*1d70*/                   STS [R8.X4+0x4bc], R15 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1d80*/                   IADD3 R10, -R34, R17, R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*1d90*/                   IMAD.IADD R17, R4, 0x1, R17 ;
+        /*1da0*/                   IADD3 R21, R9.reuse, 0x5, RZ ;
+        /*1db0*/                   STS [R8.X4+0x4b4], R11 ;
+        /*1dc0*/                   IADD3 R39, R9, 0x6, RZ ;
+        /*1dd0*/                   IADD3 R41, R9, 0x7, RZ ;
+        /*1de0*/                   STS [R8.X4+0x4b8], R13 ;
+        /*1df0*/                   PLOP3.LUT P0, PT, PT, PT, PT, 0x8, 0x0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1e00*/                   IADD3 R7, R7, -0x8, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*1e10*/                   STS [R10.X4+0x4b0], R17 ;
+        /*1e20*/                   STS [R10.X4+0x4b4], R21 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1e30*/                   IMAD.IADD R8, R37, 0x1, -R34 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*1e40*/                   STS [R10.X4+0x4b8], R39 ;
+        /*1e50*/                   STS [R10.X4+0x4bc], R41 ;
+.L_x_33:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1e60*/                   BSYNC B4 ;
+.L_x_32:
+        /*1e70*/                   ISETP.NE.OR P0, PT, R7, RZ, P0 ;
+        /*1e80*/              @!P0 BREAK B0 ;
+        /*1e90*/              @!P0 BRA `(.L_x_34) ;
+.L_x_28:
+        /*1ea0*/                   BSYNC B0 ;
+.L_x_27:
+        /*1eb0*/                   BSSY B0, `(.L_x_34) ;
+.L_x_35:
+        /*1ec0*/                   IADD3 R7, R7, -0x4, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*1ed0*/                   IMAD.IADD R9, R4, 0x1, R5 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1ee0*/                   IADD3 R5, R5, 0x4, RZ ;
+        /*1ef0*/                   ISETP.NE.AND P0, PT, R7, RZ, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*1f00*/                   IADD3 R11, R9.reuse, 0x1, RZ ;
+        /*1f10*/                   STS [R8.X4+0x4b0], R9 ;
+        /*1f20*/                   IADD3 R13, R9.reuse, 0x2, RZ ;
+        /*1f30*/                   IADD3 R15, R9, 0x3, RZ ;
+        /*1f40*/                   STS [R8.X4+0x4b4], R11 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1f50*/                   IADD3 R37, R5, R3, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*1f60*/                   STS [R8.X4+0x4b8], R13 ;
+        /*1f70*/                   STS [R8.X4+0x4bc], R15 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*1f80*/                   IMAD.IADD R8, R37, 0x1, -R34 ;
+        /*1f90*/               @P0 BRA `(.L_x_35) ;
+        /*1fa0*/                   BSYNC B0 ;
+.L_x_34:
+        /*1fb0*/                   BSYNC B1 ;
+.L_x_26:
+        /*1fc0*/                   IMAD.IADD R36, R5, 0x1, R0 ;
+.L_x_25:
+        /*1fd0*/                   BSYNC B2 ;
+.L_x_24:
+        /*1fe0*/                   ISETP.NE.AND P0, PT, R6, RZ, PT ;
+        /*1ff0*/              @!P0 BRA `(.L_x_23) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*2000*/                   IMAD.IADD R7, R4, 0x1, R5 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*2010*/                   ISETP.NE.AND P0, PT, R6, 0x1, PT ;
+        /*2020*/                   BSSY B0, `(.L_x_36) ;
+        /*2030*/                   IADD3 R36, R5, 0x1, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*2040*/                   STS [R8.X4+0x4b0], R7 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*2050*/                   IMAD.IADD R37, R36, 0x1, R3 ;
+        /*2060*/              @!P0 BRA `(.L_x_37) ;
+        /*2070*/                   ISETP.NE.AND P0, PT, R6, 0x2, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*2080*/                   IMAD.IADD R6, R4, 0x1, R36 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*2090*/                   IADD3 R36, R5, 0x2, RZ ;
+        /*20a0*/                   IMAD.IADD R7, R37, 0x1, -R34 ;
+        /*20b0*/                   IMAD.IADD R37, R36, 0x1, R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*20c0*/                   LEA R8, R7, 0x4b0, 0x2 ;
+        /*20d0*/                   STS [R7.X4+0x4b0], R6 ;
+        /*20e0*/               @P0 IMAD.IADD R9, R4, 0x1, R36 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*20f0*/               @P0 IADD3 R36, R5, 0x3, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 135
+        /*2100*/               @P0 STS [R8+0x4], R9 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 134
+        /*2110*/               @P0 IADD3 R37, R36, R3, RZ ;
+.L_x_37:
+        /*2120*/                   BSYNC B0 ;
+.L_x_36:
+        /*2130*/                   IMAD.IADD R36, R36, 0x1, R0 ;
+.L_x_23:
+        /*2140*/                   BSYNC B3 ;
+.L_x_22:
+        /*2150*/                   WARPSYNC 0xffffffff ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 139
+        /*2160*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 143
+        /*2170*/                   ISETP.GE.U32.AND P0, PT, R18, R35, PT ;
+        /*2180*/                   IMAD.MOV.U32 R41, RZ, RZ, RZ ;
+        /*2190*/                   IMAD.MOV.U32 R39, RZ, RZ, RZ ;
+        /*21a0*/                   BSSY B7, `(.L_x_38) ;
+        /*21b0*/               @P0 BRA `(.L_x_39) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 142
+        /*21c0*/                   LDS R4, [R18.X4+0x4b0] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 144
+        /*21d0*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x4 ;
+        /*21e0*/                   IMAD.WIDE R4, R4, R5, c[0x0][0x170] ;
+        /*21f0*/                   LDG.E R39, [R4.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 145
+        /*2200*/                   BSSY B6, `(.L_x_40) ;
+        /*2210*/                   ISETP.GE.AND P0, PT, R39, c[0x0][0x160], PT ;
+        /*2220*/              @!P0 BRA `(.L_x_41) ;
+        /*2230*/                   MOV R14, 0xa0 ;
+        /*2240*/                   HFMA2.MMA R8, -RZ, RZ, 0, 8.642673492431640625e-06 ;
+        /*2250*/                   IMAD.MOV.U32 R4, RZ, RZ, c[0x4][0x80] ;
+        /*2260*/                   IMAD.MOV.U32 R5, RZ, RZ, c[0x4][0x84] ;
+        /*2270*/                   LDC.64 R14, c[0x4][R14] ;
+        /*2280*/                   IMAD.MOV.U32 R6, RZ, RZ, c[0x4][0x88] ;
+        /*2290*/                   IMAD.MOV.U32 R7, RZ, RZ, c[0x4][0x8c] ;
+        /*22a0*/                   IMAD.MOV.U32 R10, RZ, RZ, c[0x4][0x8] ;
+        /*22b0*/                   IMAD.MOV.U32 R11, RZ, RZ, c[0x4][0xc] ;
+        /*22c0*/                   IMAD.MOV.U32 R12, RZ, RZ, 0x1 ;
+        /*22d0*/                   IMAD.MOV.U32 R13, RZ, RZ, RZ ;
+        /*22e0*/                   LEPC R16 ;
+        /*22f0*/                   MOV R3, 0x2360 ;
+        /*2300*/                   MOV R20, 0x22e0 ;
+        /*2310*/                   MOV R21, 0x0 ;
+        /*2320*/                   MOV R0, 0x0 ;
+        /*2330*/                   IADD3 R20, P0, P1, -R20, R3, R16 ;
+        /*2340*/                   IADD3.X R21, ~R0, R21, R17, P0, P1 ;
+        /*2350*/                   CALL.ABS.NOINC R14 ;
+.L_x_41:
+        /*2360*/                   BSYNC B6 ;
+.L_x_40:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 146
+        /*2370*/                   IMAD.MOV.U32 R4, RZ, RZ, 0x4 ;
+        /*2380*/                   IMAD.WIDE R4, R39, R4, c[0x0][0x178] ;
+        /*2390*/                   LDG.E R0, [R4.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 169
+        /*23a0*/                   IMAD.U32 R3, RZ, RZ, UR43 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 146
+        /*23b0*/                   ISETP.NE.AND P0, PT, R0, 0x3b9aca00, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 169
+        /*23c0*/              @!P0 IADD3 R3, R3, 0x1, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 147
+        /*23d0*/              @!P0 IMAD.MOV.U32 R41, RZ, RZ, 0x1 ;
+        /*23e0*/              @!P0 STG.E [R4.64], R3 ;
+.L_x_39:
+        /*23f0*/                   BSYNC B7 ;
+.L_x_38:
+        /*2400*/                   ISETP.GT.U32.AND P0, PT, R18, 0x1f, PT ;
+	//## File "/usr/local/cuda/include/cub/detail/uninitialized_copy.cuh", line 61
+        /*2410*/                   STS [R22.X4+0x8c0], R41 ;
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 240
+        /*2420*/                   WARPSYNC 0xffffffff ;
+        /*2430*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 484
+        /*2440*/               @P0 BRA `(.L_x_42) ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*2450*/                   LDS R0, [R23+0x8c4] ;
+        /*2460*/                   LDS R3, [R23+0x8c0] ;
+        /*2470*/                   LDS R4, [R23+0x8c8] ;
+        /*2480*/                   LDS R5, [R23+0x8cc] ;
+        /*2490*/                   LDS R6, [R23+0x8d0] ;
+        /*24a0*/                   LDS R7, [R23+0x8d4] ;
+        /*24b0*/                   LDS R8, [R23+0x8d8] ;
+        /*24c0*/                   LDS R9, [R23+0x8dc] ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*24d0*/                   IADD3 R0, R4, R0, R3 ;
+        /*24e0*/                   IADD3 R0, R6, R0, R5 ;
+        /*24f0*/                   IADD3 R0, R8, R0, R7 ;
+        /*2500*/                   IMAD.IADD R0, R0, 0x1, R9 ;
+	//## File "/usr/local/cuda/include/cub/warp/specializations/warp_scan_shfl.cuh", line 163
+        /*2510*/                   BRA.DIV ~URZ, `(.L_x_43) ;
+        /*2520*/                   SHFL.UP P0, R3, R0, 0x1, RZ ;
+.L_x_69:
+        /*2530*/                   IMAD.MOV.U32 R10, RZ, RZ, R3 ;
+        /*2540*/               @P0 IMAD.IADD R10, R0, 0x1, R10 ;
+        /*2550*/                   BRA.DIV ~URZ, `(.L_x_44) ;
+        /*2560*/                   SHFL.UP P0, R3, R10, 0x2, RZ ;
+        /*2570*/               @P0 IMAD.IADD R3, R10, 0x1, R3 ;
+        /*2580*/                   SHFL.UP P0, R4, R3, 0x4, RZ ;
+        /*2590*/               @P0 IMAD.IADD R4, R3, 0x1, R4 ;
+        /*25a0*/                   SHFL.UP P0, R5, R4, 0x8, RZ ;
+        /*25b0*/               @P0 IMAD.IADD R5, R4, 0x1, R5 ;
+        /*25c0*/                   SHFL.UP P0, R6, R5, 0x10, RZ ;
+        /*25d0*/               @P0 IADD3 R6, R5, R6, RZ ;
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 323
+        /*25e0*/                   SHFL.IDX PT, R8, R6, 0x1f, 0x1f ;
+        /*25f0*/                   IMAD.MOV.U32 R7, RZ, RZ, R6 ;
+.L_x_70:
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*2600*/                   LDS R3, [R23+0x8c0] ;
+	//## File "/usr/local/cuda/include/cub/warp/specializations/warp_scan_shfl.cuh", line 645
+        /*2610*/                   IMAD.IADD R0, R7, 0x1, -R0 ;
+        /*2620*/                   ISETP.NE.AND P0, PT, R18, RZ, PT ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*2630*/                   LDS R5, [R23+0x8c4] ;
+        /*2640*/                   LDS R9, [R23+0x8c8] ;
+        /*2650*/                   LDS R11, [R23+0x8cc] ;
+        /*2660*/                   LDS R13, [R23+0x8d0] ;
+        /*2670*/                   LDS R15, [R23+0x8d4] ;
+        /*2680*/                   LDS R17, [R23+0x8d8] ;
+        /*2690*/                   STS [R23+0x8c0], R0 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*26a0*/                   IMAD.IADD R4, R0, 0x1, R3 ;
+        /*26b0*/                   IMAD.IADD R6, R4, 0x1, R5 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*26c0*/                   STS [R23+0x8c4], R4 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*26d0*/                   IMAD.IADD R10, R6, 0x1, R9 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*26e0*/                   STS [R23+0x8c8], R6 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*26f0*/                   IMAD.IADD R12, R10, 0x1, R11 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*2700*/                   STS [R23+0x8cc], R10 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*2710*/                   IMAD.IADD R14, R12, 0x1, R13 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*2720*/                   STS [R23+0x8d0], R12 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*2730*/                   IMAD.IADD R16, R14, 0x1, R15 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*2740*/                   STS [R23+0x8d4], R14 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_operators.cuh", line 118
+        /*2750*/                   IADD3 R20, R16, R17, RZ ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 198
+        /*2760*/                   STS [R23+0x8d8], R16 ;
+        /*2770*/                   STS [R23+0x8dc], R20 ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 500
+        /*2780*/              @!P0 STS [0xd40], R8 ;
+.L_x_42:
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 240
+        /*2790*/                   WARPSYNC 0xffffffff ;
+        /*27a0*/                   ISETP.NE.AND P0, PT, R18, RZ, PT ;
+        /*27b0*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 74
+        /*27c0*/                   BSSY B0, `(.L_x_45) ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 507
+        /*27d0*/                   LDS R11, [R22.X4+0x8c0] ;
+	//## File "/usr/local/cuda/include/cub/block/specializations/block_scan_raking.cuh", line 510
+        /*27e0*/                   LDS R13, [0xd40] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 74
+        /*27f0*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 75
+        /*2800*/               @P0 BRA `(.L_x_46) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 76
+        /*2810*/                   LDL.64 R4, [R2+0x18] ;
+	//## File "/usr/local/cuda/include/device_atomic_functions.hpp", line 107
+        /*2820*/                   ATOM.E.ADD.STRONG.GPU PT, R4, [R4.64], R13 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 76
+        /*2830*/                   STS [0xd50], R4 ;
+.L_x_46:
+        /*2840*/                   BSYNC B0 ;
+.L_x_45:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 78
+        /*2850*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 79
+        /*2860*/                   ISETP.NE.AND P0, PT, R41, RZ, PT ;
+        /*2870*/              @!P0 BRA `(.L_x_47) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 80
+        /*2880*/                   LDL.64 R4, [R2+0x10] ;
+        /*2890*/                   LDS R10, [0xd50] ;
+        /*28a0*/                   LD.E R12, [R4.64] ;
+        /*28b0*/                   IMAD.IADD R3, R11, 0x1, R10 ;
+        /*28c0*/                   ISETP.GE.AND P0, PT, R3, R12, PT ;
+        /*28d0*/              @!P0 BRA `(.L_x_48) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 81
+        /*28e0*/                   LDL.64 R14, [R2+0x18] ;
+        /*28f0*/                   MOV R8, 0x98 ;
+        /*2900*/                   LD.E R14, [R14.64] ;
+        /*2910*/                   LDC.64 R8, c[0x4][R8] ;
+        /*2920*/                   IMAD.MOV.U32 R4, RZ, RZ, c[0x4][0x90] ;
+        /*2930*/                   STL.64 [R1], R10 ;
+        /*2940*/                   IMAD.MOV.U32 R5, RZ, RZ, c[0x4][0x94] ;
+        /*2950*/                   IMAD.U32 R6, RZ, RZ, UR41 ;
+        /*2960*/                   STL.64 [R1+0x8], R12 ;
+        /*2970*/                   IMAD.U32 R7, RZ, RZ, UR42 ;
+        /*2980*/                   STL [R1+0x10], R14 ;
+        /*2990*/                   LEPC R10 ;
+        /*29a0*/                   MOV R3, 0x2a10 ;
+        /*29b0*/                   MOV R20, 0x2990 ;
+        /*29c0*/                   MOV R21, 0x0 ;
+        /*29d0*/                   MOV R0, 0x0 ;
+        /*29e0*/                   IADD3 R20, P0, P1, -R20, R3, R10 ;
+        /*29f0*/                   IADD3.X R21, ~R0, R21, R11, P0, P1 ;
+        /*2a00*/                   CALL.ABS.NOINC R8 ;
+        /*2a10*/                   BRA `(.L_x_49) ;
+.L_x_48:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 85
+        /*2a20*/                   LDL.64 R4, [R2] ;
+        /*2a30*/                   IMAD.WIDE R4, R3, 0x4, R4 ;
+        /*2a40*/                   ST.E [R4.64], R39 ;
+.L_x_47:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 87
+        /*2a50*/                   WARPSYNC 0xffffffff ;
+        /*2a60*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+.L_x_49:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 131
+        /*2a70*/                   ISETP.GT.AND P0, PT, R35.reuse, 0x100, PT ;
+        /*2a80*/                   IMAD.MOV.U32 R0, RZ, RZ, R36 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 153
+        /*2a90*/                   IADD3 R34, R34, 0x100, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 131
+        /*2aa0*/                   IMAD.MOV.U32 R3, RZ, RZ, R37 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 152
+        /*2ab0*/                   IADD3 R35, R35, -0x100, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 131
+        /*2ac0*/                   IADD3 R32, R32, 0x1, RZ ;
+        /*2ad0*/              @!P0 CALL.REL.NOINC `(.L_x_21) ;
+        /*2ae0*/                   BRA `(.L_x_50) ;
+.L_x_21:
+        /*2af0*/                   ISETP.NE.AND P0, PT, R38, RZ, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 117
+        /*2b00*/                   IADD3 R30, R30, UR40, RZ ;
+        /*2b10*/              @!P0 CALL.REL.NOINC `(.L_x_17) ;
+        /*2b20*/                   BRA `(.L_x_51) ;
+.L_x_17:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 13
+        /*2b30*/                   S2UR UR4, SR_CTAID.X ;
+        /*2b40*/                   ISETP.NE.AND P0, PT, RZ, UR4, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 29
+        /*2b50*/              @!PT LDS RZ, [RZ] ;
+        /*2b60*/              @!PT LDS RZ, [RZ] ;
+        /*2b70*/              @!PT LDS RZ, [RZ] ;
+        /*2b80*/              @!PT LDS RZ, [RZ] ;
+        /*2b90*/                   MEMBAR.SC.GPU ;
+        /*2ba0*/                   ERRBAR;
+        /*2bb0*/                   CCTL.IVALL ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 30
+        /*2bc0*/                   WARPSYNC 0xffffffff ;
+        /*2bd0*/                   BSSY B0, `(.L_x_52) ;
+        /*2be0*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 32
+        /*2bf0*/              @!P0 BRA `(.L_x_53) ;
+        /*2c00*/                   ISETP.NE.AND P0, PT, R18, RZ, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 53
+        /*2c10*/               @P0 BRA `(.L_x_54) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 55
+        /*2c20*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x1 ;
+        /*2c30*/                   MOV R4, UR38 ;
+        /*2c40*/                   IMAD.U32 R5, RZ, RZ, UR39 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_load.cuh", line 260
+        /*2c50*/                   IMAD.U32 R6, RZ, RZ, UR38 ;
+        /*2c60*/                   IMAD.U32 R7, RZ, RZ, UR39 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 55
+        /*2c70*/                   STG.E.STRONG.SYS [R4.64], R3 ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_load.cuh", line 260
+        /*2c80*/                   LD.E.STRONG.GPU R6, [R6.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 59
+        /*2c90*/                   ISETP.NE.AND P0, PT, R6, 0x1, PT ;
+        /*2ca0*/               @P0 BRA `(.L_x_54) ;
+.L_x_55:
+        /*2cb0*/                   YIELD ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_load.cuh", line 260
+        /*2cc0*/                   IMAD.U32 R4, RZ, RZ, UR38 ;
+        /*2cd0*/                   IMAD.U32 R5, RZ, RZ, UR39 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 60
+        /*2ce0*/              @!PT LDS RZ, [RZ] ;
+        /*2cf0*/              @!PT LDS RZ, [RZ] ;
+        /*2d00*/              @!PT LDS RZ, [RZ] ;
+        /*2d10*/              @!PT LDS RZ, [RZ] ;
+        /*2d20*/                   MEMBAR.SC.CTA ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_load.cuh", line 260
+        /*2d30*/                   LD.E.STRONG.GPU R4, [R4.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 59
+        /*2d40*/                   ISETP.NE.AND P0, PT, R4, 0x1, PT ;
+        /*2d50*/              @!P0 BRA `(.L_x_55) ;
+.L_x_54:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 63
+        /*2d60*/                   WARPSYNC 0xffffffff ;
+        /*2d70*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+        /*2d80*/                   BRA `(.L_x_56) ;
+.L_x_53:
+        /*2d90*/                   ISETP.NE.AND P0, PT, R18, RZ, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 35
+        /*2da0*/              @!P0 IMAD.MOV.U32 R3, RZ, RZ, 0x1 ;
+        /*2db0*/              @!P0 IMAD.MOV.U32 R4, RZ, RZ, c[0x0][0x1c8] ;
+        /*2dc0*/              @!P0 IMAD.MOV.U32 R5, RZ, RZ, c[0x0][0x1cc] ;
+        /*2dd0*/              @!P0 STG.E.STRONG.SYS [R4.64], R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 37
+        /*2de0*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+        /*2df0*/                   ISETP.GE.U32.AND P0, PT, R18, c[0x0][0xc], PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 40
+        /*2e00*/               @P0 BRA `(.L_x_57) ;
+        /*2e10*/                   MOV R0, R18 ;
+.L_x_61:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 42
+        /*2e20*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x4 ;
+        /*2e30*/                   IMAD.WIDE R4, R0, R5, c[0x0][0x1c8] ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_load.cuh", line 260
+        /*2e40*/                   LD.E.STRONG.GPU R3, [R4.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 40
+        /*2e50*/                   IADD3 R0, R0, c[0x0][0x0], RZ ;
+        /*2e60*/                   YIELD ;
+        /*2e70*/                   BSSY B1, `(.L_x_58) ;
+        /*2e80*/                   ISETP.GE.U32.AND P1, PT, R0, c[0x0][0xc], PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 42
+        /*2e90*/                   ISETP.NE.AND P2, PT, R3, RZ, PT ;
+        /*2ea0*/               @P2 BRA `(.L_x_59) ;
+.L_x_60:
+        /*2eb0*/                   YIELD ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 43
+        /*2ec0*/              @!PT LDS RZ, [RZ] ;
+        /*2ed0*/              @!PT LDS RZ, [RZ] ;
+        /*2ee0*/              @!PT LDS RZ, [RZ] ;
+        /*2ef0*/              @!PT LDS RZ, [RZ] ;
+        /*2f00*/                   MEMBAR.SC.CTA ;
+	//## File "/usr/local/cuda/include/cub/thread/thread_load.cuh", line 260
+        /*2f10*/                   LD.E.STRONG.GPU R3, [R4.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 42
+        /*2f20*/                   ISETP.NE.AND P2, PT, R3, RZ, PT ;
+        /*2f30*/              @!P2 BRA `(.L_x_60) ;
+.L_x_59:
+        /*2f40*/                   BSYNC B1 ;
+.L_x_58:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 40
+        /*2f50*/              @!P1 BRA `(.L_x_61) ;
+.L_x_57:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 46
+        /*2f60*/                   WARPSYNC 0xffffffff ;
+        /*2f70*/                   BAR.SYNC.DEFER_BLOCKING 0x0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 49
+        /*2f80*/               @P0 BRA `(.L_x_56) ;
+        /*2f90*/                   IMAD.MOV.U32 R0, RZ, RZ, R18 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 50
+        /*2fa0*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x4 ;
+.L_x_62:
+        /*2fb0*/                   IMAD.WIDE R4, R0.reuse, R3, c[0x0][0x1c8] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 49
+        /*2fc0*/                   IADD3 R0, R0, c[0x0][0x0], RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 50
+        /*2fd0*/                   STG.E.STRONG.SYS [R4.64], RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/gbar.h", line 49
+        /*2fe0*/                   ISETP.GE.U32.AND P0, PT, R0, c[0x0][0xc], PT ;
+        /*2ff0*/              @!P0 BRA `(.L_x_62) ;
+.L_x_56:
+        /*3000*/                   BSYNC B0 ;
+.L_x_52:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 176
+        /*3010*/                   LDL.64 R6, [R24] ;
+        /*3020*/                   ST.E [R6.64], RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 168
+        /*3030*/                   LDL.64 R4, [R2+0x18] ;
+        /*3040*/                   LD.E R0, [R4.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 169
+        /*3050*/                   UIADD3 UR43, UR43, 0x1, URZ ;
+        /*3060*/                   IADD3 R24, R2, 0x18, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 168
+        /*3070*/                   ISETP.GT.AND P0, PT, R0, RZ, PT ;
+        /*3080*/                   IMAD.MOV.U32 R0, RZ, RZ, R25 ;
+        /*3090*/              @!P0 CALL.REL.NOINC `(.L_x_63) ;
+        /*30a0*/                   BRA `(.L_x_64) ;
+.L_x_63:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 178
+        /*30b0*/                   EXIT ;
+.L_x_8:
+	//## File "/usr/local/cuda/include/cub/warp/specializations/warp_scan_shfl.cuh", line 163
+        /*30c0*/                   IMAD.MOV.U32 R10, RZ, RZ, R0 ;
+        /*30d0*/                   MOV R4, 0x3120 ;
+        /*30e0*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x1 ;
+        /*30f0*/                   IMAD.MOV.U32 R7, RZ, RZ, RZ ;
+        /*3100*/                   IMAD.MOV.U32 R8, RZ, RZ, -0x1 ;
+        /*3110*/                   CALL.REL.NOINC `($__internal_1_$__cuda_sm70_shflsync_up_p) ;
+        /*3120*/                   ISETP.EQ.U32.AND P0, PT, R6, 0x1, PT ;
+        /*3130*/                   BRA `(.L_x_65) ;
+.L_x_9:
+        /*3140*/                   HFMA2.MMA R7, -RZ, RZ, 0, 0 ;
+        /*3150*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x2 ;
+        /*3160*/                   MOV R4, 0x3190 ;
+        /*3170*/                   IMAD.MOV.U32 R8, RZ, RZ, -0x1 ;
+        /*3180*/                   CALL.REL.NOINC `($__internal_1_$__cuda_sm70_shflsync_up_p) ;
+        /*3190*/                   IMAD.IADD R4, R10, 0x1, R3 ;
+        /*31a0*/                   ISETP.NE.U32.AND P0, PT, R6, 0x1, PT ;
+        /*31b0*/                   IMAD.MOV.U32 R7, RZ, RZ, RZ ;
+        /*31c0*/                   IMAD.MOV.U32 R8, RZ, RZ, -0x1 ;
+        /*31d0*/                   SEL R10, R4, R3, !P0 ;
+        /*31e0*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x4 ;
+        /*31f0*/                   MOV R4, 0x3210 ;
+        /*3200*/                   CALL.REL.NOINC `($__internal_1_$__cuda_sm70_shflsync_up_p) ;
+        /*3210*/                   IMAD.IADD R4, R10, 0x1, R3 ;
+        /*3220*/                   ISETP.NE.U32.AND P0, PT, R6, 0x1, PT ;
+        /*3230*/                   IMAD.MOV.U32 R7, RZ, RZ, RZ ;
+        /*3240*/                   IMAD.MOV.U32 R8, RZ, RZ, -0x1 ;
+        /*3250*/                   SEL R10, R4, R3, !P0 ;
+        /*3260*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x8 ;
+        /*3270*/                   MOV R4, 0x3290 ;
+        /*3280*/                   CALL.REL.NOINC `($__internal_1_$__cuda_sm70_shflsync_up_p) ;
+        /*3290*/                   ISETP.NE.U32.AND P0, PT, R6, 0x1, PT ;
+        /*32a0*/                   IMAD.MOV.U32 R7, RZ, RZ, RZ ;
+        /*32b0*/                   IADD3 R4, R10, R3, RZ ;
+        /*32c0*/                   IMAD.MOV.U32 R8, RZ, RZ, -0x1 ;
+        /*32d0*/                   SEL R10, R4, R3, !P0 ;
+        /*32e0*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x10 ;
+        /*32f0*/                   MOV R4, 0x3310 ;
+        /*3300*/                   CALL.REL.NOINC `($__internal_1_$__cuda_sm70_shflsync_up_p) ;
+        /*3310*/                   IMAD.IADD R4, R10, 0x1, R3 ;
+        /*3320*/                   ISETP.NE.U32.AND P0, PT, R6, 0x1, PT ;
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 323
+        /*3330*/                   IMAD.MOV.U32 R8, RZ, RZ, 0x1f ;
+	//## File "/usr/local/cuda/include/cub/warp/specializations/warp_scan_shfl.cuh", line 163
+        /*3340*/                   SEL R7, R4, R3, !P0 ;
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 323
+        /*3350*/                   IMAD.MOV.U32 R3, RZ, RZ, -0x1 ;
+        /*3360*/                   MOV R4, 0x3380 ;
+        /*3370*/                   CALL.REL.NOINC `($__internal_0_$__cuda_sm70_shflsync_idx) ;
+        /*3380*/                   BRA `(.L_x_66) ;
+.L_x_19:
+	//## File "/usr/local/cuda/include/cub/warp/specializations/warp_scan_shfl.cuh", line 163
+        /*3390*/                   IMAD.MOV.U32 R10, RZ, RZ, R0 ;
+        /*33a0*/                   MOV R4, 0x33f0 ;
+        /*33b0*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x1 ;
+        /*33c0*/                   IMAD.MOV.U32 R7, RZ, RZ, RZ ;
+        /*33d0*/                   IMAD.MOV.U32 R8, RZ, RZ, -0x1 ;
+        /*33e0*/                   CALL.REL.NOINC `($__internal_1_$__cuda_sm70_shflsync_up_p) ;
+        /*33f0*/                   ISETP.EQ.U32.AND P0, PT, R6, 0x1, PT ;
+        /*3400*/                   BRA `(.L_x_67) ;
+.L_x_20:
+        /*3410*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x2 ;
+        /*3420*/                   MOV R4, 0x3460 ;
+        /*3430*/                   IMAD.MOV.U32 R7, RZ, RZ, RZ ;
+        /*3440*/                   IMAD.MOV.U32 R8, RZ, RZ, -0x1 ;
+        /*3450*/                   CALL.REL.NOINC `($__internal_1_$__cuda_sm70_shflsync_up_p) ;
+        /*3460*/                   IMAD.IADD R4, R10, 0x1, R3 ;
+        /*3470*/                   ISETP.NE.U32.AND P0, PT, R6, 0x1, PT ;
+        /*3480*/                   IMAD.MOV.U32 R7, RZ, RZ, RZ ;
+        /*3490*/                   IMAD.MOV.U32 R8, RZ, RZ, -0x1 ;
+        /*34a0*/                   SEL R10, R4, R3, !P0 ;
+        /*34b0*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x4 ;
+        /*34c0*/                   MOV R4, 0x34e0 ;
+        /*34d0*/                   CALL.REL.NOINC `($__internal_1_$__cuda_sm70_shflsync_up_p) ;
+        /*34e0*/                   IMAD.IADD R4, R10, 0x1, R3 ;
+        /*34f0*/                   ISETP.NE.U32.AND P0, PT, R6, 0x1, PT ;
+        /*3500*/                   IMAD.MOV.U32 R7, RZ, RZ, RZ ;
+        /*3510*/                   IMAD.MOV.U32 R8, RZ, RZ, -0x1 ;
+        /*3520*/                   SEL R10, R4, R3, !P0 ;
+        /*3530*/                   MOV R3, 0x8 ;
+        /*3540*/                   MOV R4, 0x3560 ;
+        /*3550*/                   CALL.REL.NOINC `($__internal_1_$__cuda_sm70_shflsync_up_p) ;
+        /*3560*/                   IMAD.IADD R4, R10, 0x1, R3 ;
+        /*3570*/                   ISETP.NE.U32.AND P0, PT, R6, 0x1, PT ;
+        /*3580*/                   IMAD.MOV.U32 R7, RZ, RZ, RZ ;
+        /*3590*/                   IMAD.MOV.U32 R8, RZ, RZ, -0x1 ;
+        /*35a0*/                   SEL R10, R4, R3, !P0 ;
+        /*35b0*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x10 ;
+        /*35c0*/                   MOV R4, 0x35e0 ;
+        /*35d0*/                   CALL.REL.NOINC `($__internal_1_$__cuda_sm70_shflsync_up_p) ;
+        /*35e0*/                   IMAD.IADD R4, R10, 0x1, R3 ;
+        /*35f0*/                   ISETP.NE.U32.AND P0, PT, R6, 0x1, PT ;
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 323
+        /*3600*/                   IMAD.MOV.U32 R8, RZ, RZ, 0x1f ;
+	//## File "/usr/local/cuda/include/cub/warp/specializations/warp_scan_shfl.cuh", line 163
+        /*3610*/                   SEL R7, R4, R3, !P0 ;
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 323
+        /*3620*/                   MOV R3, 0xffffffff ;
+        /*3630*/                   MOV R4, 0x3650 ;
+        /*3640*/                   CALL.REL.NOINC `($__internal_0_$__cuda_sm70_shflsync_idx) ;
+        /*3650*/                   BRA `(.L_x_68) ;
+.L_x_43:
+	//## File "/usr/local/cuda/include/cub/warp/specializations/warp_scan_shfl.cuh", line 163
+        /*3660*/                   MOV R10, R0 ;
+        /*3670*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x1 ;
+        /*3680*/                   MOV R4, 0x36c0 ;
+        /*3690*/                   IMAD.MOV.U32 R7, RZ, RZ, RZ ;
+        /*36a0*/                   IMAD.MOV.U32 R8, RZ, RZ, -0x1 ;
+        /*36b0*/                   CALL.REL.NOINC `($__internal_1_$__cuda_sm70_shflsync_up_p) ;
+        /*36c0*/                   ISETP.EQ.U32.AND P0, PT, R6, 0x1, PT ;
+        /*36d0*/                   BRA `(.L_x_69) ;
+.L_x_44:
+        /*36e0*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x2 ;
+        /*36f0*/                   MOV R4, 0x3730 ;
+        /*3700*/                   IMAD.MOV.U32 R7, RZ, RZ, RZ ;
+        /*3710*/                   IMAD.MOV.U32 R8, RZ, RZ, -0x1 ;
+        /*3720*/                   CALL.REL.NOINC `($__internal_1_$__cuda_sm70_shflsync_up_p) ;
+        /*3730*/                   ISETP.NE.U32.AND P0, PT, R6, 0x1, PT ;
+        /*3740*/                   IMAD.MOV.U32 R7, RZ, RZ, RZ ;
+        /*3750*/                   IADD3 R4, R10, R3, RZ ;
+        /*3760*/                   IMAD.MOV.U32 R8, RZ, RZ, -0x1 ;
+        /*3770*/                   SEL R10, R4, R3, !P0 ;
+        /*3780*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x4 ;
+        /*3790*/                   MOV R4, 0x37b0 ;
+        /*37a0*/                   CALL.REL.NOINC `($__internal_1_$__cuda_sm70_shflsync_up_p) ;
+        /*37b0*/                   IMAD.IADD R4, R10, 0x1, R3 ;
+        /*37c0*/                   ISETP.NE.U32.AND P0, PT, R6, 0x1, PT ;
+        /*37d0*/                   IMAD.MOV.U32 R7, RZ, RZ, RZ ;
+        /*37e0*/                   IMAD.MOV.U32 R8, RZ, RZ, -0x1 ;
+        /*37f0*/                   SEL R10, R4, R3, !P0 ;
+        /*3800*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x8 ;
+        /*3810*/                   MOV R4, 0x3830 ;
+        /*3820*/                   CALL.REL.NOINC `($__internal_1_$__cuda_sm70_shflsync_up_p) ;
+        /*3830*/                   IMAD.IADD R4, R10, 0x1, R3 ;
+        /*3840*/                   ISETP.NE.U32.AND P0, PT, R6, 0x1, PT ;
+        /*3850*/                   IMAD.MOV.U32 R7, RZ, RZ, RZ ;
+        /*3860*/                   IMAD.MOV.U32 R8, RZ, RZ, -0x1 ;
+        /*3870*/                   SEL R10, R4, R3, !P0 ;
+        /*3880*/                   HFMA2.MMA R3, -RZ, RZ, 0, 9.5367431640625e-07 ;
+        /*3890*/                   MOV R4, 0x38b0 ;
+        /*38a0*/                   CALL.REL.NOINC `($__internal_1_$__cuda_sm70_shflsync_up_p) ;
+        /*38b0*/                   IMAD.IADD R4, R10, 0x1, R3 ;
+        /*38c0*/                   ISETP.NE.U32.AND P0, PT, R6, 0x1, PT ;
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 323
+        /*38d0*/                   IMAD.MOV.U32 R8, RZ, RZ, 0x1f ;
+	//## File "/usr/local/cuda/include/cub/warp/specializations/warp_scan_shfl.cuh", line 163
+        /*38e0*/                   SEL R7, R4, R3, !P0 ;
+	//## File "/usr/local/cuda/include/cub/util_ptx.cuh", line 323
+        /*38f0*/                   IMAD.MOV.U32 R3, RZ, RZ, -0x1 ;
+        /*3900*/                   MOV R4, 0x3920 ;
+        /*3910*/                   CALL.REL.NOINC `($__internal_0_$__cuda_sm70_shflsync_idx) ;
+        /*3920*/                   BRA `(.L_x_70) ;
+
+
+
+
+        .weak           $__internal_0_$__cuda_sm70_shflsync_idx
+        .type           $__internal_0_$__cuda_sm70_shflsync_idx,@function
+        .size           $__internal_0_$__cuda_sm70_shflsync_idx,($__internal_1_$__cuda_sm70_shflsync_up_p - $__internal_0_$__cuda_sm70_shflsync_idx)
+$__internal_0_$__cuda_sm70_shflsync_idx:
+        /*3930*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x0 ;
+        /*3940*/                   WARPSYNC R3 ;
+        /*3950*/                   SHFL.IDX PT, R8, R7, R8, R8 ;
+        /*3960*/                   RET.REL.NODEC R4 `(_Z10bfs_kerneliPiS_S_9Worklist2S0_i13GlobalBarrier) ;
+
+
+
+
+        .weak           $__internal_1_$__cuda_sm70_shflsync_up_p
+        .type           $__internal_1_$__cuda_sm70_shflsync_up_p,@function
+        .size           $__internal_1_$__cuda_sm70_shflsync_up_p,($__internal_2_$__cuda_sm70_votesync_any - $__internal_1_$__cuda_sm70_shflsync_up_p)
+$__internal_1_$__cuda_sm70_shflsync_up_p:
+        /*3970*/                   WARPSYNC R8 ;
+        /*3980*/                   SHFL.UP P0, R3, R10, R3, R7 ;
+        /*3990*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x0 ;
+        /*39a0*/                   SEL R6, RZ, 0x1, !P0 ;
+        /*39b0*/                   RET.REL.NODEC R4 `(_Z10bfs_kerneliPiS_S_9Worklist2S0_i13GlobalBarrier) ;
+
+
+
+
+        .weak           $__internal_2_$__cuda_sm70_votesync_any
+        .type           $__internal_2_$__cuda_sm70_votesync_any,@function
+        .size           $__internal_2_$__cuda_sm70_votesync_any,(.L_x_75 - $__internal_2_$__cuda_sm70_votesync_any)
+$__internal_2_$__cuda_sm70_votesync_any:
+        /*39c0*/                   IMAD.MOV.U32 R7, RZ, RZ, 0x0 ;
+        /*39d0*/                   WARPSYNC 0xffffffff ;
+        /*39e0*/                   RET.REL.NODEC R6 `(_Z10bfs_kerneliPiS_S_9Worklist2S0_i13GlobalBarrier) ;
+.L_x_71:
+        /*39f0*/                   BRA `(.L_x_71);
+        /*3a00*/                   NOP;
+        /*3a10*/                   NOP;
+        /*3a20*/                   NOP;
+        /*3a30*/                   NOP;
+        /*3a40*/                   NOP;
+        /*3a50*/                   NOP;
+        /*3a60*/                   NOP;
+        /*3a70*/                   NOP;
+.L_x_75:
+
+
+//--------------------- .text._Z6inserti9Worklist2 --------------------------
+	.section	.text._Z6inserti9Worklist2,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+
+
+
+
+        .global         _Z6inserti9Worklist2
+        .type           _Z6inserti9Worklist2,@function
+        .size           _Z6inserti9Worklist2,(.L_x_78 - _Z6inserti9Worklist2)
+        .other          _Z6inserti9Worklist2,@"STO_CUDA_ENTRY STV_DEFAULT"
+_Z6inserti9Worklist2:
+.text._Z6inserti9Worklist2:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 158
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 159
+        /*0010*/                   S2UR UR4, SR_CTAID.X ;
+        /*0020*/                   S2R R0, SR_TID.X ;
+        /*0030*/                   ULDC UR5, c[0x0][0x0] ;
+        /*0040*/                   UIMAD UR4, UR4, UR5, URZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 160
+        /*0050*/                   IMAD.MOV R0, RZ, RZ, -R0 ;
+        /*0060*/                   ISETP.NE.AND P0, PT, R0, UR4, PT ;
+        /*0070*/               @P0 EXIT ;
+	//## File "/usr/local/cuda/include/device_atomic_functions.hpp", line 107
+        /*0080*/                   S2R R3, SR_LANEID ;
+        /*0090*/                   VOTEU.ANY UR6, UPT, PT ;
+        /*00a0*/                   MOV R2, c[0x0][0x180] ;
+        /*00b0*/                   FLO.U32 R6, UR6 ;
+        /*00c0*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*00d0*/                   POPC R7, UR6 ;
+        /*00e0*/                   ISETP.EQ.U32.AND P0, PT, R6, R3, PT ;
+        /*00f0*/                   IMAD.MOV.U32 R3, RZ, RZ, c[0x0][0x184] ;
+        /*0100*/               @P0 ATOMG.E.ADD.STRONG.GPU PT, R3, [R2.64], R7 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 46
+        /*0110*/                   IMAD.MOV.U32 R5, RZ, RZ, c[0x0][0x17c] ;
+        /*0120*/                   MOV R4, c[0x0][0x178] ;
+        /*0130*/                   LDG.E R5, [R4.64] ;
+	//## File "/usr/local/cuda/include/device_atomic_functions.hpp", line 107
+        /*0140*/                   S2R R8, SR_LTMASK ;
+        /*0150*/                   LOP3.LUT R8, R8, UR6, RZ, 0xc0, !PT ;
+        /*0160*/                   POPC R9, R8 ;
+        /*0170*/                   SHFL.IDX PT, R0, R3, R6, 0x1f ;
+        /*0180*/                   IADD3 R0, R0, R9, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 46
+        /*0190*/                   ISETP.GE.AND P0, PT, R0, R5, PT ;
+        /*01a0*/               @P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 48
+        /*01b0*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x4 ;
+        /*01c0*/                   MOV R5, c[0x0][0x160] ;
+        /*01d0*/                   IMAD.WIDE R2, R0, R3, c[0x0][0x168] ;
+        /*01e0*/                   STG.E [R2.64], R5 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/bfs/fusion.cu", line 161
+        /*01f0*/                   EXIT ;
+.L_x_72:
+        /*0200*/                   BRA `(.L_x_72);
+        /*0210*/                   NOP;
+        /*0220*/                   NOP;
+        /*0230*/                   NOP;
+        /*0240*/                   NOP;
+        /*0250*/                   NOP;
+        /*0260*/                   NOP;
+        /*0270*/                   NOP;
+        /*0280*/                   NOP;
+        /*0290*/                   NOP;
+        /*02a0*/                   NOP;
+        /*02b0*/                   NOP;
+        /*02c0*/                   NOP;
+        /*02d0*/                   NOP;
+        /*02e0*/                   NOP;
+        /*02f0*/                   NOP;
+.L_x_78:
+
+
+//--------------------- SYMBOLS --------------------------
+
+	.type		vprintf,@function
+	.type		__assertfail,@function

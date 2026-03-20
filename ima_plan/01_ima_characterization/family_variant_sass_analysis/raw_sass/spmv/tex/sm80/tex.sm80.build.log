@@ -1,0 +1,24 @@
+/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/tex.cu(12): error: texture is not a template
+  texture<float,1> tex_x;
+  ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/tex.cu(13): error: identifier "cudaBindTexture" is undefined
+  void bind_x(const float * x) { { cudaError err = cudaBindTexture(
+                                                   ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/tex.cu(14): error: identifier "cudaUnbindTexture" is undefined
+  void unbind_x(const float * x) { { cudaError err = cudaUnbindTexture(tex_x); if( cudaSuccess != err) { fprintf(
+                                                     ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/tex.cu(23): error: no instance of overloaded function "tex1Dfetch" matches the argument list
+            argument types are: (<error-type>, const IndexT)
+     sum += Ax[offset] * tex1Dfetch(tex_x, Aj[offset]);
+                         ^
+/usr/local/cuda/include/texture_indirect_functions.h(115): note #3327-D: candidate function template "tex1Dfetch<T>(cudaTextureObject_t, int)" failed deduction
+  static __attribute__((device)) T tex1Dfetch(cudaTextureObject_t texObject, int x)
+                                   ^
+/usr/local/cuda/include/texture_indirect_functions.h(109): note #3322-D: number of parameters of function template "tex1Dfetch(T *, cudaTextureObject_t, int)" does not match the call
+  static __attribute__((device)) typename __nv_itex_trait<T>::type tex1Dfetch(T *ptr, cudaTextureObject_t obj, int x)
+                                                                   ^
+
+4 errors detected in the compilation of "/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/tex.cu".

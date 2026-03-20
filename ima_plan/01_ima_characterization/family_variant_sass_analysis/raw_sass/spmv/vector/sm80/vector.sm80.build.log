@@ -1,0 +1,83 @@
+/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/vector.cu(22): error: texture is not a template
+  texture<float,1> tex_x;
+  ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/vector.cu(23): error: identifier "cudaBindTexture" is undefined
+  void bind_x(const float * x) { { cudaError err = cudaBindTexture(
+                                                   ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/vector.cu(24): error: identifier "cudaUnbindTexture" is undefined
+  void unbind_x(const float * x) { { cudaError err = cudaUnbindTexture(tex_x); if( cudaSuccess != err) { fprintf(
+                                                     ^
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/vector.cu(51): error: no instance of overloaded function "tex1Dfetch" matches the argument list
+            argument types are: (<error-type>, const VertexId)
+     sum += Ax[offset] * tex1Dfetch(tex_x, Aj[offset]);
+                         ^
+/usr/local/cuda/include/texture_indirect_functions.h(115): note #3327-D: candidate function template "tex1Dfetch<T>(cudaTextureObject_t, int)" failed deduction
+  static __attribute__((device)) T tex1Dfetch(cudaTextureObject_t texObject, int x)
+                                   ^
+/usr/local/cuda/include/texture_indirect_functions.h(109): note #3322-D: number of parameters of function template "tex1Dfetch(T *, cudaTextureObject_t, int)" does not match the call
+  static __attribute__((device)) typename __nv_itex_trait<T>::type tex1Dfetch(T *ptr, cudaTextureObject_t obj, int x)
+                                                                   ^
+          detected during:
+            instantiation of "void spmv_vector_kernel<VECTORS_PER_BLOCK,THREADS_PER_VECTOR>(int, const uint64_t *, const VertexId *, const ValueT *, const ValueT *, ValueT *) [with VECTORS_PER_BLOCK=128, THREADS_PER_VECTOR=2]" at line 74
+            instantiation of "void spmv_vector<THREADS_PER_VECTOR>(int, uint64_t *, VertexId *, ValueT *, ValueT *, ValueT *) [with THREADS_PER_VECTOR=2]" at line 108
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/vector.cu(51): error: no instance of overloaded function "tex1Dfetch" matches the argument list
+            argument types are: (<error-type>, const VertexId)
+     sum += Ax[offset] * tex1Dfetch(tex_x, Aj[offset]);
+                         ^
+/usr/local/cuda/include/texture_indirect_functions.h(115): note #3327-D: candidate function template "tex1Dfetch<T>(cudaTextureObject_t, int)" failed deduction
+  static __attribute__((device)) T tex1Dfetch(cudaTextureObject_t texObject, int x)
+                                   ^
+/usr/local/cuda/include/texture_indirect_functions.h(109): note #3322-D: number of parameters of function template "tex1Dfetch(T *, cudaTextureObject_t, int)" does not match the call
+  static __attribute__((device)) typename __nv_itex_trait<T>::type tex1Dfetch(T *ptr, cudaTextureObject_t obj, int x)
+                                                                   ^
+          detected during:
+            instantiation of "void spmv_vector_kernel<VECTORS_PER_BLOCK,THREADS_PER_VECTOR>(int, const uint64_t *, const VertexId *, const ValueT *, const ValueT *, ValueT *) [with VECTORS_PER_BLOCK=64, THREADS_PER_VECTOR=4]" at line 74
+            instantiation of "void spmv_vector<THREADS_PER_VECTOR>(int, uint64_t *, VertexId *, ValueT *, ValueT *, ValueT *) [with THREADS_PER_VECTOR=4]" at line 109
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/vector.cu(51): error: no instance of overloaded function "tex1Dfetch" matches the argument list
+            argument types are: (<error-type>, const VertexId)
+     sum += Ax[offset] * tex1Dfetch(tex_x, Aj[offset]);
+                         ^
+/usr/local/cuda/include/texture_indirect_functions.h(115): note #3327-D: candidate function template "tex1Dfetch<T>(cudaTextureObject_t, int)" failed deduction
+  static __attribute__((device)) T tex1Dfetch(cudaTextureObject_t texObject, int x)
+                                   ^
+/usr/local/cuda/include/texture_indirect_functions.h(109): note #3322-D: number of parameters of function template "tex1Dfetch(T *, cudaTextureObject_t, int)" does not match the call
+  static __attribute__((device)) typename __nv_itex_trait<T>::type tex1Dfetch(T *ptr, cudaTextureObject_t obj, int x)
+                                                                   ^
+          detected during:
+            instantiation of "void spmv_vector_kernel<VECTORS_PER_BLOCK,THREADS_PER_VECTOR>(int, const uint64_t *, const VertexId *, const ValueT *, const ValueT *, ValueT *) [with VECTORS_PER_BLOCK=32, THREADS_PER_VECTOR=8]" at line 74
+            instantiation of "void spmv_vector<THREADS_PER_VECTOR>(int, uint64_t *, VertexId *, ValueT *, ValueT *, ValueT *) [with THREADS_PER_VECTOR=8]" at line 110
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/vector.cu(51): error: no instance of overloaded function "tex1Dfetch" matches the argument list
+            argument types are: (<error-type>, const VertexId)
+     sum += Ax[offset] * tex1Dfetch(tex_x, Aj[offset]);
+                         ^
+/usr/local/cuda/include/texture_indirect_functions.h(115): note #3327-D: candidate function template "tex1Dfetch<T>(cudaTextureObject_t, int)" failed deduction
+  static __attribute__((device)) T tex1Dfetch(cudaTextureObject_t texObject, int x)
+                                   ^
+/usr/local/cuda/include/texture_indirect_functions.h(109): note #3322-D: number of parameters of function template "tex1Dfetch(T *, cudaTextureObject_t, int)" does not match the call
+  static __attribute__((device)) typename __nv_itex_trait<T>::type tex1Dfetch(T *ptr, cudaTextureObject_t obj, int x)
+                                                                   ^
+          detected during:
+            instantiation of "void spmv_vector_kernel<VECTORS_PER_BLOCK,THREADS_PER_VECTOR>(int, const uint64_t *, const VertexId *, const ValueT *, const ValueT *, ValueT *) [with VECTORS_PER_BLOCK=16, THREADS_PER_VECTOR=16]" at line 74
+            instantiation of "void spmv_vector<THREADS_PER_VECTOR>(int, uint64_t *, VertexId *, ValueT *, ValueT *, ValueT *) [with THREADS_PER_VECTOR=16]" at line 111
+
+/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/vector.cu(51): error: no instance of overloaded function "tex1Dfetch" matches the argument list
+            argument types are: (<error-type>, const VertexId)
+     sum += Ax[offset] * tex1Dfetch(tex_x, Aj[offset]);
+                         ^
+/usr/local/cuda/include/texture_indirect_functions.h(115): note #3327-D: candidate function template "tex1Dfetch<T>(cudaTextureObject_t, int)" failed deduction
+  static __attribute__((device)) T tex1Dfetch(cudaTextureObject_t texObject, int x)
+                                   ^
+/usr/local/cuda/include/texture_indirect_functions.h(109): note #3322-D: number of parameters of function template "tex1Dfetch(T *, cudaTextureObject_t, int)" does not match the call
+  static __attribute__((device)) typename __nv_itex_trait<T>::type tex1Dfetch(T *ptr, cudaTextureObject_t obj, int x)
+                                                                   ^
+          detected during:
+            instantiation of "void spmv_vector_kernel<VECTORS_PER_BLOCK,THREADS_PER_VECTOR>(int, const uint64_t *, const VertexId *, const ValueT *, const ValueT *, ValueT *) [with VECTORS_PER_BLOCK=8, THREADS_PER_VECTOR=32]" at line 74
+            instantiation of "void spmv_vector<THREADS_PER_VECTOR>(int, uint64_t *, VertexId *, ValueT *, ValueT *, ValueT *) [with THREADS_PER_VECTOR=32]" at line 112
+
+8 errors detected in the compilation of "/workspace/prefetch/gpu-app-collection/gardenia/src/spmv/vector.cu".

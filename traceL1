@@ -347,10 +347,31 @@ declare -A TRACE_MAP=(
     ["bc_ima_med"]="bc_linear_base/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
     ["bc_ima_small"]="bc_linear_base/mtx___data_web_Google_0_0_506742/traces/kernelslist.g"
 
+    # Gardenia IMA tiers (newly traced workloads)
+    ["pr_ima_high"]="pr_base/mtx___data_cit_Patents_1/traces/kernelslist.g"
+    ["pr_ima_med"]="pr_base/mtx___data_web_Google_1/traces/kernelslist.g"
+    ["pr_ima_small"]="pr_base/mtx___data_web_Google_0/traces/kernelslist.g"
+
+    ["scc_ima_high"]="scc_topo/__data_cit_Patents_mtx_1/traces/kernelslist.g"
+    ["scc_ima_med"]="scc_topo/__data_web_Google_mtx_1/traces/kernelslist.g"
+    ["scc_ima_small"]="scc_topo/__data_flickr_mtx_1/traces/kernelslist.g"
+
+    ["vc_ima_high"]="vc_linear_base/mtx___data_cit_Patents_1_0/traces/kernelslist.g"
+    ["vc_ima_med"]="vc_linear_base/mtx___data_web_Google_1_0/traces/kernelslist.g"
+    ["vc_ima_small"]="vc_linear_base/mtx___data_roadNet_CA_1_0/traces/kernelslist.g"
+
+    ["symgs_ima_high"]="symgs_base/mtx___data_cit_Patents_1/traces/kernelslist.g"
+    ["symgs_ima_med"]="symgs_base/mtx___data_web_Google_1/traces/kernelslist.g"
+    ["symgs_ima_small"]="symgs_base/mtx___data_roadNet_CA_1/traces/kernelslist.g"
+
 
     # flash attention
     ["fa"]="fa/NO_ARGS/traces/kernelslist.g"
     ["fa4k"]="fa_4096seq/NO_ARGS/traces/kernelslist.g"
+    ["fi_dec_512"]="flashinfer_decode_512/NO_ARGS/traces/kernelslist.g"
+    ["fi_dec_4k"]="flashinfer_decode_4096/NO_ARGS/traces/kernelslist.g"
+    ["ima_tiny_case"]="ima_tiny_case/NO_ARGS/traces/kernelslist.g"
+    ["ima_tiny_case_current"]="ima_tiny_case_current/NO_ARGS/traces/kernelslist.g"
 
     #cache strategy
     ["wb"]="/strategybench.sm80/__test_alloc___store_wb/traces/kernelslist.g"
@@ -442,7 +463,7 @@ show_usage() {
     echo "选项:"
     echo "  -c, --config <model>  指定GPU配置模型 (默认: SM80_A100)"
     echo "                        支持: SM7_QV100, SM80_A100"
-    echo "  --ideal-l1d            启用 Ideal L1D：强制 eligible global read 为 L1D HIT（上界实验）"
+    echo "  --ideal-l1d            启用 Ideal L1D：强制 eligible global read 为 L1D HIT（上界实验，日志名自动加 _ideal_l1d 后缀）"
     echo "  -nl, --nlevel         启用 n_level 调度器（日志名自动加 _nl 后缀，与 -gto 互斥）"
     echo "  -nls, --nlevel-scheduler <lrr|gto>"
     echo "                        选择 n_level 默认调度器并匹配 warp alloc 文件 (默认: lrr)"
@@ -608,6 +629,9 @@ if [ "$NLEVEL_ENABLED" = true ]; then
             LOG_NAME="${LOG_NAME}_nl"
         fi
     fi
+fi
+if [ "$IDEAL_L1D_ENABLED" = true ] && [[ "$LOG_NAME" != *_ideal_l1d ]]; then
+    LOG_NAME="${LOG_NAME}_ideal_l1d"
 fi
 if [ "$GTO_ENABLED" = true ] && [[ "$LOG_NAME" != *_gto ]]; then
     LOG_NAME="${LOG_NAME}_gto"
