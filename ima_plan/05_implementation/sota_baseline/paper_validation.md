@@ -1,7 +1,7 @@
 # SOTA Baseline 原论文验证报告
 
 > 创建日期：2026-03-25
-> 状态：**模板已建立，Snake 验证待 Rodinia trace 就绪后执行**
+> 状态：**Snake 验证已执行（SM80_A100），Spare Register 趋势验证通过**
 
 ---
 
