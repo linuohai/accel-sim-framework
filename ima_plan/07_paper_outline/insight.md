@@ -72,7 +72,7 @@ IMA 相关的 load 贡献了超过一半到四分之三以上的 L1 miss，证�
 
 ## Insight 4: 循环展开导致 PC 膨胀，(base, scale) 归并可解
 
-**来源**: `01_ima_characterization/loop_unrolling_and_prefetch.md`, `04_prefetcher_design.md` §3.2 Table B
+**来源**: `01_ima_characterization/loop_unrolling_and_prefetch.md`, `04_prefetcher_design.md` §3.2 TT
 
 **内容**:
 
@@ -84,11 +84,11 @@ IMA 相关的 load 贡献了超过一半到四分之三以上的 L1 miss，证�
 | CC hook | 1 index + 1 data + 1 dependent | 15 | 5× |
 | SpMV | 1 index + 1 data | 60+ | ~30× |
 
-**关键洞察**: 虽然 PC 不同，但所有展开副本的 IMAD.WIDE 共享同一个 `(constant_operand, scale)` 对。用 `(data_base, scale)` 作为 Pattern Table 的 key，可自动将 30+ 个不同 PC 归并到同一个 pattern entry，彻底解决 PC 膨胀问题。
+**关键洞察**: 虽然 PC 不同，但所有展开副本的 IMAD.WIDE 共享同一个 `(constant_operand, scale)` 对。用 `(data_base, scale)` 作为 Target Table (TT) 的 key，可自动将 30+ 个不同 PC 归并到同一个 pattern entry，彻底解决 PC 膨胀问题。
 
 这是 CPU prefetcher 不存在的问题（CPU 通常没有大规模 loop unrolling），也是 GPU 方案独有的设计挑战和解决方式。
 
-**论文适用段落**: Characterization（PC 膨胀现象）, Design（两表归并机制）
+**论文适用段落**: Characterization（PC 膨胀现象）, Design（CT+TT 双表归并机制）
 
 ---
 
@@ -107,7 +107,7 @@ IMA 相关的 load 贡献了超过一半到四分之三以上的 L1 miss，证�
 | BC forward | 1 index → 2 data (`depths[]` + `path_counts[]`) | 2× |
 | BC reverse | 1 index → 3 data (`depths[]` + `path_counts[]` + `deltas[]`) | 3× |
 
-BC reverse 的 1→3 复用意味着 prefetcher **每次 index 值获取的 ROI 是 SpMV 的 3 倍**。设计上通过 Table B 的 `targets[K=3]` 数组支持，无需额外 index fetch 开销。
+BC reverse 的 1→3 复用意味着 prefetcher **每次 index 值获取的 ROI 是 SpMV 的 3 倍**。设计上通过 TT 的 `targets[K=3]` 数组支持，无需额外 index fetch 开销。
 
 SASS 证据：BC reverse 的三条 IMAD.WIDE 共享同一个 index 寄存器 R9，仅 constant operand（base）不同。
 
@@ -123,11 +123,11 @@ SASS 证据：BC reverse 的三条 IMAD.WIDE 共享同一个 index 寄存器 R9�
 
 本设计的"训练"包含两个阶段，性质不同：
 
-**阶段 1：IMA 依赖链检测**（填充 Table A/B + 累加 confidence）
+**阶段 1：IMA 依赖链检测**（填充 CT/TT + 累加 confidence）
 - 发生在 instruction **issue** 阶段——观察到 `LDG → IMAD.WIDE → LDG` 的寄存器依赖链时立即写入，**不需要等 load 数据返回**
-- 单个 warp 完成检测的速度并不比 CPU 快（GPU per-warp issue rate 更低），但 64 个 warp 都在执行相同代码，各自独立通过 FIFO 检测到链并给 Table B 的 confidence +1，因此 confidence 在 wall-clock 时间上较快达到阈值
+- 单个 warp 完成检测的速度并不比 CPU 快（GPU per-warp issue rate 更低），但 64 个 warp 都在执行相同代码，各自独立通过 FIFO 检测到链并给 TT 的 confidence +1，因此 confidence 在 wall-clock 时间上较快达到阈值
 
-**阶段 2：Stride 学习**（Table A 的 `iter_stride`）
+**阶段 2：Stride 学习**（CT 的 `iter_stride`）
 - 需要同一 PC 的 index load 被同一个 tracked warp 执行**两次**，计算地址差
 - 这要求该 warp 经历至少 2 次 outer loop iteration，每次需等待 index + data load 返回
 - 对 BFS（unroll×4）：2 次 outer iteration ≈ 2 × 4 × 400 ≈ 3200 cycles
@@ -148,10 +148,10 @@ SASS 证据：BC reverse 的三条 IMAD.WIDE 共享同一个 index 寄存器 R9�
   └───────────────────┘          └────────────────────────────┘
 ```
 
-- Table A/B 是 **per-SM shared**，任何 warp 的检测结果立即对所有 warp 可用
+- CT/TT 是 **per-SM shared**，任何 warp 的检测结果立即对所有 warp 可用
 - 1 个 warp 完成训练 → 64 个 warp 受益，训练开销被 **64 倍分摊**
 - 即使训练本身比 CPU 慢，分摊到每个 warp 后的代价远低于 CPU 每线程独立训练的模式
-- Per-warp FIFO（检测用）是独立的，但产出的**知识**（Table A/B）是共享的
+- Per-warp FIFO（检测用）是独立的，但产出的**知识**（CT/TT）是共享的
 
 **与 CPU 的本质差异**：CPU 的 IMP/DMP 是 per-core 的检测器，每个 core 为自己的线程独立学习。GPU 的独特之处在于**大量执行相同代码的 warp 共享同一份 pattern 知识**——这是 SIMT 执行模型的天然产物。
 
@@ -237,7 +237,7 @@ PR 和 VC 在 sm70/sm80/sm90 三个架构上均保持 `stable_fast_path` 或 `mo
 
 | Pattern | 代表 | Index 流 | Data 地址可知时机 | Prefetchability |
 |---------|------|---------|----------------|-----------------|
-| I: Linear Gather | SpMV | stride-1 顺序 | S1 可预测 | **最高** — 两步 pipeline 完全可行 |
+| I: Linear Gather | SpMV | stride-1 顺序 | S1 可预测 | **最高** — Index-Data Pipeline 完全可行 |
 | II: Frontier-Driven | BFS/SSSP/BC | worklist 随机 | S1 可预测（内循环同 I） | **高** — 内循环同 I，外层 worklist 不可控 |
 | III: Data-Dependent | CC hook | stride-1 首跳 | S3 才可知 | **有限** — 第一层可预取，第二层 timeliness ≈ 0 |
 | IV: Pointer Chasing | CC shortcut | 纯数据依赖 | S3 才可知 | **极低** — MLP ≈ 0，传统方法无效 |

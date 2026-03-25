@@ -3,6 +3,9 @@
 > 对应文件夹：`02_related_work/`（论文 PDF 按 `cpu/`、`gpu/` 分类存放）
 >
 > 状态：**调研进行中** — 论文收集完成（CPU 8篇 + GPU 9篇），笔记与分析进行中
+>
+> 补充文档：
+> - `02_related_work/gpu_prefetcher_impl_provenance.md`：GPU prefetcher 的实现公开性、evaluation baseline provenance、开源 simulator 依赖梳理
 
 ---
 
@@ -284,6 +287,7 @@
 
 ```
 02_related_work/
+├── gpu_prefetcher_impl_provenance.md   # GPU 实现来源 / baseline provenance 调研
 ├── cpu/                    # CPU IMA prefetch 论文 PDF（8 篇）
 │   ├── IMP (MICRO'15)
 │   ├── DMP (HPCA'24)

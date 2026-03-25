@@ -27,4 +27,30 @@ result/issue_trace/plot/script/_pydeps
 *.pyc
 analyze/*
 result/*
+worktrees/
 skills/*.bashrc
+
+# 临时/大型数据
+tmp/
+perf.data
+*.tar.bz2*
+gpgpu_inst_stats.txt
+RohuWmuRbET2.yaml
+.bashrc
+.claude/
+
+# 构建产物
+gpu-simulator/build-pgo1/
+gpu-simulator/gpgpu-sim/
+
+# 大型仿真数据目录
+ima_plan/04_prefetcher_design/extra_pattern/small_1sm_cta5/
+ima_plan/04_prefetcher_design/tiny_case/grasp_verify/
+ima_plan/05_implementation/spmv_deep_dive/
+
+# 不需要提交的杂项
+gtc_report/
+/skills/
+ima_plan/weekly_report/
+scripts/
+run_flashinfer_decode_compare.sh

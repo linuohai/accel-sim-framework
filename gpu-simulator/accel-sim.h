@@ -22,6 +22,7 @@ class accel_sim_framework {
  public:
   accel_sim_framework(int argc, const char **argv);
   accel_sim_framework(std::string config_file, std::string trace_file);
+  ~accel_sim_framework();
 
   void init() {
     active = false;
@@ -69,6 +70,7 @@ class accel_sim_framework {
 
   std::vector<unsigned long long> busy_streams;
   std::vector<trace_kernel_info_t *> kernels_info;
+  std::vector<trace_kernel_info_t *> retired_kernels;
   std::vector<trace_command> commandlist;
 
 };

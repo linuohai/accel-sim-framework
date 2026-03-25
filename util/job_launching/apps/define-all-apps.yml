@@ -109,6 +109,14 @@ GPU_Microbenchmark:
             - args:
               accel-sim-mem: 1G
 
+IMA_TinyCase:
+    exec_dir: "$GPUAPPS_ROOT/bin/$CUDA_VERSION/release/"
+    data_dirs: "$GPUAPPS_ROOT/data_dirs/"
+    execs:
+        - ima_tiny_case:
+            - args:
+              accel-sim-mem: 1G
+
 GPU_Atomic:
     exec_dir: "$GPUAPPS_ROOT/bin/$CUDA_VERSION/release/"
     data_dirs: "$GPUAPPS_ROOT/data_dirs/"
@@ -958,6 +966,39 @@ pannotia:
 #            - args: ./data/USA-road-d.NW.gr 0
 #            - args: ./data/USA-road-d.NY.gr 0
 
+gardenia_ima:
+    exec_dir: "$GPUAPPS_ROOT/gardenia/bin/"
+    data_dirs: "$GPUAPPS_ROOT/gardenia/datasets/accelsim/"
+    execs:
+        - pr_base:
+            - args: mtx ./data/cit-Patents 1
+              accel-sim-mem: 8G
+            - args: mtx ./data/web-Google 1
+              accel-sim-mem: 8G
+            - args: mtx ./data/web-Google 0
+              accel-sim-mem: 8G
+        - scc_topo:
+            - args: ./data/cit-Patents.mtx 1
+              accel-sim-mem: 8G
+            - args: ./data/web-Google.mtx 1
+              accel-sim-mem: 8G
+            - args: ./data/flickr.mtx 1
+              accel-sim-mem: 8G
+        - vc_linear_base:
+            - args: mtx ./data/cit-Patents 1 0
+              accel-sim-mem: 8G
+            - args: mtx ./data/web-Google 1 0
+              accel-sim-mem: 8G
+            - args: mtx ./data/roadNet-CA 1 0
+              accel-sim-mem: 8G
+        - symgs_base:
+            - args: mtx ./data/cit-Patents 1
+              accel-sim-mem: 8G
+            - args: mtx ./data/web-Google 1
+              accel-sim-mem: 8G
+            - args: mtx ./data/roadNet-CA 1
+              accel-sim-mem: 8G
+
 lonestargpu-2.0:
     exec_dir: "$GPUAPPS_ROOT/bin/$CUDA_VERSION/release/"
     data_dirs: "$GPUAPPS_ROOT/data_dirs/cuda/lonestargpu-2.0/"
@@ -1076,3 +1117,22 @@ vllm:
             - args: # defualt is llama-7b model , pass model name to use other models
               accel-sim-mem: 10G
 
+
+flashinfer_decode:
+    exec_dir: "$GPUAPPS_ROOT/bin/$CUDA_VERSION/release/"
+    data_dirs: ""
+    execs:
+        - flashinfer_decode_512:
+            - args:
+              accel-sim-mem: 6G
+        - flashinfer_decode_4096:
+            - args:
+              accel-sim-mem: 10G
+
+ima_tiny_case:
+    exec_dir: "$GPUAPPS_ROOT/bin/$CUDA_VERSION/release/"
+    data_dirs: ""
+    execs:
+        - ima_tiny_case:
+            - args:
+              accel-sim-mem: 2G

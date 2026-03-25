@@ -24,6 +24,13 @@ PLOT_TMUX_MONITOR=false
 # Ideal L1D cache (force eligible global reads to L1D HIT)
 IDEAL_L1D_ENABLED=false
 
+# GRASP prefetcher
+GRASP_ENABLED=false
+GRASP_DEBUG=false
+GRASP_CHAIN_CSV=""
+GRASP_TRACE_ENABLED=false
+GRASP_DISTANCE=0
+
 # 额外控制（用于减小仿真时间/输出体量）
 MAX_CYCLE=0
 MAX_INSN=0
@@ -32,6 +39,8 @@ MAX_COMPLETED_CTA=0
 ISSUE_TRACE_ENABLED=false
 L1_TRACE_ENABLED=true
 L2_TRACE_ENABLED=true
+L2_TRACE_PRINT_BW=false
+L2_TRACE_PRINT_COMPUTE=false
 HBM_TRACE_ENABLED=true
 HBM_TRACE_PERIOD=1
 ICNT_BW_TRACE_ENABLED=false
@@ -73,6 +82,30 @@ while [[ $# -gt 0 ]]; do
     --ideal-l1d)
       IDEAL_L1D_ENABLED=true
       shift # past argument
+      ;;
+    --grasp)
+      GRASP_ENABLED=true
+      shift
+      ;;
+    --grasp-debug)
+      GRASP_ENABLED=true
+      GRASP_DEBUG=true
+      shift
+      ;;
+    --grasp-trace)
+      GRASP_ENABLED=true
+      GRASP_TRACE_ENABLED=true
+      shift
+      ;;
+    --grasp-chain-csv)
+      GRASP_CHAIN_CSV="$2"
+      shift
+      shift
+      ;;
+    --grasp-distance)
+      GRASP_DISTANCE="$2"
+      shift
+      shift
       ;;
   -nl|--nlevel)
       NLEVEL_ENABLED=true
@@ -211,6 +244,14 @@ while [[ $# -gt 0 ]]; do
       L2_TRACE_ENABLED=false
       shift
       ;;
+    --l2-trace-print-bw)
+      L2_TRACE_PRINT_BW=true
+      shift
+      ;;
+    --l2-trace-print-compute)
+      L2_TRACE_PRINT_COMPUTE=true
+      shift
+      ;;
     --no-hbm-trace)
       HBM_TRACE_ENABLED=false
       shift
@@ -287,6 +328,7 @@ RESULT_STALL_REASON_PC_STATS_BASE_DIR="$RESULT_ISSUE_DIR/stall_reason_pc_stats"
 RESULT_BW_DIR="$BASE_DIR/result/bandwidth"
 RESULT_ICNT_BW_DIR="$BASE_DIR/result/icnt_bw"
 RESULT_L2_BW_DIR="$BASE_DIR/result/l2_bw"
+RESULT_GRASP_TRACE_DIR="$BASE_DIR/result/grasp_trace"
 
 # 创建结果目录（如果不存在）
 mkdir -p "$RESULT_LOG_DIR"
@@ -317,11 +359,9 @@ declare -A TRACE_MAP=(
     ["bfs_flickr"]="bfs_linear_base/mtx___data_flickr_0_0_0/traces/kernelslist.g"
     ["spmv_cu"]="spmv_cusparse/mtx___data_web_Google_1_0/traces/kernelslist.g"
     ["spmv"]="spmv_base/mtx___data_web_Google_1_0/traces/kernelslist.g"
-    # IMA tiers（direction sensitive；spmv 输入必须无向/对称 => 2 tiers）
+    # IMA tiers（direction sensitive；spmv 输入必须无向/对称 => 2 tiers，无 small）
     ["spmv_ima_high"]="spmv_base/mtx___data_cit_Patents_1_0/traces/kernelslist.g"
-    ["spmv_ima_small"]="spmv_base/mtx___data_web_Google_1_0/traces/kernelslist.g"
-    # IMA（smaller, faster）：web-Google（no symmetrize）（需先生成对应 traces）
-    ["spmv_web_ima_small"]="spmv_base/mtx___data_web_Google_0_0/traces/kernelslist.g"
+    ["spmv_ima_med"]="spmv_base/mtx___data_web_Google_1_0/traces/kernelslist.g"
     # IMA 配置（cit-Patents, symmetrize=1）
     ["spmv_cit_ima"]="spmv_base/mtx___data_cit_Patents_1_0/traces/kernelslist.g"
 
@@ -464,6 +504,10 @@ show_usage() {
     echo "  -c, --config <model>  指定GPU配置模型 (默认: SM80_A100)"
     echo "                        支持: SM7_QV100, SM80_A100"
     echo "  --ideal-l1d            启用 Ideal L1D：强制 eligible global read 为 L1D HIT（上界实验，日志名自动加 _ideal_l1d 后缀）"
+    echo "  --grasp                启用 GRASP IMA prefetcher（默认 chain CSV: tmp/strict_chains/strict_selected_chain_instances.csv）"
+    echo "  --grasp-debug          启用 GRASP + 详细调试日志"
+    echo "  --grasp-trace          启用 GRASP + 结构化 CSV 事件 trace（含 --grasp）"
+    echo "  --grasp-chain-csv <path>  指定 GRASP chain CSV 文件路径"
     echo "  -nl, --nlevel         启用 n_level 调度器（日志名自动加 _nl 后缀，与 -gto 互斥）"
     echo "  -nls, --nlevel-scheduler <lrr|gto>"
     echo "                        选择 n_level 默认调度器并匹配 warp alloc 文件 (默认: lrr)"
@@ -485,6 +529,8 @@ show_usage() {
     echo "  --stall-reason-pc-stats-topk <K>  设置每个 reason 的 topK（默认 5；0=不输出 topk_other.csv）"
     echo "  --no-l1-trace                 关闭 L1 trace（默认开启）"
     echo "  --no-l2-trace                 关闭 L2 trace（默认开启）"
+    echo "  --l2-trace-print-bw           在 L2 trace 中打印 HBM 带宽/occupancy"
+    echo "  --l2-trace-print-compute      在 L2 trace 中打印 SM compute utilization"
     echo "  --no-hbm-trace                关闭 HBM 分区带宽 trace（默认开启）"
     echo "  --no-icnt-bw-trace            关闭 ICNT 带宽 trace（默认关闭）"
     echo "  --no-l2-bw-trace              关闭 L2 端口带宽 trace（默认关闭）"
@@ -528,6 +574,8 @@ show_usage() {
     echo "  $0 --max-completed-cta 200 bfs_web              # 只跑前 200 个 CTA（快速看 IMA 趋势）"
     echo "  $0 --hbm-trace-period 100 spmv                  # 带宽 trace 按 100 cycle 采样"
     echo "  $0 --ideal-l1d bfs_usa bfs_usa_ideal_l1d        # Ideal L1D 上界实验"
+    echo "  $0 --grasp bfs_ima_small bfs_grasp              # GRASP prefetcher 实验"
+    echo "  $0 --grasp-debug --max-completed-cta 5 bfs_ima_small grasp_dbg  # GRASP 调试模式"
     echo ""
     echo "L1/ISSUE Trace 后处理 (生成带 L1 命中信息的 CSV):"
     echo "  python result/issue_trace/issue_trace_l1_match.py <issue_csv> [选项]"
@@ -687,6 +735,7 @@ L2_BW_FILE="$RESULT_L2_BW_DIR/${LOG_NAME}_l2_bw.csv"
 # 每次运行的 stall reason/pc stats 输出目录（避免并发/多算法覆盖）
 RESULT_STALL_REASON_PC_STATS_DIR="$RESULT_STALL_REASON_PC_STATS_BASE_DIR/$LOG_NAME"
 mkdir -p "$RESULT_STALL_REASON_PC_STATS_DIR"
+mkdir -p "$RESULT_GRASP_TRACE_DIR"
 
 REL_L1_FILE="result/L1cache_trace/${LOG_NAME}_l1.csv"
 REL_L2_FILE="result/L2cache_trace/${LOG_NAME}_l2.csv"
@@ -695,6 +744,7 @@ REL_STALL_REASON_PC_STATS_DIR="result/issue_trace/stall_reason_pc_stats/${LOG_NA
 REL_BW_FILE="result/bandwidth/${LOG_NAME}_hbm_partition.csv"
 REL_ICNT_BW_FILE="result/icnt_bw/${LOG_NAME}_icnt_bw.csv"
 REL_L2_BW_FILE="result/l2_bw/${LOG_NAME}_l2_bw.csv"
+REL_GRASP_TRACE_FILE="result/grasp_trace/${LOG_NAME}_grasp.csv"
 
 STALL_REASON_PC_STATS_BREAKDOWN="$RESULT_STALL_REASON_PC_STATS_DIR/stall_reason_breakdown.csv"
 STALL_REASON_PC_STATS_HIST="$RESULT_STALL_REASON_PC_STATS_DIR/stall_reason_pc_hist.csv"
@@ -758,6 +808,20 @@ if ! grep -q '^-l2_trace_enable[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
 fi
 if ! grep -q '^-l2_trace_path[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
     echo "-l2_trace_path \"$REL_L2_FILE\"" >> "$TEMP_GPGPU_CONFIG"
+fi
+if [ "$L2_TRACE_PRINT_BW" = true ]; then
+    if grep -q '^-l2_trace_print_bw[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        sed -i "s|^-l2_trace_print_bw[[:space:]].*|-l2_trace_print_bw 1|g" "$TEMP_GPGPU_CONFIG"
+    else
+        echo "-l2_trace_print_bw 1" >> "$TEMP_GPGPU_CONFIG"
+    fi
+fi
+if [ "$L2_TRACE_PRINT_COMPUTE" = true ]; then
+    if grep -q '^-l2_trace_print_compute[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
+        sed -i "s|^-l2_trace_print_compute[[:space:]].*|-l2_trace_print_compute 1|g" "$TEMP_GPGPU_CONFIG"
+    else
+        echo "-l2_trace_print_compute 1" >> "$TEMP_GPGPU_CONFIG"
+    fi
 fi
 if [ "$HBM_TRACE_ENABLED" = true ]; then
     if ! grep -q '^-hbm_partition_trace_enable[[:space:]]' "$TEMP_GPGPU_CONFIG"; then
@@ -839,6 +903,30 @@ else
         sed -i "s|^[[:space:]]*-gpgpu_perfect_l1d[[:space:]].*|-gpgpu_perfect_l1d 0|g" "$TEMP_GPGPU_CONFIG"
     else
         echo "-gpgpu_perfect_l1d 0" >> "$TEMP_GPGPU_CONFIG"
+    fi
+fi
+
+# GRASP prefetcher: enable and configure
+if [ "$GRASP_ENABLED" = true ]; then
+    echo "-grasp_enable 1" >> "$TEMP_GPGPU_CONFIG"
+    # Default chain CSV: strict_selected_chain_instances.csv (covers BFS/SSSP/BC/SpMV)
+    if [ -z "$GRASP_CHAIN_CSV" ]; then
+        GRASP_CHAIN_CSV="$BASE_DIR/tmp/strict_chains/strict_selected_chain_instances.csv"
+    fi
+    if [ ! -f "$GRASP_CHAIN_CSV" ]; then
+        echo "警告: GRASP chain CSV 不存在: $GRASP_CHAIN_CSV"
+        echo "  GRASP pair table 将为空，仅 CD/CT/stride 训练生效"
+    fi
+    echo "-gpgpu_ima_prefetch_chain_csv \"$GRASP_CHAIN_CSV\"" >> "$TEMP_GPGPU_CONFIG"
+    if [ "$GRASP_DEBUG" = true ]; then
+        echo "-grasp_debug 1" >> "$TEMP_GPGPU_CONFIG"
+    fi
+    if [ "$GRASP_TRACE_ENABLED" = true ]; then
+        echo "-grasp_trace_enable 1" >> "$TEMP_GPGPU_CONFIG"
+        echo "-grasp_trace_path \"$REL_GRASP_TRACE_FILE\"" >> "$TEMP_GPGPU_CONFIG"
+    fi
+    if [ "$GRASP_DISTANCE" -gt 0 ] 2>/dev/null; then
+        echo "-grasp_ist_distance $GRASP_DISTANCE" >> "$TEMP_GPGPU_CONFIG"
     fi
 fi
 

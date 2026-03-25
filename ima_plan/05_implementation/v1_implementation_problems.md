@@ -12,22 +12,22 @@
 
 | 编号 | 问题 | 严重度 | 涉及组件 |
 |------|------|--------|---------|
-| [P1](#p1-component-3-在-trace-driven-模式下无运行时数据值) | Component 3 在 trace-driven 模式下无运行时数据值 | **阻塞** | Component 3 |
-| [P2](#p2-per-warp-fifo-深度对-spmv-16-展开不足) | per-warp FIFO 深度对 SpMV ×16 展开不足 | ~~高~~ → **中**（不需要 per-warp，深度需求可控） | Component 1 |
-| [P3](#p3-imadwide-的-c0x00x178-基地址解析路径缺失) | IMAD.WIDE 的 `c[0x0][0x178]` 基地址解析路径缺失 | ~~高~~ → **已简化**（由 P1 方案连带解决） | Component 1 |
-| [P4](#p4-imadwide-无专用-op_type只能字符串匹配识别) | IMAD.WIDE 无专用 `op_type`，只能字符串匹配 | **中** | Component 1 |
-| [P5](#p5-fill-路径中-index-prefetch-无法识别pending-buffer-匹配需新机制) | fill 路径中 index prefetch 无法识别，pending buffer 匹配需新机制 | ~~中~~ → **已简化**（由 P1 方案连带解决） | Component 3 |
-| [P6](#p6-data-prefetch-的多-lane-地址生成无法走正常-coalescing-路径) | data prefetch 多 lane 地址生成无法走正常 coalescing 路径 | **中** | Component 3 |
-| [P7](#p7-pending-buffer-容量被严重低估) | Pending Buffer 容量被严重低估 | ~~中~~ → **已消除**（由 P1 方案连带解决） | Component 3 |
+| [P1](#p1-component-3-在-trace-driven-模式下无运行时数据值) | DPU 在 trace-driven 模式下无运行时数据值 | **阻塞** | DPU (Data Prefetch Unit) |
+| [P2](#p2-per-warp-fifo-深度对-spmv-16-展开不足) | per-warp FIFO 深度对 SpMV ×16 展开不足 | ~~高~~ → **中**（不需要 per-warp，深度需求可控） | CD (Chain Detector) |
+| [P3](#p3-imadwide-的-c0x00x178-基地址解析路径缺失) | IMAD.WIDE 的 `c[0x0][0x178]` 基地址解析路径缺失 | ~~高~~ → **已简化**（由 P1 方案连带解决） | CD (Chain Detector) |
+| [P4](#p4-imadwide-无专用-op_type只能字符串匹配识别) | IMAD.WIDE 无专用 `op_type`，只能字符串匹配 | **中** | CD (Chain Detector) |
+| [P5](#p5-fill-路径中-index-prefetch-无法识别pending-buffer-匹配需新机制) | fill 路径中 index prefetch 无法识别，pending buffer 匹配需新机制 | ~~中~~ → **已简化**（由 P1 方案连带解决） | DPU (Data Prefetch Unit) |
+| [P6](#p6-data-prefetch-的多-lane-地址生成无法走正常-coalescing-路径) | data prefetch 多 lane 地址生成无法走正常 coalescing 路径 | **中** | DPU (Data Prefetch Unit) |
+| [P7](#p7-pending-buffer-容量被严重低估) | Pending Buffer 容量被严重低估 | ~~中~~ → **已消除**（由 P1 方案连带解决） | DPU (Data Prefetch Unit) |
 | [P8](#p8-kernel-launch--warp-exit-清表的-hook-位置) | Kernel launch / Warp EXIT 清表的 hook 位置 | **低** | 生命周期管理 |
 
 ---
 
-## P1: Component 3 在 trace-driven 模式下无运行时数据值
+## P1: DPU 在 trace-driven 模式下无运行时数据值
 
 ### 问题描述
 
-两步 Pipeline 的 Step 2 公式：`data_addr = base + value × scale`
+Index-Data Pipeline 的 Step 2 公式：`data_addr = base + value × scale`
 
 其中 `value` 是 index prefetch 从 L2 返回时 cache line 中的实际数据（如 `column_indices[offset+3]` 的运行时内容）。
 
@@ -52,7 +52,7 @@ Trace-driven GPGPU-Sim 本质上只模拟时序，不维护功能性数据状态
 
 | 方案 | 说明 | 代价 |
 |------|------|------|
-| **只做 Step 1** | 跳过 Component 3，只做 index array prefetch | 放弃 data miss 缓解（设计 novelty 损失大） |
+| **只做 Step 1** | 跳过 DPU，只做 index array prefetch | 放弃 data miss 缓解（设计 novelty 损失大） |
 | **从 demand data load 地址反推** | 当 demand `LDG dists[v]` 在 L1_latency_queue 执行时，地址已知 = `dists_base + v*4`，反推 `v`，用于下一迭代的 data prefetch | 触发点后移（demand 执行时而非 index prefetch 返回时）；时效性需验证 |
 | **扩展 NVBit tracer 记录 load 返回值** | tracer 记录每个 load 的数据值，trace-driven 重放时提供 | tracer 改动大，trace 文件大幅膨胀 |
 
@@ -173,7 +173,7 @@ on_index_prefetch_fill(warp_id, chain_id, idx_addr):
 ```
 
 **前置依赖**：
-- 需要已知 `(PC_idx, PC_data)` 对（来自 Component 1 依赖链检测 / Table A / SASS 分析）
+- 需要已知 `(PC_idx, PC_data)` 对（来自 CD 依赖链检测 / CT / SASS 分析）
 - 需要在 `init_traces()` 后增加映射表构建步骤
 - 需要给 `mem_fetch` 添加 prefetch 类型字段（P5 简化方案）
 
@@ -269,7 +269,7 @@ IMAD.WIDE R_, R0, R_scale, c[..]        → 查找 R0 ✓，查找 R_scale → N
 
 LDG R0 和 IMAD.WIDE [uses R0] 之间还有 15 个其他 LDG，FIFO 深度 8 无法同时保留 R_scale 和所有 16 个 LDG 的 LOAD_RESULT 条目。
 
-设计文档 §7.1 将 SpMV 30+ PC 列为 Table A 的 sizing bottleneck，但 §4.1 的 FIFO 深度论证仅针对 BFS ×4，**未覆盖 SpMV ×16 的实际情况**。
+设计文档 §7.1 将 SpMV 30+ PC 列为 CT 的 sizing bottleneck，但 §4.1 的 FIFO 深度论证仅针对 BFS ×4，**未覆盖 SpMV ×16 的实际情况**。
 
 **相关文件：** `04_prefetcher_design.md` §4.1（Per-Warp FIFO 设计说明）
 
@@ -281,7 +281,7 @@ LDG R0 和 IMAD.WIDE [uses R0] 之间还有 15 个其他 LDG，FIFO 深度 8 无
 
 #### 问题描述修正：IMAD.MOV 不参与检测链
 
-原问题描述将 IMAD.MOV 纳入 FIFO 必须保留的指令，但 Dependency Detector 的检测目标是：
+原问题描述将 IMAD.MOV 纳入 FIFO 必须保留的指令，但 Chain Detector (CD) 的检测目标是：
 
 ```
 LDG(dst=Rx) → IMAD.WIDE(src=Rx, dst=Ry) → LDG(addr=Ry)
@@ -320,7 +320,7 @@ FIFO 只需在 SM 级别维护**一份**，选定某个 warp 追踪其指令流�
   → LDG_data[k] 与 IMAD.WIDE[k] 之间距离取决于指令排列
 ```
 
-**关键观察**：如果 SpMV ×16 的 16 次展开使用**不同的 PC**（全展开场景），则需要 16 次独立链检测。如果使用**相同的 PC**（循环体），Table A 一次学习即可。这决定了 FIFO 深度的实际需求——需要查看具体 SpMV trace 确认。
+**关键观察**：如果 SpMV ×16 的 16 次展开使用**不同的 PC**（全展开场景），则需要 16 次独立链检测。如果使用**相同的 PC**（循环体），CT 一次学习即可。这决定了 FIFO 深度的实际需求——需要查看具体 SpMV trace 确认。
 
 #### Pending Question
 
@@ -335,7 +335,7 @@ FIFO 只需在 SM 级别维护**一份**，选定某个 warp 追踪其指令流�
 
 ### 问题描述
 
-Dependency Detector 需要从 IMAD.WIDE 提取 `data_base`（如 `dists[]` 数组的 64-bit 指针）。
+Chain Detector (CD) 需要从 IMAD.WIDE 提取 `data_base`（如 `dists[]` 数组的 64-bit 指针）。
 
 `IMAD.WIDE R2, R0, R11, c[0x0][0x178]` 中：
 
@@ -360,7 +360,7 @@ struct inst_trace_t {
 
 ### 我的思路和解决办法
 
-> 这个值我们不需要拿到，因为这个值是用来计算地址的，而我们已经在 P1 解决了地址的问题，所以获得不到值其实没有关系。但在仿真过程中只仍要模拟拿到这个值的过程，即在 Table B 时记录这次的得到的 baseaddr 和 stride，因为我们实际上是模拟这个预取器在硬件上的行为
+> 这个值我们不需要拿到，因为这个值是用来计算地址的，而我们已经在 P1 解决了地址的问题，所以获得不到值其实没有关系。但在仿真过程中只仍要模拟拿到这个值的过程，即在 TT 时记录这次的得到的 baseaddr 和 stride，因为我们实际上是模拟这个预取器在硬件上的行为
 
 ### 讨论结论
 
@@ -370,19 +370,19 @@ struct inst_trace_t {
 
 | 组件 | 是否需要 `c[0x0][0x178]` 值 | 原因 |
 |------|---------------------------|------|
-| Component 1（依赖链检测） | **否** | 检测基于寄存器依赖模式匹配（LDG→IMAD.WIDE→LDG），不需要操作数的运行时值 |
-| Component 2（Stride 预测） | **否** | Stride 预测作用于 index load 地址的 delta（连续迭代的 `&col_indices[offset]` 之差），与 data array 基地址无关 |
-| Component 3（Data prefetch 地址） | **否** | P1 映射表提供 `idx_addr → data_addr` 直接查找，替代了 `base + value × scale` 计算 |
+| CD（依赖链检测） | **否** | 检测基于寄存器依赖模式匹配（LDG→IMAD.WIDE→LDG），不需要操作数的运行时值 |
+| IPU（Stride 预测） | **否** | Stride 预测作用于 index load 地址的 delta（连续迭代的 `&col_indices[offset]` 之差），与 data array 基地址无关 |
+| DPU（Data prefetch 地址） | **否** | P1 映射表提供 `idx_addr → data_addr` 直接查找，替代了 `base + value × scale` 计算 |
 
 因此 `c[0x0][0x178]` 的运行时值在 trace-driven 实现中**完全不需要获取**。原问题描述中"双重挑战（静态偏移传递 + 运行时指针解析）"均不再构成障碍。
 
-#### Table B 保留为训练状态机
+#### TT 保留为训练状态机
 
-虽然 `base_addr` 和 `stride` 的实际值不再需要（用占位符替代），但 Table B 的 **valid bit** 仍有意义——它代表硬件 prefetcher 的训练状态：
+虽然 `base_addr` 和 `stride` 的实际值不再需要（用占位符替代），但 TT 的 **valid bit** 仍有意义——它代表硬件 prefetcher 的训练状态：
 
 ```
-Table B entry 状态机：
-  INVALID → 首次检测到 chain（Component 1 写入 Table A 触发）→ TRAINING
+TT entry 状态机：
+  INVALID → 首次检测到 chain（CD 写入 CT 触发）→ TRAINING
   TRAINING → 确认 stride 稳定（连续 N 次 delta 一致）→ VALID
 
   只有 VALID 状态下，映射表中预备好的 data_addr 才允许发出 prefetch
@@ -390,7 +390,7 @@ Table B entry 状态机：
 
 这保证了仿真时序的忠实性：真实硬件 prefetcher 在训练完成前不会发出 data prefetch，模拟器也应如此。若跳过此约束（检测到 chain 立刻发），会导致评估结果过度乐观（首次迭代就有 data prefetch，真实硬件做不到）。
 
-Table B 中 `base_addr`、`stride` 字段改为占位符：仿真器记录它们仅用于调试输出，不参与地址计算（地址来源已切换为 P1 映射表）。
+TT 中 `base_addr`、`stride` 字段改为占位符：仿真器记录它们仅用于调试输出，不参与地址计算（地址来源已切换为 P1 映射表）。
 
 **严重度修正**：**高** → **已简化**（由 P1 方案连带解决，仅需 valid bit 状态机）
 
@@ -412,7 +412,7 @@ if (opcode1 == "IMAD") {
 
 `warp_inst_t::op`（`op_type` enum）**不区分 IMAD.WIDE、IMAD.MOV.U32、普通 IMAD**。
 
-Dependency Detector 在 `issue_warp()` 中只能访问 `warp_inst_t`，
+Chain Detector (CD) 在 `issue_warp()` 中只能访问 `warp_inst_t`，
 无法用 `inst->op == IMAD_WIDE_OP` 筛选——必须调用 `opcode_from_inst()` 重建字符串（每次 issue 有字符串操作开销），或修改 ISA 定义文件为 IMAD.WIDE 添加专用枚举值。
 
 **相关文件：** `trace-driven/trace_driven.cc`（line 220），`ISA_Def/ampere_opcode.h`（ISA 枚举定义），`shader.cc::issue_warp()`（line 1661：`opcode_from_inst()`）
@@ -474,7 +474,7 @@ public:
 
 ### 问题描述
 
-设计 Component 3 的触发：当 index prefetch fill 从 L1 返回时，查 pending buffer，用返回值计算 data_addr。
+设计 DPU 的触发：当 index prefetch fill 从 L1 返回时，查 pending buffer，用返回值计算 data_addr。
 
 当前 `ldst_unit::fill()` 接收所有 `mem_fetch`（demand + prefetch），无区分机制。即使不考虑 P1（数据值问题），还需要：
 
@@ -526,15 +526,15 @@ prefetcher 生成的"人工请求"没有对应的 `warp_inst_t`，**无法直接
 实际并发量计算：
 - 每 SM 最多 64 warp
 - 每 warp 每次外循环迭代，向每个 active index PC 发 1 次 index prefetch
-- Index prefetch in-flight 时间 ≈ L2 latency = **200 cycles**
+- `small_1sm_cta5 / lrr` 代表窗口中，`index_issue_to_refill_p50` 已经落在 `536-853` cycles，`p90` 落在 `834-2152` cycles；因此 index prefetch 的在途生命周期不能再用固定 `200 cycles` 近似
 - BFS 有 ~5 个 index PC，SpMV 有 30+ 个 index PC
 
 **最坏情况（SpMV，30 个 index PC，64 warp 密集执行）：**
-`64 warp × 30 PC = 1920` 个并发 index prefetch 可能同时 in-flight，而 pending buffer 只有 16–32 条目。
+`64 warp × 30 PC = 1920` 给出了一个上界级别的触发规模；结合上面的实测在途时间范围，pending buffer 只有 16–32 条目的假设就更缺乏支撑。
 
-即便是 BFS：`64 × 5 = 320` 个潜在并发，pending buffer 32 条目命中率极低。
+即便是 BFS：`64 × 5 = 320` 个潜在触发点也足以说明 32 条目非常紧张；这里应把 `200 cycles` 视为 config knob，而不是 capacity sizing 的实测依据。
 
-**后果：** 大量 index prefetch fill 因找不到 pending buffer 条目而丢失触发机会，Component 3 的实际触发率远低于预期。
+**后果：** 大量 index prefetch fill 因找不到 pending buffer 条目而丢失触发机会，DPU 的实际触发率远低于预期。
 
 **相关文件：** `04_prefetcher_design.md` §4.3（Pending Buffer 设计表格）
 
@@ -552,7 +552,7 @@ prefetcher 生成的"人工请求"没有对应的 `warp_inst_t`，**无法直接
 
 | 事件 | 操作 |
 |------|------|
-| Kernel launch | 清空 Table A/B + 所有 warp FIFO + Pending Buffer |
+| Kernel launch | 清空 CT/TT + 所有 warp FIFO + Pending Buffer |
 | Warp EXIT | 清该 warp 的 FIFO + Pending Buffer 中匹配条目 |
 
 GPGPU-Sim 中存在对应 hook 点（可能），但 trace-driven 模式下的调用时机需确认：
@@ -560,7 +560,7 @@ GPGPU-Sim 中存在对应 hook 点（可能），但 trace-driven 模式下的�
 - **Kernel launch hook**：`gpu-sim.cc` 中 `gpgpu_sim::launch()` 或 `shader_core_ctx::init_warps()`
 - **Warp EXIT hook**：`shader.cc` 中 warp done 检测路径（warp barrier / warp finish）
 
-未实现此逻辑的风险：跨 kernel 的陈旧 Table A/B 条目导致错误 pattern 激活，或悬挂的 Pending Buffer 条目占用空间。
+未实现此逻辑的风险：跨 kernel 的陈旧 CT/TT 条目导致错误 pattern 激活，或悬挂的 Pending Buffer 条目占用空间。
 
 **相关文件：** `gpu-sim.cc`（kernel launch 路径），`shader.cc`（warp exit/done 处理）
 
@@ -569,4 +569,3 @@ GPGPU-Sim 中存在对应 hook 点（可能），但 trace-driven 模式下的�
 > 之前我考虑的不对，不能按照 warp exit 去清，因为 预取器最后训练的结果是基于 PC 的，所以应该是 kernel 执行完再切换，CTA 执行完都不用切换，因为下一个 CTA 还是这套 PC，可以服用，所以应该是等到 kernel 切换时才清空（这点可以作为核心的 insight 说明 GPU 做 IMA 预取相比 CPU 优势的点）
 
 ---
-

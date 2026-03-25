@@ -22,8 +22,17 @@ HIT_RESERVED_STATUSES = {"HIT_RESERVED"}
 HIT_STATUSES = {"HIT"}
 RESFAIL_STATUSES = {"RESERVATION_FAIL"}
 STATUS_PRIORITY = {"MISS": 4, "HIT_RESERVED": 3, "HIT": 2, "RESFAIL": 1, "UNKNOWN": 0}
+L2_STATUS_PRIORITY = {
+    "MISS": 6,
+    "SECTOR_MISS": 5,
+    "MSHR_HIT": 4,
+    "HIT_RESERVED": 3,
+    "HIT": 2,
+    "RESERVATION_FAIL": 1,
+    "UNKNOWN": 0,
+}
 LOAD_OPCODE_PREFIXES = ("LDG",)
-SASS_ANALYSIS_DIR = Path("ima_plan/01_ima_characterization/sass_analysis")
+SASS_ANALYSIS_DIR = Path("ima_plan/01_ima_characterization/sass_analysis/core_cases")
 SASS_ROLE_CONFIGS = {
     "bfs": {
         "sass_path": SASS_ANALYSIS_DIR / "bfs_linear_base.sm80.sass",
@@ -149,22 +158,65 @@ SASS_ROLE_CONFIGS = {
 }
 WORKLOAD_TO_SASS_KEY = {
     "bfs_ima_high": "bfs",
+    "bfs_ima_med": "bfs",
+    "bfs_ima_small": "bfs",
     "bfs_cit_ima": "bfs",
     "bfs_web": "bfs",
     "bfs_flickr": "bfs",
     "bfs_roadnet": "bfs",
     "bfs_usa": "bfs",
     "sssp_ima_high": "sssp",
+    "sssp_ima_med": "sssp",
+    "sssp_ima_small": "sssp",
     "sssp_cit_ima": "sssp",
     "sssp_cit_ima_nosym": "sssp",
     "cc_ima_high": "cc",
+    "cc_ima_med": "cc",
+    "cc_ima_small": "cc",
     "cc_cit_ima": "cc",
     "bc_ima_high": "bc",
+    "bc_ima_med": "bc",
+    "bc_ima_small": "bc",
     "bc_cit_ima": "bc",
+    "bc_ima_high_forward": "bc_forward",
+    "bc_ima_high_reverse": "bc_reverse",
+    "bc_ima_small_forward": "bc_forward",
+    "bc_ima_small_reverse": "bc_reverse",
+    "bc_cit_ima_forward": "bc_forward",
+    "bc_cit_ima_reverse": "bc_reverse",
     "spmv_ima_high": "spmv",
+    "spmv_ima_small": "spmv",
     "spmv_cit_ima": "spmv",
 }
 STATIC_PAIR_CONFIGS = {
+    "bfs": (
+        ("p00", 0x01D0, 0x0200),
+        ("p01", 0x0640, 0x0670),
+        ("p02", 0x09A0, 0x09D0),
+        ("p03", 0x0D00, 0x0D30),
+        ("p04", 0x1060, 0x1090),
+    ),
+    "cc": (
+        ("p00", 0x01B0, 0x01E0),
+        ("p01", 0x0390, 0x03C0),
+        ("p02", 0x04B0, 0x04D0),
+        ("p03", 0x05C0, 0x05E0),
+        ("p04", 0x06D0, 0x06F0),
+    ),
+    "bc_forward": (
+        ("f00", 0x01D0, 0x0200),
+        ("f01", 0x06E0, 0x0710),
+        ("f02", 0x0AE0, 0x0B10),
+        ("f03", 0x0ED0, 0x0F00),
+        ("f04", 0x12C0, 0x12F0),
+    ),
+    "bc_reverse": (
+        ("r00", 0x0200, 0x0230),
+        ("r01", 0x0520, 0x0550),
+        ("r02", 0x0740, 0x0770),
+        ("r03", 0x0960, 0x0990),
+        ("r04", 0x0B80, 0x0BB0),
+    ),
     "sssp": (
         ("p00", 0x0250, 0x02A0),
         ("p01", 0x05D0, 0x0610),
@@ -204,6 +256,10 @@ STATIC_PAIR_CONFIGS = {
         ("p28", 0x0CF0, 0x0DB0),
     ),
 }
+WINDOW_MARKER_PCS = {
+    "bc_forward": {0x01D0, 0x06E0, 0x0710, 0x0AE0, 0x0B10, 0x0ED0, 0x0F00, 0x12C0, 0x12F0},
+    "bc_reverse": {0x0230, 0x0520, 0x0550, 0x0740, 0x0770, 0x0960, 0x0990, 0x0B80, 0x0BB0},
+}
 
 
 @dataclass
@@ -228,11 +284,25 @@ class L1Record:
 
 
 @dataclass
+class L2Record:
+    cycle: int
+    status: str
+    hbm_bw_gbps: Optional[float]
+    hbm_occupancy: Optional[float]
+    sm_alu_utilization: Optional[float]
+
+
+@dataclass
 class IssueSummary:
     issue: IssueRecord
     first_status: str
     refill_cycle: Optional[int]
     issue_to_refill: Optional[int]
+    l2_first_status: str
+    l2_first_cycle: Optional[int]
+    l2_hbm_bw_gbps: Optional[float]
+    l2_hbm_occupancy: Optional[float]
+    l2_sm_alu_utilization: Optional[float]
 
 
 @dataclass
@@ -323,6 +393,14 @@ def get_static_pair_maps(workload: str) -> Tuple[Dict[int, str], Dict[int, str],
     return pc_to_role, pc_to_pair, pair_to_pcs
 
 
+def get_window_marker_pcs(workload: str) -> Optional[set[int]]:
+    sass_key = WORKLOAD_TO_SASS_KEY.get(workload, workload)
+    marker_pcs = WINDOW_MARKER_PCS.get(sass_key)
+    if not marker_pcs:
+        return None
+    return set(marker_pcs)
+
+
 def parse_sass_role_map(workload: str) -> Dict[int, str]:
     static_pc_to_role, _, _ = get_static_pair_maps(workload)
     if static_pc_to_role:
@@ -390,7 +468,17 @@ def parse_pc_classification(path: Path, workload: str) -> Dict[int, str]:
     }
     workload_source_line_to_role = {
         "bfs_ima_high": default_source_line_to_role,
+        "bfs_ima_med": default_source_line_to_role,
+        "bfs_ima_small": default_source_line_to_role,
         "sssp_ima_high": {
+            "linear_base.cu:39": "index_load",
+            "linear_base.cu:40": "data_load",
+        },
+        "sssp_ima_med": {
+            "linear_base.cu:39": "index_load",
+            "linear_base.cu:40": "data_load",
+        },
+        "sssp_ima_small": {
             "linear_base.cu:39": "index_load",
             "linear_base.cu:40": "data_load",
         },
@@ -398,7 +486,33 @@ def parse_pc_classification(path: Path, workload: str) -> Dict[int, str]:
             "base.cu:17": "index_load",
             "base.cu:19": "data_load",
         },
+        "cc_ima_med": {
+            "base.cu:17": "index_load",
+            "base.cu:19": "data_load",
+        },
+        "cc_ima_small": {
+            "base.cu:17": "index_load",
+            "base.cu:19": "data_load",
+        },
         "bc_ima_high": {
+            "linear_base.cu:52": "index_load",
+            "linear_base.cu:53": "data_load",
+            "linear_base.cu:56": "data_load",
+            "linear_base.cu:57": "data_load",
+            "linear_base.cu:77": "index_load",
+            "linear_base.cu:78": "data_load",
+            "linear_base.cu:80": "data_load",
+        },
+        "bc_ima_med": {
+            "linear_base.cu:52": "index_load",
+            "linear_base.cu:53": "data_load",
+            "linear_base.cu:56": "data_load",
+            "linear_base.cu:57": "data_load",
+            "linear_base.cu:77": "index_load",
+            "linear_base.cu:78": "data_load",
+            "linear_base.cu:80": "data_load",
+        },
+        "bc_ima_small": {
             "linear_base.cu:52": "index_load",
             "linear_base.cu:53": "data_load",
             "linear_base.cu:56": "data_load",
@@ -651,6 +765,68 @@ def find_fill_cycle(cycles: Optional[Sequence[int]], start_cycle: int) -> Option
     return cycles[idx]
 
 
+def peek_csv_header(path: Path) -> List[str]:
+    with open_text(path) as handle:
+        reader = csv.reader(handle)
+        return next(reader)
+
+
+def parse_optional_float(value: Optional[str]) -> Optional[float]:
+    text = (value or "").strip()
+    if not text:
+        return None
+    try:
+        return float(text)
+    except ValueError:
+        return None
+
+
+def classify_l2_status(statuses: Sequence[str]) -> str:
+    if not statuses:
+        return "UNKNOWN"
+    return max(statuses, key=lambda item: L2_STATUS_PRIORITY.get(item, 0))
+
+
+def choose_l2_record(records: Sequence[L2Record]) -> Optional[L2Record]:
+    if not records:
+        return None
+    best_status = classify_l2_status([record.status for record in records])
+    best_candidates = [record for record in records if record.status == best_status]
+    return min(best_candidates, key=lambda record: record.cycle)
+
+
+def find_l2_status(
+    records: Optional[Sequence[L2Record]],
+    record_cycles: Optional[Sequence[int]],
+    issue_cycle: int,
+) -> Tuple[str, Optional[int], Optional[float], Optional[float], Optional[float]]:
+    if not records or not record_cycles:
+        return "UNKNOWN", None, None, None, None
+    idx = bisect_left(record_cycles, issue_cycle)
+    limit = issue_cycle + L1_MATCH_WINDOW
+    matched: List[L2Record] = []
+    while idx < len(records):
+        record = records[idx]
+        if record.cycle > limit:
+            break
+        matched.append(record)
+        if record.status not in RESFAIL_STATUSES:
+            break
+        idx += 1
+    if not matched:
+        return "UNKNOWN", None, None, None, None
+    chosen = choose_l2_record(matched)
+    if chosen is None:
+        return "UNKNOWN", None, None, None, None
+    return (
+        classify_l2_status([record.status for record in matched]),
+        chosen.cycle,
+        chosen.hbm_bw_gbps,
+        chosen.hbm_occupancy,
+        chosen.sm_alu_utilization,
+    )
+
+
 def collect_l1_records(
     l1_trace: Path,
     issues: Sequence[IssueRecord],
@@ -743,6 +919,105 @@ def collect_l1_records(
     return initial_lookup, initial_cycle_lookup, fill_lookup, window_counts
 
 
+def collect_l2_records(
+    l2_trace: Path,
+    issues: Sequence[IssueRecord],
+    cycle_window: Tuple[int, int],
+) -> Tuple[
+    Dict[Tuple[int, int, int], List[L2Record]],
+    Dict[Tuple[int, int, int], List[int]],
+    Counter[str],
+]:
+    tracked_pairs = {(issue.sm_id, issue.warp_id, cacheline) for issue in issues for cacheline in issue.cachelines}
+    tracked_cachelines = {cacheline for issue in issues for cacheline in issue.cachelines}
+    l2_lookup: Dict[Tuple[int, int, int], List[L2Record]] = defaultdict(list)
+    l2_cycle_lookup: Dict[Tuple[int, int, int], List[int]] = {}
+    window_counts: Counter[str] = Counter()
+
+    header = peek_csv_header(l2_trace)
+    optional_cols = [
+        column
+        for column in ["hbm_bw_GBps", "hbm_occupancy", "sm_alu_utilization"]
+        if column in header
+    ]
+    usecols = ["cycle", "sm_id", "warp_id", "address", "op", "l2_status"] + optional_cols
+
+    try:
+        import pandas as pd  # type: ignore
+
+        compression = "gzip" if l2_trace.suffix == ".gz" else None
+        for chunk in pd.read_csv(
+            l2_trace,
+            usecols=usecols,
+            dtype=str,
+            keep_default_na=False,
+            chunksize=1_000_000,
+            compression=compression,
+        ):
+            ld_chunk = chunk[chunk["op"] == "LD"]
+            if ld_chunk.empty:
+                continue
+
+            cycle_series = ld_chunk["cycle"].astype(int)
+            in_window = ld_chunk[cycle_series.between(cycle_window[0], cycle_window[1])]
+            if not in_window.empty:
+                window_counts.update(in_window["l2_status"].tolist())
+
+            for row in ld_chunk.itertuples(index=False):
+                try:
+                    cycle = int(row.cycle)
+                    sm_id = int(row.sm_id)
+                    warp_id = int(row.warp_id)
+                    cacheline = int(row.address, 16) >> CACHELINE_SHIFT
+                except (TypeError, ValueError):
+                    continue
+                key = (sm_id, warp_id, cacheline)
+                if cacheline not in tracked_cachelines or key not in tracked_pairs:
+                    continue
+                l2_lookup[key].append(
+                    L2Record(
+                        cycle=cycle,
+                        status=row.l2_status or "UNKNOWN",
+                        hbm_bw_gbps=parse_optional_float(getattr(row, "hbm_bw_GBps", None)),
+                        hbm_occupancy=parse_optional_float(getattr(row, "hbm_occupancy", None)),
+                        sm_alu_utilization=parse_optional_float(getattr(row, "sm_alu_utilization", None)),
+                    )
+                )
+    except ImportError:
+        with open_text(l2_trace) as handle:
+            reader = csv.DictReader(handle)
+            for row in reader:
+                try:
+                    cycle = int(row["cycle"])
+                    sm_id = int(row["sm_id"])
+                    warp_id = int(row["warp_id"])
+                    cacheline = int(row["address"], 16) >> CACHELINE_SHIFT
+                except (KeyError, TypeError, ValueError):
+                    continue
+                if row.get("op", "NA") != "LD":
+                    continue
+                status = row.get("l2_status", "UNKNOWN")
+                if cycle_window[0] <= cycle <= cycle_window[1]:
+                    window_counts[status] += 1
+                key = (sm_id, warp_id, cacheline)
+                if cacheline not in tracked_cachelines or key not in tracked_pairs:
+                    continue
+                l2_lookup[key].append(
+                    L2Record(
+                        cycle=cycle,
+                        status=status,
+                        hbm_bw_gbps=parse_optional_float(row.get("hbm_bw_GBps")),
+                        hbm_occupancy=parse_optional_float(row.get("hbm_occupancy")),
+                        sm_alu_utilization=parse_optional_float(row.get("sm_alu_utilization")),
+                    )
+                )
+
+    for key in l2_lookup:
+        l2_lookup[key].sort(key=lambda record: record.cycle)
+        l2_cycle_lookup[key] = [record.cycle for record in l2_lookup[key]]
+    return l2_lookup, l2_cycle_lookup, window_counts
+
+
 def format_hex_list(values: Sequence[int]) -> str:
     return ";".join(f"0x{value:x}" for value in values)
 
@@ -756,6 +1031,8 @@ def summarize_issues(
     initial_lookup: Dict[Tuple[int, int, int], List[L1Record]],
     initial_cycle_lookup: Dict[Tuple[int, int, int], List[int]],
     fill_lookup: Dict[Tuple[int, int], List[int]],
+    l2_lookup: Optional[Dict[Tuple[int, int, int], List[L2Record]]] = None,
+    l2_cycle_lookup: Optional[Dict[Tuple[int, int, int], List[int]]] = None,
 ) -> Tuple[List[IssueSummary], Dict[str, Counter[str]], List[List[object]], List[List[object]]]:
     role_counts: Dict[str, Counter[str]] = defaultdict(Counter)
     issue_summaries: List[IssueSummary] = []
@@ -768,6 +1045,11 @@ def summarize_issues(
     ):
         statuses: List[str] = []
         refill_candidates: List[int] = []
+        l2_statuses: List[str] = []
+        l2_cycles: List[int] = []
+        l2_hbm_bw_values: List[float] = []
+        l2_hbm_occupancy_values: List[float] = []
+        l2_sm_alu_util_values: List[float] = []
         sector_rows: List[List[object]] = []
         for sector_idx, addr in enumerate(issue.addresses):
             initial_status, initial_cycle, max_initial_cycle = find_initial_status(
@@ -781,6 +1063,27 @@ def summarize_issues(
                 if fill_cycle is not None:
                     refill_candidates.append(fill_cycle)
             statuses.append(initial_status)
+            l2_status = "UNKNOWN"
+            l2_cycle = None
+            l2_hbm_bw = None
+            l2_hbm_occupancy = None
+            l2_sm_alu_util = None
+            cacheline = addr >> CACHELINE_SHIFT
+            if l2_lookup is not None and l2_cycle_lookup is not None:
+                l2_status, l2_cycle, l2_hbm_bw, l2_hbm_occupancy, l2_sm_alu_util = find_l2_status(
+                    l2_lookup.get((issue.sm_id, issue.warp_id, cacheline)),
+                    l2_cycle_lookup.get((issue.sm_id, issue.warp_id, cacheline)),
+                    issue.issue_cycle,
+                )
+                l2_statuses.append(l2_status)
+                if l2_cycle is not None:
+                    l2_cycles.append(l2_cycle)
+                if l2_hbm_bw is not None:
+                    l2_hbm_bw_values.append(l2_hbm_bw)
+                if l2_hbm_occupancy is not None:
+                    l2_hbm_occupancy_values.append(l2_hbm_occupancy)
+                if l2_sm_alu_util is not None:
+                    l2_sm_alu_util_values.append(l2_sm_alu_util)
             sector_rows.append(
                 [
                     issue.sm_id,
@@ -798,12 +1101,28 @@ def summarize_issues(
                     initial_status,
                     initial_cycle,
                     fill_cycle,
+                    l2_status,
+                    l2_cycle,
+                    l2_hbm_bw,
+                    l2_hbm_occupancy,
+                    l2_sm_alu_util,
                 ]
             )
 
         overall_status = max(statuses, key=lambda item: STATUS_PRIORITY[item]) if statuses else "UNKNOWN"
         refill_cycle = max(refill_candidates) if refill_candidates else None
         issue_to_refill = (refill_cycle - issue.issue_cycle) if refill_cycle is not None else None
+        overall_l2_status = classify_l2_status(l2_statuses)
+        l2_first_cycle = min(l2_cycles) if l2_cycles else None
+        l2_hbm_bw_gbps = (
+            sum(l2_hbm_bw_values) / len(l2_hbm_bw_values) if l2_hbm_bw_values else None
+        )
+        l2_hbm_occupancy = (
+            sum(l2_hbm_occupancy_values) / len(l2_hbm_occupancy_values) if l2_hbm_occupancy_values else None
+        )
+        l2_sm_alu_utilization = (
+            sum(l2_sm_alu_util_values) / len(l2_sm_alu_util_values) if l2_sm_alu_util_values else None
+        )
         role_counts[issue.role][overall_status] += 1
         issue_summaries.append(
             IssueSummary(
@@ -811,6 +1130,11 @@ def summarize_issues(
                 first_status=overall_status,
                 refill_cycle=refill_cycle,
                 issue_to_refill=issue_to_refill,
+                l2_first_status=overall_l2_status,
+                l2_first_cycle=l2_first_cycle,
+                l2_hbm_bw_gbps=l2_hbm_bw_gbps,
+                l2_hbm_occupancy=l2_hbm_occupancy,
+                l2_sm_alu_utilization=l2_sm_alu_utilization,
             )
         )
         rows_for_events.append(
@@ -830,6 +1154,11 @@ def summarize_issues(
                 overall_status,
                 refill_cycle,
                 issue_to_refill,
+                overall_l2_status,
+                l2_first_cycle,
+                l2_hbm_bw_gbps,
+                l2_hbm_occupancy,
+                l2_sm_alu_utilization,
             ]
         )
         rows_for_sectors.extend(sector_rows)
@@ -1044,6 +1373,7 @@ def write_chain_outputs(
                 "index_hit_reserved_count",
                 "data_miss_count",
                 "data_hit_reserved_count",
+                "fill_observed",
                 "bad_order_count",
                 "index_issue_to_refill_p50",
                 "index_issue_to_refill_p90",
@@ -1073,6 +1403,7 @@ def write_chain_outputs(
                 sum(chain.index_status == "HIT_RESERVED" for chain in chains),
                 sum(chain.data_status == "MISS" for chain in chains),
                 sum(chain.data_status == "HIT_RESERVED" for chain in chains),
+                int(bool(index_refill_lat or data_refill_lat)),
                 bad_order_count,
                 percentile(index_refill_lat, 0.50),
                 percentile(index_refill_lat, 0.90),
@@ -1101,15 +1432,19 @@ def write_outputs(
     fill_lookup: Dict[Tuple[int, int], List[int]],
     window_counts: Counter[str],
     pair_to_pcs: Dict[str, Tuple[int, int]],
+    l2_lookup: Optional[Dict[Tuple[int, int, int], List[L2Record]]] = None,
+    l2_cycle_lookup: Optional[Dict[Tuple[int, int, int], List[int]]] = None,
+    l2_window_counts: Optional[Counter[str]] = None,
 ) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     events_path = out_dir / f"warp_load_events_{scheduler_label}.csv"
     sectors_path = out_dir / f"warp_load_sectors_{scheduler_label}.csv"
     summary_path = out_dir / f"ima_window_summary_{scheduler_label}.csv"
     breakdown_path = out_dir / f"ima_window_role_breakdown_{scheduler_label}.csv"
+    l2_summary_path = out_dir / f"ima_l2_window_summary_{scheduler_label}.csv"
 
     issue_summaries, role_counts, rows_for_events, rows_for_sectors = summarize_issues(
-        issues, initial_lookup, initial_cycle_lookup, fill_lookup
+        issues, initial_lookup, initial_cycle_lookup, fill_lookup, l2_lookup, l2_cycle_lookup
     )
 
     with events_path.open("w", newline="") as handle:
@@ -1131,6 +1466,11 @@ def write_outputs(
                 "first_status",
                 "refill_cycle",
                 "issue_to_refill",
+                "l2_first_status",
+                "l2_first_cycle",
+                "l2_hbm_bw_GBps",
+                "l2_hbm_occupancy",
+                "l2_sm_alu_utilization",
             ]
         )
         writer.writerows(rows_for_events)
@@ -1154,6 +1494,11 @@ def write_outputs(
                 "initial_l1_status",
                 "initial_cycle",
                 "fill_cycle",
+                "l2_first_status",
+                "l2_first_cycle",
+                "l2_hbm_bw_GBps",
+                "l2_hbm_occupancy",
+                "l2_sm_alu_utilization",
             ]
         )
         writer.writerows(rows_for_sectors)
@@ -1268,6 +1613,91 @@ def write_outputs(
                 ]
             )
 
+    l2_window_counts = l2_window_counts or Counter()
+    l2_role_rows: List[List[object]] = []
+    for role in ROLE_ORDER:
+        role_summaries = [summary for summary in issue_summaries if summary.issue.role == role and summary.first_status == "MISS"]
+        total = len(role_summaries)
+        l2_counts = Counter(summary.l2_first_status for summary in role_summaries)
+        bw_values = [summary.l2_hbm_bw_gbps for summary in role_summaries if summary.l2_hbm_bw_gbps is not None]
+        occupancy_values = [summary.l2_hbm_occupancy for summary in role_summaries if summary.l2_hbm_occupancy is not None]
+        alu_values = [
+            summary.l2_sm_alu_utilization
+            for summary in role_summaries
+            if summary.l2_sm_alu_utilization is not None
+        ]
+        l2_role_rows.append(
+            [
+                scheduler_label,
+                cycle_window[0],
+                cycle_window[1],
+                role,
+                "l1_miss_issue_events",
+                total,
+                l2_counts["HIT"],
+                l2_counts["HIT_RESERVED"],
+                l2_counts["MSHR_HIT"],
+                l2_counts["MISS"],
+                l2_counts["SECTOR_MISS"],
+                l2_counts["RESERVATION_FAIL"],
+                l2_counts["UNKNOWN"],
+                f"{((l2_counts['HIT'] + l2_counts['HIT_RESERVED'] + l2_counts['MSHR_HIT']) / total):.4f}" if total else "0.0000",
+                f"{((l2_counts['MISS'] + l2_counts['SECTOR_MISS']) / total):.4f}" if total else "0.0000",
+                f"{(sum(bw_values) / len(bw_values)):.4f}" if bw_values else "",
+                f"{(sum(occupancy_values) / len(occupancy_values)):.4f}" if occupancy_values else "",
+                f"{(sum(alu_values) / len(alu_values)):.4f}" if alu_values else "",
+            ]
+        )
+
+    total_l2 = sum(l2_window_counts.values())
+    with l2_summary_path.open("w", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(
+            [
+                "scheduler",
+                "window_start",
+                "window_end",
+                "scope",
+                "count_basis",
+                "access_count",
+                "hit_count",
+                "hit_reserved_count",
+                "mshr_hit_count",
+                "miss_count",
+                "sector_miss_count",
+                "reservation_fail_count",
+                "unknown_count",
+                "l2_hit_path_rate",
+                "l2_miss_path_rate",
+                "avg_hbm_bw_GBps",
+                "avg_hbm_occupancy",
+                "avg_sm_alu_utilization",
+            ]
+        )
+        writer.writerow(
+            [
+                scheduler_label,
+                cycle_window[0],
+                cycle_window[1],
+                "all_l2_window",
+                "all_l2_ld_events",
+                total_l2,
+                l2_window_counts["HIT"],
+                l2_window_counts["HIT_RESERVED"],
+                l2_window_counts["MSHR_HIT"],
+                l2_window_counts["MISS"],
+                l2_window_counts["SECTOR_MISS"],
+                l2_window_counts["RESERVATION_FAIL"],
+                l2_window_counts["UNKNOWN"],
+                f"{((l2_window_counts['HIT'] + l2_window_counts['HIT_RESERVED'] + l2_window_counts['MSHR_HIT']) / total_l2):.4f}" if total_l2 else "0.0000",
+                f"{((l2_window_counts['MISS'] + l2_window_counts['SECTOR_MISS']) / total_l2):.4f}" if total_l2 else "0.0000",
+                "",
+                "",
+                "",
+            ]
+        )
+        writer.writerows(l2_role_rows)
+
     write_chain_outputs(out_dir, workload, scheduler_label, cycle_window, issue_summaries, pair_to_pcs)
 
 
@@ -1275,15 +1705,23 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Lightweight extractor for workload-specific IMA warp tables")
     parser.add_argument("--l1-trace", required=True, type=Path)
     parser.add_argument("--issue-trace", required=True, type=Path)
+    parser.add_argument("--l2-trace", type=Path)
     parser.add_argument("--pc-class", type=Path)
     parser.add_argument("--workload", required=True)
     parser.add_argument("--scheduler-label", default="lrr")
     parser.add_argument("--out-dir", required=True, type=Path)
     args = parser.parse_args()
 
+    if args.workload in {"bc_ima_high", "bc_cit_ima", "bc_ima_small", "bc_ima_med"}:
+        raise SystemExit(
+            "Use bc_*_forward / bc_*_reverse to avoid cross-kernel PC aliasing."
+        )
+
     static_pc_to_role, pc_to_pair, pair_to_pcs = get_static_pair_maps(args.workload)
     if args.pc_class is not None:
         pc_to_role = parse_pc_classification(args.pc_class, args.workload)
+        if not pc_to_role:
+            pc_to_role = parse_sass_role_map(args.workload)
     else:
         pc_to_role = parse_sass_role_map(args.workload)
     if static_pc_to_role:
@@ -1295,7 +1733,14 @@ def main() -> None:
     if not all_matching_issues:
         raise SystemExit(f"No IMA issues found for {args.workload}")
 
-    cycle_window = detect_dense_window_from_issues(all_matching_issues)
+    marker_pcs = get_window_marker_pcs(args.workload)
+    window_source_issues = all_matching_issues
+    if marker_pcs:
+        marker_issues = [issue for issue in all_matching_issues if issue.pc in marker_pcs]
+        if marker_issues:
+            window_source_issues = marker_issues
+
+    cycle_window = detect_dense_window_from_issues(window_source_issues)
     issues = filter_window_issues(all_matching_issues, cycle_window)
     if not issues:
         raise SystemExit(f"No IMA issues found in dense window for {args.workload}")
@@ -1303,6 +1748,11 @@ def main() -> None:
     initial_lookup, initial_cycle_lookup, fill_lookup, window_counts = collect_l1_records(
         args.l1_trace, issues, cycle_window
     )
+    l2_lookup = None
+    l2_cycle_lookup = None
+    l2_window_counts = None
+    if args.l2_trace is not None and args.l2_trace.exists():
+        l2_lookup, l2_cycle_lookup, l2_window_counts = collect_l2_records(args.l2_trace, issues, cycle_window)
     write_outputs(
         args.out_dir,
         args.workload,
@@ -1314,6 +1764,9 @@ def main() -> None:
         fill_lookup,
         window_counts,
         pair_to_pcs,
+        l2_lookup,
+        l2_cycle_lookup,
+        l2_window_counts,
     )
 
     print(f"Saved workload tables for {args.workload} to {args.out_dir}")

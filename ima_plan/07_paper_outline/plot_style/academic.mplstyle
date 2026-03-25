@@ -1,0 +1,100 @@
+# Academic paper style for GPU architecture conferences (MICRO/ISCA/HPCA/ASPLOS)
+# IEEE/ACM double-column: column width ~3.5in, full width ~7.0in
+#
+# Usage:
+#   import matplotlib.pyplot as plt
+#   plt.style.use(str(REPO_ROOT / "ima_plan/07_paper_outline/plot_style/academic.mplstyle"))
+#
+# Or via plot_util:
+#   from plot_util import apply_style
+#   apply_style()
+
+# ── Font ──────────────────────────────────────────────────────────────────────
+# Liberation Serif is metrically identical to Times New Roman (IEEE body font).
+font.family:        serif
+font.serif:         Liberation Serif, DejaVu Serif, STIXGeneral, serif
+font.sans-serif:    Liberation Sans, DejaVu Sans, Helvetica, Arial, sans-serif
+font.size:          8
+
+# Embed fonts as outlines in PDF/SVG (required by IEEE/ACM camera-ready)
+pdf.fonttype:       42
+ps.fonttype:        42
+svg.fonttype:       none
+
+# ── Figure ────────────────────────────────────────────────────────────────────
+# Default: single-column width. Override per-figure for full-width.
+figure.figsize:     3.5, 2.5
+figure.dpi:         150
+figure.facecolor:   white
+figure.edgecolor:   white
+savefig.dpi:        300
+savefig.bbox:       tight
+savefig.pad_inches: 0.02
+savefig.facecolor:  white
+savefig.transparent: false
+
+# ── Axes ──────────────────────────────────────────────────────────────────────
+axes.linewidth:     0.6
+axes.labelsize:     8
+axes.titlesize:     9
+axes.titleweight:   normal
+axes.titlepad:      4
+axes.labelpad:      3
+axes.spines.top:    false
+axes.spines.right:  false
+axes.facecolor:     white
+axes.edgecolor:     black
+axes.labelcolor:    black
+axes.grid:          false
+axes.axisbelow:     true
+
+# Tableau Colorblind 10 — colorblind-safe default cycle
+axes.prop_cycle:    cycler('color', ['006BA4', 'FF800E', 'ABABAB', '595959', '5F9ED1', 'C85200', '898989', 'A2C8EC', 'FFBC79', 'CFCFCF'])
+
+# ── Ticks ─────────────────────────────────────────────────────────────────────
+xtick.labelsize:    7
+ytick.labelsize:    7
+xtick.direction:    out
+ytick.direction:    out
+xtick.major.width:  0.6
+ytick.major.width:  0.6
+xtick.minor.width:  0.4
+ytick.minor.width:  0.4
+xtick.major.size:   3
+ytick.major.size:   3
+xtick.minor.size:   1.5
+ytick.minor.size:   1.5
+xtick.major.pad:    2
+ytick.major.pad:    2
+xtick.color:        black
+ytick.color:        black
+
+# ── Grid (off by default; enable per-figure with ax.grid(True)) ──────────────
+grid.color:         cccccc
+grid.linewidth:     0.4
+grid.linestyle:     --
+grid.alpha:         0.5
+
+# ── Lines ─────────────────────────────────────────────────────────────────────
+lines.linewidth:    1.0
+lines.markersize:   4
+lines.markeredgewidth: 0.5
+
+# ── Patches (bars, etc.) ─────────────────────────────────────────────────────
+patch.linewidth:    0.5
+patch.edgecolor:    black
+patch.facecolor:    006BA4
+
+# ── Legend ─────────────────────────────────────────────────────────────────────
+legend.fontsize:    7
+legend.frameon:     false
+legend.borderpad:   0.3
+legend.labelspacing: 0.3
+legend.handlelength: 1.2
+legend.handletextpad: 0.4
+legend.columnspacing: 1.0
+legend.fancybox:    false
+
+# ── Hatching ──────────────────────────────────────────────────────────────────
+hatch.linewidth:    0.5
+hatch.color:        333333

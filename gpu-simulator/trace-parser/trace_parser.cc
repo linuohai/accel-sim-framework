@@ -84,6 +84,7 @@ unsigned inst_trace_t::get_datawidth_from_opcode(
 
 kernel_trace_t::kernel_trace_t(const std::string &filePath)
     : pipeReader(filePath) {
+  trace_path = filePath;
   kernel_name = filePath;
   shmem_base_addr = 0;
   local_base_addr = 0;

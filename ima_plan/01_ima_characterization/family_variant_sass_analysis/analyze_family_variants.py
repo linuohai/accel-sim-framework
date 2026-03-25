@@ -124,6 +124,7 @@ MOVE_OPS = {
     "IMAD.MOV.U32",
     "IMAD.MOV",
 }
+STRICT_FIFO_DEPTH = 128
 
 
 @dataclass
@@ -137,6 +138,20 @@ class ManifestEntry:
     variation_rank: int
     boundary_rank: int
     notes: str
+
+
+@dataclass
+class StrictFifoEntry:
+    dst_reg: str
+    entry_type: str
+    pc: str
+    opcode: str
+    source_file: str | None
+    source_line: int | None
+    index_pc: str | None = None
+    index_opcode: str | None = None
+    index_source_file: str | None = None
+    index_source_line: int | None = None
 
 
 def style_bucket(impl: str) -> str:
@@ -201,6 +216,27 @@ def parse_dest_reg(operands: str) -> str | None:
     return clean_reg(operands.split(",", 1)[0].strip())
 
 
+def paired_reg(reg: str | None) -> str | None:
+    if not reg:
+        return None
+    match = re.fullmatch(r"R(\d+)", reg)
+    if not match:
+        return None
+    return f"R{int(match.group(1)) + 1}"
+
+
+def parse_dest_regs(opcode: str, operands: str) -> list[str]:
+    dst = parse_dest_reg(operands)
+    if not dst:
+        return []
+    regs = [dst]
+    if opcode.startswith("IMAD.WIDE"):
+        pair = paired_reg(dst)
+        if pair:
+            regs.append(pair)
+    return regs
+
+
 def parse_addr_reg(operands: str) -> str | None:
     if not operands:
         return None
@@ -261,6 +297,39 @@ def find_prev_writer(instructions: list[dict], start_idx: int, reg: str, window:
     return None, None
 
 
+def fifo_lookup(reg_fifo: list[StrictFifoEntry], reg: str | None) -> StrictFifoEntry | None:
+    if not reg:
+        return None
+    for entry in reversed(reg_fifo):
+        if entry.dst_reg == reg:
+            return entry
+    return None
+
+
+def fifo_invalidate_load_results_by_read(reg_fifo: list[StrictFifoEntry], src_regs: list[str]):
+    if not src_regs:
+        return
+    src_set = set(src_regs)
+    reg_fifo[:] = [
+        entry
+        for entry in reg_fifo
+        if not (entry.entry_type == "LOAD_RESULT" and entry.dst_reg in src_set)
+    ]
+
+
+def fifo_invalidate_by_write(reg_fifo: list[StrictFifoEntry], dst_regs: list[str]):
+    if not dst_regs:
+        return
+    dst_set = set(dst_regs)
+    reg_fifo[:] = [entry for entry in reg_fifo if entry.dst_reg not in dst_set]
+
+
+def fifo_push(reg_fifo: list[StrictFifoEntry], entry: StrictFifoEntry):
+    reg_fifo.append(entry)
+    if len(reg_fifo) > STRICT_FIFO_DEPTH:
+        del reg_fifo[0 : len(reg_fifo) - STRICT_FIFO_DEPTH]
+
+
 def follow_move_chain(instructions: list[dict], start_idx: int, reg: str | None, max_depth: int = 4):
     current_reg = reg
     current_idx = start_idx
@@ -295,73 +364,83 @@ def analyze_sass_file(sass_path: Path, algorithm: str, impl: str, sm: int) -> li
         return results
     functions = parse_sass(sass_path)
     for function_name, instructions in functions.items():
-        for idx, inst in enumerate(instructions):
-            if not inst["opcode"].startswith("LDG"):
-                continue
-            addr_reg = parse_addr_reg(inst["operands"])
-            if not addr_reg:
-                continue
-            addr_prod, addr_idx = follow_move_chain(instructions, idx, addr_reg)
-            if not addr_prod:
-                continue
-            if addr_prod["opcode"].startswith("IMAD.WIDE"):
-                parts = parse_imad_parts(addr_prod["operands"])
-                if len(parts) < 4:
-                    continue
-                index_reg = clean_reg(parts[1])
-                index_prod, index_idx = follow_move_chain(instructions, addr_idx, index_reg)
-                if index_prod and index_prod["opcode"].startswith("LDG"):
+        reg_fifo: list[StrictFifoEntry] = []
+        for inst in instructions:
+            opcode = inst["opcode"]
+            src_regs = parse_source_regs(inst["operands"])
+            dst_regs = parse_dest_regs(opcode, inst["operands"])
+
+            if not opcode.startswith("IMAD.WIDE"):
+                fifo_invalidate_load_results_by_read(reg_fifo, src_regs)
+
+            if opcode.startswith("LDG"):
+                addr_reg = parse_addr_reg(inst["operands"])
+                addr_prod = fifo_lookup(reg_fifo, addr_reg)
+                if addr_prod and addr_prod.entry_type == "IMA_ADDR_COMPUTE":
                     results.append(
                         {
                             "algorithm": algorithm,
                             "impl": impl,
                             "sm": f"sm{sm}",
                             "function": function_name,
-                            "classification": classify_imad_chain(addr_idx - index_idx, idx - addr_idx),
-                            "index_pc": index_prod["pc"],
-                            "index_opcode": index_prod["opcode"],
-                            "addr_pc": addr_prod["pc"],
-                            "addr_opcode": addr_prod["opcode"],
+                            "classification": "exact_chain",
+                            "index_pc": addr_prod.index_pc,
+                            "index_opcode": addr_prod.index_opcode,
+                            "addr_pc": addr_prod.pc,
+                            "addr_opcode": addr_prod.opcode,
                             "data_pc": inst["pc"],
                             "data_opcode": inst["opcode"],
-                            "index_source_file": index_prod["source_file"],
-                            "index_source_line": index_prod["source_line"],
-                            "addr_source_file": addr_prod["source_file"],
-                            "addr_source_line": addr_prod["source_line"],
+                            "index_source_file": addr_prod.index_source_file,
+                            "index_source_line": addr_prod.index_source_line,
+                            "addr_source_file": addr_prod.source_file,
+                            "addr_source_line": addr_prod.source_line,
                             "data_source_file": inst["source_file"],
                             "data_source_line": inst["source_line"],
                         }
                     )
-            elif addr_prod["opcode"] in VARIANT_ADDR_OPS:
-                found_variant = None
-                for src_reg in parse_source_regs(addr_prod["operands"]):
-                    src_prod, src_idx = follow_move_chain(instructions, addr_idx, src_reg)
-                    if src_prod and src_prod["opcode"].startswith("LDG"):
-                        found_variant = (src_prod, src_idx)
-                        break
-                if found_variant:
-                    src_prod, _ = found_variant
-                    results.append(
-                        {
-                            "algorithm": algorithm,
-                            "impl": impl,
-                            "sm": f"sm{sm}",
-                            "function": function_name,
-                            "classification": "variant_non_imadwide",
-                            "index_pc": src_prod["pc"],
-                            "index_opcode": src_prod["opcode"],
-                            "addr_pc": addr_prod["pc"],
-                            "addr_opcode": addr_prod["opcode"],
-                            "data_pc": inst["pc"],
-                            "data_opcode": inst["opcode"],
-                            "index_source_file": src_prod["source_file"],
-                            "index_source_line": src_prod["source_line"],
-                            "addr_source_file": addr_prod["source_file"],
-                            "addr_source_line": addr_prod["source_line"],
-                            "data_source_file": inst["source_file"],
-                            "data_source_line": inst["source_line"],
-                        }
+                fifo_invalidate_by_write(reg_fifo, dst_regs)
+                dst_reg = parse_dest_reg(inst["operands"])
+                if dst_reg:
+                    fifo_push(
+                        reg_fifo,
+                        StrictFifoEntry(
+                            dst_reg=dst_reg,
+                            entry_type="LOAD_RESULT",
+                            pc=inst["pc"],
+                            opcode=inst["opcode"],
+                            source_file=inst["source_file"],
+                            source_line=inst["source_line"],
+                        ),
                     )
+                continue
+
+            if opcode.startswith("IMAD.WIDE"):
+                parts = parse_imad_parts(inst["operands"])
+                producer = None
+                if len(parts) >= 4:
+                    producer = fifo_lookup(reg_fifo, clean_reg(parts[1]))
+                fifo_invalidate_by_write(reg_fifo, dst_regs)
+                if producer and producer.entry_type == "LOAD_RESULT":
+                    dst_reg = parse_dest_reg(inst["operands"])
+                    if dst_reg:
+                        fifo_push(
+                            reg_fifo,
+                            StrictFifoEntry(
+                                dst_reg=dst_reg,
+                                entry_type="IMA_ADDR_COMPUTE",
+                                pc=inst["pc"],
+                                opcode=inst["opcode"],
+                                source_file=inst["source_file"],
+                                source_line=inst["source_line"],
+                                index_pc=producer.pc,
+                                index_opcode=producer.opcode,
+                                index_source_file=producer.source_file,
+                                index_source_line=producer.source_line,
+                            ),
+                        )
+                continue
+
+            fifo_invalidate_by_write(reg_fifo, dst_regs)
     return results
 
 

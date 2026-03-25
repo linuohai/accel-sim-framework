@@ -138,7 +138,7 @@ Spare Register（Lakshminarayana & Kim, HPCA 2014）是唯一直接针对 GPU �
 |------|--------|-------------|
 | **检测方式原始** | 使用 value tag + load-id tag 传播追踪依赖（本质是 CPU tag-based 思路搬到 GPU），未利用 GPU ISA 的结构性信息。需要 **3 次循环迭代** 才能检测到 load-pair | 本工作利用 IMAD.WIDE 的操作数直接提取 IMA 参数，**零推断、1 次指令观测即可建立依赖** |
 | **侵入式实现** | 向指令流中注入额外的 load/mov 指令（修改 pipeline 行为），在 Volta+ 的 independent thread scheduling 下正确性更难保证 | 本工作作为独立硬件模块（L1 client），**不修改指令流** |
-| **仅支持单层 load-pair** | 只能处理 `A[B[i]]` 单层间接，不支持 one-to-many（如 BC reverse 的 1 index → 3 data） | 本工作通过 Table B 的 `targets[K]` 支持 one-to-many |
+| **仅支持单层 load-pair** | 只能处理 `A[B[i]]` 单层间接，不支持 one-to-many（如 BC reverse 的 1 index → 3 data） | 本工作通过 Target Table (TT) 的 `targets[K]` 支持 one-to-many |
 | **架构绑定** | 基于 Fermi 架构评估（2010 年），利用 Fermi 特有的 unified register/cache 架构。Volta+ 的 L1/shared memory 架构、async copy 等与 Fermi 有本质差异 | 本工作基于 SM80 (A100) 设计与评估 |
 
 **DSAP [IEEE Access'18]** 也针对 GPU 图 IMA，但仅限 BFS 一种算法，不具备通用性。
@@ -163,7 +163,7 @@ Spare Register（Lakshminarayana & Kim, HPCA 2014）是唯一直接针对 GPU �
 |------|------|---------|
 | **IMAD.WIDE 显式暴露 IMA 参数** | `IMAD.WIDE Rd, Rindex, Rscale, c[base]` 直接暴露 scale 和 base 为指令操作数 | CPU (x86 `lea`/`mov`) 需要从地址差分反推 shift（IMP 试探 2/3/4/-3），或差分序列匹配（DMP） |
 | **Constant memory 提供稳定 base** | 所有 IMA 基地址在 `c[0x0][0x1XX]` 中，整个 kernel launch 不变 | CPU base address 可能被运行时修改 |
-| **Per-SM 共享表的 64 倍分摊** | Table A/B 为 per-SM shared，1 个 warp 完成训练 → 64 个 warp 立即受益，训练开销被 64 倍分摊 | CPU per-core 独立训练，复用率 1:1 |
+| **Per-SM 共享表的 64 倍分摊** | CT/TT 为 per-SM shared，1 个 warp 完成训练 → 64 个 warp 立即受益，训练开销被 64 倍分摊 | CPU per-core 独立训练，复用率 1:1 |
 | **(base, scale) 自然归并展开副本** | 30+ 个不同 PC 的 IMAD.WIDE 共享同一 constant operand → 自动归到 1 个 pattern entry | CPU 展开少，PC 膨胀问题不存在 |
 
 **关键论断**：IMAD.WIDE 不是设计上的"简化"，而是 GPU ISA 结构性提供的优势。GPU 编译器**必然**使用 IMAD.WIDE 来完成 `base + index × sizeof(element)` 运算（这是 SASS 中唯一能单指令完成 32×32+64→64 的指令），scale 由 C++ 类型系统在编译期保证，base 由 CUDA kernel 参数 → `.param` → `c[0x0]` 的固定映射链保证。这些都是**结构性保证**，而非经验性观察。
@@ -172,7 +172,7 @@ Spare Register（Lakshminarayana & Kim, HPCA 2014）是唯一直接针对 GPU �
 
 1. **IMA 特征化与分类体系**：建立四类 IMA pattern（Linear Gather → Pointer Chasing）的多层次分类框架，从源码、SASS 指令到微架构三个层次量化图 workload 的 IMA 行为。揭示 IMA 占 L1 miss 51%–84%、L1 miss 导致 warp 交织延迟隐藏机制失效的关键发现。
 
-2. **GPU IMA Hardware Prefetcher 设计**：提出基于 IMAD.WIDE 检测的两步 prefetch pipeline（index prefetch → data prefetch），利用 GPU ISA 的结构性优势实现零推断 IMA 检测，通过 (base, scale) 归并解决编译器 loop unrolling 导致的 PC 膨胀问题，支持 one-to-many 的多目标预取。据我们所知，这是首个利用 GPU ISA 结构性特征（IMAD.WIDE 操作数直接提取）实现 IMA 检测的硬件 prefetcher，也是首个在现代 GPU 架构（SM80, A100）上设计与评估的通用 IMA prefetcher。
+2. **GPU IMA Hardware Prefetcher 设计**：提出 **GRASP**（GPU Register-chain Aware Sector Prefetcher），基于 IMAD.WIDE 检测的 Index-Data Pipeline（index prefetch → data prefetch），利用 GPU ISA 的结构性优势实现零推断 IMA 检测，通过 (base, scale) 归并解决编译器 loop unrolling 导致的 PC 膨胀问题，支持 one-to-many 的多目标预取。据我们所知，这是首个利用 GPU ISA 结构性特征（IMAD.WIDE 操作数直接提取）实现 IMA 检测的硬件 prefetcher，也是首个在现代 GPU 架构（SM80, A100）上设计与评估的通用 IMA prefetcher。
 
 3. **全面评估**：在 Accel-Sim/GPGPU-Sim 上对 5 类图算法（BFS/SSSP/BC/CC/SpMV）进行评估，展示平均 X% IPC 提升（达到 ideal L1D 天花板的 Y%），硬件开销 ~Z KB/SM。
 
@@ -202,7 +202,7 @@ Spare Register [HPCA'14] 技术局限（tag-based / 单层 / Fermi）
     ↓  这些 insight 使得更简洁高效的设计成为可能
     ↓  简洁不是缺陷，而是 insight 驱动的结果
     ↓
-本工作：利用这些优势，设计通用 GPU IMA prefetcher
+本工作：利用这些优势，设计 GRASP — 通用 GPU IMA prefetcher
     ↓
 Contribution: 特征化 + 设计 + 评估
 ```

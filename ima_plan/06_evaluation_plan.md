@@ -60,20 +60,19 @@
 
 ## Workload 矩阵
 
-### 核心 workload（必须包含）
+详见 [`06_evaluation_plan/benchmark_suite.md`](06_evaluation_plan/benchmark_suite.md)，包含完整测例矩阵（7 算法 × 3 IMA 强度级 = 20 trace keys）和各实验类型的覆盖要求。
 
-从 Phase 2 的天花板实验中筛选出 IPC 提升显著的 workload。
+### 算法一览
 
-| 算法 | trace_key | IMA 强度 | Ideal L1D 提升 | 入选理由 |
-|------|-----------|---------|---------------|---------|
-| （待 Phase 2 实验后填充） | | | | |
-
-### 扩展 workload（展示通用性）
-
-如果核心 workload 上效果好，扩展到：
-- Gardenia 的其他图规模（`*_med`, `*_small`）
-- Rodinia BFS / B+Tree
-- 其他潜在 IMA 负载（如 PageRank）
+| 算法 | 来源 | 入选理由 |
+|------|------|---------|
+| BFS | Gardenia | 经典图遍历，IMA 模式清晰 |
+| SSSP | Gardenia | 加权图遍历，ideal L1D 提升最高（2.46×） |
+| BC | Gardenia | 反向传播阶段 1→多表查找，ideal L1D 提升 3.04× |
+| CC | Gardenia | 无源点依赖，IMA miss share 83.6% |
+| SpMV | Gardenia | CSR 格式间接访存，IMA miss share 66.9% |
+| PR (PageRank) | Gardenia | pull 语义补充 push 类算法；SASS chain 100% 符合 |
+| VC (Vertex Coloring) | Gardenia | 迭代收敛型；SASS chain 97% 符合，证明通用性 |
 
 ---
 
@@ -106,7 +105,7 @@
 | 参数 | 扫描范围 | 目的 |
 |------|---------|------|
 | Prefetch Queue Size | 4, 8, 16, 32 | 最优配置点 |
-| Pattern Table Size | 16, 32, 64, 128 entries | 面积-性能 trade-off |
+| Target Table (TT) Size | 16, 32, 64, 128 entries | 面积-性能 trade-off |
 | Prefetch Degree | 1, 2, 4 | 激进度 |
 | L1D Size | 32KB, 64KB, 128KB | 与 cache size 的交互 |
 | Warp Count / CTA | 不同并发度 | 与 latency hiding 的交互 |

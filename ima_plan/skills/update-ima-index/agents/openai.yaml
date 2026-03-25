@@ -1,0 +1,4 @@
+interface:
+  display_name: "Update IMA Research Index"
+  short_description: "扫描 ima_plan/ 生成研究状态索引"
+  default_prompt: "Use /update-ima-index to scan ima_plan/ and generate INDEX.md"

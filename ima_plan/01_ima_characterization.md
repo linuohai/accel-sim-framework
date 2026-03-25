@@ -30,7 +30,7 @@
 
 **关键约束**：prefetcher 在 S1 时刻能"免费"获取信息（不依赖任何运行时数据）；S2/S3 信息有延迟，prefetcher 必须在 **S2/S3 信息到达前** 就已经开始工作才有 timeliness 价值。这决定了不同 IMA pattern 的 prefetchability 本质差异：
 
-- **Pattern I/II**：index 流地址在 S1 可预测（stride 已知），prefetcher 可提前发起 index prefetch → 拿到 index 值(S2) → 计算 data 地址 → 发起 data prefetch。两步 pipeline 可行。
+- **Pattern I/II**：index 流地址在 S1 可预测（stride 已知），prefetcher 可提前发起 index prefetch → 拿到 index 值(S2) → 计算 data 地址 → 发起 data prefetch。Index-Data Pipeline 可行。
 - **Pattern III**：data 地址依赖 f(S2 值)，f() 的输入本身需要等 load 返回。Prefetcher 只能在 S3（前序 load 数据返回后）才能开始计算，timeliness 受限。
 - **Pattern IV**：每一跳的地址完全依赖上一跳的 S3 数据，prefetcher 无提前量。
 
@@ -96,7 +96,7 @@ BC reverse 的 1→3 复用意味着 prefetcher 的 **每次 index 值获取的 
   ```
 - 特征：index 数组（`Aj`）按 stride-1 顺序访问；data 数组（`x`）按 `Aj` 值随机访问；**层间无数据依赖**
 - 间接目标：单一数组（`x[]`）
-- Prefetch 分析：可用两步 pipeline（先预取 index，再用 index 值预取 data）
+- Prefetch 分析：可用Index-Data Pipeline（先预取 index，再用 index 值预取 data）
 
 ---
 
@@ -215,7 +215,7 @@ IMA 的 prefetch 收益不仅取决于间接访问结构本身，还取决于 GP
 - [ ] 标注间接目标数组数量（✅ 已在上表完成）
 - [ ] 标注 index 流的访问模式（stride-1 顺序 vs 随机）（✅ 已在上表完成）
 - [ ] 标注 GPU 执行上下文（G1 TID-Indexed / G2 Worklist-Driven）（✅ 已在上表完成）
-- [ ] 对每种模式给出 prefetch 两步 pipeline 的可行性判断（需结合 Level 2/3 数据细化）
+- [ ] 对每种模式给出 prefetch Index-Data Pipeline 的可行性判断（需结合 Level 2/3 数据细化）
 
 ### Level 2：SASS 指令级行为（面向 Prefetcher 设计）
 
@@ -533,6 +533,7 @@ SSSP (`bellman_ford` kernel) 结构几乎一致，仅多了 `LDG weight[offset]`
 1. **IMA 分类表**：综合三个层次，对每种 IMA 模式给出完整画像
 2. **各 workload 的 IMA 行为量化数据**（存放在 `01_ima_characterization/` 中）
 3. **"哪些 IMA 模式是可预取的"初步判断**：为 Phase 3 prefetcher 设计提供输入
+4. **现代推荐 / Embedding 补充线**：见 [`recsys_embedding_ima.md`](01_ima_characterization/recsys_embedding_ima.md)
 
 ---
 
@@ -542,6 +543,7 @@ SSSP (`bellman_ford` kernel) 结构几乎一致，仅多了 `LDG weight[offset]`
 01_ima_characterization/
 ├── sass_analysis/          # runtime cubin 转译后的 canonical SASS
 ├── l1_miss_breakdown/      # ima_high baseline L1 miss 分类统计（脚本/CSV/图表/分析）
+├── recsys_embedding_ima.md # 现代推荐 / embedding IMA 专题
 ├── trace_data/             # L1/L2 trace 分析的中间数据（汇总后的 CSV 等，非原始 trace）
 ├── scripts/                # 分析脚本
 ├── figures/                # 分类图、地址分散度可视化等
@@ -555,3 +557,4 @@ SSSP (`bellman_ford` kernel) 结构几乎一致，仅多了 `LDG weight[offset]`
 1. IMA 分类的"粒度"应该多细？论文中需要几种分类就够了？
 2. 是否需要对同一算法、不同图规模的 IMA 行为做对比？（如 `bfs_ima_high` vs `bfs_ima_small`）
 3. 地址可预测性分析用什么度量？（autocorrelation? delta entropy?）
+4. 现代推荐 / embedding 线里，是否需要把 `inference` 和 `training` 分成两条独立子线？
