@@ -1,0 +1,38 @@
+GRASP Per-Iteration Analysis Log (v2 — generalized)
+Generated: 2026-03-26 14:11:44
+
+Input files:
+  L1 trace (GRASP):    /tmp/v6_spmv/grasp/spmv_pf_v6_l1.csv
+  L1 trace (baseline): /tmp/v6_spmv/baseline/spmv_base_v6_l1.csv
+  GRASP event trace:   /tmp/v6_spmv/grasp/spmv_pf_v6_grasp.csv
+
+PC configuration:
+  Index PCs:    ['0x200', '0x3d0', '0x3e0', '0x3f0', '0x400', '0x410', '0x440', '0x460', '0x470', '0x520', '0x550', '0x570', '0x650', '0x670', '0x6a0', '0x6b0', '0x6c0', '0x9a0', '0x9b0', '0x9c0', '0x9d0', '0x9e0', '0x9f0', '0xa00', '0xa10', '0xcc0', '0xcd0', '0xce0', '0xcf0']
+  Data PCs:     ['0x250', '0x4a0', '0x4c0', '0x4d0', '0x510', '0x530', '0x5d0', '0x600', '0x620', '0x680', '0x730', '0x770', '0x7a0', '0x7d0', '0x820', '0x840', '0x850', '0xa60', '0xa80', '0xaa0', '0xad0', '0xb10', '0xb40', '0xb60', '0xb80', '0xd60', '0xd80', '0xda0', '0xdb0']
+  Boundary PCs: ['0x200']
+
+Warp 1:
+  Iterations:          2
+  Avg baseline latency: 73017.5 cycles
+  Avg GRASP latency:    80816.5 cycles
+  Overall speedup:      0.90x
+
+Warp 2:
+  Iterations:          3
+  Avg baseline latency: 60157.7 cycles
+  Avg GRASP latency:    58546.0 cycles
+  Overall speedup:      1.03x
+
+Warp 3:
+  Iterations:          2
+  Avg baseline latency: 95776.0 cycles
+  Avg GRASP latency:    94840.0 cycles
+  Overall speedup:      1.01x
+
+Output files:
+  event_timeline_warp1.txt
+  baseline_comparison_warp1.txt
+  event_timeline_warp2.txt
+  baseline_comparison_warp2.txt
+  event_timeline_warp3.txt
+  baseline_comparison_warp3.txt

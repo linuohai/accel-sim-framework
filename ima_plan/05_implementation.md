@@ -155,11 +155,12 @@ last_access_time — LRU 时间戳
 ```
 
 **Stride 学习**（`update_stride()`）：
-- 仅 tracked warp 贡献 stride 训练
-- 第 1 次访问：记录 `last_addr`
-- 第 2 次访问：计算 `delta = current_addr - last_addr`，记录 `iter_stride = delta`
-- 第 3 次访问：若 `delta == iter_stride` → `stride_valid = true`；否则重置
-- **Stride_valid 即 confidence 达标**：无需额外的 saturating counter
+- 仅 tracked warp 贡献 stride 训练，且同一 warp 必须使用同一 lane 保证地址序列一致
+- 第 1 次访问：记录 `last_addr`（无 delta）
+- 第 2 次访问：计算 `delta = current_addr - last_addr`；若 `delta != 0` 且 `stride_valid == false`，直接设 `iter_stride = delta, stride_valid = true`（单次收敛，无需确认）
+- 后续访问：若 `delta != iter_stride`，覆盖 `iter_stride = delta`，但 **不重置 `stride_valid`**
+- `delta == 0` 被跳过（不影响 stride 状态，但 `last_addr` 仍更新）
+- 同 cycle 的重复 mem_fetch 被去重（`last_cycle == cycle → skip`）
 
 **CT 淘汰策略**（`find_victim()`）：
 1. Invalid entry（优先）
@@ -228,7 +229,7 @@ alloc_cycle       — 分配时间（用于 lifetime 统计）
 
 IST 是从 `ima_prefetcher_t` 迁移的独立 stride tracker（IPT 表 + 2-bit saturating confidence）。
 
-**当前状态**：类实现已保留（编译、可选初始化），但 **不在 `on_demand_load()` 主路径中调用**。原因：CT 的 stride 学习已包含置信度语义（`stride_valid` = 连续 2 次 delta 匹配），且 CT 通过 CD 链检测限定了哪些 PC 是 IMA load——比 IST 的盲目 stride tracking 更精准。IST 的独立运行会退化为无 CD 上下文的裸 stride prefetcher。
+**当前状态**：类实现已保留（编译、可选初始化），但 **不在 `on_demand_load()` 主路径中调用**。原因：CT 的 stride 学习已内置收敛判定（单次非零 delta 即 `stride_valid = true`），且 CT 通过 CD 链检测限定了哪些 PC 是 IMA load——比 IST 的盲目 stride tracking 更精准。IST 的独立运行会退化为无 CD 上下文的裸 stride prefetcher。
 
 可选：后续若需对比"裸 stride vs GRASP"，可通过配置开关重新启用 IST 路径。
 

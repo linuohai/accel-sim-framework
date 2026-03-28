@@ -1,0 +1,13 @@
+=== Warp 1, IMA region (7 iterations) ===
+
+iter | idx_cycle |               idx_L1 | data_cycle |                   data_L1 |                                 grasp_summary | latency
+------------------------------------------------------------------------------------------------------------------------------------------
+   0 |    541449 | [32L] 25xHIT,5xMISS,2xHIT_RES |     541732 | [32L] 20xMISS,11xHIT,1xHIT_RES | DAT_ENQx47; DAT_INJx47; L1_HITx46; IDX_ENQx23; IDX_INJx23; L1_MISSx20; FILL_Dx19; CDx18; CT_HITx14; STR_UPDx6; L1_RFAILx4; CT_INSx3; STR_CONV |   36654
+   1 |    604673 | [30L] 16xMISS,13xHIT,1xHIT_RES |     604930 | [32L] 14xHIT,12xMISS,6xHIT_RES | IDX_ENQx177; CT_HITx77; IDX_INJx57; L1_RFAILx45; L1_MISSx15; DAT_ENQx14; DAT_INJx14; L1_HITx11; FILL_Dx6; STR_UPDx2 |  267163
+   2 |    877143 | [30L] 16xHIT,14xMISS |     877721 | [32L] 23xMISS,5xHIT_RES,4xHIT | CT_HITx144; L1_MISSx57; IDX_ENQx48; IDX_INJx48; DAT_ENQx27; DAT_INJx27; FILL_Dx13; L1_RFAILx10; L1_HITx8; STR_UPDx6 |  435864
+   3 |   1313355 | [32L] 20xHIT,12xMISS |    1314209 |       [32L] 27xMISS,5xHIT | IDX_ENQx338; IDX_INJx124; CT_HITx85; L1_MISSx74; L1_RFAILx69; DAT_ENQx43; DAT_INJx43; L1_HITx24; FILL_Dx23; STR_UPDx2 |  153500
+   4 |   1466991 | [31L] 21xHIT,10xMISS |    1471115 | [32L] 26xMISS,4xHIT_RES,2xHIT | IDX_ENQx105; IDX_INJx105; L1_MISSx65; L1_RFAILx53; CT_HITx50; DAT_ENQx28; DAT_INJx28; L1_HITx15; FILL_Dx11 |  184157
+   5 |   1657425 | [32L] 24xHIT,7xMISS,1xHIT_RES |    1658111 | [32L] 25xMISS,4xHIT_RES,3xHIT | IDX_ENQx115; IDX_INJx111; L1_MISSx67; CT_HITx58; L1_RFAILx54; DAT_ENQx51; DAT_INJx50; L1_HITx40; FILL_Dx27; STR_UPDx4 |  166250
+   6 |   1864167 | [32L] 12xMISS,12xHIT,8xHIT_RES |    1867037 | [32L] 19xMISS,11xHIT_RES,2xHIT | IDX_ENQx182; IDX_INJx170; L1_MISSx108; DAT_ENQx89; L1_RFAILx81; DAT_INJx73; CT_HITx68; L1_HITx54; FILL_Dx44 |  209226
+------------------------------------------------------------------------------------------------------------------------------------------
+  avg_latency=207544.9  idx_hit_rate=65.3%  data_hit_rate=32.1%

@@ -1,0 +1,4 @@
+interface:
+  display_name: "GPU Trace Sim Pipeline"
+  short_description: "Repo workflow for compile, trace, and GPGPU-Sim"
+  default_prompt: "Use $gpu-trace-sim-pipeline to guide a repo-integrated GPU workload from compile to hardware trace to GPGPU-Sim simulation."

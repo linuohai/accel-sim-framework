@@ -1,0 +1,10 @@
+WARNING: iteration count mismatch: baseline=3, grasp=4. Showing min(3).
+=== Warp 2, Baseline vs GRASP (3 iterations) ===
+
+iter | base_idx_cyc |     base_idx_L1 | base_data_cyc |         base_data_L1 | grasp_idx_cyc |    grasp_idx_L1 | grasp_data_cyc |        grasp_data_L1 | speedup
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+   0 |         6182 | [30L] 12xMISS,11xHIT_RES,7xHIT |          7429 |        [31L] 31xMISS |          6182 | [30L] 11xMISS,11xHIT_RES,8xHIT |           7429 |  [31L] 30xMISS,1xHIT |   0.97x
+   1 |       169578 | [17L] 10xMISS,6xHIT,1xHIT_RES |        171690 |  [24L] 23xMISS,1xHIT |        159922 | [17L] 13xMISS,2xHIT,2xHIT_RES |         162392 |        [24L] 24xMISS |   0.85x
+   2 |       175068 | [22L] 11xHIT,10xHIT_RES,1xMISS |        177060 |  [25L] 21xMISS,4xHIT |        166668 | [23L] 12xHIT,9xHIT_RES,2xMISS |         168524 | [25L] 22xMISS,2xHIT,1xHIT_RES |   0.92x
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+  avg baseline latency=60157.7, avg GRASP latency=63518.0, overall speedup=0.95x

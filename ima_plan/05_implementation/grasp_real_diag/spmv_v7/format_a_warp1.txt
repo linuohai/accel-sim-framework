@@ -1,0 +1,10 @@
+=== Warp 1, IMA region (4 iterations) ===
+
+iter | idx_cycle |               idx_L1 | data_cycle |                   data_L1 |                                 grasp_summary | latency
+------------------------------------------------------------------------------------------------------------------------------------------
+   0 |      6477 | [27L] 12xMISS,12xHIT_RES,3xHIT |       7528 | [30L] 27xMISS,2xHIT,1xHIT_RES |    IDX_ENQx8; IDX_INJx8; L1_RFAILx8; CT_HITx2 |   63546
+   1 |    159774 |        [17L] 17xMISS |          0 |                       N/A | IDX_ENQx17; IDX_INJx17; L1_RFAILx12; L1_MISSx5; CT_HIT |     N/A
+   2 |    160089 | [27L] 14xHIT_RES,13xHIT |     162346 |       [31L] 29xMISS,2xHIT | IDX_ENQx609; IDX_INJx491; FILL_Dx395; L1_MISSx276; CT_HITx170; L1_HITx159; DAT_ENQx120; L1_RFAILx101; DAT_INJx45 |   90811
+   3 |    252341 |        [19L] 19xMISS |          0 |                       N/A | IDX_ENQx19; IDX_INJx19; L1_RFAILx17; L1_MISSx2; CT_HIT |     N/A
+------------------------------------------------------------------------------------------------------------------------------------------
+  avg_latency=77178.5  idx_hit_rate=46.7%  data_hit_rate=8.2%

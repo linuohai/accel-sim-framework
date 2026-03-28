@@ -1,0 +1,10 @@
+=== Warp 2, IMA region (4 iterations) ===
+
+iter | idx_cycle |               idx_L1 | data_cycle |                   data_L1 |                                 grasp_summary | latency
+------------------------------------------------------------------------------------------------------------------------------------------
+   0 |      6182 | [30L] 11xHIT_RES,11xHIT,8xMISS |       7429 |             [31L] 31xMISS | IDX_ENQx83; IDX_INJx83; CT_HITx82; L1_MISSx66; STR_UPDx62; CDx59; DAT_ENQx40; FILL_Dx25; CT_INSx21; L1_HITx18; DAT_INJx16; L1_RFAILx15; STR_CONVx10 |  113923
+   1 |    159204 | [17L] 10xMISS,6xHIT,1xHIT_RES |     161937 |             [24L] 24xMISS | IDX_ENQx30; IDX_INJx20; L1_RFAILx14; DAT_ENQx5; L1_MISSx3; L1_HITx3; CT_HITx2; FILL_Dx2 |    5566
+   2 |    164822 | [22L] 12xHIT,10xHIT_RES |     166922 | [25L] 20xMISS,4xHIT,1xHIT_RES | IDX_ENQx839; IDX_INJx417; L1_HITx167; CT_HITx164; L1_MISSx129; L1_RFAILx124; DAT_ENQx52; FILL_Dx29; CDx16; DAT_INJx3 |   56149
+   3 |    249025 | [17L] 14xMISS,3xHIT_RES |     249778 | [26L] 18xMISS,7xHIT_RES,1xHIT | L1_MISSx20; IDX_ENQx16; IDX_INJx16; DAT_ENQx16; DAT_INJx16; L1_RFAILx12; FILL_Dx3; CT_HIT |    1863
+------------------------------------------------------------------------------------------------------------------------------------------
+  avg_latency=44375.2  idx_hit_rate=62.8%  data_hit_rate=12.3%

@@ -1,0 +1,13 @@
+=== Warp 2, IMA region (7 iterations) ===
+
+iter | idx_cycle |               idx_L1 | data_cycle |                   data_L1 |                                 grasp_summary | latency
+------------------------------------------------------------------------------------------------------------------------------------------
+   0 |    541455 |  [30L] 22xHIT,8xMISS |     541849 | [32L] 15xHIT,14xMISS,3xHIT_RES | L1_HITx52; DAT_ENQx48; DAT_INJx46; CT_HITx34; IDX_ENQx25; IDX_INJx25; FILL_Dx22; L1_MISSx19 |   52587
+   1 |    604705 | [30L] 17xMISS,12xHIT,1xHIT_RES |     605381 | [32L] 12xHIT,11xHIT_RES,9xMISS | IDX_ENQx229; CT_HITx148; IDX_INJx75; L1_RFAILx63; L1_MISSx13; DAT_ENQx9; DAT_INJx9; L1_HITx8; FILL_Dx6; STR_UPD |  271309
+   2 |    877144 | [32L] 19xMISS,9xHIT,4xHIT_RES |     877668 | [32L] 25xMISS,4xHIT,3xHIT_RES | IDX_ENQx697; CT_HITx443; IDX_INJx182; L1_RFAILx118; L1_MISSx95; DAT_ENQx47; DAT_INJx41; FILL_Dx22; L1_HITx10 |  414208
+   3 |   1313349 | [26L] 17xHIT,8xMISS,1xHIT_RES |    1314636 | [32L] 22xMISS,6xHIT,4xHIT_RES | CT_HITx40; L1_MISSx37; IDX_ENQx31; IDX_INJx31; DAT_ENQx23; DAT_INJx23; FILL_Dx12; L1_RFAILx10; L1_HITx7 |   95658
+   4 |   1466987 |  [31L] 23xHIT,8xMISS |    1469576 | [32L] 29xMISS,2xHIT_RES,1xHIT | IDX_ENQx167; IDX_INJx127; CT_HITx86; L1_MISSx73; L1_RFAILx67; DAT_ENQx25; DAT_INJx25; L1_HITx12; FILL_Dx11 |  182341
+   5 |   1657426 | [31L] 16xHIT,14xMISS,1xHIT_RES |    1658982 |   [32L] 24xMISS,8xHIT_RES | IDX_ENQx91; IDX_INJx91; L1_MISSx68; CT_HITx39; DAT_ENQx38; DAT_INJx38; L1_RFAILx33; L1_HITx28; FILL_Dx20 |  144492
+   6 |   1864163 | [31L] 14xHIT,13xMISS,4xHIT_RES |    1867318 | [32L] 24xMISS,7xHIT_RES,1xHIT | IDX_ENQx112; IDX_INJx112; L1_MISSx98; DAT_ENQx98; DAT_INJx77; L1_HITx65; FILL_Dx48; CT_HITx43; L1_RFAILx26 |  204813
+------------------------------------------------------------------------------------------------------------------------------------------
+  avg_latency=195058.3  idx_hit_rate=58.8%  data_hit_rate=34.4%

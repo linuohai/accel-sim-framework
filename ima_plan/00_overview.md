@@ -1,9 +1,7 @@
 # IMA Prefetch 研究计划总览
 
-> 最后更新：2026-03-20
-> 当前阶段：**Phase 2 / Phase 3 — 设计证据回填与预取方案收敛**
->
-> 📌 快速了解研究全貌请先读 [`INDEX.md`](INDEX.md)（由 `/update-ima-index` 自动生成的各阶段状态、关键发现和目录摘要）
+> 最后更新：2026-03-27
+> 本文档定义研究**计划**（目标、方法论、阶段定义）。当前进度与状态见 [`INDEX.md`](INDEX.md)。
 
 ---
 
@@ -37,13 +35,15 @@ IMA 特征化  →  确定性能天花板  →  调研已有方案  →  设计 
 
 ## 里程碑与阶段
 
-| Phase | 名称 | 核心产出 | 状态 |
-|-------|------|---------|------|
-| 0 | 计划制定 | 本文档及子文档框架 | **进行中** |
-| 1 | IMA 特征化 | IMA 分类体系 + 各 workload 微架构行为数据 | **进行中**（ima_high baseline L1 miss breakdown 已完成） |
-| 2 | 天花板量化 & 相关工作 | ideal L1D 全 workload 数据 + 文献调研报告 | **部分完成**（ima_high 已有数据） |
-| 3 | GRASP Prefetcher 设计 | GRASP 方案文档 + 覆盖分析 + 硬件预算 | **进行中**（`small_1sm_cta5` 时序校准已接入设计文档） |
-| 4 | 实现与评估 | GPGPU-Sim 代码 + 完整评估数据 + 论文初稿 | 待开始 |
+| Phase | 名称 | 核心产出 |
+|-------|------|---------|
+| 0 | 计划制定 | 本文档及子文档框架 |
+| 1 | IMA 特征化 | IMA 分类体系 + 各 workload 微架构行为数据 |
+| 2 | 天花板量化 & 相关工作 | ideal L1D 全 workload 数据 + 文献调研报告 |
+| 3 | GRASP Prefetcher 设计 | GRASP 方案文档 + 覆盖分析 + 硬件预算 |
+| 4 | 实现与评估 | GPGPU-Sim 代码 + 完整评估数据 + 论文初稿 |
+
+> 各阶段当前状态见 [INDEX.md](INDEX.md)
 
 ---
 
@@ -74,9 +74,7 @@ IMA 特征化  →  确定性能天花板  →  调研已有方案  →  设计 
 
 ## 最新产出
 
-- [ima_high baseline L1 miss breakdown](01_ima_characterization/l1_miss_breakdown/analysis.md)：基于 SASS + baseline L1 trace 的四类 load 统计，输出汇总表、热点 PC 表和跨 workload 总览图。
-- [03_performance_ceiling.md](03_performance_ceiling.md)：作为 motivation/background 页面，承接 ideal L1D 上界、L1/L2 hit-rate 不对称，以及为何继续做按 load 类型的 miss 归因。
-- [small_1sm_cta5 design evidence](04_prefetcher_design/extra_pattern/small_1sm_cta5/prefetch_design_summary_lrr.md)：基于 `1SM + CTA5 + lrr` 代表窗口恢复 IMA 链级时延与 index-vs-data 压力，用于修正设计文档中早期固定 `~200 / ~400 cycles` 的时序估计；这些结果仅作为 small-case 参考，不直接外推到 full-scale workload。
+> 最新产出与关键发现见 [INDEX.md](INDEX.md)。
 
 ## 工作负载速查
 

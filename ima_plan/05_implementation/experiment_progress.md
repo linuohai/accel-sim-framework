@@ -1,8 +1,9 @@
 # GRASP Prefetcher 实验进度记录
 
-> **目的**：本文档作为跨 Agent 窗口的交接文档，记录每次实验的配置、结果和发现。
+> **目的**：统一的实验进度 + 问题追踪文档。记录实验配置、结果、发现的问题和解决方案。
+> **写入规则**：**append-only**——新内容追加到对应 section 末尾，不修改已有条目。多个并发 session 可安全追加。
 >
-> 最近更新：2026-03-24
+> 最近更新：2026-03-28
 
 ---
 
@@ -146,25 +147,194 @@ SpMV 的 MSHR_ENTRY_FAIL 为 290 万次，说明 MSHR 已完全饱和。此时 P
 
 ---
 
-## 5. 下一步行动
+## 5. GRASP Tiny Case 逐 Iteration 验证 (2026-03-25 ~ 03-26)
 
-### 5.1 高优先级
+### 5.1 验证目标
 
-| # | 行动 | 预期效果 | 复杂度 |
-|---|------|---------|--------|
-| 1 | **增加 `ist_distance` 到 3-5** | 预取提前 3-5 次迭代，覆盖 L2 latency | 改 1 个配置值 |
-| 2 | **CT stride 跨 kernel 持久化** | BFS/SSSP/BC 不再因 kernel 重启丢失训练 | 修改 `on_kernel_launch()` 逻辑 |
-| 3 | **实现 Throttle Control** | 减少 MSHR 拥塞时的无效 PF | 实现 `TODO(human)` |
+在 `ima_tiny_case` (dl64, 1SM_NOSUBCORE) 上逐 iteration 验证 GRASP 全管线行为，使用专用分析脚本 `grasp_verify/analyze_grasp_iterations.py`。
 
-### 5.2 验证计划
+### 5.2 版本演进
 
-1. 修复后重跑 spmv_ima_high (distance=3)，期望 demand HIT 从 643 → 数千以上
-2. 修复后重跑 sssp_ima_high（跨 kernel 持久化），期望 kernel 2 也有 PF 活动
-3. 对比 IPC 提升与 ideal L1D 的上界
+| 版本 | Cycles | 改动 | 关键结果 |
+|------|--------|------|---------|
+| baseline | 30661 | — | 16 iter, 每 iter index 4xMISS |
+| v1 (GRASP) | 24175 | 初始 GRASP 开启 | -21%, 验证管线功能正确 |
+| v2 | 24175 | stride seed on CT creation + queue dedup + 4-sector inject | 与 v1 相同（优化未暴露新收益） |
+| v3 | 23788 | 修复跨 warp FIFO bug（v2 的 FIFO 越界） | **-22.4%**, 2.37x per-iter speedup |
+| v4 | 23788 | 3 项 trace 质量 + 功耗优化（见 §5.3） | 性能不变，事件流更干净 |
+| v5 | 23788 | 修复 CD freeze 条件（见 §5.4） | 性能不变，确保 CT 未满时不误冻结 CD |
+
+### 5.3 v4 改动详情
+
+1. **DEMAND_CT_HIT / STRIDE_UPDATE per-instruction dedup**
+   - 每条 LDG 产生 4 个 sector mem_fetch，共享同一 `inst_uid`。v3 对 4 个 sector 都触发 CT 查找和 stride 计算
+   - v4：仅第一个 sector 触发（`is_first_sector` 检查），后 3 个 skip
+   - 效果：每 iter DEMAND_CT_HIT 4→1, STRIDE_UPDATE 4→1（消除 delta=0 噪声）
+   - 文件：`grasp_prefetcher.cc` `on_demand_load()`，`grasp_tables.h` `ct_entry_t` 新增 `last_demand_warp_id`/`last_demand_inst_uid`
+
+2. **IDX_PF_INJECT 显示 prb_id**
+   - 分析脚本 `format_detail_brief()` 解析 `prb_id` 字段
+   - 效果：事件流中 `IDX_PF_INJECT` 显示 `prb=0`, `prb=1` 等
+
+3. **CD check_freeze 激活**
+   - `check_freeze()` 已存在但从未被调用
+   - v4：在 `STRIDE_CONVERGE` 后调用 `m_cd.check_freeze(m_ct)`
+   - 条件：`ct.all_stride_valid()` — **仅检查 valid entry，不检查 CT 是否满**
+   - 效果：训练后 0 次 CHAIN_DETECT（v3 有 15 次冗余检测）
+
+### 5.4 v5 改动详情
+
+- **问题**：v4 的 `all_stride_valid()` 跳过 invalid slot，CT 只有 1 条 chain（未满）时仍返回 true → 过早冻结 CD → 新 IMA chain 无法被检测
+- **修复**：`check_freeze()` 条件改为 `ct.is_full() && ct.all_stride_valid()`
+  - `is_full()` 检查所有 slot 都 valid
+  - 新增 `grasp_tables.{h,cc}` `is_full()` 方法
+  - 修改 `grasp_chain_detector.cc` `check_freeze()`
+- **效果**：tiny_case CT 未满 → CD 不冻结 → CHAIN_DETECT 恢复出现（15 次，与 v3 一致）。性能不变 23788 cycles
+- **真实 workload**：CT 满后 CD 正确冻结，省功耗
+
+### 5.5 Per-Iteration Speedup 模式
+
+奇偶交替（distance=1 lookahead 限制）：
+
+| 类型 | Index L1 | Data L1 | Speedup | 原因 |
+|------|----------|---------|---------|------|
+| 偶数 iter (2,4,6,...) | 4xHIT | 32xHIT | 7.6x–15.2x | 上轮 PF 已 FILL 完成 |
+| 奇数 iter (3,5,7,...) | 4xHIT_RES | HIT+HIT_RES 混合 | 1.4x–2.7x | 当前 iter PF 刚发出，FILL 在途 |
+
+Overall: avg baseline latency=748.4, avg GRASP latency=316.1, **2.37x per-iteration speedup**
+
+### 5.6 验证产出文件索引
+
+```
+grasp_verify/
+├── grasp_v5/
+│   ├── grasp_verify_pf_v5.log
+│   ├── grasp_verify_pf_v5_l1.csv
+│   ├── grasp_verify_pf_v5_grasp.csv
+│   └── analysis_output/
+│       ├── event_timeline_warp1.txt    # 逐 iter 事件流
+│       ├── baseline_comparison_warp1.txt  # Baseline vs GRASP 对比
+│       ├── format_a_warp1.txt/csv      # 摘要表
+│       └── analysis_log.txt            # 运行元信息
+├── baseline_v4/                         # Baseline（v4/v5 共用）
+└── analyze_grasp_iterations.py          # 分析脚本
+```
+
+### 5.7 v6: RESERVATION_FAIL Per-Reason 诊断 (2026-03-25)
+
+**背景**：§3.2.2 显示 GRASP 运行后 RFAIL 增加 27,559 次（+0.9%），但无法区分是 MSHR 满、miss queue 满还是 cache line 全 reserved。原 `rfail` 统计只有总数，无法定位根因。
+
+**改动**：为 GRASP 的 RESERVATION_FAIL 统计添加 per-reason breakdown。
+
+| 文件 | 改动 |
+|------|------|
+| `gpu-cache.h` | `baseline_cache` 新增 `m_last_fail_reason` 成员 + `last_fail_reason()` getter |
+| `gpu-cache.cc` | 所有 `inc_fail_stats()` 调用处（~15 处）同步设置 `m_last_fail_reason` |
+| `grasp_prefetcher.h` | `grasp_stats_t` 新增 `index_pf_rfail[5]` / `data_pf_rfail[5]` per-reason 数组；`on_l1_access_result` 增加 `fail_reason` 参数 |
+| `grasp_prefetcher.cc` | RESERVATION_FAIL 分支按 reason 分桶；`print_stats` 输出 per-reason breakdown |
+| `shader.cc` | 传递 `m_L1D->last_fail_reason()` 给 GRASP |
+
+**5 种 fail reason**：
+
+| Reason | 含义 |
+|--------|------|
+| `LINE_ALLOC_FAIL` | 目标 set 中所有 cache line 都被 reserved |
+| `MISS_QUEUE_FULL` | miss queue（到 interconnect/DRAM）满 |
+| `MSHR_ENRTY_FAIL` | MSHR 无空闲 entry |
+| `MSHR_MERGE_ENRTY_FAIL` | MSHR 已有该地址 entry 但 merge 满 |
+| `MSHR_RW_PENDING` | Write-Read-Write 冒险 |
+
+**日志输出格式**（每个 SM 的 GRASP 统计行新增）：
+```
+idx_rfail(line_alloc=X missq=X mshr_entry=X mshr_merge=X rw_pending=X)
+data_rfail(line_alloc=X missq=X mshr_entry=X mshr_merge=X rw_pending=X)
+```
+
+**用途**：下一轮实验（distance=3-5 + throttle）前，先用此诊断确认 SpMV 的 rfail 根因分布，指导 throttle 策略（如 MSHR_ENRTY_FAIL 占比高则按 MSHR 占用率节流，MISS_QUEUE_FULL 占比高则按 miss queue 深度节流）。
 
 ---
 
-## 6. 已知问题
+## 5b. ima_med 全量实验 (2026-03-27 ~ 03-28)
+
+### 5b.1 实验配置
+
+- **GPU 配置**：SM80_A100 (108 SM)，默认参数
+- **CTA 限制**：无（完整运行）
+- **GRASP 参数**：默认（见 §2.2），distance=1（默认值）
+
+**⚠ 不可与 §3 消融实验直接对比**：§3 使用 ima_high (cit-Patents) + 限制 CTA (50-100)，本实验使用 ima_med (web-Google) + 完整运行。数据集不同 + CTA 规模不同，结果无可比性。
+
+### 5b.2 数据集说明
+
+三级 IMA 数据集的差异不仅是图规模，更关键的是 **symmetrize 标志**（Gardenia `main.cc` 第 3 个参数）。对称化将有向图转为无向图，边数增加约 69%，导致 BFS/SSSP frontier 更大、IMA 访问更密集。
+
+| 级别 | 图 | symmetrize | 节点数 | 边数 | 源节点 | 说明 |
+|------|-----|:----------:|--------|------|--------|------|
+| ima_small | web-Google | 0（有向） | 916,428 | 5,105,039 | 506742 | frontier 小，BFS/SSSP 非 memory-bound |
+| **ima_med** | **web-Google** | **1（无向）** | **916,428** | **8,644,102** | **506742** | **本实验使用** |
+| ima_high | cit-Patents | 1（无向） | ~3.5M | — | 3569341 | 更大图 + 无向 |
+
+注意：ima_small 和 ima_med 是**同一张图、同一个源节点**，区别仅在 symmetrize。SpMV 不依赖源节点和 BFS frontier，对称化仅影响矩阵非零分布。
+
+### 5b.3 ima_med 结果
+
+| Workload | Baseline IPC | GRASP IPC | Baseline Cycles | GRASP Cycles | Speedup |
+|----------|-------------|-----------|----------------|-------------|---------|
+| bfs_ima_med | 7.3528 | 11.0151 | 18,473,259 | 12,331,255 | **+49.8%** |
+| sssp_ima_med | 9.5580 | 13.7587 | 17,997,932 | 12,502,901 | **+44.0%** |
+| spmv_ima_med | 129.6846 | 164.1219 | 760,487 | 600,916 | **+26.6%** |
+| bc_ima_med | 10.8322 | 13.3567 | 41,346,547 | 33,531,935 | **+23.3%** |
+| **Geomean** | | | | | **+35.5%** |
+
+### 5b.4 ima_small baseline 对比（仅 baseline，无 GRASP 数据）
+
+| Workload | ima_small Baseline IPC | ima_med Baseline IPC | IPC 比 | 原因 |
+|----------|----------------------|---------------------|--------|------|
+| bfs | 23.5588 | 7.3528 | small 3.2× 快 | 有向图 frontier 小 |
+| sssp | 28.8141 | 9.5580 | small 3.0× 快 | 同上 |
+| spmv | 130.4888 | 129.6846 | ≈ 相同 | SpMV 不受 symmetrize 显著影响 |
+| bc | 499.5106 | 10.8322 | small 46× 快 | 有向图 BC 遍历深度极浅 |
+
+ima_small（有向图）的 BFS/SSSP/BC 因 frontier 小而非 memory-bound，GRASP 在此级别预期无显著收益。
+
+### 5b.5 日志文件索引
+
+| 日志 | 说明 |
+|------|------|
+| `result/log/bfs_ima_med_baseline.log` | BFS 基线（全量） |
+| `result/log/bfs_ima_med_grasp.log` | BFS GRASP（全量） |
+| `result/log/sssp_ima_med_baseline.log` | SSSP 基线（全量） |
+| `result/log/sssp_ima_med_grasp.log` | SSSP GRASP（全量） |
+| `result/log/spmv_ima_med_baseline.log` | SpMV 基线（全量） |
+| `result/log/spmv_ima_med_grasp.log` | SpMV GRASP（全量） |
+| `result/log/bc_ima_med_baseline.log` | BC 基线（全量） |
+| `result/log/bc_ima_med_grasp.log` | BC GRASP（全量） |
+
+---
+
+## 6. 下一步行动
+
+### 6.1 高优先级（已完成）
+
+| # | 行动 | 结果 |
+|---|------|------|
+| 1 | **增加 `ist_distance` 到 3-5** | ✅ distance=4 验证有效（SSSP +42.2%） |
+| 2 | **CT stride 跨 kernel 持久化** | ✅ 已实现，多 kernel workload 不再丢训练 |
+| 3 | **实现 Throttle Control** | ✅ 已实现（80% 阈值），SpMV 场景仍需调优 |
+
+### 6.2 当前重点
+
+> 新的行动项直接追加到本 section 末尾。
+
+- SpMV ×16 展开导致 4/5 chain 学不到 stride → 需设计层面解决
+- Throttle 80% 阈值在 MSHR 饱和场景未触发 → 需更激进策略
+- SOTA Spare Register SpMV 实验待完成
+
+---
+
+## 7. 已知问题
+
+> 历史阻塞项详见 [`v1_implementation_problems.md`](v1_implementation_problems.md)。新发现的问题直接追加在下方。
 
 | 问题 | 状态 | 说明 |
 |------|------|------|
@@ -174,7 +344,7 @@ SpMV 的 MSHR_ENTRY_FAIL 为 290 万次，说明 MSHR 已完全饱和。此时 P
 
 ---
 
-## 7. 日志文件索引
+## 8. 日志文件索引
 
 | 日志 | 说明 |
 |------|------|

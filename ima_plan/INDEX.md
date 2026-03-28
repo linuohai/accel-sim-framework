@@ -155,6 +155,29 @@
 10. **写无效化保证正确性** — false positive 清除
 11. **P1 已收敛为 pair-table 方案** — trace-driven 的 runtime payload 缺口由预构建映射补齐
 
+## GRASP 逐 Iteration 分析工具
+
+对任何 IMA workload 的 GRASP 行为进行逐 iteration 粒度分析，定位加速/未加速原因。
+
+| 文件 | 用途 |
+|------|------|
+| `04_prefetcher_design/tiny_case/grasp_verify/analyze_grasp_iterations.py` | 分析脚本（3 种输出格式） |
+| `04_prefetcher_design/tiny_case/grasp_verify/README.md` | 完整使用流程与诊断指南 |
+
+**输出格式**：
+- `--format summary` (a): 单配置摘要表
+- `--format timeline` (b): 逐 iteration 详细事件流（L1 demand + GRASP 内部事件按 cycle 交错）
+- `--format compare` (c): Baseline vs GRASP 对比表（含 per-iteration speedup）
+
+**典型用法**：
+```bash
+python3 analyze_grasp_iterations.py \
+    --grasp-dir <grasp_output> --baseline-dir <baseline_output> \
+    --warps 1 --format all --output-dir <output>
+```
+
+**何时使用**：分析 GRASP 在某个 workload 上加速不理想时，先看 compare 定位问题 iteration，再用 timeline 检查 CD/CT/IST/PRB 时序。详见 README.md §7。
+
 ## 待解决问题
 
 - `05_implementation/grasp_ablation/`: SpMV ×16 展开使 stride 学习失效，需设计层面解决

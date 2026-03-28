@@ -1,0 +1,239 @@
+段落主题: RE054
+导出时间: 2026-01-06 23:03:56
+论文编号: RE003, RE006, RE015, RE017, RE019, RE029, RE047, RE050, RE052, RE054, RE056, RE059, RE063, RE067, RE068, RE071, RE074, RE082, RE084, RE086, RE087, RE088, RE090, RE092, RE094, RE100
+================================================================================
+
+【论文 1】
+编号: RE003
+发表年份: 2024
+作者: Rolinger, Thomas B.; Sussman, Alan
+标题: Adaptive Prefetching for Fine-grain Communication in PGAS Programs
+期刊/出版物: 2024 IEEE International Parallel and Distributed Processing Symposium (IPDPS)
+摘要: Applications that require distributed-memory systems and exhibit irregular memory access patterns present both productivity and performance challenges. This is largely due to the fine-grain communication that arises from irregular memory accesses to distributed data. The Partitioned Global Address Space (PGAS) model provides a globally shared address space and one-sided communication, making it well suited for implementing irregular codes. However, while the PGAS model provides productivity advantages, irregular applications have difficulty achieving high performance due to the cost of fine-grain remote accesses. One way to improve the performance of such PGAS programs is to prefetch remote data before it is needed, thereby hiding communication latency. The challenges of applying prefetching are computing the prefetch distance (i.e., how far ahead to issue prefetches), determining when prefetching will be profitable, and modifying the program to perform prefetching. In this work, we present an adaptive prefetching optimization that can be applied to PGAS programs with irregular memory access patterns. We target the Chapel parallel programming language, which implements a PGAS model. Our optimization leverages runtime information to adjust the prefetch distance and to pause/resume prefetching when that is likely to provide performance gains. Furthermore, we develop compiler support to automatically apply the optimization without requiring user intervention. We evaluate the optimization across five different distributed-memory systems and four workloads. We observe runtime speed-ups of 0.5 – 377x for the Chapel workloads when compared to not prefetching, and 3 – 215x when compared to implementations written in UPC, OpenSHMEM, and one-sided MPI.
+--------------------------------------------------------------------------------
+
+【论文 2】
+编号: RE006
+发表年份: 2021
+作者: Talati, Nishil; May, Kyle; Behroozi, Armand; Yang, Yichen; Kaszyk, Kuba; Vasiladiotis, Christos; Verma, Tarunesh; Li, Lu; Nguyen, Brandon; Sun, Jiawen; Morton, John Magnus; Ahmadi, Agreen; Austin, Todd; O’Boyle, Michael; Mahlke, Scott; Mudge, Trevor; Dreslinski, Ronald
+标题: Prodigy: Improving the Memory Latency of Data-Indirect Irregular Workloads Using Hardware-Software Co-Design
+期刊/出版物: 2021 IEEE International Symposium on High-Performance Computer Architecture (HPCA)
+摘要: Irregular workloads are typically bottlenecked by the memory system. These workloads often use sparse data representations, e.g., compressed sparse row/column (CSR/CSC), to conserve space at the cost of complicated, irregular traversals. Such traversals access large volumes of data and offer little locality for caches and conventional prefetchers to exploit. This paper presents Prodigy, a low-cost hardware-software codesign solution for intelligent prefetching to improve the memory latency of several important irregular workloads. Prodigy targets irregular workloads including graph analytics, sparse linear algebra, and fluid mechanics that exhibit two specific types of data-dependent memory access patterns. Prodigy adopts a “best of both worlds” approach by using static program information from software, and dynamic run-time information from hardware. The core of the system is the Data Indirection Graph (DIG)—a proposed compact representation used to express program semantics such as the layout and memory access patterns of key data structures. The DIG representation is agnostic to a particular data structure format and is demonstrated to work with several sparse formats including CSR and CSC. Program semantics are automatically captured with a compiler pass, encoded as a DIG, and inserted into the application binary. The DIG is then used to program a low-cost hardware prefetcher to fetch data according to an irregular algorithm’s data structure traversal pattern. We equip the prefetcher with a flexible prefetching algorithm that maintains timeliness by dynamically adapting its prefetch distance to an application’s execution pace. We evaluate the performance, energy consumption, and transistor cost of Prodigy using a variety of algorithms from the GAP, HPCG, and NAS benchmark suites. We compare the performance of Prodigy against a non-prefetching baseline as well as state-of-the-art prefetchers. We show that by using just 0.8KB of storage, Prodigy outperforms a non-prefetching baseline by 2.6 \times and saves energy by 1.6 \times, on average. Prodigy also outperforms modern data prefetchers by 1.5- 2.3 \times.
+--------------------------------------------------------------------------------
+
+【论文 3】
+编号: RE015
+发表年份: 2025
+作者: Li, Mengming; Zhang, Qijun; Ren, Yongqing; Xie, Zhiyao
+标题: Integrating Prefetcher Selection with Dynamic Request Allocation Improves Prefetching Efficiency
+期刊/出版物: 2025 IEEE International Symposium on High Performance Computer Architecture (HPCA)
+摘要: Hardware prefetching plays a critical role in hiding the off-chip DRAM latency. The complexity of applications results in a wide variety of memory access patterns, prompting the development of numerous cache-prefetching algorithms. Consequently, commercial processors often employ a hybrid of these algorithms to enhance the overall prefetching performance. Nonetheless, since these prefetchers share hardware resources, conflicts arising from competing prefetching requests can negate the benefits of hardware prefetching. Under such circumstances, several prefetcher selection algorithms have been proposed to mitigate conflicts between prefetchers. However, these prior solutions suffer from two limitations. First, the input demand request allocation is inaccurate. Second, the prefetcher selection criteria are coarse-grained. In this paper, we address both limitations by introducing an efficient and widely applicable prefetcher selection algorithm—Alecto 1, which tailors the demand requests for each prefetcher. Every demand request is first sent to Alecto to identify suitable prefetchers before being routed to prefetchers for training and prefetching. Our analysis shows that Alecto is adept at not only harmonizing prefetching accuracy, coverage, and timeliness but also significantly enhancing the utilization of the prefetcher table, which is vital for temporal prefetching. Alecto outperforms the state-of-the-art RL-based prefetcher selection algorithm—Bandit by 2.76 % in single-core, and \mathbf7. 5 6 % in eight-core. For memory-intensive benchmarks, Alecto outperforms Bandit by \mathbf5. 2 5 %. Alecto consistently delivers state-of-the-art performance in scheduling various types of cache prefetchers. In addition to the performance improvement, Alecto can reduce the energy consumption associated with accessing the prefetchers’ table by 48 % (7 % energy reduction on the entire memory hierarchy), while only adding less than 1 KB of storage overhead.1The name Alecto stands for the combination of selection and allocation.
+--------------------------------------------------------------------------------
+
+【论文 4】
+编号: RE017
+发表年份: 2014
+作者: Lakshminarayana, Nagesh B.; Kim, Hyesoon
+标题: Spare register aware prefetching for graph algorithms on GPUs
+期刊/出版物: 2014 IEEE 20th International Symposium on High Performance Computer Architecture (HPCA)
+摘要: More and more graph algorithms are being GPU enabled. Graph algorithm implementations on GPUs have irregular control flow and are memory-intensive with many irregular/data-dependent memory accesses. Due to these factors graph algorithms on GPUs have low execution efficiency. In this work we propose a mechanism to improve the execution efficiency of graph algorithms by improving their memory access latency tolerance. We propose a mechanism for prefetching data for load pairs that have one load dependent on the other - such pairs are common in graph algorithms. Our mechanism detects the target loads in hardware and injects instructions into the pipeline to prefetch data into spare registers that are not being used by any active threads. By prefetching data into registers, early eviction of prefetched data can be eliminated. We also propose a mechanism that uses the compiler to identify the target loads. Our mechanism improves performance over no prefetching by 10% on average and upto 51% for nine memory intensive graph algorithm kernels.
+--------------------------------------------------------------------------------
+
+【论文 5】
+编号: RE019
+发表年份: 2018
+作者: Koo, Gunjae; Jeon, Hyeran; Liu, Zhenhong; Kim, Nam Sung; Annavaram, Murali
+标题: CTA-Aware Prefetching and Scheduling for GPU
+期刊/出版物: 2018 IEEE International Parallel and Distributed Processing Symposium (IPDPS)
+摘要: Albeit GPUs are supposed to be tolerant to long latency of data fetch operation, we observe that L1 cache misses occur in a bursty manner for many memory-intensive applications. This in turn leads to severe contentions in GPU memory hierarchy, and thus stalls execution pipeline for many cycles as all warps end up waiting for their memory requests to be serviced by L1 cache. To spread such bursty L1 cache misses, we propose CTA-Aware Prefetcher and Scheduler (CAPS) consisting of a thread group-aware prefetcher and a prefetch-aware warp scheduler for GPUs. GPU kernels group threads into cooperative thread arrays (CTAs). Each thread typically uses its thread index and its associated CTA index to identify the data that it operates on. The starting base address accessed by the first warp in a CTA is difficult to predict since that starting address is a complex function of thread index and CTA index and also depends on how the programmer distributes input data across CTAs. But threads within each CTA exhibit stride accesses. Hence, if the base address of each CTA can be computed early, it is possible to accurately predict prefetch addresses for threads within a CTA. To compute the base address of each CTA, a leading warp is used from each CTA. The leading warp is executed early by pairing it with warps from currently executing leading CTA. The warps in the leading CTA are used to compute the stride value. The stride value is then combined with base addresses computed from the leading warp of each CTA to prefetch the data for all the trailing warps in the trailing CTAs. CAPS allows prefetch requests to be issued sufficiently ahead of time before the demand requests, effectively reorganizing warp executions to quickly detect the base address of each CTA and stride per load. CAPS predicts addresses with over 97% accuracy and is able to improve GPU performance by 8% on average with up to 27% for a wide range of GPU applications.
+--------------------------------------------------------------------------------
+
+【论文 6】
+编号: RE029
+发表年份: 2015
+作者: Yu, Xiangyao; Hughes, Christopher J.; Satish, Nadathur; Devadas, Srinivas
+标题: IMP: indirect memory prefetcher
+期刊/出版物: Proceedings of the 48th International Symposium on Microarchitecture
+摘要: Machine learning, graph analytics and sparse linear algebra-based applications are dominated by irregular memory accesses resulting from following edges in a graph or non-zero elements in a sparse matrix. These accesses have little temporal or spatial locality, and thus incur long memory stalls and large bandwidth requirements. A traditional streaming or striding prefetcher cannot capture these irregular access patterns.A majority of these irregular accesses come from indirect patterns of the form A[B[i]]. We propose an efficient hardware indirect memory prefetcher (IMP) to capture this access pattern and hide latency. We also propose a partial cacheline accessing mechanism for these prefetches to reduce the network and DRAM bandwidth pressure from the lack of spatial locality.Evaluated on 7 applications, IMP shows 56% speedup on average (up to 2.3×) compared to a baseline 64 core system with streaming prefetchers. This is within 23% of an idealized system. With partial cacheline accessing, we see another 9.4% speedup on average (up to 46.6%).
+--------------------------------------------------------------------------------
+
+【论文 7】
+编号: RE047
+发表年份: 2021
+作者: Heirman, Wim; Eyerman, Stijn; Bois, Kristof Du; Hur, Ibrahim
+标题: Automatic Sublining for Efficient Sparse Memory Accesses
+期刊/出版物: ACM Trans. Archit. Code Optim.
+摘要: Sparse memory accesses, which are scattered accesses to single elements of a large data structure, are a challenge for current processor architectures. Their lack of spatial and temporal locality and their irregularity makes caches and traditional stream prefetchers useless. Furthermore, performing standard caching and prefetching on sparse accesses wastes precious memory bandwidth and thrashes caches, deteriorating performance for regular accesses. Bypassing prefetchers and caches for sparse accesses, and fetching only a single element (e.g., 8&nbsp;B) from main memory (subline access), can solve these issues.Deciding which accesses to handle as sparse accesses and which as regular cached accesses, is a challenging task, with a large potential impact on performance. Not only is performance reduced by treating sparse accesses as regular accesses, not caching accesses that do have locality also negatively impacts performance by significantly increasing their latency and bandwidth consumption. Furthermore, this decision depends on the dynamic environment, such as input set characteristics and system load, making a static decision by the programmer or compiler suboptimal.We propose the Instruction Spatial Locality Estimator (ISLE), a hardware detector that finds instructions that access isolated words in a sea of unused data. These sparse accesses are dynamically converted into uncached subline accesses, while keeping regular accesses cached. ISLE does not require modifying source code or binaries, and adapts automatically to a changing environment (input data, available bandwidth, etc.). We apply ISLE to a graph analytics processor running sparse graph workloads, and show that ISLE outperforms the performance of no subline accesses, manual sublining, and prior work on detecting sparse accesses.
+--------------------------------------------------------------------------------
+
+【论文 8】
+编号: RE050
+发表年份: 2025
+作者: Sotiropoulos, Konstantinos; Skeppstedt, Jonas; Stenström, Per
+标题: ASaP: Automatic Software Prefetching for Sparse Tensor Computations in MLIR
+期刊/出版物: Proceedings of the SC '25 Workshops of the International Conference for High Performance Computing, Networking, Storage and Analysis
+摘要: Sparse tensor computations suffer from irregular memory access patterns that degrade cache performance. While software prefetching can mitigate this, existing compiler approaches lack the semantic insight needed for effective optimization. We present ASaP, an automatic software prefetching framework integrated within MLIR’s sparse tensor dialect. By leveraging semantic information—tensor formats and loop structure—available during sparsification, ASaP determines accurate buffer bounds and injects prefetches in both innermost and outer loops, achieving broader coverage than prior work. Evaluated on SuiteSparse matrices, ASaP demonstrates significant performance gains for unstructured matrices. For SpMV with innermost-loop prefetching, ASaP achieves 1.38× speedup over Ainsworth &amp; Jones. For SpMM with outer-loop prefetching, ASaP achieves 1.28× speedup while Ainsworth &amp; Jones fails to generate prefetches. Our experiments reveal that disabling inaccurate hardware prefetchers frees critical resources for software prefetching, suggesting future architectures should expose prefetcher control as an optimization interface.
+--------------------------------------------------------------------------------
+
+【论文 9】
+编号: RE052
+发表年份: 2025
+作者: Posluns, Gilead; Jeffrey, Mark C.
+标题: Symbiotic Task Scheduling and Data Prefetching
+期刊/出版物: Proceedings of the 58th IEEE/ACM International Symposium on Microarchitecture
+摘要: Task-parallel programming models enable programmers to extract parallelism from irregular applications. Since software-based task-parallel runtimes impose crippling overheads on fine-grain tasks, architects have designed manycores with hardware support for task management. These hardware task-parallel systems can scale challenging workloads to hundreds of cores, but fail to use conventional prefetchers due to short (100-cycle) tasks. Lacking prefetching, they often expose DRAM latency to applications, fumbling the performance gains of hardware. We present the Task-Seeded Prefetcher (TSP) and Memory Response Task Scheduler (MRS), a symbiotic pair that boost performance in general-purpose task-parallel hardware. TSP learns and prefetches the data-access pattern of each task function, seeded with its descriptor that is queued by the task scheduler. MRS augments the baseline task-to-core dispatch policy by using prefetch status from TSP to optimize core utilization. Together, TSP and MRS provide speedups of up to 3.1 × (gmeans up to 1.4 ×) across 13 benchmarks on 256-core task-parallel systems that were already 3–60 × faster than parallel software.
+--------------------------------------------------------------------------------
+
+【论文 10】
+编号: RE054
+发表年份: 2024
+作者: Xue, Feng; Han, Chenji; Li, Xinyu; Wu, Junliang; Zhang, Tingting; Liu, Tianyi; Hao, Yifan; Du, Zidong; Guo, Qi; Zhang, Fuxin
+标题: Tyche: An Efficient and General Prefetcher for Indirect Memory Accesses
+期刊/出版物: ACM Trans. Archit. Code Optim.
+摘要: Indirect memory accesses (IMAs, i.e., A[f(B[i])]) are typical memory access patterns in applications such as graph analysis, machine learning, and database. IMAs are composed of producer-consumer pairs, where the consumers’ memory addresses are derived from the producers’ memory data. Due to the built-in value-dependent feature, IMAs exhibit poor locality, making prefetching ineffective. Hindered by the challenges of recording the potentially complex graphs of instruction dependencies among IMA producers and consumers, current state-of-the-art hardware prefetchers either (a) exhibit inadequate IMA identification abilities or (b)&nbsp;rely on the run-ahead mechanism to prefetch IMAs intermittently and insufficiently.To solve this problem, we propose Tyche,1 an efficient and general hardware prefetcher to enhance IMA performance. Tyche adopts a bilateral propagation mechanism to precisely excavate the instruction dependencies in simple chains with moderate length (rather than complex graphs). Based on the exact instruction dependencies, Tyche can accurately identify various IMA patterns, including nonlinear ones, and generate accurate prefetching requests continuously. Evaluated on broad benchmarks, Tyche achieves an average performance speedup of 16.2% over the state-of-the-art spatial prefetcher Berti. More importantly, Tyche outperforms the state-of-the-art IMA prefetchers IMP, Gretch, and Vector Runahead, by 15.9%, 12.8%, and 10.7%, respectively, with a lower storage overhead of only 0.57 KB.
+--------------------------------------------------------------------------------
+
+【论文 11】
+编号: RE056
+发表年份: 2020
+作者: Cavus, Mustafa; Sendag, Resit; Yi, Joshua J.
+标题: Informed Prefetching for Indirect Memory Accesses
+期刊/出版物: ACM Trans. Archit. Code Optim.
+摘要: Indirect memory accesses have irregular access patterns that limit the performance of conventional software and hardware-based prefetchers. To address this problem, we propose the Array Tracking Prefetcher (ATP), which tracks array-based indirect memory accesses using a novel combination of software and hardware. ATP is first configured by special metadata instructions, which are inserted by programmer or compiler to pass data structure traversal knowledge. It then calculates and issues prefetches based on this information. ATP also employs a novel mechanism for dynamically adjusting prefetching distance to reduce early or late prefetches. ATP yields average speedup of 2.17 as compared to a single-core without prefetching. By contrast, the speedup for conventional software and hardware-based prefetching is 1.84 and 1.32, respectively. For four cores, the average speedup for ATP is 1.85, while the corresponding speedups for software and hardware-based prefetching are 1.60 and 1.25, respectively.
+--------------------------------------------------------------------------------
+
+【论文 12】
+编号: RE059
+发表年份: 2025
+作者: Khadem, Alireza; Kamalakkannan, Kamalavasan; Zhu, Zhenyan; Poptani, Akash; Gu, Yufeng; Dominguez-Trujillo, Jered Benjamin; Talati, Nishil; Fujiki, Daichi; Mahlke, Scott; Shipman, Galen; Das, Reetuparna
+标题: DX100: Programmable Data Access Accelerator for Indirection
+期刊/出版物: Proceedings of the 52nd Annual International Symposium on Computer Architecture
+摘要: Indirect memory accesses frequently appear in applications where memory bandwidth is a critical bottleneck. Prior indirect memory access proposals, such as indirect prefetchers, runahead execution, fetchers, and decoupled access/execute architectures, primarily focus on improving memory access latency by loading data ahead of computation but still rely on the DRAM controllers to reorder memory requests and enhance memory bandwidth utilization. DRAM controllers have limited visibility to future memory accesses due to the small capacity of request buffers and the restricted memory-level parallelism of conventional core and memory systems.We introduce DX100, a programmable data access accelerator for indirect memory accesses. DX100 is shared across cores to offload bulk indirect memory accesses and associated address calculation operations. DX100 reorders, interleaves, and coalesces memory requests to improve DRAM row-buffer hit rate and memory bandwidth utilization. DX100 provides a general-purpose ISA to support diverse access types, loop patterns, conditional accesses, and address calculations. To support this accelerator without significant programming efforts, we discuss a set of MLIR compiler passes that automatically transform legacy code to utilize DX100. Experimental evaluations on 12 benchmarks spanning scientific computing, database, and graph applications show that DX100 achieves performance improvements of 2.6 × over a multicore baseline and 2.0 × over the state-of-the-art indirect prefetcher.
+--------------------------------------------------------------------------------
+
+【论文 13】
+编号: RE063
+发表年份: 2021
+作者: Kaushik, Anirudh Mohan; Pekhimenko, Gennady; Patel, Hiren
+标题: Gretch: A Hardware Prefetcher for Graph Analytics
+期刊/出版物: ACM Trans. Archit. Code Optim.
+摘要: Data-dependent memory accesses (DDAs) pose an important challenge for high-performance graph analytics (GA). This is because such memory accesses do not exhibit enough temporal and spatial locality resulting in low cache performance. Prior efforts that focused on improving the performance of DDAs for GA are not applicable across various GA frameworks. This is because (1) they only focus on one particular graph representation, and (2) they require workload changes to communicate specific information to the hardware for their effective operation.In this work, we propose a hardware-only solution to improving the performance of DDAs for GA across multiple GA frameworks. We present a hardware prefetcher for GA called Gretch, that addresses the above limitations. An important observation we make is that identifying certain DDAs&nbsp;without hardware-software communication is sensitive to the instruction scheduling. A key contribution of this work is a hardware mechanism that activates Gretch&nbsp;to identify DDAs&nbsp;when using either in-order or out-of-order instruction scheduling. Our evaluation shows that Gretch provides an average speedup of 38% over no prefetching, 25% over conventional stride prefetcher, and outperforms prior DDAs&nbsp;prefetchers by 22% with only 1% increase in power consumption when executed on different GA workloads and frameworks.
+--------------------------------------------------------------------------------
+
+【论文 14】
+编号: RE067
+发表年份: 2005
+作者: Ganusov, Ilya; Burtscher, Martin
+标题: On the importance of optimizing the configuration of stream prefetchers
+期刊/出版物: Proceedings of the 2005 Workshop on Memory System Performance
+摘要: This paper provides a detailed analysis of how the parameters of hardware prefetchers affect the memory system performance. In particular, we found the configuration of the frequently used stream prefetcher to have a major impact on the runtime, making parameter optimizations imperative when comparing a stream prefetcher with other prefetching techniques. For example, we show that adjusting the prefetch distance to the optimal value can increase the average speedup over the SPECcpu2000 benchmark suite from 40% to 70%. Moreover, our investigation of the performance of runahead prefetching relative to stream prefetching shows that choosing a non-optimal stream prefetcher as a baseline can distort the results by as much as a factor of two.
+--------------------------------------------------------------------------------
+
+【论文 15】
+编号: RE068
+发表年份: 2016
+作者: Panda, Reena; Eckert, Yasuko; Jayasena, Nuwan; Kayiran, Onur; Boyer, Michael; John, Lizy Kurian
+标题: Prefetching Techniques for Near-memory Throughput Processors
+期刊/出版物: Proceedings of the 2016 International Conference on Supercomputing
+摘要: Near-memory processing or processing-in-memory (PIM) is regaining a lot of interest recently as a viable solution to overcome the challenges imposed by memory wall. This trend has been mainly fueled by the emergence of 3D-stacked memories. GPUs are touted as great candidates for in-memory processors due to their superior bandwidth utilization capabilities. Although putting a GPU core beneath memory exposes it to unprecedented memory bandwidth, in this paper, we demonstrate that significant opportunities still exist to improve the performance of the simpler, in-memory GPU processors (GPU-PIM) by improving their memory performance. Thus, we propose three light-weight, practical memory-side prefetchers to improve the performance of GPU-PIM systems. The proposed prefetchers exploit the patterns in individual memory accesses and synergy in the wavefront-localized memory streams, combined with a better understanding of the memory-system state, to prefetch from DRAM row buffers into on-chip prefetch buffers, thereby achieving over 75% prefetcher accuracy and 40% improvement in row buffer locality. In order to maximize utilization of prefetched data and minimize thrashing, the prefetchers also use a novel prefetch buffer management policy based on a unique dead-row prediction mechanism together with an eviction-based prefetch-trigger policy to control their aggressiveness. The proposed prefetchers improve performance by over 60% (max) and 9% on average as compared to the baseline, while achieving over 33% of the performance benefits of perfect-L2 using less than 5.6KB of additional hardware. The proposed prefetchers also outperform the state-of-the-art memory-side prefetcher, OWL by more than 20%.
+--------------------------------------------------------------------------------
+
+【论文 16】
+编号: RE071
+发表年份: 2012
+作者: Panda, Biswabandan; Balachandran, Shankar
+标题: Hardware prefetchers for emerging parallel applications
+期刊/出版物: Proceedings of the 21st International Conference on Parallel Architectures and Compilation Techniques
+摘要: Hardware prefetching has been studied in the past for multi-programmed workloads as well as GPUs. Efficient hardware prefetchers like stream-based or GHB-based ones work well for multiprogrammed workloads because different programs get mapped to different cores and are run independently. Parallel applications, however, pose a different set of challenges. Multiple threads of a parallel application share data with each other which brings in coherency issues. Also, local prefetchers do not understand the irregular spread of misses across threads. In this paper, we propose a hardware prefetching framework for L1 D-Cache that targets parallel applications. We show how to make efficient prefetch requests to the L2 cache by studying and classifying the patterns of L1 misses across all the threads. Our preliminary results show an improvement of 7% in execution time on an average on the PARSEC benchmark suite.
+--------------------------------------------------------------------------------
+
+【论文 17】
+编号: RE074
+发表年份: 2013
+作者: Sethia, Ankit; Dasika, Ganesh; Samadi, Mehrzad; Mahlke, Scott
+标题: APOGEE: adaptive prefetching on GPUs for energy efficiency
+期刊/出版物: Proceedings of the 22nd International Conference on Parallel Architectures and Compilation Techniques
+摘要: Modern graphics processing units (GPUs) combine large amounts of parallel hardware with fast context switching among thousands of active threads to achieve high performance. However, such designs do not translate well to mobile environments where power constraints often limit the amount of hardware. In this work, we investigate the use of prefetching as a means to increase the energy efficiency of GPUs. Classically, CPU prefetching results in higher performance but worse energy efficiency due to unnecessary data being brought on chip. Our approach, called APOGEE, uses an adaptive mechanism to dynamically detect and adapt to the memory access patterns found in both graphics and scientific applications that are run on modern GPUs to achieve prefetching efficiencies of over 90%. Rather than examining threads in isolation, APOGEE uses adjacent threads to more efficiently identify address patterns and dynamically adapt the timeliness of prefetching. The net effect of APOGEE is that fewer thread contexts are necessary to hide memory latency and thus sustain performance. This reduction in thread contexts and related hardware translates to simplification of hardware and leads to a reduction in power. For Graphics and GPGPU applications, APOGEE enables an 8X reduction in multithreading hardware, while providing a performance benefit of 19%. This translates to a 52% increase in performance per watt over systems with high multi-threading and 33% over existing GPU prefetching techniques.
+--------------------------------------------------------------------------------
+
+【论文 18】
+编号: RE082
+发表年份: 2017
+作者: Panda, Reena; Zheng, Xinnian; Wang, Jiajun; Gerstlauer, Andreas; John, Lizy K.
+标题: Statistical Pattern Based Modeling of GPU Memory Access Streams
+期刊/出版物: Proceedings of the 54th Annual Design Automation Conference 2017
+摘要: Recent research studies have shown that modern GPU performance is often limited by the memory system performance. Optimizing memory hierarchy performance requires GPU designers to draw design insights based on the cache &amp; memory behavior of end-user applications. Unfortunately, it is often difficult to get access to end-user workloads due to the confidential or proprietary nature of the software/data. Furthermore, the efficiency of early design space exploration of cache &amp; memory systems is often limited due to either the slow speed of detailed simulation techniques or limited scope of state-of-the-art cache analytical models.To enable efficient GPU memory system exploration, we present a novel methodology and framework that statistically models the GPU memory access stream locality. The proposed G-MAP (GPU Memory Access Proxy) framework models the regularity in code-localized memory access patterns of GPGPU applications and the parallelism in GPU's execution model to create miniaturized memory proxies. We evaluate G-MAP using 18 GPGPU benchmarks and show that G-MAP proxies can replicate cache/memory performance of original applications with over 90% accuracy across over 5000 different L1/L2 cache, prefetcher and memory configurations.
+--------------------------------------------------------------------------------
+
+【论文 19】
+编号: RE084
+发表年份: 2010
+作者: Lee, Jaekyu; Lakshminarayana, Nagesh B.; Kim, Hyesoon; Vuduc, Richard
+标题: Many-Thread Aware Prefetching Mechanisms for GPGPU Applications
+期刊/出版物: Proceedings of the 2010 43rd Annual IEEE/ACM International Symposium on Microarchitecture
+摘要: We consider the problem of how to improve memory latency tolerance in massively multithreaded GPGPUs when the thread-level parallelism of an application is not sufficient to hide memory latency. One solution used in conventional CPU systems is prefetching, both in hardware and software. However, we show that straightforwardly applying such mechanisms to GPGPU systems does not deliver the expected performance benefits and can in fact hurt performance when not used judiciously. This paper proposes new hardware and software prefetching mechanisms tailored to GPGPU systems, which we refer to as many-thread aware prefetching (MT-prefetching) mechanisms. Our software MT-prefetching mechanism, called inter-thread prefetching, exploits the existence of common memory access behavior among fine-grained threads. For hardware MT-prefetching, we describe a scalable prefetcher training algorithm along with a hardware-based inter-thread prefetching mechanism. In some cases, blindly applying prefetching degrades performance. To reduce such negative effects, we propose an adaptive prefetch throttling scheme, which permits automatic GPGPU application- and hardware-specific adjustment. We show that adaptation reduces the negative effects of prefetching and can even improve performance. Overall, compared to the state-of-the-art software and hardware prefetching, our MT-prefetching improves performance on average by 16%(software pref.) / 15% (hardware pref.) on our benchmarks.
+--------------------------------------------------------------------------------
+
+【论文 20】
+编号: RE086
+发表年份: 2016
+作者: Oh, Yunho; Kim, Keunsoo; Yoon, Myung Kuk; Park, Jong Hyun; Park, Yongjun; Ro, Won Woo; Annavaram, Murali
+标题: APRES: improving cache efficiency by exploiting load characteristics on GPUs
+期刊/出版物: Proceedings of the 43rd International Symposium on Computer Architecture
+摘要: Long memory latency and limited throughput become performance bottlenecks of GPGPU applications. The latency takes hundreds of cycles which is difficult to be hidden by simply interleaving tens of warp execution. While cache hierarchy helps to reduce memory system pressure, massive Thread-Level Parallelism (TLP) often causes excessive cache contention. This paper proposes Adaptive PREfetching and Scheduling (APRES) to improve GPU cache efficiency. APRES relies on the following observations. First, certain static load instructions tend to generate memory addresses having very high locality. Second, although loads have no locality, the access addresses still can show highly strided access pattern. Third, the locality behavior tends to be consistent regardless of warp ID.APRES schedules warps so that as many cache hits generated as possible before any cache misses generated. This is to minimize cache thrashing when many warps are contending for a cache line. However, to realize this operation, it is required to predict which warp will hit the cache in the near future. Without directly predicting future cache hit/miss for each warp, APRES creates a group of warps that will execute the same load instruction in the near future. Based on the third observation, we expect the locality behavior is consistent over all warps in the group. If the first executed warp in the group hits the cache, then the load is considered as a high locality type, and APRES prioritizes all warps in the group. Group prioritization leads to consecutive cache hits, because the grouped warps are likely to access the same cache line. If the first warp missed the cache, then the load is considered as a strided type, and APRES generates prefetch requests for the other warps in the group. After that, APRES prioritizes prefetch targeted warps so that the demand requests are merged to Miss Status Holding Register (MSHR) or prefetched lines can be accessed. On memory-intensive applications, APRES achieves 31.7% performance improvement compared to the baseline GPU and 7.2% additional speedup compared to the best combination of existing warp scheduling and prefetching methods.
+--------------------------------------------------------------------------------
+
+【论文 21】
+编号: RE087
+发表年份: 2023
+作者: Chou, Yuan Hsi; Nowicki, Tyler; Aamodt, Tor M.
+标题: Treelet Prefetching For Ray Tracing
+期刊/出版物: Proceedings of the 56th Annual IEEE/ACM International Symposium on Microarchitecture
+摘要: Ray tracing is traditionally only used in offline rendering to produce images of high fidelity because it is computationally expensive. Recent Graphics Processing Units (GPUs) have included dedicated accelerators to bring ray tracing to real-time rendering for video games and other graphics applications. These accelerators focus on finding the closest intersection between a ray and a scene using a hierarchical tree data structure called a Bounding Volume Hierarchy (BVH) tree. However, BVH tree traversal is still very costly due to divergent rays accessing different parts of the tree, with each ray following a unique pointer-chasing sequence that is difficult to optimize with traditional methods. To address this, we propose treelet prefetching to reduce the latency of ray traversal. Treelets are smaller subtrees created by splitting the BVH tree. When a ray visits a treelet root node, we prefetch the corresponding treelet, enabling deeper levels of the tree to be fetched in advance. This reduces the latency associated with pointer-chasing during tree traversal. Our approach uses a hardware prefetcher with a two-stack treelet based traversal algorithm, maximizing the benefits of treelet prefetching. Our simulation results show treelet prefetching on average improves performance of the baseline RT Unit in Vulkan-Sim by 32.1% while maintaining the same power consumption.
+--------------------------------------------------------------------------------
+
+【论文 22】
+编号: RE088
+发表年份: 2023
+作者: Mostofi, Saba; Falahati, Hajar; Mahani, Negin; Lotfi-Kamran, Pejman; Sarbazi-Azad, Hamid
+标题: Snake: A Variable-length Chain-based Prefetching for GPUs
+期刊/出版物: Proceedings of the 56th Annual IEEE/ACM International Symposium on Microarchitecture
+摘要: Graphics Processing Units (GPUs) utilize memory hierarchy and Thread-Level Parallelism (TLP) to tolerate off-chip memory latency, which is a significant bottleneck for memory-bound applications. However, parallel threads generate a large number of memory requests, which increases the average memory latency and degrades cache performance due to high contention. Prefetching is an effective technique to reduce memory access latency, and prior research shows the positive impact of stride-based prefetching on GPU performance. However, existing prefetching methods only rely on fixed strides. To address this limitation, this paper proposes a new prefetching technique, Snake, which is built upon chains of variable strides, using throttling and memory decoupling strategies. Snake&nbsp;achieves 80% coverage and 75% accuracy in prefetching demand memory requests, resulting in a 17% improvement in total GPU performance and energy consumption for memory-bound General-Purpose Graphics Processing Unit (GPGPU) applications.
+--------------------------------------------------------------------------------
+
+【论文 23】
+编号: RE090
+发表年份: 2013
+作者: Jog, Adwait; Kayiran, Onur; Mishra, Asit K.; Kandemir, Mahmut T.; Mutlu, Onur; Iyer, Ravishankar; Das, Chita R.
+标题: Orchestrated scheduling and prefetching for GPGPUs
+期刊/出版物: Proceedings of the 40th Annual International Symposium on Computer Architecture
+摘要: In this paper, we present techniques that coordinate the thread scheduling and prefetching decisions in a General Purpose Graphics Processing Unit (GPGPU) architecture to better tolerate long memory latencies. We demonstrate that existing warp scheduling policies in GPGPU architectures are unable to effectively incorporate data prefetching. The main reason is that they schedule consecutive warps, which are likely to access nearby cache blocks and thus prefetch accurately for one another, back-to-back in consecutive cycles. This either 1) causes prefetches to be generated by a warp too close to the time their corresponding addresses are actually demanded by another warp, or 2) requires sophisticated prefetcher designs to correctly predict the addresses required by a future "far-ahead" warp while executing the current warp.We propose a new prefetch-aware warp scheduling policy that overcomes these problems. The key idea is to separate in time the scheduling of consecutive warps such that they are not executed back-to-back. We show that this policy not only enables a simple prefetcher to be effective in tolerating memory latencies but also improves memory bank parallelism, even when prefetching is not employed. Experimental evaluations across a diverse set of applications on a 30-core simulated GPGPU platform demonstrate that the prefetch-aware warp scheduler provides 25% and 7% average performance improvement over baselines that employ prefetching in conjunction with, respectively, the commonly-employed round-robin scheduler or the recently-proposed two-level warp scheduler. Moreover, when prefetching is not employed, the prefetch-aware warp scheduler provides higher performance than both of these baseline schedulers as it better exploits memory bank parallelism.
+--------------------------------------------------------------------------------
+
+【论文 24】
+编号: RE092
+发表年份: 2024
+作者: Deng, Yangshen; Chen, Shiwen; Hong, Zhaoyang; Tang, Bo
+标题: How Does Software Prefetching Work on GPU Query Processing?
+期刊/出版物: Proceedings of the 20th International Workshop on Data Management on New Hardware
+摘要: Improving the performance of GPU query processing is a well-studied problem in database community. However, its performance is still unsatisfactory due to the low utilization of GPU memory bandwidth. In the literature, employing software prefetching techniques to improve the bandwidth utilization is a common practice in CPU database as it overlaps computation cost and memory access latency. However, it was ignored by GPU database even though the software prefetching ability has been provided by modern GPU architecture (i.e., from NVIDIA Ampere).In order to investigate the effectiveness of software prefetching techniques on GPU query processing, we implement four software prefetching algorithms on GPU, i.e., Group Prefetch (GP), Software-Pipelined Prefetch (SPP), Asynchronous Memory Access Chaining (AMAC) and Interleaved Multi-Vectorizing (IMV) in the work. We then adapt them on hash join probe and BTree search tasks with a suite of optimizations. Last, we conduct comprehensive experiments and evaluate the performance of them. The results confirm the superiority of software prefetching techniques on GPU query processing. Specifically, they can achieve up to 1.19X speedup on hash join probe and 1.31X speedup on BTree search when compared with the implementations without software prefetching.
+--------------------------------------------------------------------------------
+
+【论文 25】
+编号: RE094
+发表年份: 2025
+作者: Fu, Gelin; Xia, Tian; Yin, Mingzhuo; Nair, Prashant J.; Lis, Mieszko; Ren, Pengju
+标题: Magellan: A High-Performance Loop-Guided Prefetcher for Indirect Memory Access
+期刊/出版物: Proceedings of the 52nd Annual International Symposium on Computer Architecture
+摘要: Graph analytics and sparse linear algebra applications heavily rely on indirect memory access (IMA). IMAs are characterized by poor temporal and spatial locality, which causes frequent high-latency DRAM accesses. While dedicated hardware prefetchers for IMA have been explored, they target narrow access patterns and tend to introduce significant hardware complexity. Software prefetching offers a promising alternative, leveraging compiler analysis to prefetch indirection patterns. However, existing software prefetchers struggle with sparse applications due to limited loop iterations and complex IMA patterns across nested loops.We propose Magellan, a novel loop-guided software prefetcher designed to detect and schedule IMA prefetches efficiently. Magellan introduces two key innovations: (1) extracting dependence graphs across loop levels to detect complex IMA patterns and (2) capturing inner-outer loop semantics to prefetch for both current and future iterations. We evaluate Magellan on 14 memory-intensive benchmarks using real-world datasets from social networks and web graphs. Compared to the best existing IMA software prefetcher, Magellan reduces cache misses by 25% and dynamic instruction counts by 14% on average. This results in a 1.14 × average speedup, with performance gains of up to 1.41 ×.
+--------------------------------------------------------------------------------
+
+【论文 26】
+编号: RE100
+发表年份: 2024
+作者: Fu, Gelin; Xia, Tian; Luo, Zhongpei; Chen, Ruiyang; Zhao, Wenzhe; Ren, Pengju
+标题: Differential-Matching Prefetcher for Indirect Memory Access
+期刊/出版物: 2024 IEEE International Symposium on High-Performance Computer Architecture (HPCA)
+摘要: Indirect memory access is a critical bottleneck for modern CPUs, especially for graph analysis and sparse linear algebra applications, where the values of one data array are used to generate the fetching addresses of another array. It often causes irregular data accesses with poor temporal and spatial locality that are difficult to be captured by conventional hardware prefetchers. For many complex workloads, such indirect access patterns may have different types and are nested in a multiplelevel form. Moreover, branch mispredictions would further disturb their patterns, making them even harder to detect. As a result, existing hardware prefetchers are unable to fully prefetch complex indirect patterns. This paper proposes DMP, a low-cost hardware prefetcher to improve the memory latency in several representative irregular workloads. DMP targets four types of indirect memory access patterns including single, range, multi-level, and multi-way indirect access. DMP uses differential matching to identify an indirect access pattern in pair with its corresponding index stream. Then DMP uses a flexible prefetching mechanism to dynamically adapt the prefetching degree to maintain prefetching coverage. We evaluate the performance, energy consumption, and transistor cost of DMP among various algorithms from GAP, NAS, and HPCG benchmarks. DMP improves performance by 1.8 × (up to 5.6 ×) on average against state-of-the-art hardware prefetchers and 1.2 × (up to 2.3 ×) speedup against state-of-the-art compiler-based prefetcher Prodigy. Besides, the proposed design is optimized to take only 0.9KB of storage, making it feasible to be integrated into current CPU designs.
+--------------------------------------------------------------------------------
+

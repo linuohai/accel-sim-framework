@@ -1,0 +1,10 @@
+=== Warp 3, IMA region (4 iterations) ===
+
+iter | idx_cycle |               idx_L1 | data_cycle |                   data_L1 |                                 grasp_summary | latency
+------------------------------------------------------------------------------------------------------------------------------------------
+   0 |      6305 | [30L] 16xHIT_RES,8xHIT,6xMISS |       7450 | [30L] 27xMISS,2xHIT_RES,1xHIT | IDX_ENQx40; IDX_INJx40; CT_HITx35; L1_RFAILx30; L1_MISSx11; CDx8; CT_INSx7; FILL_Dx4; DAT_ENQx4; STR_UPDx2; DAT_INJx2; STR_CONV; L1_HIT |   94840
+   1 |    160267 |        [14L] 14xMISS |          0 |                       N/A | IDX_ENQx14; IDX_INJx14; L1_RFAILx14; CT_HIT; STR_UPD |     N/A
+   2 |    160913 | [21L] 11xHIT_RES,8xHIT,2xMISS |     163346 | [32L] 22xMISS,5xHIT_RES,5xHIT | IDX_ENQx123; IDX_INJx122; CT_HITx73; L1_RFAILx63; L1_MISSx60; DAT_ENQx39; DAT_INJx37; L1_HITx36; FILL_Dx11; CDx10 |   52195
+   3 |    249063 | [14L] 13xMISS,1xHIT_RES |     250032 |             [24L] 24xMISS | IDX_ENQx14; IDX_INJx14; L1_RFAILx9; L1_MISSx5; CT_HIT; STR_UPD; CD |    1805
+------------------------------------------------------------------------------------------------------------------------------------------
+  avg_latency=49613.3  idx_hit_rate=55.7%  data_hit_rate=15.1%

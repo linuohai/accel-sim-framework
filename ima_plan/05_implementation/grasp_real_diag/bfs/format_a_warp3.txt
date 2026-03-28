@@ -1,0 +1,13 @@
+=== Warp 3, IMA region (7 iterations) ===
+
+iter | idx_cycle |               idx_L1 | data_cycle |                   data_L1 |                                 grasp_summary | latency
+------------------------------------------------------------------------------------------------------------------------------------------
+   0 |    541447 | [27L] 20xHIT,6xMISS,1xHIT_RES |     541704 | [32L] 12xMISS,10xHIT,10xHIT_RES | L1_HITx33; DAT_ENQx33; DAT_INJx30; CT_HITx23; CDx23; STR_UPDx20; IDX_ENQx17; IDX_INJx17; FILL_Dx15; L1_MISSx14; CT_INSx3; STR_CONVx3 |   40426
+   1 |    604682 |  [30L] 21xMISS,9xHIT |     605119 | [32L] 19xMISS,10xHIT_RES,3xHIT | IDX_ENQx135; CT_HITx68; IDX_INJx45; L1_RFAILx36; DAT_ENQx20; DAT_INJx20; L1_HITx17; L1_MISSx12; FILL_Dx7; STR_UPDx3 |  260114
+   2 |    877147 | [32L] 18xMISS,13xHIT,1xHIT_RES |     877851 | [32L] 23xMISS,7xHIT_RES,2xHIT | CT_HITx104; IDX_ENQx96; IDX_INJx60; L1_RFAILx30; L1_MISSx25; L1_HITx11; DAT_ENQx6; DAT_INJx6; STR_UPDx2; FILL_Dx2 |  382862
+   3 |   1313357 | [29L] 18xHIT,6xMISS,5xHIT_RES |    1314242 | [32L] 20xMISS,8xHIT_RES,4xHIT | L1_MISSx74; DAT_ENQx71; DAT_INJx70; IDX_ENQx64; IDX_INJx64; L1_HITx34; FILL_Dx30; CT_HITx27; L1_RFAILx26 |   82346
+   4 |   1466988 | [31L] 21xHIT,10xMISS |    1470672 | [32L] 24xMISS,6xHIT_RES,2xHIT | IDX_ENQx95; IDX_INJx87; CT_HITx66; L1_MISSx52; L1_RFAILx40; DAT_ENQx19; DAT_INJx19; L1_HITx14; FILL_Dx8 |  170481
+   5 |   1657419 | [31L] 16xMISS,14xHIT,1xHIT_RES |    1658007 |   [32L] 27xMISS,5xHIT_RES | IDX_ENQx87; IDX_INJx87; L1_MISSx65; DAT_ENQx49; DAT_INJx43; L1_HITx36; CT_HITx32; L1_RFAILx29; FILL_Dx24 |  154740
+   6 |   1864165 | [31L] 19xHIT,11xMISS,1xHIT_RES |    1867000 | [32L] 18xMISS,10xHIT_RES,4xHIT | IDX_ENQx131; L1_MISSx130; IDX_INJx127; DAT_ENQx91; CT_HITx90; DAT_INJx77; FILL_Dx46; L1_RFAILx40; L1_HITx34 |  259651
+------------------------------------------------------------------------------------------------------------------------------------------
+  avg_latency=192945.7  idx_hit_rate=58.3%  data_hit_rate=36.2%

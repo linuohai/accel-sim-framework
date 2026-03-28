@@ -1,0 +1,22 @@
+=== Warp 1, IMA region (16 iterations) ===
+
+iter | idx_cycle |               idx_L1 | data_cycle |                   data_L1 |                                 grasp_summary | latency
+------------------------------------------------------------------------------------------------------------------------------------------
+   0 |      9768 |          [4L] 4xMISS |      10290 |   [32L] 26xHIT_RES,6xMISS |                                        CT_INS |    1001
+   1 |     11018 |          [4L] 4xMISS |      11542 | [32L] 17xHIT,13xHIT_RES,2xMISS | DAT_ENQx32; DAT_INJx32; L1_MISSx24; L1_HITx12; IDX_ENQx4; IDX_INJx4; FILL_Dx4; CT_HIT; STR_UPD; STR_CONV; CD |     956
+   2 |     12106 |           [4L] 4xHIT |      12151 |              [32L] 32xHIT | IDX_ENQx4; IDX_INJx4; L1_MISSx2; L1_RFAILx2; CT_HIT; STR_UPD; CD |      64
+   3 |     12238 | [4L] 2xHIT_RES,2xMISS |      12711 |   [32L] 16xHIT_RES,16xHIT | DAT_ENQx48; DAT_INJx48; L1_MISSx30; L1_HITx22; FILL_Dx6; IDX_ENQx4; IDX_INJx4; CT_HIT; STR_UPD; CD |     492
+   4 |     13098 |           [4L] 4xHIT |      13156 |              [32L] 32xHIT | IDX_ENQx4; IDX_INJx4; L1_MISSx4; CT_HIT; STR_UPD; CD |      76
+   5 |     13243 |       [4L] 4xHIT_RES |      13613 |   [32L] 18xHIT,14xHIT_RES | DAT_ENQx64; DAT_INJx64; L1_MISSx36; L1_HITx32; FILL_Dx8; IDX_ENQx4; IDX_INJx4; CT_HIT; STR_UPD; CD |     388
+   6 |     14117 |           [4L] 4xHIT |      14162 |              [32L] 32xHIT | IDX_ENQx4; IDX_INJx4; L1_MISSx4; CT_HIT; STR_UPD; CD |      64
+   7 |     14251 |       [4L] 4xHIT_RES |      14598 |   [32L] 18xHIT,14xHIT_RES | DAT_ENQx64; DAT_INJx64; L1_MISSx35; L1_HITx33; FILL_Dx8; IDX_ENQx4; IDX_INJx4; CT_HIT; STR_UPD; CD |     366
+   8 |     15177 |           [4L] 4xHIT |      15222 |              [32L] 32xHIT | IDX_ENQx4; IDX_INJx4; L1_MISSx4; CT_HIT; STR_UPD; CD |      63
+   9 |     15320 |       [4L] 4xHIT_RES |      15682 |   [32L] 21xHIT,11xHIT_RES | DAT_ENQx64; DAT_INJx64; L1_HITx35; L1_MISSx33; FILL_Dx8; IDX_ENQx4; IDX_INJx4; CT_HIT; STR_UPD; CD |     380
+  10 |     16210 |           [4L] 4xHIT |      16303 |              [32L] 32xHIT | IDX_ENQx4; IDX_INJx4; L1_MISSx4; CT_HIT; STR_UPD; CD |     112
+  11 |     16403 |       [4L] 4xHIT_RES |      16736 |   [32L] 22xHIT,10xHIT_RES | DAT_ENQx64; DAT_INJx64; L1_HITx36; L1_MISSx32; FILL_Dx8; IDX_ENQx4; IDX_INJx4; CT_HIT; STR_UPD; CD |     351
+  12 |     17256 |           [4L] 4xHIT |      17301 |              [32L] 32xHIT | IDX_ENQx4; IDX_INJx4; L1_MISSx4; CT_HIT; STR_UPD; CD |      63
+  13 |     17457 |       [4L] 4xHIT_RES |      17737 |    [32L] 27xHIT,5xHIT_RES | DAT_ENQx64; DAT_INJx64; L1_HITx56; L1_MISSx12; FILL_Dx8; IDX_ENQx4; IDX_INJx4; CT_HIT; STR_UPD; CD |     298
+  14 |     18253 |           [4L] 4xHIT |      18300 |              [32L] 32xHIT | IDX_ENQx4; IDX_INJx4; L1_MISSx4; CT_HIT; STR_UPD; CD |      66
+  15 |     18437 |       [4L] 4xHIT_RES |      18736 |              [32L] 32xHIT | L1_HITx36; DAT_ENQx32; DAT_INJx32; FILL_Dx8; IDX_ENQx4; IDX_INJx4; CT_HIT; STR_UPD; CD |     317
+------------------------------------------------------------------------------------------------------------------------------------------
+  avg_latency=316.1  idx_hit_rate=84.4%  data_hit_rate=98.4%

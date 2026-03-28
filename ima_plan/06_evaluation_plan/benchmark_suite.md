@@ -58,6 +58,27 @@ ALL_IMA="$IMA_HIGH $IMA_MED $IMA_SMALL"
 
 ---
 
+## Trace 输出策略
+
+> **原则：** 基础实验不输出 trace CSV；需要 trace 分析时必须开启压缩。
+
+| 场景 | trace 开关 | 理由 |
+|------|-----------|------|
+| Baseline / Ideal L1D / SOTA 对比 | `--no-l1-trace --no-l2-trace --no-hbm-trace` | 只需 log 中的 IPC / miss rate，不需要 CSV |
+| Prefetcher 调试（需看 cache 行为） | 开启 L1/L2 trace + `--issue-trace-compress gzip` | 需要逐访问分析 |
+| 大规模实验（≥ 5 个测例并行） | 必须关闭 trace 或开启压缩 | 单个 L1 trace 可达 19 GB，并行写入易触发 OOM |
+
+**典型命令：**
+```bash
+# 基础实验（推荐）
+./traceL1 --no-l1-trace --no-l2-trace --no-hbm-trace bfs_ima_high bfs_ima_high
+
+# 需要 trace 分析时
+./traceL1 --issue-trace-compress gzip bfs_ima_high bfs_ima_high_with_trace
+```
+
+---
+
 ## 入选依据
 
 | 算法 | SASS chain 符合率 | L1 miss rate (high) | Ideal L1D 加速 (high) | IMA miss share |

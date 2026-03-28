@@ -1,0 +1,14 @@
+{
+    "metadata": {
+        "recorded_at": "2026-03-27",
+        "git_commit": "9ebfe62",
+        "max_completed_cta": 0,
+        "note": "v6 full-CTA runs"
+    },
+    "workloads": {
+        "bfs":  { "trace_key": "bfs_ima_small",  "baseline_ipc": 23.5588, "grasp_ipc": 29.7492 },
+        "sssp": { "trace_key": "sssp_ima_small", "baseline_ipc": 28.8141, "grasp_ipc": 34.2830 },
+        "spmv": { "trace_key": "spmv_ima_med",   "baseline_ipc": 129.6846, "grasp_ipc": 164.1219 },
+        "bc":   { "trace_key": "bc_ima_small",   "baseline_ipc": 37.6489, "grasp_ipc": 44.6064 }
+    }
+}

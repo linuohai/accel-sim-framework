@@ -1,0 +1,14 @@
+WARNING: iteration count mismatch: baseline=8, grasp=7. Showing min(7).
+=== Warp 1, Baseline vs GRASP (7 iterations) ===
+
+iter | base_idx_cyc |     base_idx_L1 | base_data_cyc |         base_data_L1 | grasp_idx_cyc |    grasp_idx_L1 | grasp_data_cyc |        grasp_data_L1 | speedup
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+   0 |       541449 | [32L] 25xHIT,7xMISS |        541732 | [32L] 21xMISS,9xHIT,2xHIT_RES |        541449 | [32L] 25xHIT,5xMISS,2xHIT_RES |         541732 | [32L] 20xMISS,11xHIT,1xHIT_RES |   1.01x
+   1 |       605277 | [30L] 20xMISS,10xHIT |        605534 | [32L] 13xHIT,13xMISS,6xHIT_RES |        604673 | [30L] 16xMISS,13xHIT,1xHIT_RES |         604930 | [32L] 14xHIT,12xMISS,6xHIT_RES |   0.99x
+   2 |       876457 | [30L] 16xHIT,14xMISS |        877219 | [32L] 25xMISS,4xHIT_RES,3xHIT |        877143 | [30L] 16xHIT,14xMISS |         877721 | [32L] 23xMISS,5xHIT_RES,4xHIT |   0.96x
+   3 |      1293462 | [32L] 16xMISS,16xHIT |       1294382 | [32L] 22xMISS,7xHIT_RES,3xHIT |       1313355 | [32L] 20xHIT,12xMISS |        1314209 |  [32L] 27xMISS,5xHIT |   1.50x
+   4 |      1631725 | [25L] 18xHIT,7xMISS |       1632306 | [32L] 23xMISS,8xHIT_RES,1xHIT |       1466991 | [31L] 21xHIT,10xMISS |        1471115 | [32L] 26xMISS,4xHIT_RES,2xHIT |   0.40x
+   5 |      1721081 | [24L] 14xHIT,10xMISS |       1721952 | [32L] 22xMISS,7xHIT_RES,3xHIT |       1657425 | [32L] 24xHIT,7xMISS,1xHIT_RES |        1658111 | [32L] 25xMISS,4xHIT_RES,3xHIT |   0.72x
+   6 |      1841611 | [28L] 17xHIT,11xMISS |       1842339 | [32L] 24xMISS,7xHIT_RES,1xHIT |       1864167 | [32L] 12xMISS,12xHIT,8xHIT_RES |        1867037 | [32L] 19xMISS,11xHIT_RES,2xHIT |   0.57x
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+  avg baseline latency=180195.9, avg GRASP latency=207544.9, overall speedup=0.87x
