@@ -37,11 +37,11 @@ MAX_INSN=0
 MAX_CTA=0
 MAX_COMPLETED_CTA=0
 ISSUE_TRACE_ENABLED=false
-L1_TRACE_ENABLED=true
-L2_TRACE_ENABLED=true
+L1_TRACE_ENABLED=false
+L2_TRACE_ENABLED=false
 L2_TRACE_PRINT_BW=false
 L2_TRACE_PRINT_COMPUTE=false
-HBM_TRACE_ENABLED=true
+HBM_TRACE_ENABLED=false
 HBM_TRACE_PERIOD=1
 ICNT_BW_TRACE_ENABLED=false
 L2_BW_TRACE_ENABLED=false
@@ -236,8 +236,16 @@ while [[ $# -gt 0 ]]; do
       shift
       shift
       ;;
+    --l1-trace)
+      L1_TRACE_ENABLED=true
+      shift
+      ;;
     --no-l1-trace)
       L1_TRACE_ENABLED=false
+      shift
+      ;;
+    --l2-trace)
+      L2_TRACE_ENABLED=true
       shift
       ;;
     --no-l2-trace)
@@ -250,6 +258,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --l2-trace-print-compute)
       L2_TRACE_PRINT_COMPUTE=true
+      shift
+      ;;
+    --hbm-trace)
+      HBM_TRACE_ENABLED=true
       shift
       ;;
     --no-hbm-trace)
@@ -527,11 +539,14 @@ show_usage() {
     echo "  --no-issue-trace              关闭 issue trace（默认关闭；最占空间/最慢）"
     echo "  --no-stall-reason-pc-stats    关闭轻量 stall reason->pc 统计（默认开启；替代 issue trace）"
     echo "  --stall-reason-pc-stats-topk <K>  设置每个 reason 的 topK（默认 5；0=不输出 topk_other.csv）"
-    echo "  --no-l1-trace                 关闭 L1 trace（默认开启）"
-    echo "  --no-l2-trace                 关闭 L2 trace（默认开启）"
+    echo "  --l1-trace                    开启 L1 trace（默认关闭）"
+    echo "  --no-l1-trace                 关闭 L1 trace（默认关闭）"
+    echo "  --l2-trace                    开启 L2 trace（默认关闭）"
+    echo "  --no-l2-trace                 关闭 L2 trace（默认关闭）"
     echo "  --l2-trace-print-bw           在 L2 trace 中打印 HBM 带宽/occupancy"
     echo "  --l2-trace-print-compute      在 L2 trace 中打印 SM compute utilization"
-    echo "  --no-hbm-trace                关闭 HBM 分区带宽 trace（默认开启）"
+    echo "  --hbm-trace                   开启 HBM 分区带宽 trace（默认关闭）"
+    echo "  --no-hbm-trace                关闭 HBM 分区带宽 trace（默认关闭）"
     echo "  --no-icnt-bw-trace            关闭 ICNT 带宽 trace（默认关闭）"
     echo "  --no-l2-bw-trace              关闭 L2 端口带宽 trace（默认关闭）"
     echo "  --hbm-trace-period <N>        HBM trace 采样周期（默认 1；建议 100/1000）"
@@ -1075,6 +1090,14 @@ fi
 if [ "$GTO_ENABLED" = true ]; then
     echo "scheduler: gto"
 fi
+if [ "$GRASP_ENABLED" = true ]; then
+    echo "GRASP预取器: 已启用"
+    echo "  Chain CSV: ${GRASP_CHAIN_CSV:-$BASE_DIR/tmp/strict_chains/strict_selected_chain_instances.csv}"
+    echo "  IST Distance: ${GRASP_DISTANCE:-1 (default)}"
+    echo "  (其他参数使用默认值，见 log 中 GRASP_CONFIG 行)"
+else
+    echo "GRASP预取器: 未启用"
+fi
 echo "=========================================="
 
 # 启动 issue trace 边运行边压缩（必须在 accel-sim 启动前完成，否则 issue_tracer 打开 FIFO 会阻塞）
@@ -1161,6 +1184,118 @@ if [ ${PIPESTATUS[0]} -eq 0 ]; then
         STALL_REASON_PC_STATS_HIST="$STALL_REASON_PC_STATS_HIST_PREFIXED"
         STALL_REASON_PC_STATS_TOPK_FILE="$STALL_REASON_PC_STATS_TOPK_PREFIXED"
     fi
+
+    # ── 实验完成性验证 ──────────────────────────────────────────────
+    verify_completion() {
+        local log_file="$1"
+        local trace_path="$2"
+
+        # 1. 检查退出标志
+        local exit_ok=false
+        if grep -q "exit detected" "$log_file"; then
+            exit_ok=true
+        fi
+
+        # 2. 统计已完成 kernel 数（gpu_tot_ipc 每个 kernel 结束时出现一次）
+        local completed_kernels
+        completed_kernels=$(grep -c "gpu_tot_ipc" "$log_file" 2>/dev/null || echo 0)
+
+        # 3. 从 trace 目录数 expected kernel 数
+        local trace_dir
+        trace_dir=$(dirname "$trace_path")
+        local expected_kernels
+        expected_kernels=$(find "$trace_dir" -maxdepth 1 -name 'kernel-*.traceg*' 2>/dev/null | wc -l)
+
+        # 4. 提取最终 IPC 和 cycles
+        local final_ipc final_cycles
+        final_ipc=$(grep "gpu_tot_ipc" "$log_file" | tail -1 | awk '{print $NF}')
+        final_cycles=$(grep "gpu_tot_sim_cycle" "$log_file" | tail -1 | awk -F'=' '{print $2}' | tr -d ' ')
+
+        # 5. 判定状态
+        local status
+        if [ "$exit_ok" = true ] && [ "$completed_kernels" -eq "$expected_kernels" ] 2>/dev/null; then
+            status="COMPLETE"
+        elif [ "$exit_ok" = true ]; then
+            status="PARTIAL (${completed_kernels}/${expected_kernels} kernels)"
+        else
+            status="CRASHED"
+        fi
+
+        # 6. 写入 EXPERIMENT SUMMARY 到 log 末尾
+        {
+            echo ""
+            echo "=== EXPERIMENT SUMMARY ==="
+            echo "trace_key=$TRACE_KEY"
+            echo "config=$CONFIG_MODEL"
+            echo "grasp_enabled=$GRASP_ENABLED"
+            echo "expected_kernels=$expected_kernels"
+            echo "completed_kernels=$completed_kernels"
+            echo "final_ipc=$final_ipc"
+            echo "final_cycles=$final_cycles"
+            echo "status=$status"
+            echo "=== END SUMMARY ==="
+        } >> "$log_file"
+
+        # 打印摘要到终端
+        echo ""
+        echo "── 实验完成性验证 ──"
+        echo "  Expected kernels: $expected_kernels"
+        echo "  Completed kernels: $completed_kernels"
+        echo "  Final IPC: $final_ipc"
+        echo "  Final cycles: $final_cycles"
+        echo "  Status: $status"
+        if [ "$status" != "COMPLETE" ]; then
+            echo "  ⚠ 实验未完整完成！结果可能不准确。"
+        fi
+        echo "────────────────────"
+    }
+
+    verify_completion "$LOG_FILE" "$TRACE_PATH"
+
+    # ── Baseline Registry 自动更新 ─────────────────────────────────
+    update_baseline_registry() {
+        local log_file="$1"
+        local registry="$BASE_DIR/ima_plan/06_evaluation_plan/baseline_registry.csv"
+
+        # 只在非 GRASP 模式（baseline）时写入
+        if [ "$GRASP_ENABLED" = true ]; then return; fi
+
+        # 从 EXPERIMENT SUMMARY 提取数据
+        local status
+        status=$(grep "^status=" "$log_file" | tail -1 | cut -d= -f2)
+
+        # 只有 COMPLETE 的才写入 registry
+        if [ "$status" != "COMPLETE" ]; then
+            echo "[baseline-registry] 实验未完成 (status=$status)，跳过写入"
+            return
+        fi
+
+        local final_ipc completed_kernels final_cycles
+        final_ipc=$(grep "^final_ipc=" "$log_file" | tail -1 | cut -d= -f2)
+        completed_kernels=$(grep "^completed_kernels=" "$log_file" | tail -1 | cut -d= -f2)
+        final_cycles=$(grep "^final_cycles=" "$log_file" | tail -1 | cut -d= -f2)
+
+        local git_commit
+        git_commit=$(git -C "$BASE_DIR" rev-parse --short HEAD 2>/dev/null || echo "unknown")
+        local today
+        today=$(date +%F)
+
+        # 创建 header（首次）
+        if [ ! -f "$registry" ]; then
+            echo "trace_key,config,kernels,final_ipc,final_cycles,log_file,git_commit,date" > "$registry"
+        fi
+
+        # 删除同 trace_key+config 的旧条目，写入新条目
+        local tmp_reg="${registry}.tmp"
+        head -1 "$registry" > "$tmp_reg"
+        tail -n +2 "$registry" | grep -v "^${TRACE_KEY},${CONFIG_MODEL}," >> "$tmp_reg" 2>/dev/null || true
+        echo "${TRACE_KEY},${CONFIG_MODEL},${completed_kernels},${final_ipc},${final_cycles},$(basename "$log_file"),${git_commit},${today}" >> "$tmp_reg"
+        mv "$tmp_reg" "$registry"
+
+        echo "[baseline-registry] 已更新: ${TRACE_KEY} (IPC=${final_ipc}, cycles=${final_cycles})"
+    }
+
+    update_baseline_registry "$LOG_FILE"
 
     echo ""
     echo "=========================================="
