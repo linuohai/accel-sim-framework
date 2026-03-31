@@ -35,6 +35,7 @@ BASELINE_INTRA_ENABLED=false
 BASELINE_INTER_ENABLED=false
 BASELINE_SNAKE_ENABLED=false
 BASELINE_SPARE_REG_ENABLED=false
+BASELINE_CAPS_ENABLED=false
 GRASP_TRACE_ENABLED=false
 
 # 额外控制（用于减小仿真时间/输出体量）
@@ -122,6 +123,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --baseline-spare-reg)
       BASELINE_SPARE_REG_ENABLED=true
+      shift
+      ;;
+    --baseline-caps)
+      BASELINE_CAPS_ENABLED=true
       shift
       ;;
   -nl|--nlevel)
@@ -401,6 +406,8 @@ declare -A TRACE_MAP=(
     ["cc_ima_small"]="cc_base/mtx___data_web_Google_0_0/traces/kernelslist.g"
 
     ["bc"]="bc_linear_base/mtx___data_web_Google_0/traces/kernelslist.g"
+    ["hotspot"]="../hw_run/traces/tesla-v100/rodinia-3.1/11.0/hotspot-rodinia-3.1/512_2_2___data_temp_512___data_power_512_output_out/traces/kernelslist.g"
+    ["gaussian"]="../hw_run/traces/tesla-v100/rodinia-3.1/11.0/gaussian-rodinia-3.1/_s_512/traces/kernelslist.g"
     # IMA tiers（与 define-all-apps.yml 对齐；source sensitive）
     ["bc_ima_high"]="bc_linear_base/mtx___data_cit_Patents_1_0_3569341/traces/kernelslist.g"
     ["bc_ima_med"]="bc_linear_base/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
@@ -538,6 +545,7 @@ show_usage() {
     echo "  --baseline-inter       启用 SOTA baseline: INTER stride prefetcher"
     echo "  --baseline-snake       启用 SOTA baseline: Snake prefetcher"
     echo "  --baseline-spare-reg   启用 SOTA baseline: Spare Register prefetcher"
+    echo "  --baseline-caps        启用 SOTA baseline: CAPS CTA-aware prefetcher (Koo et al. IPDPS'18)"
     echo "  -nl, --nlevel         启用 n_level 调度器（日志名自动加 _nl 后缀，与 -gto 互斥）"
     echo "  -nls, --nlevel-scheduler <lrr|gto>"
     echo "                        选择 n_level 默认调度器并匹配 warp alloc 文件 (默认: lrr)"
@@ -968,6 +976,9 @@ fi
 if [ "$BASELINE_SPARE_REG_ENABLED" = true ]; then
     BASELINE_ENABLE_COUNT=$((BASELINE_ENABLE_COUNT + 1))
 fi
+if [ "$BASELINE_CAPS_ENABLED" = true ]; then
+    BASELINE_ENABLE_COUNT=$((BASELINE_ENABLE_COUNT + 1))
+fi
 
 if [ "$GRASP_ENABLED" = true ] && [ "$BASELINE_ENABLE_COUNT" -gt 0 ]; then
     echo "错误: GRASP 与 baseline prefetcher 不能同时启用"
@@ -1003,6 +1014,11 @@ if [ "$BASELINE_SNAKE_ENABLED" = true ]; then
 fi
 if [ "$BASELINE_SPARE_REG_ENABLED" = true ]; then
     echo "-baseline_spare_reg_enable 1" >> "$TEMP_GPGPU_CONFIG"
+fi
+if [ "$BASELINE_CAPS_ENABLED" = true ]; then
+    echo "-baseline_caps_enable 1" >> "$TEMP_GPGPU_CONFIG"
+    echo "-baseline_caps_percta_entries 16" >> "$TEMP_GPGPU_CONFIG"
+    echo "-baseline_caps_dist_entries 16" >> "$TEMP_GPGPU_CONFIG"
 fi
 
 # trace enable 开关（默认与原 config 一致；这里允许从命令行覆盖）
