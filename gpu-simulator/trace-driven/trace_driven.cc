@@ -36,8 +36,10 @@
 #include <time.h>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <sstream>
 #include <string>
+#include <tuple>
 #include <vector>
 
 #include "../ISA_Def/accelwattch_component_mapping.h"
@@ -57,6 +59,197 @@
 #include "option_parser.h"
 #include "trace_driven.h"
 
+namespace {
+
+struct loaded_ima_chain_row_t {
+  std::string kernel;
+  std::string function;
+  std::string impl;
+  std::string sm;
+  std::string classification;
+  unsigned pc_idx = 0;
+  unsigned pc_addr = 0;
+  unsigned pc_data = 0;
+};
+
+static std::string trim_copy(const std::string &in) {
+  size_t start = 0;
+  while (start < in.size() && isspace(static_cast<unsigned char>(in[start])))
+    ++start;
+  size_t end = in.size();
+  while (end > start && isspace(static_cast<unsigned char>(in[end - 1]))) --end;
+  return in.substr(start, end - start);
+}
+
+static std::vector<std::string> split_csv_line(const std::string &line) {
+  std::vector<std::string> fields;
+  std::string cur;
+  bool in_quotes = false;
+  for (char ch : line) {
+    if (ch == '"') {
+      in_quotes = !in_quotes;
+      continue;
+    }
+    if (ch == ',' && !in_quotes) {
+      fields.push_back(cur);
+      cur.clear();
+    } else {
+      cur.push_back(ch);
+    }
+  }
+  fields.push_back(cur);
+  for (std::string &field : fields) field = trim_copy(field);
+  return fields;
+}
+
+static bool parse_hex_pc(const std::string &text, unsigned &value) {
+  std::string s = trim_copy(text);
+  if (s.empty()) return false;
+  try {
+    value = static_cast<unsigned>(std::stoul(s, nullptr, 16));
+    return true;
+  } catch (...) {
+    return false;
+  }
+}
+
+static std::vector<std::string> split_path_components(
+    const std::string &path) {
+  std::vector<std::string> comps;
+  std::string cur;
+  for (char ch : path) {
+    if (ch == '/') {
+      if (!cur.empty()) {
+        comps.push_back(cur);
+        cur.clear();
+      }
+    } else {
+      cur.push_back(ch);
+    }
+  }
+  if (!cur.empty()) comps.push_back(cur);
+  return comps;
+}
+
+static std::string derive_impl_from_trace_path(const std::string &trace_path) {
+  const std::vector<std::string> comps = split_path_components(trace_path);
+  if (comps.size() < 4) return "";
+  if (comps[comps.size() - 2] != "traces") return "";
+  return comps[comps.size() - 4];
+}
+
+static std::vector<loaded_ima_chain_row_t> load_ima_chain_rows(
+    const std::string &csv_path) {
+  std::vector<loaded_ima_chain_row_t> rows;
+  std::ifstream fin(csv_path.c_str());
+  if (!fin.is_open()) return rows;
+
+  std::string header_line;
+  if (!std::getline(fin, header_line)) return rows;
+  std::vector<std::string> header = split_csv_line(header_line);
+  std::map<std::string, size_t> cols;
+  for (size_t i = 0; i < header.size(); ++i) cols[header[i]] = i;
+
+  const bool has_kernel = cols.count("kernel") > 0;
+  const bool has_function = cols.count("function") > 0;
+  const bool has_impl = cols.count("impl") > 0;
+  const bool has_sm = cols.count("sm") > 0;
+  const bool has_classification = cols.count("classification") > 0;
+  const bool has_addr_pc = cols.count("addr_pc") > 0;
+  if (!cols.count("index_pc") || !cols.count("data_pc")) return rows;
+
+  std::string line;
+  while (std::getline(fin, line)) {
+    if (trim_copy(line).empty()) continue;
+    std::vector<std::string> fields = split_csv_line(line);
+    const size_t idx_pc_col = cols["index_pc"];
+    const size_t data_pc_col = cols["data_pc"];
+    if (idx_pc_col >= fields.size() || data_pc_col >= fields.size()) continue;
+
+    unsigned pc_idx = 0;
+    unsigned pc_data = 0;
+    if (!parse_hex_pc(fields[idx_pc_col], pc_idx) ||
+        !parse_hex_pc(fields[data_pc_col], pc_data))
+      continue;
+
+    loaded_ima_chain_row_t row;
+    row.pc_idx = pc_idx;
+    row.pc_data = pc_data;
+    if (has_kernel && cols["kernel"] < fields.size())
+      row.kernel = fields[cols["kernel"]];
+    if (has_function && cols["function"] < fields.size())
+      row.function = fields[cols["function"]];
+    if (has_impl && cols["impl"] < fields.size())
+      row.impl = fields[cols["impl"]];
+    if (has_sm && cols["sm"] < fields.size()) row.sm = fields[cols["sm"]];
+    if (has_classification && cols["classification"] < fields.size())
+      row.classification = fields[cols["classification"]];
+    if (has_addr_pc && cols["addr_pc"] < fields.size())
+      parse_hex_pc(fields[cols["addr_pc"]], row.pc_addr);
+    rows.push_back(row);
+  }
+  return rows;
+}
+
+static const std::vector<loaded_ima_chain_row_t> &get_ima_chain_rows(
+    const std::string &csv_path) {
+  static std::map<std::string, std::vector<loaded_ima_chain_row_t>> cache;
+  std::map<std::string, std::vector<loaded_ima_chain_row_t>>::iterator it =
+      cache.find(csv_path);
+  if (it == cache.end()) {
+    it = cache.insert(std::make_pair(csv_path, load_ima_chain_rows(csv_path)))
+             .first;
+  }
+  return it->second;
+}
+
+static std::vector<trace_shd_warp_t::ima_chain_desc_t> select_ima_chain_descs(
+    const std::string &csv_path, const std::string &kernel_name,
+    const std::string &sm_name, const std::string &trace_impl) {
+  const std::vector<loaded_ima_chain_row_t> &rows = get_ima_chain_rows(csv_path);
+  std::vector<loaded_ima_chain_row_t> filtered;
+  for (const loaded_ima_chain_row_t &row : rows) {
+    if (!row.kernel.empty() && row.kernel != kernel_name) continue;
+    if (!row.function.empty() && row.function != kernel_name) continue;
+    if (!trace_impl.empty() && !row.impl.empty() && row.impl != trace_impl) {
+      // Trace directory uses {algorithm}_{impl} convention (e.g., "bfs_linear_base")
+      // while CSV stores just impl (e.g., "linear_base"). Check suffix match.
+      std::string suffix = std::string("_") + row.impl;
+      if (trace_impl.length() < suffix.length() ||
+          trace_impl.compare(trace_impl.length() - suffix.length(),
+                             suffix.length(), suffix) != 0)
+        continue;
+    }
+    if (!sm_name.empty() && !row.sm.empty() && row.sm != sm_name) continue;
+    if (!row.classification.empty() && row.classification != "exact_chain")
+      continue;
+    filtered.push_back(row);
+  }
+
+  std::set<std::pair<unsigned, unsigned>> seen_pairs;
+  std::vector<trace_shd_warp_t::ima_chain_desc_t> result;
+  for (const loaded_ima_chain_row_t &row : filtered) {
+    std::pair<unsigned, unsigned> key(row.pc_idx, row.pc_data);
+    if (!seen_pairs.insert(key).second) continue;
+    trace_shd_warp_t::ima_chain_desc_t desc;
+    desc.chain_id = static_cast<unsigned>(result.size());
+    desc.pc_idx = row.pc_idx;
+    desc.pc_data = row.pc_data;
+    result.push_back(desc);
+  }
+
+  for (size_t i = 0; i < result.size(); ++i) {
+    for (size_t j = 0; j < result.size(); ++j) {
+      if (i == j) continue;
+      if (result[i].pc_data == result[j].pc_idx)
+        result[i].successor_chain_ids.push_back(result[j].chain_id);
+    }
+  }
+  return result;
+}
+
+}  // namespace
+
 const trace_warp_inst_t *trace_shd_warp_t::get_next_trace_inst() {
   if (trace_pc < warp_traces.size()) {
     trace_warp_inst_t *new_inst =
@@ -73,6 +266,20 @@ const trace_warp_inst_t *trace_shd_warp_t::get_next_trace_inst() {
 void trace_shd_warp_t::clear() {
   trace_pc = 0;
   warp_traces.clear();
+  m_ima_pair_tables.clear();
+  m_chain_ids_by_pc.clear();
+  m_chain_ids_by_data_pc.clear();
+  m_pending_runtime_idx_occurrences.clear();
+  m_pending_runtime_verifications.clear();
+  m_runtime_idx_occurrence_counts.clear();
+  m_runtime_data_occurrence_counts.clear();
+  m_stat_runtime_verify_enqueued = 0;
+  m_stat_runtime_verify_duplicate = 0;
+  m_stat_runtime_verify_checked = 0;
+  m_stat_runtime_verify_matched = 0;
+  m_stat_runtime_verify_mismatched = 0;
+  m_stat_runtime_verify_no_prediction = 0;
+  m_stat_runtime_verify_missing_idx = 0;
 }
 
 // functional_done
@@ -87,6 +294,340 @@ address_type trace_shd_warp_t::get_pc() {
   assert(warp_traces.size() > 0);
   assert(trace_pc < warp_traces.size());
   return warp_traces[trace_pc].m_pc;
+}
+
+std::string trace_shd_warp_t::sm_name_for_current_kernel() const {
+  if (m_kernel_info == NULL) return "";
+  unsigned binary_version = m_kernel_info->get_trace_info()->binary_verion;
+  if (binary_version == AMPERE_RTX_BINART_VERSION ||
+      binary_version == AMPERE_A100_BINART_VERSION)
+    return "sm80";
+  if (binary_version == VOLTA_BINART_VERSION) return "sm70";
+  if (binary_version == PASCAL_P100_BINART_VERSION) return "sm60";
+  if (binary_version == PASCAL_TITANX_BINART_VERSION) return "sm61";
+  if (binary_version == TURING_BINART_VERSION) return "sm75";
+  if (binary_version == KEPLER_BINART_VERSION) return "sm35";
+  return "";
+}
+
+void trace_shd_warp_t::build_ima_pair_tables(const std::string &csv_path,
+                                             bool debug_enable) {
+  m_ima_pair_tables.clear();
+  m_chain_ids_by_pc.clear();
+  m_chain_ids_by_data_pc.clear();
+  m_pending_runtime_idx_occurrences.clear();
+  m_pending_runtime_verifications.clear();
+  m_runtime_idx_occurrence_counts.clear();
+  m_runtime_data_occurrence_counts.clear();
+  m_stat_runtime_verify_enqueued = 0;
+  m_stat_runtime_verify_duplicate = 0;
+  m_stat_runtime_verify_checked = 0;
+  m_stat_runtime_verify_matched = 0;
+  m_stat_runtime_verify_mismatched = 0;
+  m_stat_runtime_verify_no_prediction = 0;
+  m_stat_runtime_verify_missing_idx = 0;
+  if (csv_path.empty() || m_kernel_info == NULL) return;
+
+  const std::string kernel_name = m_kernel_info->get_trace_info()->kernel_name;
+  const std::string sm_name = sm_name_for_current_kernel();
+  const std::string trace_impl =
+      derive_impl_from_trace_path(m_kernel_info->get_trace_info()->trace_path);
+  std::vector<ima_chain_desc_t> descs =
+      select_ima_chain_descs(csv_path, kernel_name, sm_name, trace_impl);
+  if (descs.empty()) {
+    if (debug_enable) {
+      printf("IMA pair table: warp %u kernel '%s' impl '%s' found no chain specs "
+             "from %s\n",
+             get_warp_id(), kernel_name.c_str(), trace_impl.c_str(),
+             csv_path.c_str());
+    }
+    return;
+  }
+
+  m_ima_pair_tables.resize(descs.size());
+  m_pending_runtime_idx_occurrences.resize(descs.size());
+  m_pending_runtime_verifications.resize(descs.size());
+  m_runtime_idx_occurrence_counts.assign(descs.size(), 0);
+  m_runtime_data_occurrence_counts.assign(descs.size(), 0);
+  for (size_t i = 0; i < descs.size(); ++i) {
+    m_ima_pair_tables[i].desc = descs[i];
+    m_chain_ids_by_pc[descs[i].pc_idx].push_back(descs[i].chain_id);
+    m_chain_ids_by_data_pc[descs[i].pc_data].push_back(descs[i].chain_id);
+  }
+
+  const new_addr_type kInvalidAddr = static_cast<new_addr_type>(-1);
+  for (ima_pair_chain_table_t &table : m_ima_pair_tables) {
+    std::vector<std::vector<new_addr_type>> idx_occurrences;
+    unsigned idx_occ = 0;
+    unsigned data_occ = 0;
+    for (const inst_trace_t &inst : warp_traces) {
+      if (inst.memadd_info == NULL) continue;
+      std::bitset<WARP_SIZE> active_mask(inst.mask);
+      if (inst.m_pc == table.desc.pc_idx) {
+        std::vector<new_addr_type> addrs(WARP_SIZE, kInvalidAddr);
+        for (unsigned lane = 0; lane < WARP_SIZE; ++lane) {
+          if (active_mask.test(lane)) addrs[lane] = inst.memadd_info->addrs[lane];
+        }
+        idx_occurrences.push_back(addrs);
+        ++idx_occ;
+      }
+      if (inst.m_pc == table.desc.pc_data) {
+        assert(data_occ <= idx_occ);
+        if (data_occ >= idx_occurrences.size()) continue;
+        const std::vector<new_addr_type> &idx_addrs = idx_occurrences[data_occ];
+        for (unsigned lane = 0; lane < WARP_SIZE; ++lane) {
+          if (!active_mask.test(lane) || idx_addrs[lane] == kInvalidAddr)
+            continue;
+          new_addr_type idx_addr = idx_addrs[lane];
+          new_addr_type data_addr = inst.memadd_info->addrs[lane];
+          std::unordered_map<new_addr_type, new_addr_type>::iterator existing =
+              table.addr_map.find(idx_addr);
+          if (existing == table.addr_map.end()) {
+            table.addr_map[idx_addr] = data_addr;
+            ++table.stat_build_pairs;
+          } else if (existing->second == data_addr) {
+            ++table.stat_duplicate_same_value;
+          } else {
+            ++table.stat_duplicate_conflict_value;
+            assert(existing->second == data_addr &&
+                   "IMA pair-table conflict on read-only index array");
+          }
+        }
+        ++data_occ;
+      }
+    }
+    if (debug_enable) {
+      printf("IMA pair table build: warp=%u chain=%u pc_idx=0x%04x pc_data=0x%04x "
+             "pairs=%llu dup_same=%llu dup_conflict=%llu succ=%zu\n",
+             get_warp_id(), table.desc.chain_id, table.desc.pc_idx,
+             table.desc.pc_data, table.stat_build_pairs,
+             table.stat_duplicate_same_value,
+             table.stat_duplicate_conflict_value,
+             table.desc.successor_chain_ids.size());
+    }
+  }
+}
+
+std::vector<unsigned> trace_shd_warp_t::get_ima_seed_chain_ids(address_type pc) {
+  std::unordered_map<address_type, std::vector<unsigned>>::iterator it =
+      m_chain_ids_by_pc.find(pc);
+  if (it == m_chain_ids_by_pc.end()) return std::vector<unsigned>();
+  return it->second;
+}
+
+bool trace_shd_warp_t::is_ima_data_pc(address_type pc) {
+  return m_chain_ids_by_data_pc.count(pc) > 0;
+}
+
+std::vector<ima_prefetch_candidate_t>
+trace_shd_warp_t::lookup_ima_prefetch_candidates(
+    new_addr_type request_addr, const std::vector<unsigned> &seed_chain_ids,
+    bool exact_match_only) {
+  std::vector<ima_prefetch_candidate_t> result;
+  if (seed_chain_ids.empty()) return result;
+
+  const new_addr_type sector_base =
+      request_addr - (request_addr % static_cast<new_addr_type>(SECTOR_SIZE));
+  std::set<std::tuple<unsigned, new_addr_type, new_addr_type>> dedupe;
+  for (unsigned chain_id : seed_chain_ids) {
+    if (chain_id >= m_ima_pair_tables.size()) continue;
+    ima_pair_chain_table_t &table = m_ima_pair_tables[chain_id];
+    bool chain_hit = false;
+    const unsigned slot_limit = exact_match_only ? 1 : (SECTOR_SIZE / 4);
+    for (unsigned slot = 0; slot < slot_limit; ++slot) {
+      new_addr_type idx_addr =
+          exact_match_only
+              ? request_addr
+              : (sector_base + static_cast<new_addr_type>(slot * sizeof(uint32_t)));
+      std::unordered_map<new_addr_type, new_addr_type>::iterator it =
+          table.addr_map.find(idx_addr);
+      if (it == table.addr_map.end()) continue;
+      chain_hit = true;
+      std::tuple<unsigned, new_addr_type, new_addr_type> dedupe_key(
+          chain_id, idx_addr, it->second);
+      if (!dedupe.insert(dedupe_key).second) continue;
+      ima_prefetch_candidate_t candidate;
+      candidate.idx_addr = idx_addr;
+      candidate.data_addr = it->second;
+      candidate.source_chain_id = chain_id;
+      candidate.successor_chain_ids = table.desc.successor_chain_ids;
+      result.push_back(candidate);
+    }
+    if (chain_hit)
+      ++table.stat_issue_lookup_hit;
+    else
+      ++table.stat_issue_lookup_miss;
+  }
+  return result;
+}
+
+void trace_shd_warp_t::record_ima_verify_predictions(
+    const std::vector<ima_prefetch_candidate_t> &cands,
+    unsigned long long issue_cycle, bool debug_enable, bool dedupe_pending) {
+  for (const ima_prefetch_candidate_t &cand : cands) {
+    if (cand.source_chain_id >= m_pending_runtime_verifications.size()) continue;
+    std::unordered_map<new_addr_type, std::deque<ima_runtime_verify_record_t>>
+        &by_idx = m_pending_runtime_verifications[cand.source_chain_id];
+    std::deque<ima_runtime_verify_record_t> &records = by_idx[cand.idx_addr];
+    if (dedupe_pending) {
+      bool duplicate_pending = false;
+      for (std::deque<ima_runtime_verify_record_t>::const_iterator it =
+               records.begin();
+           it != records.end(); ++it) {
+        if (it->predicted_data_addr == cand.data_addr) {
+          duplicate_pending = true;
+          break;
+        }
+      }
+      if (duplicate_pending) {
+        ++m_stat_runtime_verify_duplicate;
+        if (debug_enable) {
+          printf(
+              "IMA verify enqueue skip duplicate: warp=%u chain=%u idx=0x%llx "
+              "data=0x%llx cycle=%llu\n",
+              get_warp_id(), cand.source_chain_id,
+              (unsigned long long)cand.idx_addr,
+              (unsigned long long)cand.data_addr, issue_cycle);
+        }
+        continue;
+      }
+    }
+
+    ima_runtime_verify_record_t record;
+    record.chain_id = cand.source_chain_id;
+    record.idx_addr = cand.idx_addr;
+    record.predicted_data_addr = cand.data_addr;
+    record.issue_cycle = issue_cycle;
+    records.push_back(record);
+    ++m_stat_runtime_verify_enqueued;
+    if (debug_enable) {
+      printf(
+          "IMA verify enqueue: warp=%u chain=%u idx=0x%llx data=0x%llx "
+          "issue_cycle=%llu pending=%zu\n",
+          get_warp_id(), cand.source_chain_id,
+          (unsigned long long)cand.idx_addr,
+          (unsigned long long)cand.data_addr, issue_cycle, records.size());
+    }
+  }
+}
+
+void trace_shd_warp_t::observe_ima_runtime_memory_inst(const warp_inst_t &inst,
+                                                       unsigned long long cycle,
+                                                       bool debug_enable) {
+  if (m_ima_pair_tables.empty() || !inst.is_load()) return;
+
+  const new_addr_type kInvalidAddr = static_cast<new_addr_type>(-1);
+  const address_type pc = inst.pc;
+  std::vector<new_addr_type> lane_addrs(inst.warp_size(), kInvalidAddr);
+  bool has_active_lane = false;
+  for (unsigned lane = 0; lane < inst.warp_size(); ++lane) {
+    if (!inst.active(lane)) continue;
+    lane_addrs[lane] = inst.get_addr(lane);
+    has_active_lane = true;
+  }
+  if (!has_active_lane) return;
+
+  std::unordered_map<address_type, std::vector<unsigned>>::iterator idx_it =
+      m_chain_ids_by_pc.find(pc);
+  if (idx_it != m_chain_ids_by_pc.end()) {
+    for (unsigned chain_id : idx_it->second) {
+      if (chain_id >= m_pending_runtime_idx_occurrences.size()) continue;
+      ima_runtime_idx_occurrence_t occ;
+      occ.occurrence_id = ++m_runtime_idx_occurrence_counts[chain_id];
+      occ.idx_addrs = lane_addrs;
+      m_pending_runtime_idx_occurrences[chain_id].push_back(occ);
+      if (debug_enable) {
+        printf(
+            "IMA runtime idx observe: warp=%u chain=%u pc=0x%04llx occ=%llu "
+            "cycle=%llu\n",
+            get_warp_id(), chain_id, (unsigned long long)pc,
+            occ.occurrence_id, cycle);
+      }
+    }
+  }
+
+  std::unordered_map<address_type, std::vector<unsigned>>::iterator data_it =
+      m_chain_ids_by_data_pc.find(pc);
+  if (data_it == m_chain_ids_by_data_pc.end()) return;
+
+  for (unsigned chain_id : data_it->second) {
+    if (chain_id >= m_pending_runtime_idx_occurrences.size()) continue;
+    ++m_runtime_data_occurrence_counts[chain_id];
+    unsigned long long data_occ = m_runtime_data_occurrence_counts[chain_id];
+
+    std::deque<ima_runtime_idx_occurrence_t> &idx_queue =
+        m_pending_runtime_idx_occurrences[chain_id];
+    if (idx_queue.empty()) {
+      ++m_stat_runtime_verify_missing_idx;
+      if (debug_enable) {
+        printf(
+            "IMA runtime verify missing idx: warp=%u chain=%u pc=0x%04llx "
+            "data_occ=%llu cycle=%llu\n",
+            get_warp_id(), chain_id, (unsigned long long)pc, data_occ, cycle);
+      }
+      continue;
+    }
+
+    const ima_runtime_idx_occurrence_t idx_occ = idx_queue.front();
+    idx_queue.pop_front();
+    std::unordered_map<new_addr_type, std::deque<ima_runtime_verify_record_t>>
+        &verify_by_idx = m_pending_runtime_verifications[chain_id];
+
+    for (unsigned lane = 0; lane < inst.warp_size(); ++lane) {
+      if (!inst.active(lane)) continue;
+      const new_addr_type idx_addr = idx_occ.idx_addrs[lane];
+      if (idx_addr == kInvalidAddr) continue;
+      const new_addr_type actual_data_addr = lane_addrs[lane];
+      std::unordered_map<new_addr_type,
+                         std::deque<ima_runtime_verify_record_t>>::iterator rec_it =
+          verify_by_idx.find(idx_addr);
+      if (rec_it == verify_by_idx.end() || rec_it->second.empty()) {
+        ++m_stat_runtime_verify_no_prediction;
+        if (debug_enable) {
+          printf(
+              "IMA runtime verify no prediction: warp=%u chain=%u lane=%u "
+              "data_occ=%llu idx=0x%llx actual=0x%llx cycle=%llu\n",
+              get_warp_id(), chain_id, lane, data_occ,
+              (unsigned long long)idx_addr,
+              (unsigned long long)actual_data_addr, cycle);
+        }
+        continue;
+      }
+
+      ima_runtime_verify_record_t record = rec_it->second.front();
+      rec_it->second.pop_front();
+      if (rec_it->second.empty()) verify_by_idx.erase(rec_it);
+
+      ++m_stat_runtime_verify_checked;
+      if (record.predicted_data_addr == actual_data_addr) {
+        ++m_stat_runtime_verify_matched;
+        if (debug_enable) {
+          printf(
+              "IMA runtime verify match: warp=%u chain=%u lane=%u "
+              "idx_occ=%llu data_occ=%llu idx=0x%llx predicted=0x%llx "
+              "actual=0x%llx issue_cycle=%llu cycle=%llu\n",
+              get_warp_id(), chain_id, lane, idx_occ.occurrence_id, data_occ,
+              (unsigned long long)idx_addr,
+              (unsigned long long)record.predicted_data_addr,
+              (unsigned long long)actual_data_addr, record.issue_cycle, cycle);
+        }
+      } else {
+        ++m_stat_runtime_verify_mismatched;
+        printf(
+            "IMA runtime verify mismatch: warp=%u chain=%u lane=%u "
+            "idx_occ=%llu data_occ=%llu idx=0x%llx predicted=0x%llx "
+            "actual=0x%llx issue_cycle=%llu cycle=%llu\n",
+            get_warp_id(), chain_id, lane, idx_occ.occurrence_id, data_occ,
+            (unsigned long long)idx_addr,
+            (unsigned long long)record.predicted_data_addr,
+            (unsigned long long)actual_data_addr, record.issue_cycle, cycle);
+        if (debug_enable) {
+          assert(record.predicted_data_addr == actual_data_addr &&
+                 "IMA runtime verify mismatch");
+        }
+      }
+    }
+  }
 }
 
 trace_kernel_info_t::trace_kernel_info_t(dim3 gridDim, dim3 blockDim,
@@ -190,6 +731,7 @@ bool trace_warp_inst_t::parse_from_trace_struct(
   oprnd_type = UN_OP;
 
   // get the opcode
+  m_sass_opcode = trace.opcode;  // P4: save full SASS mnemonic for GRASP CD
   std::vector<std::string> opcode_tokens = trace.get_opcode_tokens();
   std::string opcode1 = opcode_tokens[0];
 
@@ -588,13 +1130,35 @@ const warp_inst_t *trace_shader_core_ctx::get_next_inst(unsigned warp_id,
   if (ret == NULL && m_trace_warp->trace_done()) {
     if (!m_warp[warp_id]->inst_in_pipeline() &&
         m_warp[warp_id]->stores_done() &&
+        !m_warp[warp_id]->done_exit() &&
         !m_scoreboard->pendingWrites(warp_id)) {
+      unsigned cta_id = m_warp[warp_id]->get_cta_id();
       for (unsigned t = 0; t < m_warp_size; t++) {
         if (m_warp[warp_id]->test_active(t)) {
           m_warp[warp_id]->set_completed(t);
         }
       }
       m_barriers.warp_exit(warp_id);
+      bool did_exit = false;
+      for (unsigned t = 0; t < m_warp_size; t++) {
+        unsigned tid = warp_id * m_warp_size + t;
+        if (m_threadState[tid].m_active == true) {
+          m_threadState[tid].m_active = false;
+          if (m_thread[tid] == NULL) {
+            register_cta_thread_exit(cta_id, m_warp[warp_id]->get_kernel_info());
+          } else {
+            register_cta_thread_exit(cta_id, &(m_thread[tid]->get_kernel()));
+          }
+          m_not_completed -= 1;
+          m_active_threads.reset(tid);
+          did_exit = true;
+        }
+      }
+      if (did_exit) {
+        m_warp[warp_id]->set_done_exit();
+        --m_active_warps;
+        assert(m_active_warps >= 0);
+      }
     }
   }
   return ret;
@@ -622,6 +1186,14 @@ void trace_shader_core_ctx::init_traces(unsigned start_warp, unsigned end_warp,
     trace_shd_warp_t *m_trace_warp = static_cast<trace_shd_warp_t *>(m_warp[i]);
     m_trace_warp->set_next_pc(m_trace_warp->get_start_trace_pc());
     m_trace_warp->set_kernel(&trace_kernel);
+    // Load IMA chain CSV whenever provided — enables IMA demand tracking
+    // (Timeliness/Coverage metrics) even in no-prefetch baseline mode.
+    if (m_config->gpgpu_ima_prefetch_chain_csv != NULL &&
+        strlen(m_config->gpgpu_ima_prefetch_chain_csv) > 0) {
+      m_trace_warp->build_ima_pair_tables(
+          std::string(m_config->gpgpu_ima_prefetch_chain_csv),
+          m_config->gpgpu_ima_prefetch_debug || m_config->grasp_debug);
+    }
   }
 }
 
@@ -654,6 +1226,14 @@ void trace_shader_core_ctx::func_exec_inst(warp_inst_t &inst) {
   // here, we generate memory acessess and set the status if thread (done?)
   if (inst.is_load() || inst.is_store()) {
     inst.generate_mem_accesses();
+    if (m_config->gpgpu_ima_prefetch_enable) {
+      trace_shd_warp_t *trace_warp =
+          static_cast<trace_shd_warp_t *>(m_warp[inst.warp_id()]);
+      unsigned long long cycle =
+          m_gpu->gpu_tot_sim_cycle + m_gpu->gpu_sim_cycle;
+      trace_warp->observe_ima_runtime_memory_inst(
+          inst, cycle, m_config->gpgpu_ima_prefetch_debug);
+    }
   }
 }
 

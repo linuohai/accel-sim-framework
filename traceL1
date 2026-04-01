@@ -995,12 +995,13 @@ IMA_CHAIN_CSV="$GRASP_CHAIN_CSV"
 if [ -z "$IMA_CHAIN_CSV" ]; then
     IMA_CHAIN_CSV="$IMA_CHAIN_CSV_DEFAULT"
 fi
-if [ "$GRASP_ENABLED" = true ] || [ "$BASELINE_ENABLE_COUNT" -gt 0 ]; then
-    if [ ! -f "$IMA_CHAIN_CSV" ]; then
-        echo "警告: IMA chain CSV 不存在: $IMA_CHAIN_CSV"
-        echo "  GRASP / baseline 的 seed_chain_ids 将为空，相关训练将退化"
-    fi
+# Always pass chain CSV when available — enables IMA demand tracking
+# (Timeliness/Coverage) even in no-prefetch mode.
+if [ -f "$IMA_CHAIN_CSV" ]; then
     echo "-gpgpu_ima_prefetch_chain_csv \"$IMA_CHAIN_CSV\"" >> "$TEMP_GPGPU_CONFIG"
+elif [ "$GRASP_ENABLED" = true ] || [ "$BASELINE_ENABLE_COUNT" -gt 0 ]; then
+    echo "警告: IMA chain CSV 不存在: $IMA_CHAIN_CSV"
+    echo "  GRASP / baseline 的 seed_chain_ids 将为空，相关训练将退化"
 fi
 
 if [ "$BASELINE_INTRA_ENABLED" = true ]; then

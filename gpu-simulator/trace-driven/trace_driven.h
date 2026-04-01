@@ -33,6 +33,11 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <deque>
+#include <map>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 #ifndef TRACE_DRIVEN_H
 #define TRACE_DRIVEN_H
@@ -80,8 +85,12 @@ class trace_warp_inst_t : public warp_inst_t {
       const class trace_config *tconfig,
       const class kernel_trace_t *kernel_trace_info);
 
+  // GRASP: full SASS mnemonic (e.g., "LDG.E.SYS", "IMAD.WIDE")
+  const std::string &get_sass_opcode() const override { return m_sass_opcode; }
+
  private:
   unsigned m_opcode;
+  std::string m_sass_opcode;  // P4: preserved for CD chain detection
 };
 
 class trace_kernel_info_t : public kernel_info_t {
@@ -141,6 +150,35 @@ class trace_config {
 
 class trace_shd_warp_t : public shd_warp_t {
  public:
+  struct ima_chain_desc_t {
+    unsigned chain_id = (unsigned)-1;
+    unsigned pc_idx = 0;
+    unsigned pc_data = 0;
+    std::vector<unsigned> successor_chain_ids;
+  };
+
+  struct ima_pair_chain_table_t {
+    ima_chain_desc_t desc;
+    std::unordered_map<new_addr_type, new_addr_type> addr_map;
+    unsigned long long stat_build_pairs = 0;
+    unsigned long long stat_duplicate_same_value = 0;
+    unsigned long long stat_duplicate_conflict_value = 0;
+    unsigned long long stat_issue_lookup_hit = 0;
+    unsigned long long stat_issue_lookup_miss = 0;
+  };
+
+  struct ima_runtime_verify_record_t {
+    unsigned chain_id = (unsigned)-1;
+    new_addr_type idx_addr = 0;
+    new_addr_type predicted_data_addr = 0;
+    unsigned long long issue_cycle = 0;
+  };
+
+  struct ima_runtime_idx_occurrence_t {
+    unsigned long long occurrence_id = 0;
+    std::vector<new_addr_type> idx_addrs;
+  };
+
   trace_shd_warp_t(class shader_core_ctx *shader, unsigned warp_size)
       : shd_warp_t(shader, warp_size) {
     trace_pc = 0;
@@ -154,13 +192,48 @@ class trace_shd_warp_t : public shd_warp_t {
   address_type get_start_trace_pc();
   virtual address_type get_pc();
   virtual kernel_info_t *get_kernel_info() const { return m_kernel_info; }
+  virtual std::vector<unsigned> get_ima_seed_chain_ids(
+      address_type pc) override;
+  bool is_ima_index_pc(address_type pc) override {
+    return m_chain_ids_by_pc.count(pc) > 0;
+  }
+  virtual bool is_ima_data_pc(address_type pc) override;
+  virtual std::vector<ima_prefetch_candidate_t> lookup_ima_prefetch_candidates(
+      new_addr_type request_addr, const std::vector<unsigned> &seed_chain_ids,
+      bool exact_match_only = false) override;
+  virtual void record_ima_verify_predictions(
+      const std::vector<ima_prefetch_candidate_t> &cands,
+      unsigned long long issue_cycle, bool debug_enable,
+      bool dedupe_pending = true) override;
   void set_kernel(trace_kernel_info_t *kernel_info) {
     m_kernel_info = kernel_info;
   }
+  void build_ima_pair_tables(const std::string &csv_path, bool debug_enable);
+  void observe_ima_runtime_memory_inst(const warp_inst_t &inst,
+                                       unsigned long long cycle,
+                                       bool debug_enable);
 
  private:
+  std::string sm_name_for_current_kernel() const;
   unsigned trace_pc;
   trace_kernel_info_t *m_kernel_info;
+  std::vector<ima_pair_chain_table_t> m_ima_pair_tables;
+  std::unordered_map<address_type, std::vector<unsigned>> m_chain_ids_by_pc;
+  std::unordered_map<address_type, std::vector<unsigned>> m_chain_ids_by_data_pc;
+  std::vector<std::deque<ima_runtime_idx_occurrence_t>>
+      m_pending_runtime_idx_occurrences;
+  std::vector<std::unordered_map<new_addr_type,
+                                 std::deque<ima_runtime_verify_record_t>>>
+      m_pending_runtime_verifications;
+  std::vector<unsigned long long> m_runtime_idx_occurrence_counts;
+  std::vector<unsigned long long> m_runtime_data_occurrence_counts;
+  unsigned long long m_stat_runtime_verify_enqueued = 0;
+  unsigned long long m_stat_runtime_verify_duplicate = 0;
+  unsigned long long m_stat_runtime_verify_checked = 0;
+  unsigned long long m_stat_runtime_verify_matched = 0;
+  unsigned long long m_stat_runtime_verify_mismatched = 0;
+  unsigned long long m_stat_runtime_verify_no_prediction = 0;
+  unsigned long long m_stat_runtime_verify_missing_idx = 0;
 };
 
 class trace_gpgpu_sim : public gpgpu_sim {
