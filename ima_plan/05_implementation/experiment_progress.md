@@ -3,7 +3,7 @@
 > **目的**：统一的实验进度 + 问题追踪文档。记录实验配置、结果、发现的问题和解决方案。
 > **写入规则**：**append-only**——新内容追加到对应 section 末尾，不修改已有条目。多个并发 session 可安全追加。
 >
-> 最近更新：2026-03-31
+> 最近更新：2026-04-02
 
 ---
 
@@ -544,6 +544,36 @@ BFS event timeline 中发现 stride 值出现百万级异常（如 iter_stride=1
 
 - 回归测试待运行（`grasp_regression.sh check`）
 - Pair table miss 41%（stride 越过邻接表末尾的固有限制，非 bug）
+
+---
+
+## 7b. Speculative Stride 实验（2026-04-02）
+
+**版本**：submodule commit `9066f5f`，默认关闭（`-grasp_speculative_stride 0`）
+
+**机制**：CT entry 在首次 stride observation 时用预设值立即标记 `stride_valid=true`，第二次 observation 确认或修正。per-chain stride_hint 从 chain CSV 读取（SASS 分析得出）。
+
+**stride_hint 值（SASS 分析）**：
+- Inner loop base (int*): 4
+- Unrolled ×4: 16
+- Unrolled ×16 (SpMV): 64
+- Thread-ID 索引（无循环）: 0 (disabled)
+
+**回归结果**（`-grasp_speculative_stride 4` + CSV stride_hint）：
+
+| Workload | Baseline | 旧 GRASP | Speculative | vs 旧 GRASP |
+|----------|----------|----------|-------------|-------------|
+| BFS | 23.56 | 29.75 | 30.81 | +3.56% |
+| SSSP | 28.81 | 34.28 | 35.39 | +3.23% |
+| SpMV | 129.68 | 164.12 | 175.35 | +6.84% |
+| BC | 37.65 | 44.61 | 40.79 | -8.56% |
+| Geomean | | | | +1.09% |
+
+**BC 退化分析**：stride 值本身正确（inner=4, unrolled=16, outer=0），但推测机制本身导致退化。原因待进一步排查。
+
+**决定**：默认关闭，记录为 DSE 参数（见 `dse_ct_reset_policy.md`）。
+
+**同时发现**：CT 在不同 kernel 切换时全量 reset stride（BFS 每轮 level 重训练 7K-29K cycles），也记录为 DSE 参数。
 
 ---
 
