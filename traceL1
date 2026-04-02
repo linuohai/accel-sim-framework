@@ -107,6 +107,11 @@ while [[ $# -gt 0 ]]; do
       shift
       shift
       ;;
+    --pair-table-scope)
+      PAIR_TABLE_SCOPE="$2"
+      shift
+      shift
+      ;;
   -nl|--nlevel)
       NLEVEL_ENABLED=true
       shift # past argument
@@ -411,10 +416,107 @@ declare -A TRACE_MAP=(
     ["vc_ima_high"]="vc_linear_base/mtx___data_cit_Patents_1_0/traces/kernelslist.g"
     ["vc_ima_med"]="vc_linear_base/mtx___data_web_Google_1_0/traces/kernelslist.g"
     ["vc_ima_small"]="vc_linear_base/mtx___data_roadNet_CA_1_0/traces/kernelslist.g"
+    ["vc_road"]="vc_linear_base/mtx___data_roadNet_CA_1_0/traces/kernelslist.g"
 
     ["symgs_ima_high"]="symgs_base/mtx___data_cit_Patents_1/traces/kernelslist.g"
     ["symgs_ima_med"]="symgs_base/mtx___data_web_Google_1/traces/kernelslist.g"
     ["symgs_ima_small"]="symgs_base/mtx___data_roadNet_CA_1/traces/kernelslist.g"
+
+    # ============================================================
+    # 4-category dataset evaluation (2026-03-31)
+    # Naming: {algo}_{dataset}_{dir|sym}
+    #   dir = directed (sym=0), sym = symmetrized (sym=1)
+    #   Existing *_ima_{high,med} keys are reused where applicable
+    # ============================================================
+
+    # --- cit-Patents directed (sym=0) supplements ---
+    ["bc_cit_dir"]="bc_linear_base/mtx___data_cit_Patents_0_0_3569341/traces/kernelslist.g"
+    ["pr_cit_dir"]="pr_base/mtx___data_cit_Patents_0/traces/kernelslist.g"
+    ["symgs_cit_dir"]="symgs_base/mtx___data_cit_Patents_0/traces/kernelslist.g"
+
+    # --- web-Google directed (sym=0) supplement ---
+    ["symgs_web_dir"]="symgs_base/mtx___data_web_Google_0/traces/kernelslist.g"
+
+    # --- flickr (社交网络) ---
+    # source-based (hub=1586)
+    ["bfs_flickr_dir"]="bfs_linear_base/mtx___data_flickr_0_0_1586/traces/kernelslist.g"
+    ["bfs_flickr_sym"]="bfs_linear_base/mtx___data_flickr_1_0_1586/traces/kernelslist.g"
+    ["sssp_flickr_dir"]="sssp_linear_base/mtx___data_flickr_0_0_1586/traces/kernelslist.g"
+    ["sssp_flickr_sym"]="sssp_linear_base/mtx___data_flickr_1_0_1586/traces/kernelslist.g"
+    ["bc_flickr_dir"]="bc_linear_base/mtx___data_flickr_0_0_1586/traces/kernelslist.g"
+    ["bc_flickr_sym"]="bc_linear_base/mtx___data_flickr_1_0_1586/traces/kernelslist.g"
+    # source-independent
+    ["cc_flickr"]="cc_base/mtx___data_flickr_1_0/traces/kernelslist.g"
+    ["spmv_flickr"]="spmv_base/mtx___data_flickr_1_0/traces/kernelslist.g"
+    ["pr_flickr_dir"]="pr_base/mtx___data_flickr_0/traces/kernelslist.g"
+    ["pr_flickr_sym"]="pr_base/mtx___data_flickr_1/traces/kernelslist.g"
+    # VC/SymGS: MAXCOLOR=128 crash on flickr — not available
+
+    # --- roadNet-CA (道路网络) ---
+    # source-based (dir hub=117563, sym hub=562818)
+    ["bfs_road_dir"]="bfs_linear_base/mtx___data_roadNet_CA_0_0_117563/traces/kernelslist.g"
+    ["bfs_road_sym"]="bfs_linear_base/mtx___data_roadNet_CA_1_0_562818/traces/kernelslist.g"
+    ["sssp_road_dir"]="sssp_linear_base/mtx___data_roadNet_CA_0_0_117563/traces/kernelslist.g"
+    ["sssp_road_sym"]="sssp_linear_base/mtx___data_roadNet_CA_1_0_562818/traces/kernelslist.g"
+    ["bc_road_dir"]="bc_linear_base/mtx___data_roadNet_CA_0_0_117563/traces/kernelslist.g"
+    ["bc_road_sym"]="bc_linear_base/mtx___data_roadNet_CA_1_0_562818/traces/kernelslist.g"
+    # source-independent
+    ["cc_road"]="cc_base/mtx___data_roadNet_CA_1_0/traces/kernelslist.g"
+    ["spmv_road"]="spmv_base/mtx___data_roadNet_CA_1_0/traces/kernelslist.g"
+    ["pr_road_dir"]="pr_base/mtx___data_roadNet_CA_0/traces/kernelslist.g"
+    ["pr_road_sym"]="pr_base/mtx___data_roadNet_CA_1/traces/kernelslist.g"
+    ["symgs_road_dir"]="symgs_base/mtx___data_roadNet_CA_0/traces/kernelslist.g"
+    # vc_road = vc_ima_small (already defined above), symgs_road_sym = symgs_ima_small
+
+    # --- soc-LiveJournal1 (大社交扩展) ---
+    ["bfs_socLJ_dir"]="bfs_linear_base/mtx___data_soc_LiveJournal1_0_0_10009/traces/kernelslist.g"
+    ["bfs_socLJ_sym"]="bfs_linear_base/mtx___data_soc_LiveJournal1_1_0_10009/traces/kernelslist.g"
+    ["spmv_socLJ"]="spmv_base/mtx___data_soc_LiveJournal1_1_0/traces/kernelslist.g"
+
+    # ============================================================
+    # Unified naming: {algo}_{dataset}_{dir|sym}
+    # These are canonical names used in benchmark_suite.md.
+    # Old *_ima_* keys are kept above for backward compat.
+    # ============================================================
+
+    # --- cit-Patents sym=1 (= ima_high) ---
+    ["bfs_cit_sym"]="bfs_linear_base/mtx___data_cit_Patents_1_0_3569341/traces/kernelslist.g"
+    ["sssp_cit_sym"]="sssp_linear_base/mtx___data_cit_Patents_1_0_3569341/traces/kernelslist.g"
+    ["bc_cit_sym"]="bc_linear_base/mtx___data_cit_Patents_1_0_3569341/traces/kernelslist.g"
+    ["cc_cit_sym"]="cc_base/mtx___data_cit_Patents_1_0/traces/kernelslist.g"
+    ["spmv_cit_sym"]="spmv_base/mtx___data_cit_Patents_1_0/traces/kernelslist.g"
+    ["pr_cit_sym"]="pr_base/mtx___data_cit_Patents_1/traces/kernelslist.g"
+    ["vc_cit_sym"]="vc_linear_base/mtx___data_cit_Patents_1_0/traces/kernelslist.g"
+
+    # --- cit-Patents dir (already defined above) ---
+    ["bfs_cit_dir"]="bfs_linear_base/mtx___data_cit_Patents_0_0_3569341/traces/kernelslist.g"
+    ["sssp_cit_dir"]="sssp_linear_base/mtx___data_cit_Patents_0_0_3569341/traces/kernelslist.g"
+
+    # --- web-Google sym=1 (= ima_med) ---
+    ["bfs_web_sym"]="bfs_linear_base/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["sssp_web_sym"]="sssp_linear_base/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["bc_web_sym"]="bc_linear_base/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["cc_web_sym"]="cc_base/mtx___data_web_Google_1_0/traces/kernelslist.g"
+    ["spmv_web_sym"]="spmv_base/mtx___data_web_Google_1_0/traces/kernelslist.g"
+    ["pr_web_sym"]="pr_base/mtx___data_web_Google_1/traces/kernelslist.g"
+    ["vc_web_sym"]="vc_linear_base/mtx___data_web_Google_1_0/traces/kernelslist.g"
+
+    # --- flickr sym=1 补齐 _sym 后缀 ---
+    ["cc_flickr_sym"]="cc_base/mtx___data_flickr_1_0/traces/kernelslist.g"
+    ["spmv_flickr_sym"]="spmv_base/mtx___data_flickr_1_0/traces/kernelslist.g"
+
+    # --- roadNet-CA sym=1 补齐 _sym 后缀 ---
+    ["cc_road_sym"]="cc_base/mtx___data_roadNet_CA_1_0/traces/kernelslist.g"
+    ["spmv_road_sym"]="spmv_base/mtx___data_roadNet_CA_1_0/traces/kernelslist.g"
+    ["vc_road_sym"]="vc_linear_base/mtx___data_roadNet_CA_1_0/traces/kernelslist.g"
+
+    # --- soc-LJ1 补齐 _sym ---
+    ["spmv_socLJ_sym"]="spmv_base/mtx___data_soc_LiveJournal1_1_0/traces/kernelslist.g"
+    # web-Google dir aliases for BFS/SSSP/BC/PR (existing traces)
+    ["bfs_web_dir"]="bfs_linear_base/mtx___data_web_Google_0_0_506742/traces/kernelslist.g"
+    ["sssp_web_dir"]="sssp_linear_base/mtx___data_web_Google_0_0_506742/traces/kernelslist.g"
+    ["bc_web_dir"]="bc_linear_base/mtx___data_web_Google_0_0_506742/traces/kernelslist.g"
+    ["pr_web_dir"]="pr_base/mtx___data_web_Google_0/traces/kernelslist.g"
 
 
     # flash attention
@@ -516,9 +618,10 @@ show_usage() {
     echo "  -c, --config <model>  指定GPU配置模型 (默认: SM80_A100)"
     echo "                        支持: SM7_QV100, SM80_A100"
     echo "  --ideal-l1d            启用 Ideal L1D：强制 eligible global read 为 L1D HIT（上界实验，日志名自动加 _ideal_l1d 后缀）"
-    echo "  --grasp                启用 GRASP IMA prefetcher（默认 chain CSV: tmp/strict_chains/strict_selected_chain_instances.csv）"
+    echo "  --grasp                启用 GRASP IMA prefetcher（默认 chain CSV: ima_plan/05_implementation/ima_pair_table/golden/strict_selected_chain_instances.csv）"
     echo "  --grasp-debug          启用 GRASP + 详细调试日志"
     echo "  --grasp-trace          启用 GRASP + 结构化 CSV 事件 trace（含 --grasp）"
+    echo "  --pair-table-scope <s> IMA pair table scope: warp(默认)/cta/kernel"
     echo "  --grasp-chain-csv <path>  指定 GRASP chain CSV 文件路径"
     echo "  -nl, --nlevel         启用 n_level 调度器（日志名自动加 _nl 后缀，与 -gto 互斥）"
     echo "  -nls, --nlevel-scheduler <lrr|gto>"
@@ -926,7 +1029,7 @@ if [ "$GRASP_ENABLED" = true ]; then
     echo "-grasp_enable 1" >> "$TEMP_GPGPU_CONFIG"
     # Default chain CSV: strict_selected_chain_instances.csv (covers BFS/SSSP/BC/SpMV)
     if [ -z "$GRASP_CHAIN_CSV" ]; then
-        GRASP_CHAIN_CSV="$BASE_DIR/tmp/strict_chains/strict_selected_chain_instances.csv"
+        GRASP_CHAIN_CSV="$BASE_DIR/ima_plan/05_implementation/ima_pair_table/golden/strict_selected_chain_instances.csv"
     fi
     if [ ! -f "$GRASP_CHAIN_CSV" ]; then
         echo "警告: GRASP chain CSV 不存在: $GRASP_CHAIN_CSV"
@@ -942,6 +1045,26 @@ if [ "$GRASP_ENABLED" = true ]; then
     fi
     if [ "$GRASP_DISTANCE" -gt 0 ] 2>/dev/null; then
         echo "-grasp_ist_distance $GRASP_DISTANCE" >> "$TEMP_GPGPU_CONFIG"
+    fi
+    if [ -n "$PAIR_TABLE_SCOPE" ]; then
+        case "$PAIR_TABLE_SCOPE" in
+            warp|0)   echo "-grasp_pair_table_scope 0" >> "$TEMP_GPGPU_CONFIG" ;;
+            cta|1)    echo "-grasp_pair_table_scope 1" >> "$TEMP_GPGPU_CONFIG" ;;
+            kernel|2) echo "-grasp_pair_table_scope 2" >> "$TEMP_GPGPU_CONFIG" ;;
+            *) echo "ERROR: --pair-table-scope must be warp/cta/kernel (or 0/1/2)"; exit 1 ;;
+        esac
+    fi
+    # Pair table CSV dump: auto-enable when --grasp-debug or --grasp-trace
+    if [ "$GRASP_DEBUG" = true ] || [ "$GRASP_TRACE_ENABLED" = true ]; then
+        echo "-grasp_pair_table_dump_path \"result/grasp_trace/${LOG_NAME}_pair_table.csv\"" >> "$TEMP_GPGPU_CONFIG"
+    fi
+fi
+
+# IMA demand tracking: 即使不启用 GRASP，也加载 chain CSV 以识别 IMA PC（供 IMA_DEMAND 统计）
+if [ "$GRASP_ENABLED" != true ]; then
+    IMA_CHAIN_CSV="${GRASP_CHAIN_CSV:-$BASE_DIR/ima_plan/05_implementation/ima_pair_table/golden/strict_selected_chain_instances.csv}"
+    if [ -f "$IMA_CHAIN_CSV" ]; then
+        echo "-gpgpu_ima_prefetch_chain_csv \"$IMA_CHAIN_CSV\"" >> "$TEMP_GPGPU_CONFIG"
     fi
 fi
 
@@ -1092,7 +1215,7 @@ if [ "$GTO_ENABLED" = true ]; then
 fi
 if [ "$GRASP_ENABLED" = true ]; then
     echo "GRASP预取器: 已启用"
-    echo "  Chain CSV: ${GRASP_CHAIN_CSV:-$BASE_DIR/tmp/strict_chains/strict_selected_chain_instances.csv}"
+    echo "  Chain CSV: ${GRASP_CHAIN_CSV:-$BASE_DIR/ima_plan/05_implementation/ima_pair_table/golden/strict_selected_chain_instances.csv}"
     echo "  IST Distance: ${GRASP_DISTANCE:-1 (default)}"
     echo "  (其他参数使用默认值，见 log 中 GRASP_CONFIG 行)"
 else
@@ -1221,7 +1344,38 @@ if [ ${PIPESTATUS[0]} -eq 0 ]; then
             status="CRASHED"
         fi
 
-        # 6. 写入 EXPERIMENT SUMMARY 到 log 末尾
+        # 6. 提取 IMA demand 统计（baseline 和 GRASP 都有）
+        local ima_demand_line grasp_ima_misses="" ima_timeliness_line=""
+        ima_demand_line=$(grep "^IMA_DEMAND:" "$log_file" | tail -1)
+        ima_timeliness_line=$(grep "^IMA_TIMELINESS:" "$log_file" | tail -1)
+        if [ -n "$ima_demand_line" ]; then
+            grasp_ima_misses=$(echo "$ima_demand_line" | grep -oP 'data_misses=\K[0-9]+')
+        fi
+
+        # 7. 提取 GRASP 指标（SM0，仅 GRASP 模式）
+        local grasp_effect="" grasp_storage="" grasp_rfail="" grasp_funnel="" coverage_str=""
+        local grasp_ima_demand="" grasp_timeliness=""
+        if [ "$GRASP_ENABLED" = true ]; then
+            grasp_effect=$(grep "^GRASP_EFFECT SM0:" "$log_file" | tail -1 | sed 's/^GRASP_EFFECT SM0: //')
+            grasp_storage=$(grep "^GRASP_STORAGE SM0:" "$log_file" | tail -1 | sed 's/^GRASP_STORAGE SM0: //')
+            grasp_rfail=$(grep "^GRASP_RFAIL SM0:" "$log_file" | tail -1 | sed 's/^GRASP_RFAIL SM0: //')
+            grasp_funnel=$(grep "^GRASP_FUNNEL SM0:" "$log_file" | tail -1 | sed 's/^GRASP_FUNNEL SM0: //')
+            grasp_ima_demand=$(grep "^GRASP_IMA_DEMAND SM0:" "$log_file" | tail -1 | sed 's/^GRASP_IMA_DEMAND SM0: //')
+            grasp_timeliness=$(grep "^GRASP_TIMELINESS SM0:" "$log_file" | tail -1 | sed 's/^GRASP_TIMELINESS SM0: //')
+
+            # 8. 计算 coverage = 1 - grasp_data_misses / baseline_data_misses
+            local registry="$BASE_DIR/ima_plan/06_evaluation_plan/baseline_registry.csv"
+            if [ -f "$registry" ] && [ -n "$grasp_ima_misses" ]; then
+                local baseline_ima_misses
+                baseline_ima_misses=$(grep "^${TRACE_KEY},${CONFIG_MODEL}," "$registry" | head -1 | cut -d, -f6)
+                if [ -n "$baseline_ima_misses" ] && [ "$baseline_ima_misses" -gt 0 ] 2>/dev/null; then
+                    coverage_str=$(awk -v g="$grasp_ima_misses" -v b="$baseline_ima_misses" \
+                        'BEGIN { printf "%.2f%%", (1 - g/b) * 100 }')
+                fi
+            fi
+        fi
+
+        # 7. 写入 EXPERIMENT SUMMARY 到 log 末尾
         {
             echo ""
             echo "=== EXPERIMENT SUMMARY ==="
@@ -1233,6 +1387,25 @@ if [ ${PIPESTATUS[0]} -eq 0 ]; then
             echo "final_ipc=$final_ipc"
             echo "final_cycles=$final_cycles"
             echo "status=$status"
+            if [ -n "$ima_demand_line" ]; then
+                echo "ima_demand: $ima_demand_line"
+            fi
+            if [ -n "$grasp_effect" ]; then
+                echo "--- GRASP Metrics (SM0) ---"
+                echo "effect: $grasp_effect"
+                echo "storage: $grasp_storage"
+                echo "rfail: $grasp_rfail"
+                echo "funnel: $grasp_funnel"
+                if [ -n "$grasp_ima_demand" ]; then
+                    echo "ima_demand: $grasp_ima_demand"
+                fi
+                if [ -n "$grasp_timeliness" ]; then
+                    echo "timeliness: $grasp_timeliness"
+                fi
+                if [ -n "$coverage_str" ]; then
+                    echo "coverage=$coverage_str (1 - grasp_data_misses/baseline_data_misses)"
+                fi
+            fi
             echo "=== END SUMMARY ==="
         } >> "$log_file"
 
@@ -1244,6 +1417,19 @@ if [ ${PIPESTATUS[0]} -eq 0 ]; then
         echo "  Final IPC: $final_ipc"
         echo "  Final cycles: $final_cycles"
         echo "  Status: $status"
+        if [ "$GRASP_ENABLED" = true ] && [ -n "$grasp_effect" ]; then
+            echo "  ── GRASP Metrics (SM0) ──"
+            echo "  $grasp_effect"
+            echo "  storage: $grasp_storage"
+            echo "  rfail: $grasp_rfail"
+            echo "  funnel: $grasp_funnel"
+            if [ -n "$grasp_timeliness" ]; then
+                echo "  timeliness: $grasp_timeliness"
+            fi
+            if [ -n "$coverage_str" ]; then
+                echo "  coverage: $coverage_str"
+            fi
+        fi
         if [ "$status" != "COMPLETE" ]; then
             echo "  ⚠ 实验未完整完成！结果可能不准确。"
         fi
@@ -1275,6 +1461,10 @@ if [ ${PIPESTATUS[0]} -eq 0 ]; then
         completed_kernels=$(grep "^completed_kernels=" "$log_file" | tail -1 | cut -d= -f2)
         final_cycles=$(grep "^final_cycles=" "$log_file" | tail -1 | cut -d= -f2)
 
+        # 提取 IMA demand misses（从 IMA_DEMAND: 行）
+        local ima_misses
+        ima_misses=$(grep "^IMA_DEMAND:" "$log_file" | tail -1 | grep -oP 'total_misses=\K[0-9]+' || echo "0")
+
         local git_commit
         git_commit=$(git -C "$BASE_DIR" rev-parse --short HEAD 2>/dev/null || echo "unknown")
         local today
@@ -1282,17 +1472,17 @@ if [ ${PIPESTATUS[0]} -eq 0 ]; then
 
         # 创建 header（首次）
         if [ ! -f "$registry" ]; then
-            echo "trace_key,config,kernels,final_ipc,final_cycles,log_file,git_commit,date" > "$registry"
+            echo "trace_key,config,kernels,final_ipc,final_cycles,ima_misses,log_file,git_commit,date" > "$registry"
         fi
 
         # 删除同 trace_key+config 的旧条目，写入新条目
         local tmp_reg="${registry}.tmp"
         head -1 "$registry" > "$tmp_reg"
         tail -n +2 "$registry" | grep -v "^${TRACE_KEY},${CONFIG_MODEL}," >> "$tmp_reg" 2>/dev/null || true
-        echo "${TRACE_KEY},${CONFIG_MODEL},${completed_kernels},${final_ipc},${final_cycles},$(basename "$log_file"),${git_commit},${today}" >> "$tmp_reg"
+        echo "${TRACE_KEY},${CONFIG_MODEL},${completed_kernels},${final_ipc},${final_cycles},${ima_misses},$(basename "$log_file"),${git_commit},${today}" >> "$tmp_reg"
         mv "$tmp_reg" "$registry"
 
-        echo "[baseline-registry] 已更新: ${TRACE_KEY} (IPC=${final_ipc}, cycles=${final_cycles})"
+        echo "[baseline-registry] 已更新: ${TRACE_KEY} (IPC=${final_ipc}, ima_misses=${ima_misses})"
     }
 
     update_baseline_registry "$LOG_FILE"

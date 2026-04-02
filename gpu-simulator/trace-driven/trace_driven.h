@@ -113,6 +113,22 @@ class trace_kernel_info_t : public kernel_info_t {
 
   void set_launched() { m_was_launched = true; }
 
+  // Kernel-level pair tables (scope=2): built once, shared by all CTAs.
+  // Uses per-chain addr_map (idx_addr → data_addr). Chain structure matches
+  // trace_shd_warp_t::ima_pair_chain_table_t but stored as raw maps here to
+  // avoid forward-declaration dependency.
+  struct kernel_pair_chain_t {
+    std::unordered_map<new_addr_type, new_addr_type> addr_map;
+  };
+  std::vector<kernel_pair_chain_t> m_kernel_pair_chains;
+  std::unordered_map<address_type, std::vector<unsigned>>
+      m_kernel_chain_ids_by_pc;
+  std::unordered_map<address_type, std::vector<unsigned>>
+      m_kernel_chain_ids_by_data_pc;
+  bool m_kernel_pair_tables_built = false;
+  void build_kernel_pair_tables(const std::string &csv_path,
+                                unsigned warps_per_cta, bool debug_enable);
+
  private:
   trace_config *m_tconfig;
   const std::unordered_map<std::string, OpcodeChar> *OpcodeMap;
@@ -152,9 +168,11 @@ class trace_shd_warp_t : public shd_warp_t {
  public:
   struct ima_chain_desc_t {
     unsigned chain_id = (unsigned)-1;
-    unsigned pc_idx = 0;
-    unsigned pc_data = 0;
+    unsigned pc_idx = 0;   // primary (first) index PC
+    unsigned pc_data = 0;  // primary (first) data PC
     std::vector<unsigned> successor_chain_ids;
+    // P5: all (pc_idx, pc_data) pairs merged into this table
+    std::vector<std::pair<unsigned, unsigned>> all_pc_pairs;
   };
 
   struct ima_pair_chain_table_t {
@@ -194,6 +212,12 @@ class trace_shd_warp_t : public shd_warp_t {
   virtual kernel_info_t *get_kernel_info() const { return m_kernel_info; }
   virtual std::vector<unsigned> get_ima_seed_chain_ids(
       address_type pc) override;
+  bool is_ima_index_pc(address_type pc) override {
+    return m_chain_ids_by_pc.count(pc) > 0;
+  }
+  bool is_ima_data_pc(address_type pc) override {
+    return m_chain_ids_by_data_pc.count(pc) > 0;
+  }
   virtual std::vector<ima_prefetch_candidate_t> lookup_ima_prefetch_candidates(
       new_addr_type request_addr, const std::vector<unsigned> &seed_chain_ids,
       bool exact_match_only = false) override;
@@ -205,6 +229,32 @@ class trace_shd_warp_t : public shd_warp_t {
     m_kernel_info = kernel_info;
   }
   void build_ima_pair_tables(const std::string &csv_path, bool debug_enable);
+  void merge_pair_tables_from(const trace_shd_warp_t &other);
+  void set_pair_tables(
+      const std::vector<ima_pair_chain_table_t> &tables,
+      const std::unordered_map<address_type, std::vector<unsigned>> &by_pc,
+      const std::unordered_map<address_type, std::vector<unsigned>> &by_data_pc);
+  const std::vector<ima_pair_chain_table_t> &get_pair_tables() const {
+    return m_ima_pair_tables;
+  }
+  std::vector<ima_pair_chain_table_t> &get_pair_tables_mut() {
+    return m_ima_pair_tables;
+  }
+  void set_chain_ids(
+      const std::unordered_map<address_type, std::vector<unsigned>> &by_pc,
+      const std::unordered_map<address_type, std::vector<unsigned>>
+          &by_data_pc) {
+    m_chain_ids_by_pc = by_pc;
+    m_chain_ids_by_data_pc = by_data_pc;
+  }
+  const std::unordered_map<address_type, std::vector<unsigned>> &
+  get_chain_ids_by_pc() const {
+    return m_chain_ids_by_pc;
+  }
+  const std::unordered_map<address_type, std::vector<unsigned>> &
+  get_chain_ids_by_data_pc() const {
+    return m_chain_ids_by_data_pc;
+  }
   void observe_ima_runtime_memory_inst(const warp_inst_t &inst,
                                        unsigned long long cycle,
                                        bool debug_enable);

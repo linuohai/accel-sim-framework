@@ -23,6 +23,41 @@ from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
 # ---------------------------------------------------------------------------
+# Algorithm-specific PC configurations (from SASS analysis)
+# ---------------------------------------------------------------------------
+
+# Each entry maps an algorithm to its (index_pc, data_pc) pairs extracted from
+# the SASS CFG.  nvcc may unroll the main loop, producing multiple copies of the
+# same source-level index+data load at distinct PCs.  Every index-load PC
+# occurrence in the trace counts as one *source-level* iteration.
+
+ALGORITHM_PC_CONFIGS = {
+    "bfs": {
+        "description": "bfs_kernel linear_base, nvcc sm_80, x4 unrolled",
+        # PCs from golden chain CSV (bfs_linear_base_strict.csv), NOT from
+        # SASS CFG dot file (which may be a different compilation).
+        "pairs": [
+            # prologue (remainder loop, 1 element per trip)
+            # source: linear_base.cu:19 → :20
+            {"index_pc": 0x01d0, "data_pc": 0x0200, "label": "prologue"},
+            # unrolled main body (4 elements per trip)
+            {"index_pc": 0x0640, "data_pc": 0x0670, "label": "unroll_0"},
+            {"index_pc": 0x09a0, "data_pc": 0x09d0, "label": "unroll_1"},
+            {"index_pc": 0x0d00, "data_pc": 0x0d30, "label": "unroll_2"},
+            {"index_pc": 0x1060, "data_pc": 0x1090, "label": "unroll_3"},
+        ],
+        # Iteration boundary = loop trip boundary, NOT every index PC.
+        # Main loop: unroll_0 marks the start of each ×4 trip.
+        # Prologue: each 0x01d0 is one trip.
+        "boundary_pcs": [0x01d0, 0x0640],
+        # Same-instruction mem_fetches spread ~240 cycles in L1 trace;
+        # different loop trips are >400 cycles apart.
+        "merge_window": 300,
+    },
+}
+
+
+# ---------------------------------------------------------------------------
 # PC Configuration (replaces hardcoded constants from v1)
 # ---------------------------------------------------------------------------
 
@@ -83,6 +118,33 @@ def load_chain_pcs(
                     labels[dat_pc] = f"dat_{dat_pc:#05x}"
 
     return index_pcs, data_pcs, labels
+
+
+def build_pc_config_from_algorithm(algo_key: str) -> PcConfig:
+    """Build a PcConfig from a built-in algorithm PC configuration."""
+    cfg = ALGORITHM_PC_CONFIGS[algo_key]
+    index_pcs: Set[int] = set()
+    data_pcs: Set[int] = set()
+    labels: Dict[int, str] = {}
+    for pair in cfg["pairs"]:
+        ipc = pair["index_pc"]
+        dpc = pair["data_pc"]
+        lbl = pair["label"]
+        index_pcs.add(ipc)
+        data_pcs.add(dpc)
+        labels[ipc] = f"idx_{lbl}"
+        labels[dpc] = f"dat_{lbl}"
+    # Use explicit boundary PCs if defined, otherwise fall back to all index PCs
+    if "boundary_pcs" in cfg:
+        boundary = set(cfg["boundary_pcs"])
+    else:
+        boundary = index_pcs.copy()
+    return PcConfig(
+        index_pcs=index_pcs,
+        data_pcs=data_pcs,
+        boundary_pcs=boundary,
+        labels=labels,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -852,8 +914,9 @@ def main():
                     help="Directory containing *_l1.csv and *_grasp.csv")
     p.add_argument("--baseline-dir", type=Path, required=True,
                     help="Directory containing baseline *_l1.csv")
-    p.add_argument("--chain-csv", type=Path, required=True,
-                    help="Chain CSV file to extract index/data PCs")
+    p.add_argument("--chain-csv", type=Path, default=None,
+                    help="Chain CSV file to extract index/data PCs "
+                         "(required for boundary mode, optional for algorithm modes)")
     p.add_argument("--algorithm", type=str, default=None,
                     help="Filter chains by algorithm name (for combined CSV)")
     p.add_argument("--boundary-pcs", type=str, default=None,
@@ -871,37 +934,64 @@ def main():
         help="Output format (default: all)",
     )
     p.add_argument("--output-dir", type=Path, default=None)
+    p.add_argument(
+        "--iteration-mode", type=str, default="boundary",
+        choices=["boundary"] + list(ALGORITHM_PC_CONFIGS.keys()),
+        help="Iteration detection mode: 'boundary' (default, uses boundary PCs), "
+             "or an algorithm name (e.g. 'bfs') for built-in PC config",
+    )
     args = p.parse_args()
 
     # Normalize old aliases
     fmt_aliases = {"a": "summary", "b": "timeline", "c": "compare", "bc": "all"}
     fmt = fmt_aliases.get(args.format, args.format)
 
-    # Build PcConfig from chain CSV
-    index_pcs, data_pcs, auto_labels = load_chain_pcs(args.chain_csv, args.algorithm)
-    if not index_pcs:
-        print(f"ERROR: no chains found in {args.chain_csv}"
-              + (f" for algorithm={args.algorithm}" if args.algorithm else ""),
-              file=sys.stderr)
+    # Validate: boundary mode requires --chain-csv
+    if args.iteration_mode == "boundary" and not args.chain_csv:
+        print("ERROR: --chain-csv is required for boundary mode", file=sys.stderr)
         sys.exit(1)
 
-    boundary_pcs = index_pcs
-    if args.boundary_pcs:
-        boundary_pcs = {int(x, 16) for x in args.boundary_pcs.split(",")}
+    # Build PcConfig
+    if args.iteration_mode != "boundary":
+        # Algorithm-specific mode: use built-in PC config
+        pc_config = build_pc_config_from_algorithm(args.iteration_mode)
+        # Still parse chain CSV if provided (for GRASP event filtering etc.)
+        if args.chain_csv and args.chain_csv.exists():
+            _, _, chain_labels = load_chain_pcs(args.chain_csv, args.algorithm)
+            # Merge chain labels (built-in labels take precedence)
+            for pc, lbl in chain_labels.items():
+                pc_config.labels.setdefault(pc, lbl)
+        index_pcs = pc_config.index_pcs
+        data_pcs = pc_config.data_pcs
+        boundary_pcs = pc_config.boundary_pcs
+        print(f"Iteration mode:      {args.iteration_mode} "
+              f"({ALGORITHM_PC_CONFIGS[args.iteration_mode]['description']})")
+    else:
+        # Default boundary mode: build from chain CSV
+        index_pcs, data_pcs, auto_labels = load_chain_pcs(args.chain_csv, args.algorithm)
+        if not index_pcs:
+            print(f"ERROR: no chains found in {args.chain_csv}"
+                  + (f" for algorithm={args.algorithm}" if args.algorithm else ""),
+                  file=sys.stderr)
+            sys.exit(1)
 
-    warmup_pc = int(args.warmup_pc, 16) if args.warmup_pc else None
-    tail_pcs = {int(x, 16) for x in args.tail_pcs.split(",")} if args.tail_pcs else set()
+        boundary_pcs = index_pcs
+        if args.boundary_pcs:
+            boundary_pcs = {int(x, 16) for x in args.boundary_pcs.split(",")}
 
-    if warmup_pc:
-        auto_labels[warmup_pc] = "warmup"
-    for tp in tail_pcs:
-        auto_labels.setdefault(tp, f"tail_{tp:#05x}")
+        warmup_pc = int(args.warmup_pc, 16) if args.warmup_pc else None
+        tail_pcs = {int(x, 16) for x in args.tail_pcs.split(",")} if args.tail_pcs else set()
 
-    pc_config = PcConfig(
-        index_pcs=index_pcs, data_pcs=data_pcs,
-        boundary_pcs=boundary_pcs, warmup_pc=warmup_pc,
-        tail_pcs=tail_pcs, labels=auto_labels,
-    )
+        if warmup_pc:
+            auto_labels[warmup_pc] = "warmup"
+        for tp in tail_pcs:
+            auto_labels.setdefault(tp, f"tail_{tp:#05x}")
+
+        pc_config = PcConfig(
+            index_pcs=index_pcs, data_pcs=data_pcs,
+            boundary_pcs=boundary_pcs, warmup_pc=warmup_pc,
+            tail_pcs=tail_pcs, labels=auto_labels,
+        )
 
     warps = {int(w) for w in args.warps.split(",")}
     out_dir = args.output_dir or args.grasp_dir / "analysis_output"
@@ -935,7 +1025,11 @@ def main():
 
     for warp_id in sorted(warps):
         print(f"--- Warp {warp_id} ---")
-        mw = args.merge_window
+        # Use algorithm config's merge_window if user didn't override
+        if args.iteration_mode != "boundary" and args.merge_window == 0:
+            mw = ALGORITHM_PC_CONFIGS[args.iteration_mode].get("merge_window", 0)
+        else:
+            mw = args.merge_window
         grasp_iters = detect_iterations(
             grasp_l1.get(warp_id, []),
             grasp_trace.get(warp_id, []),

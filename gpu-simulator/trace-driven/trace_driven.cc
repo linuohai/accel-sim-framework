@@ -70,6 +70,10 @@ struct loaded_ima_chain_row_t {
   unsigned pc_idx = 0;
   unsigned pc_addr = 0;
   unsigned pc_data = 0;
+  // P5: data source location for merge key (chains sharing same target array)
+  std::string data_source_file;
+  std::string data_source_line;
+  int stride_hint = 0;  // speculative stride from SASS analysis (0=use default)
 };
 
 static std::string trim_copy(const std::string &in) {
@@ -186,6 +190,15 @@ static std::vector<loaded_ima_chain_row_t> load_ima_chain_rows(
       row.classification = fields[cols["classification"]];
     if (has_addr_pc && cols["addr_pc"] < fields.size())
       parse_hex_pc(fields[cols["addr_pc"]], row.pc_addr);
+    // P5: parse data source location for merge key
+    if (cols.count("data_source_file") && cols["data_source_file"] < fields.size())
+      row.data_source_file = fields[cols["data_source_file"]];
+    if (cols.count("data_source_line") && cols["data_source_line"] < fields.size())
+      row.data_source_line = fields[cols["data_source_line"]];
+    if (cols.count("stride_hint") && cols["stride_hint"] < fields.size()) {
+      try { row.stride_hint = std::stoi(fields[cols["stride_hint"]]); }
+      catch (...) { row.stride_hint = 0; }
+    }
     rows.push_back(row);
   }
   return rows;
@@ -226,23 +239,67 @@ static std::vector<trace_shd_warp_t::ima_chain_desc_t> select_ima_chain_descs(
     filtered.push_back(row);
   }
 
+  // P5: merge chains that share the same target array.
+  // Merge key = (data_source_file, data_source_line). Chains with the same
+  // data source location access the same array (e.g., x4 unrolled instances
+  // of column_indices[] in BFS). They share one addr_map so stride predictions
+  // across unrolled PCs can find each other's addresses.
+  // One-to-many chains (same index_pc, different data arrays) have different
+  // data source locations and remain separate.
+  //
+  // Fallback: if data_source_file is empty (old CSV format), don't merge —
+  // each (pc_idx, pc_data) pair gets its own table (v6 behavior).
+
   std::set<std::pair<unsigned, unsigned>> seen_pairs;
+  // merge_key → index into result
+  std::map<std::string, unsigned> merge_groups;
   std::vector<trace_shd_warp_t::ima_chain_desc_t> result;
+
   for (const loaded_ima_chain_row_t &row : filtered) {
     std::pair<unsigned, unsigned> key(row.pc_idx, row.pc_data);
     if (!seen_pairs.insert(key).second) continue;
-    trace_shd_warp_t::ima_chain_desc_t desc;
-    desc.chain_id = static_cast<unsigned>(result.size());
-    desc.pc_idx = row.pc_idx;
-    desc.pc_data = row.pc_data;
-    result.push_back(desc);
+
+    // Determine merge key
+    std::string merge_key;
+    if (!row.data_source_file.empty() && !row.data_source_line.empty()) {
+      merge_key = row.data_source_file + ":" + row.data_source_line;
+    }
+
+    if (!merge_key.empty() && merge_groups.count(merge_key)) {
+      // Merge into existing table
+      unsigned existing_idx = merge_groups[merge_key];
+      result[existing_idx].all_pc_pairs.push_back({row.pc_idx, row.pc_data});
+    } else {
+      // New table
+      trace_shd_warp_t::ima_chain_desc_t desc;
+      desc.chain_id = static_cast<unsigned>(result.size());
+      desc.pc_idx = row.pc_idx;
+      desc.pc_data = row.pc_data;
+      desc.all_pc_pairs.push_back({row.pc_idx, row.pc_data});
+      if (!merge_key.empty()) {
+        merge_groups[merge_key] = desc.chain_id;
+      }
+      result.push_back(desc);
+    }
   }
 
+  // Build successor relationships (chain A's data_pc == chain B's index_pc)
   for (size_t i = 0; i < result.size(); ++i) {
     for (size_t j = 0; j < result.size(); ++j) {
       if (i == j) continue;
-      if (result[i].pc_data == result[j].pc_idx)
-        result[i].successor_chain_ids.push_back(result[j].chain_id);
+      // Check all data PCs of chain i against all index PCs of chain j
+      for (auto &pi : result[i].all_pc_pairs) {
+        for (auto &pj : result[j].all_pc_pairs) {
+          if (pi.second == pj.first) {
+            // Avoid duplicate successor entries
+            bool dup = false;
+            for (unsigned s : result[i].successor_chain_ids) {
+              if (s == result[j].chain_id) { dup = true; break; }
+            }
+            if (!dup) result[i].successor_chain_ids.push_back(result[j].chain_id);
+          }
+        }
+      }
     }
   }
   return result;
@@ -351,61 +408,142 @@ void trace_shd_warp_t::build_ima_pair_tables(const std::string &csv_path,
   m_runtime_data_occurrence_counts.assign(descs.size(), 0);
   for (size_t i = 0; i < descs.size(); ++i) {
     m_ima_pair_tables[i].desc = descs[i];
-    m_chain_ids_by_pc[descs[i].pc_idx].push_back(descs[i].chain_id);
-    m_chain_ids_by_data_pc[descs[i].pc_data].push_back(descs[i].chain_id);
+    // P5: register ALL merged index/data PCs for this chain_id
+    for (auto &pp : descs[i].all_pc_pairs) {
+      m_chain_ids_by_pc[pp.first].push_back(descs[i].chain_id);
+      m_chain_ids_by_data_pc[pp.second].push_back(descs[i].chain_id);
+    }
   }
 
+  // P5: build addr_map for each (possibly merged) table.
+  // A merged table has multiple (pc_idx, pc_data) pairs in all_pc_pairs.
+  // For each pair, scan the trace to match idx→data occurrences by order.
   const new_addr_type kInvalidAddr = static_cast<new_addr_type>(-1);
   for (ima_pair_chain_table_t &table : m_ima_pair_tables) {
-    std::vector<std::vector<new_addr_type>> idx_occurrences;
-    unsigned idx_occ = 0;
-    unsigned data_occ = 0;
+    // Build a set of all index/data PCs for fast lookup
+    std::set<unsigned> idx_pcs, data_pcs;
+    // Track per-(pc_idx, pc_data) pair occurrence counters
+    struct pair_state_t {
+      unsigned pc_idx, pc_data;
+      std::vector<std::vector<new_addr_type>> idx_occurrences;
+      unsigned idx_occ = 0, data_occ = 0;
+    };
+    std::vector<pair_state_t> pair_states;
+    for (auto &pp : table.desc.all_pc_pairs) {
+      pair_state_t ps;
+      ps.pc_idx = pp.first;
+      ps.pc_data = pp.second;
+      pair_states.push_back(ps);
+      idx_pcs.insert(pp.first);
+      data_pcs.insert(pp.second);
+    }
+
     for (const inst_trace_t &inst : warp_traces) {
       if (inst.memadd_info == NULL) continue;
       std::bitset<WARP_SIZE> active_mask(inst.mask);
-      if (inst.m_pc == table.desc.pc_idx) {
-        std::vector<new_addr_type> addrs(WARP_SIZE, kInvalidAddr);
-        for (unsigned lane = 0; lane < WARP_SIZE; ++lane) {
-          if (active_mask.test(lane)) addrs[lane] = inst.memadd_info->addrs[lane];
-        }
-        idx_occurrences.push_back(addrs);
-        ++idx_occ;
-      }
-      if (inst.m_pc == table.desc.pc_data) {
-        assert(data_occ <= idx_occ);
-        if (data_occ >= idx_occurrences.size()) continue;
-        const std::vector<new_addr_type> &idx_addrs = idx_occurrences[data_occ];
-        for (unsigned lane = 0; lane < WARP_SIZE; ++lane) {
-          if (!active_mask.test(lane) || idx_addrs[lane] == kInvalidAddr)
-            continue;
-          new_addr_type idx_addr = idx_addrs[lane];
-          new_addr_type data_addr = inst.memadd_info->addrs[lane];
-          std::unordered_map<new_addr_type, new_addr_type>::iterator existing =
-              table.addr_map.find(idx_addr);
-          if (existing == table.addr_map.end()) {
-            table.addr_map[idx_addr] = data_addr;
-            ++table.stat_build_pairs;
-          } else if (existing->second == data_addr) {
-            ++table.stat_duplicate_same_value;
-          } else {
-            ++table.stat_duplicate_conflict_value;
-            assert(existing->second == data_addr &&
-                   "IMA pair-table conflict on read-only index array");
+
+      // Check each pair state
+      for (pair_state_t &ps : pair_states) {
+        if (inst.m_pc == ps.pc_idx) {
+          std::vector<new_addr_type> addrs(WARP_SIZE, kInvalidAddr);
+          for (unsigned lane = 0; lane < WARP_SIZE; ++lane) {
+            if (active_mask.test(lane))
+              addrs[lane] = inst.memadd_info->addrs[lane];
           }
+          ps.idx_occurrences.push_back(addrs);
+          ++ps.idx_occ;
         }
-        ++data_occ;
+        if (inst.m_pc == ps.pc_data) {
+          if (ps.data_occ >= ps.idx_occurrences.size()) continue;
+          const std::vector<new_addr_type> &idx_addrs =
+              ps.idx_occurrences[ps.data_occ];
+          for (unsigned lane = 0; lane < WARP_SIZE; ++lane) {
+            if (!active_mask.test(lane) || idx_addrs[lane] == kInvalidAddr)
+              continue;
+            new_addr_type idx_addr = idx_addrs[lane];
+            new_addr_type data_addr = inst.memadd_info->addrs[lane];
+            // Insert into the SHARED addr_map (merged across all pairs)
+            auto existing = table.addr_map.find(idx_addr);
+            if (existing == table.addr_map.end()) {
+              table.addr_map[idx_addr] = data_addr;
+              ++table.stat_build_pairs;
+            } else if (existing->second == data_addr) {
+              ++table.stat_duplicate_same_value;
+            } else {
+              // Conflict: same idx_addr maps to different data_addr.
+              // This can happen when merged chains access overlapping
+              // index ranges (e.g., x1 tail and x4 block share some elements).
+              // Keep the first mapping; log but don't assert.
+              ++table.stat_duplicate_conflict_value;
+            }
+          }
+          ++ps.data_occ;
+        }
       }
     }
     if (debug_enable) {
-      printf("IMA pair table build: warp=%u chain=%u pc_idx=0x%04x pc_data=0x%04x "
+      printf("IMA pair table build: warp=%u chain=%u pc_idx=0x%04x "
+             "pc_data=0x%04x merged_pairs=%zu "
              "pairs=%llu dup_same=%llu dup_conflict=%llu succ=%zu\n",
              get_warp_id(), table.desc.chain_id, table.desc.pc_idx,
-             table.desc.pc_data, table.stat_build_pairs,
+             table.desc.pc_data, table.desc.all_pc_pairs.size(),
+             table.stat_build_pairs,
              table.stat_duplicate_same_value,
              table.stat_duplicate_conflict_value,
              table.desc.successor_chain_ids.size());
+      printf("IMA pair table warp %u chain %u: addr_map_size=%zu\n",
+             get_warp_id(), table.desc.chain_id, table.addr_map.size());
+      // Dump addr_map keys for warp 0 (diagnostic)
+      if (get_warp_id() == 0 && !table.addr_map.empty()) {
+        printf("IMA_ADDR_MAP_DUMP: warp=0 chain=%u size=%zu keys=[",
+               table.desc.chain_id, table.addr_map.size());
+        bool first = true;
+        for (const auto &kv : table.addr_map) {
+          if (!first) printf(",");
+          printf("0x%llx", (unsigned long long)kv.first);
+          first = false;
+        }
+        printf("]\n");
+      }
     }
   }
+}
+
+void trace_shd_warp_t::merge_pair_tables_from(const trace_shd_warp_t &other) {
+  size_t n = std::min(m_ima_pair_tables.size(), other.m_ima_pair_tables.size());
+  for (size_t c = 0; c < n; ++c) {
+    for (auto &kv : other.m_ima_pair_tables[c].addr_map) {
+      m_ima_pair_tables[c].addr_map.insert(kv);  // first-wins on conflict
+    }
+  }
+  for (auto &kv : other.m_chain_ids_by_pc) {
+    auto &dst = m_chain_ids_by_pc[kv.first];
+    for (unsigned id : kv.second) {
+      if (std::find(dst.begin(), dst.end(), id) == dst.end())
+        dst.push_back(id);
+    }
+  }
+  for (auto &kv : other.m_chain_ids_by_data_pc) {
+    auto &dst = m_chain_ids_by_data_pc[kv.first];
+    for (unsigned id : kv.second) {
+      if (std::find(dst.begin(), dst.end(), id) == dst.end())
+        dst.push_back(id);
+    }
+  }
+}
+
+void trace_shd_warp_t::set_pair_tables(
+    const std::vector<ima_pair_chain_table_t> &tables,
+    const std::unordered_map<address_type, std::vector<unsigned>> &by_pc,
+    const std::unordered_map<address_type, std::vector<unsigned>> &by_data_pc) {
+  m_ima_pair_tables = tables;
+  m_chain_ids_by_pc = by_pc;
+  m_chain_ids_by_data_pc = by_data_pc;
+  // Reset runtime verification state for new tables
+  m_pending_runtime_idx_occurrences.resize(tables.size());
+  m_pending_runtime_verifications.resize(tables.size());
+  m_runtime_idx_occurrence_counts.assign(tables.size(), 0);
+  m_runtime_data_occurrence_counts.assign(tables.size(), 0);
 }
 
 std::vector<unsigned> trace_shd_warp_t::get_ima_seed_chain_ids(address_type pc) {
@@ -664,6 +802,81 @@ void trace_kernel_info_t::get_next_threadblock_traces(
   m_parser->get_next_threadblock_traces(
       threadblock_traces, m_kernel_trace_info->trace_verion,
       m_kernel_trace_info->enable_lineinfo, m_kernel_trace_info->pipeReader);
+}
+
+void trace_kernel_info_t::build_kernel_pair_tables(
+    const std::string &csv_path, unsigned warps_per_cta, bool debug_enable) {
+  if (m_kernel_pair_tables_built) return;
+
+  // Open a separate PipeReader and skip the header.
+  // Header format: lines starting with '-' (metadata), then '#traces format',
+  // then empty lines, then '#BEGIN_TB'. parse_kernel_info reads '-' lines and
+  // breaks on '#', leaving the pipe at '#BEGIN_TB'. We replicate that logic.
+  kernel_trace_t scan_trace(m_kernel_trace_info->trace_path);
+  {
+    std::string line;
+    while (scan_trace.pipeReader.readLine(line)) {
+      if (line.empty()) continue;
+      if (line[0] == '#') break;  // consumed '#traces format', now at #BEGIN_TB
+      // lines starting with '-' are header fields, skip them
+    }
+  }
+
+  unsigned total_ctas = m_kernel_trace_info->grid_dim_x *
+                        m_kernel_trace_info->grid_dim_y *
+                        m_kernel_trace_info->grid_dim_z;
+  bool first_warp = true;
+
+  for (unsigned cta = 0; cta < total_ctas; ++cta) {
+    std::vector<std::vector<inst_trace_t>> temp_traces(warps_per_cta);
+    std::vector<std::vector<inst_trace_t> *> ptrs;
+    for (unsigned w = 0; w < warps_per_cta; ++w)
+      ptrs.push_back(&temp_traces[w]);
+
+    m_parser->get_next_threadblock_traces(
+        ptrs, m_kernel_trace_info->trace_verion,
+        m_kernel_trace_info->enable_lineinfo, scan_trace.pipeReader);
+
+    for (unsigned w = 0; w < warps_per_cta; ++w) {
+      if (temp_traces[w].empty()) continue;
+
+      // Build per-warp pair tables using existing logic
+      trace_shd_warp_t temp_warp(nullptr, 32);
+      temp_warp.warp_traces = std::move(temp_traces[w]);
+      temp_warp.set_kernel(this);
+      temp_warp.build_ima_pair_tables(csv_path, false);
+
+      const auto &warp_tables = temp_warp.get_pair_tables();
+      if (first_warp && !warp_tables.empty()) {
+        // Initialize kernel-level from first warp's chain structure
+        m_kernel_pair_chains.resize(warp_tables.size());
+        for (size_t c = 0; c < warp_tables.size(); ++c) {
+          m_kernel_pair_chains[c].addr_map = warp_tables[c].addr_map;
+        }
+        m_kernel_chain_ids_by_pc = temp_warp.get_chain_ids_by_pc();
+        m_kernel_chain_ids_by_data_pc = temp_warp.get_chain_ids_by_data_pc();
+        first_warp = false;
+      } else {
+        // Merge this warp's addr_maps into the kernel-level tables
+        size_t n = std::min(m_kernel_pair_chains.size(), warp_tables.size());
+        for (size_t c = 0; c < n; ++c) {
+          for (auto &kv : warp_tables[c].addr_map) {
+            m_kernel_pair_chains[c].addr_map.insert(kv);
+          }
+        }
+      }
+    }
+  }
+
+  m_kernel_pair_tables_built = true;
+  if (debug_enable) {
+    printf("IMA kernel-level pair tables: %zu chains, CTAs=%u\n",
+           m_kernel_pair_chains.size(), total_ctas);
+    for (size_t c = 0; c < m_kernel_pair_chains.size(); ++c) {
+      printf("  chain %zu: addr_map_size=%zu\n", c,
+             m_kernel_pair_chains[c].addr_map.size());
+    }
+  }
 }
 
 types_of_operands get_oprnd_type(op_type op, special_ops sp_op) {
@@ -1152,6 +1365,11 @@ const warp_inst_t *trace_shader_core_ctx::get_next_inst(unsigned warp_id,
       }
       if (did_exit) {
         m_warp[warp_id]->set_done_exit();
+        // Hook 7: GRASP warp exit — clean tracked warp state
+        // (mirrors the execution-driven path in shader.cc)
+        if (m_ldst_unit->grasp_enabled()) {
+          m_ldst_unit->grasp()->on_warp_exit(warp_id);
+        }
         --m_active_warps;
         assert(m_active_warps >= 0);
       }
@@ -1178,15 +1396,100 @@ void trace_shader_core_ctx::init_traces(unsigned start_warp, unsigned end_warp,
   trace_kernel.get_next_threadblock_traces(threadblock_traces);
 
   // set the pc from the traces and ignore the functional model
+  const bool has_csv = m_config->gpgpu_ima_prefetch_chain_csv != NULL &&
+                       strlen(m_config->gpgpu_ima_prefetch_chain_csv) > 0;
+  const std::string csv_path =
+      has_csv ? std::string(m_config->gpgpu_ima_prefetch_chain_csv) : "";
+  const bool debug =
+      m_config->gpgpu_ima_prefetch_debug || m_config->grasp_debug;
+  const unsigned pt_scope = m_config->grasp_pair_table_scope;
+
   for (unsigned i = start_warp; i < end_warp; ++i) {
     trace_shd_warp_t *m_trace_warp = static_cast<trace_shd_warp_t *>(m_warp[i]);
-    m_trace_warp->set_next_pc(m_trace_warp->get_start_trace_pc());
+    if (!m_trace_warp->warp_traces.empty()) {
+      m_trace_warp->set_next_pc(m_trace_warp->get_start_trace_pc());
+    }
     m_trace_warp->set_kernel(&trace_kernel);
-    if ((m_config->gpgpu_ima_prefetch_enable || m_config->grasp_enable) &&
-        m_config->gpgpu_ima_prefetch_chain_csv != NULL) {
-      m_trace_warp->build_ima_pair_tables(
-          std::string(m_config->gpgpu_ima_prefetch_chain_csv),
-          m_config->gpgpu_ima_prefetch_debug || m_config->grasp_debug);
+  }
+
+  if (!has_csv) return;
+
+  if (pt_scope == 2) {
+    // === Per-kernel: build once from entire trace file, share with all CTAs ===
+    unsigned warps_per_cta = end_warp - start_warp;
+    if (!trace_kernel.m_kernel_pair_tables_built) {
+      trace_kernel.build_kernel_pair_tables(csv_path, warps_per_cta, debug);
+    }
+    // Build per-warp tables first (for chain structure and PC indices),
+    // then replace each chain's addr_map with the kernel-level merged map.
+    for (unsigned i = start_warp; i < end_warp; ++i) {
+      auto *w = static_cast<trace_shd_warp_t *>(m_warp[i]);
+      w->build_ima_pair_tables(csv_path, false);
+      // Overwrite addr_maps with kernel-level merged maps
+      auto &warp_tables = w->get_pair_tables_mut();
+      size_t n = std::min(warp_tables.size(),
+                          trace_kernel.m_kernel_pair_chains.size());
+      for (size_t c = 0; c < n; ++c) {
+        warp_tables[c].addr_map = trace_kernel.m_kernel_pair_chains[c].addr_map;
+      }
+      // Also update PC indices from kernel-level
+      w->set_chain_ids(trace_kernel.m_kernel_chain_ids_by_pc,
+                       trace_kernel.m_kernel_chain_ids_by_data_pc);
+    }
+  } else {
+    // === Per-warp build (used for scope=0 and as basis for scope=1) ===
+    for (unsigned i = start_warp; i < end_warp; ++i) {
+      auto *w = static_cast<trace_shd_warp_t *>(m_warp[i]);
+      w->build_ima_pair_tables(csv_path, debug);
+    }
+
+    if (pt_scope == 1 && end_warp - start_warp > 1) {
+      // === Per-CTA: merge all warps' tables, then copy back ===
+      auto *warp0 = static_cast<trace_shd_warp_t *>(m_warp[start_warp]);
+      for (unsigned i = start_warp + 1; i < end_warp; ++i) {
+        auto *w = static_cast<trace_shd_warp_t *>(m_warp[i]);
+        warp0->merge_pair_tables_from(*w);
+      }
+      for (unsigned i = start_warp + 1; i < end_warp; ++i) {
+        auto *w = static_cast<trace_shd_warp_t *>(m_warp[i]);
+        w->set_pair_tables(warp0->get_pair_tables(),
+                           warp0->get_chain_ids_by_pc(),
+                           warp0->get_chain_ids_by_data_pc());
+      }
+    }
+  }
+
+  // === Pair table CSV dump (after scope merge) ===
+  const char *dump_path = m_config->grasp_pair_table_dump_path;
+  if (dump_path && dump_path[0] != '\0') {
+    static bool s_pt_dump_header = false;
+    FILE *fp = fopen(dump_path, s_pt_dump_header ? "a" : "w");
+    if (fp) {
+      if (!s_pt_dump_header) {
+        fprintf(fp,
+                "kernel_id,cta_id,warp_id,chain_id,idx_pc,data_pc,"
+                "idx_addr,data_addr\n");
+        s_pt_dump_header = true;
+      }
+      unsigned kernel_uid = kernel.get_uid();
+      unsigned cta_id_val = m_warp[start_warp]->get_cta_id();
+      for (unsigned i = start_warp; i < end_warp; ++i) {
+        auto *w = static_cast<trace_shd_warp_t *>(m_warp[i]);
+        const auto &tables = w->get_pair_tables();
+        for (size_t c = 0; c < tables.size(); ++c) {
+          const auto &table = tables[c];
+          for (const auto &kv : table.addr_map) {
+            fprintf(fp, "%u,%u,%u,%u,0x%x,0x%x,0x%llx,0x%llx\n",
+                    kernel_uid, cta_id_val, w->get_warp_id(),
+                    table.desc.chain_id, table.desc.pc_idx,
+                    table.desc.pc_data, (unsigned long long)kv.first,
+                    (unsigned long long)kv.second);
+          }
+        }
+        // For scope=1/2, all warps share the same table — dump first only
+        if (pt_scope > 0) break;
+      }
+      fclose(fp);
     }
   }
 }
