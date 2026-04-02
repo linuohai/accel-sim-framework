@@ -87,7 +87,7 @@ Expected: empty status in the worktree before edits start.
 
 Implementation:
 - Introduce a single chain-CSV variable near the existing GRASP CLI state.
-- Default it to `tmp/strict_chains/strict_selected_chain_instances.csv`.
+- Default it to `ima_plan/05_implementation/ima_pair_table/golden/strict_selected_chain_instances.csv`.
 - Keep `--grasp-chain-csv` as the external override until a baseline-specific option is actually needed.
 
 - [ ] **Step 2: Apply chain CSV to baseline runs as well as GRASP**

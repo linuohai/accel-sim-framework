@@ -15,7 +15,7 @@
 | **BC** | `bc_ima_small` | 37.65 | 44.61 | **+18.5%** | 双向遍历，chain 最多 (19) |
 | CC | `cc_ima_small` | 368.07 | 368.07 | 0.0% | 无 IMA chain，零开销 |
 
-**GRASP 配置**: `grasp_ist_distance=1`, `grasp_ct_size=32`, `grasp_tt_size=8`, `grasp_ist_ipt_size=64`, `grasp_ist_confidence=2`, `grasp_prb_capacity=1024`, `grasp_tc_mshr_threshold=80`。chain CSV 使用 `tmp/strict_chains/strict_selected_chain_instances.csv`。
+**GRASP 配置**: `grasp_ist_distance=1`, `grasp_ct_size=32`, `grasp_tt_size=8`, `grasp_ist_ipt_size=64`, `grasp_ist_confidence=2`, `grasp_prb_capacity=1024`, `grasp_tc_mshr_threshold=80`。chain CSV 使用 `ima_plan/05_implementation/ima_pair_table/golden/strict_selected_chain_instances.csv`。
 
 > **注意**：配置中还存在 `gpgpu_ima_prefetch_distance=4` 等 legacy IMA prefetcher 参数，但 `gpgpu_ima_prefetch_enable=0`（已禁用）。GRASP 与 legacy prefetcher 互斥（`shader.cc:3842-3863`），GRASP 的预取距离仅由 `grasp_ist_distance` 控制。
 
@@ -119,19 +119,30 @@ EVAL="--no-l1-trace --no-l2-trace --no-hbm-trace --no-issue-trace --no-stall-rea
 
 使用泛化版分析脚本 `ima_plan/04_prefetcher_design/analyze_grasp_iterations_v2.py`（从 tiny_case 版本泛化而来）。
 
-**BFS 分析命令**:
+**BFS 分析命令（波级，boundary=worklist pop）**:
 ```bash
 python3 analyze_grasp_iterations_v2.py \
-    --chain-csv tmp/strict_chains/bfs_linear_base_strict.csv \
+    --chain-csv ima_plan/05_implementation/ima_pair_table/golden/bfs_linear_base_strict.csv \
     --boundary-pcs 0x0c0 \
     --grasp-dir <grasp_dir> --baseline-dir <baseline_dir> \
     --warps 1,2,3 --format all
 ```
 
+**BFS 分析命令（循环级，内置 BFS PC 配置）**:
+```bash
+python3 analyze_grasp_iterations_v2.py \
+    --iteration-mode bfs \
+    --grasp-dir <grasp_dir> --baseline-dir <baseline_dir> \
+    --warps 1,2,3 --format all
+```
+- `--iteration-mode bfs` 自动设置 boundary_pcs={0x01d0, 0x0640}、merge_window=300
+- 每个 main loop trip（×4 展开）= 1 个 iteration，prologue 每次 = 1 个 iteration
+- 不需要 `--chain-csv`（PC 内置），但可选提供用于 GRASP event 过滤
+
 **SpMV 分析命令**:
 ```bash
 python3 analyze_grasp_iterations_v2.py \
-    --chain-csv tmp/strict_chains/spmv_base_strict.csv \
+    --chain-csv ima_plan/05_implementation/ima_pair_table/golden/spmv_base_strict.csv \
     --boundary-pcs 0x200 --merge-window 300 \
     --grasp-dir <grasp_dir> --baseline-dir <baseline_dir> \
     --warps 1,2,3 --format all

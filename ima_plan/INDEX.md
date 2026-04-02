@@ -1,37 +1,62 @@
 # IMA Prefetch 研究索引
 
-> 自动生成: 2026-03-25 06:30 | 由 /update-ima-index 生成
+> 自动生成: 2026-04-02 12:00 | 由 /update-ima-index 生成
 
 ## 研究总体状态
 
-当前处于 **Phase 3/4/5 并行推进**，取得关键进展。GRASP 核心组件已实现（8 个源文件），消融实验首次证明 GRASP 有效：**SSSP +42.2%**, **IMA tiny +53.6%**（SpMV 因 ×16 展开 + MSHR 饱和暂为 -2%）。SOTA baseline 复现同步推进：stride-INTRA（+2.0% geomean）、INTER（无效）、Snake（不如 stride）、Spare Register（SSSP +7.63%）均已实现或验证。论文绘图基础设施（academic.mplstyle + plot_util）已就绪。仿真加速研究确认：1SM 与 108SM 耗时相当，编译优化 +15% 已落地，论文评估采用 108SM 全量并行方案。最终目标：投稿体系结构顶会论文。
+当前处于 **Phase 5 评估深化 + Phase 6 评估基础设施完善**。GRASP 核心组件已实现（8 个源文件），ima_med 全量实验取得 **geomean +35.5%**（BFS +49.8%, SSSP +44.0%, SpMV +26.6%, BC +23.3%）。Timeliness/Coverage 指标已重构为 IMA PC 分类统计方案（HIT/HIT_RESERVED/MISS 恒等式）。**Stride 学习 bug 已修复**（3 处代码改动），修复后 PT hit rate 29%→60%，accuracy +3pp。SOTA baseline 5 种已完成（stride-INTRA/INTER/Snake/Spare Register/CAPS），**CAPS 在 SpMV 上 +14.30%** 为非 GRASP 最高。实验输出规范已建立（展示/调试指标分级 + Index/Data/Total 三版本规则）。最终目标：投稿体系结构顶会论文。
 
 ## 各阶段状态
 
 | Phase | 名称 | 状态 | 关键产出 | 最近更新 |
 |-------|------|------|----------|----------|
-| 01 | IMA 特征化与分类 | 🔄 进行中 | SASS 依赖链分析 + L1 miss breakdown (51-84%) + 4 类 IMA pattern | 2026-03-22 |
-| 02 | 相关工作调研 | 🔄 进行中 | CPU 8 篇 + GPU 9 篇 + `gpu_prefetcher_impl_provenance.md` | 2026-03-22 |
+| 01 | IMA 特征化与分类 | 🔄 进行中 | SASS 依赖链分析 + L1 miss breakdown (51-84%) + 4 类 IMA pattern | 2026-03-29 |
+| 02 | 相关工作调研 | 🔄 进行中 | CPU 8 篇 + GPU 9 篇 + 论文重组为 6 个子目录 | 2026-03-30 |
 | 03 | 性能天花板 | 🔄 部分完成 | ima_high ideal L1D: 1.75×–3.04× speedup | 2026-03-14 |
-| 04 | GRASP Prefetcher 设计 | 🔄 进行中 | GRASP 设计框架 + `small_1sm_cta5` 时序证据 | 2026-03-24 |
-| 05 | GPGPU-Sim 实现 | 🔄 **消融实验完成 + SOTA baseline 复现中** | SSSP +42.2% / SpMV -2% 消融 + 4 种 SOTA baseline | 2026-03-25 |
-| 06 | 评估方案 | 🔄 **进行中** | benchmark suite (7算法×3级) + 仿真加速研究 | 2026-03-25 |
-| 07 | 论文大纲 | 🔄 进行中 | 大纲 + 10 insight + academic 绘图基础设施 | 2026-03-24 |
+| 04 | GRASP Prefetcher 设计 | 🔄 设计框架已定 | GRASP 设计框架 + `small_1sm_cta5` 时序证据 | 2026-03-28 |
+| 05 | GPGPU-Sim 实现 | 🔄 **ima_med +35.5% + stride fix + 5 种 SOTA** | ima_med 全量 + stride 修复 + CAPS/Snake v3 评估 | 2026-04-01 |
+| 06 | 评估方案 | 🔄 **输出规范 + 批量实验** | benchmark suite + output spec + ideal L1D report + batch run | 2026-04-02 |
+| 07 | 论文大纲 | 🔄 进行中 | 大纲 + 10 insight + academic 绘图 + LaTeX 模板 + figures + abstract | 2026-04-01 |
 
 ## 关键发现
 
-1. **GRASP 在 SSSP 上 +42.2%** — d=4, 108SM, 50 CTA; MSHR 压力低 + 跨 kernel 持久化生效 → `05_implementation/grasp_ablation/README.md` §4
-2. **GRASP 在 IMA tiny 上 +53.6%** — 专用 IMA 测例，MSHR 无压力 → `05_implementation/grasp_ablation/README.md` §5
-3. **GRASP 在 SpMV 上 -2%** — ×16 展开导致 4/5 chain 学不到 stride + MSHR 饱和 (3M RFAIL) → `05_implementation/grasp_ablation/README.md` §3
+1. **GRASP ima_med geomean +35.5%** — BFS +49.8%, SSSP +44.0%, SpMV +26.6%, BC +23.3%（108SM 全量运行）→ `05_implementation/experiment_progress.md` §5b
+2. **GRASP 在 SSSP ima_high 上 +42.2%** — d=4, 108SM, 50 CTA; MSHR 压力低 + 跨 kernel 持久化生效 → `05_implementation/grasp_ablation/README.md` §4
+3. **GRASP 在 IMA tiny 上 +53.6%** — 专用 IMA 测例，MSHR 无压力 → `05_implementation/grasp_ablation/README.md` §5
 4. **IMA 占 L1 miss 的 51%–84%** — 5 个核心 workload 的主 kernel LDG miss 归因 → `01_ima_characterization/l1_miss_breakdown/analysis.md`
 5. **Ideal L1D 天花板 1.75×–3.04×** — bfs 1.75×, sssp 2.46×, bc 3.04×, cc 2.22×, spmv 2.31× → `03_performance_ceiling.md`
 6. **L1/L2 命中率不对称** — L1 miss 70-77% 但 L2 miss 仅 22-34%，prefetch 聚焦 L2→L1 → `07_paper_outline/insight.md` Insight 2
 7. **IMAD.WIDE 链覆盖率 88-99%** — 56 个实现的 1188 条 IMA 链中 88.4% 为 IMAD.WIDE → `07_paper_outline/insight.md` Insight 7
 8. **SOTA stride-INTRA (+ IMA gating) geomean +2.00%** — BFS +3.92%, SSSP +4.07%, CC +0.18%, SpMV -0.08% → `05_implementation/sota_baseline/README.md`
 9. **SOTA Spare Register: SSSP +7.63%** — 两步预取（stride index + pair table data），所有 baseline 中最高 → `05_implementation/sota_baseline/README.md`
-10. **仿真加速：1SM ≈ 108SM 耗时** — 1SM 每 cycle 快 77x 但总 cycle 多 68x，相消 → `06_evaluation_plan/simulation_acceleration_study.md`
-11. **编译优化 +15%** — `-march=native` + LTO，IPC 完全不变 → `06_evaluation_plan/simulation_acceleration_study.md`
-12. **四类 IMA pattern 的 prefetchability 层级** — Pattern I/II 可覆盖，III 部分，IV 不覆盖 → `01_ima_characterization.md` §Level 1
+10. **四类 IMA pattern 的 prefetchability 层级** — Pattern I/II 可覆盖，III 部分，IV 不覆盖 → `01_ima_characterization.md` §Level 1
+11. **Stride 学习跨 CTA 污染修复** — PT hit rate 29%→60%，accuracy +3pp → `05_implementation/experiment_progress.md` §7f
+12. **CAPS (CTA-Aware Prefetcher) SpMV +14.30%** — stride prefetcher 中 SpMV 最优，但 IMA data coverage ≈ 0% → `05_implementation/sota_baseline/README.md`
+
+## GRASP ima_med 全量结果（108SM，完整运行）
+
+| Workload | Baseline IPC | GRASP IPC | Speedup |
+|----------|-------------|-----------|---------|
+| BFS | 7.35 | 11.02 | **+49.8%** |
+| SSSP | 9.56 | 13.76 | **+44.0%** |
+| SpMV | 129.68 | 164.12 | **+26.6%** |
+| BC | 10.83 | 13.36 | **+23.3%** |
+| **Geomean** | | | **+35.5%** |
+
+> 数据来源：`05_implementation/experiment_progress.md` §5b (2026-03-28)
+
+## GRASP ima_small Timeliness/Coverage（新指标，108SM 完整运行）
+
+| Workload | Baseline IPC | GRASP IPC | Speedup | Data Timeliness | Data Coverage | Accuracy | Index Coverage |
+|----------|-------------|-----------|---------|-----------------|--------------|----------|---------------|
+| BFS | 23.56 | 30.34 | **+28.8%** | 67.85% | 14.09% | 55.89% | −5.15% |
+| SSSP | 28.81 | 34.59 | **+20.1%** | 64.36% | 11.54% | 49.19% | +8.05% |
+| SpMV | 129.68 | 152.04 | **+17.2%** | 93.34% | 5.87% | 28.83% | +5.49% |
+| BC | 37.65 | 44.72 | **+18.8%** | 85.83% | 11.05% | 50.92% | +4.21% |
+
+> Timeliness = hits/(hits+hit_reserved); Coverage = (baseline_misses−grasp_misses)/baseline_misses
+> BFS distance sweep (d=1~8): d=1 最优，d 增大后 timeliness/coverage 单调下降
+> 数据来源：`05_implementation/experiment_progress.md` §7d (2026-03-30)
 
 ## GRASP 组件命名映射
 
@@ -57,6 +82,48 @@
 | `grasp_chain_detector.{h,cc}` | CD：FIFO + tracked warp + LDG→IMAD.WIDE→LDG |
 | `grasp_tables.{h,cc}` | CT + TT 查找/插入/淘汰/stride 学习 |
 | `grasp_tracer.{h,cc}` | GRASP 事件追踪器（CSV 输出） |
+| `trace_driven.cc` | trace-driven warp exit 的 GRASP hook（与 shader.cc 对齐） |
+
+Golden chain CSV：`05_implementation/ima_pair_table/golden/strict_selected_chain_instances.csv`
+
+GRASP 仿真输出行：
+- `GRASP_CONFIG:` — 一次性参数 dump（仅 SM0）
+- `GRASP_DEMAND SM*:` — global reads/misses, throttle_suppressed
+- `GRASP_IMA_DEMAND SM*:` — IMA index/data 分项：reads/hits/hit_reserved/misses
+- `GRASP_TIMELINESS SM*:` — index/data timeliness%（= hits/(hits+hit_reserved)）
+- `GRASP_EFFECT SM*:` — legacy pf_useful/pf_useless/pf_late/accuracy%（仅供 debug）
+- `GRASP_STORAGE SM*:` / `GRASP_RFAIL SM*:` — 存储利用率 / reservation fail 分布
+- `IMA_DEMAND:` / `IMA_TIMELINESS:` — 全局汇总（baseline 和 GRASP 都有）
+
+## Legacy 声明（新 session 请忽略）
+
+以下内容是历史遗留产物，**不代表当前设计/配置/数据**。新 session 不要基于这些内容做判断：
+
+| Legacy 项 | 位置 | 被什么替代 | 说明 |
+|-----------|------|-----------|------|
+| `GRASP_EFFECT` 指标 | 仿真 log 输出 | `GRASP_IMA_DEMAND` + `GRASP_TIMELINESS` | 不区分 IMA PC，粒度粗；已被 IMA PC 分类统计替代，仅供 debug 参考 |
+| `-gpgpu_ima_prefetch_*` 参数 | gpgpusim.config | `-grasp_enable` + `grasp_*` 参数 | 旧版 IMA prefetcher，与 GRASP 互斥，已禁用 |
+| `distance=1` 配置 | experiment_progress §1-§4 | `distance=4` | distance=1 已证明无效（SpMV -0.47%），当前默认 distance=4 |
+| experiment_progress §1-§4 | `05_implementation/experiment_progress.md` | §5b（ima_med 全量） | 早期实验使用 ima_high + 限制 CTA + distance=1，与当前配置不可比 |
+| `agent_handoff_status.md` | `05_implementation/ima_pair_table/` | `.claude/BOARD.md` | 旧版串行交接文档，已被并发协调机制替代 |
+| `04_prefetcher_design/流程说明.md` | `04_prefetcher_design/` | `04_prefetcher_design.md` 正文 | 文件自标"不应当作 golden"，是早期设计草稿 |
+| 旧组件名 (Table A/B 等) | 04 设计文档 | CT/TT/CD 等（见组件命名映射） | 仅在早期文档中出现，代码已统一为新名 |
+
+## 源码导航（task → required reading）
+
+工作前先确认需要读哪些文件，**禁止不读代码就推测原因**：
+
+| 你要做什么 | 必须先读 |
+|-----------|---------|
+| 调 GRASP 整体行为/参数 | `grasp_prefetcher.{h,cc}`（config/PRB/IST/stats）+ `experiment_progress.md` 最新 section |
+| 调 stride learning / distance | `grasp_tables.cc`（`update_stride()`、`ist_distance`）+ `grasp_ablation/README.md` §4 |
+| 调 chain detection / pattern | `grasp_chain_detector.cc`（`on_issue()`、`check_chain()`）|
+| 调 throttle / MSHR 压力 | `grasp_prefetcher.cc`（`should_throttle()`）+ RFAIL 输出 |
+| 分析 SpMV 问题 | `experiment_progress.md` §5b + `grasp_tables.cc`（×16 展开分析）|
+| 改 IMA chain 定义 | `05_implementation/ima_pair_table/golden/*.csv`（golden，改后必须重跑回归测试） |
+| 改 SOTA baseline | `05_implementation/sota_baseline/README.md` + 对应 `baseline_*.cc` |
+| 改实验基础设施 | `traceL1` 脚本 + `CLAUDE.md` "运行仿真" section |
+| 写论文图表 | `07_paper_outline/plot_style/plot_util.py` + `CLAUDE.md` "绘图规范" |
 
 ## SOTA Baseline 状态
 
@@ -64,47 +131,61 @@
 |----------|------|---------|---------|
 | **stride-INTRA** (+ IMA gating) | ✅ 完成 | geomean +2.00% | 主对照基线 |
 | **stride-INTER** | ✅ 完成 | 0% (BFS/SSSP prefetch_issued=0) | Negative result |
-| **Snake** | ✅ 完成 | 不如 stride-INTRA | Negative result |
-| **Spare Register** | 🔄 部分完成 | SSSP +7.63% | 最强 baseline |
+| **Snake** | ✅ 完成 | BC +2.96%, SpMV +1.47% | Index stride 提升，IMA data 无影响 |
+| **Spare Register** | 🔄 部分完成 | SSSP +7.63% | IMA-aware 最强 baseline |
+| **CAPS** | ✅ 完成 | **SpMV +14.30%**, 其余 <0.1% | CTA-aware stride, IMA data coverage ≈ 0% |
+
+## 实验基础设施
+
+| 功能 | 说明 |
+|------|------|
+| **EXPERIMENT SUMMARY** | `traceL1` 仿真后自动写入 log 末尾，含 status/kernels/IPC |
+| **Baseline Registry** | `06_evaluation_plan/baseline_registry.csv`，baseline 不重跑 |
+| **回归测试** | `grasp_regression.sh check`（默认 --quick ~34min，--full 4 workload 并行 ~44min） |
+| **Golden Chain CSV** | `ima_pair_table/golden/strict_selected_chain_instances.csv`，所有 GRASP/IMA 仿真的必需输入 |
+| **输出规范** | `06_evaluation_plan/output_specification.md`，展示/调试指标分级 + Index/Data/Total 三版本规则 |
 
 ## 目录详情
 
-### 01_ima_characterization/ (383 files)
-- **状态**: 核心分析完成
+### 01_ima_characterization/
+- **状态**: 核心分析完成，新增 cuGraph 分析
 - **关键文件**: `sass_analysis/README.md`, `l1_miss_breakdown/analysis.md`
-- **数据/脚本**: 18 csv, 3 py, 3 svg
-- **最近修改**: 2026-03-22
+- **数据/脚本**: 19 csv, 4 py, 1 sh, 3 svg
+- **最近修改**: 2026-03-29
 
-### 02_related_work/ (18 files)
-- **状态**: 论文收集完成，分析进行中；新增 GPU prefetcher 实现公开性梳理
+### 02_related_work/
+- **状态**: 论文收集完成（CPU 8 + GPU 9），重组为 6 个子目录
+- **子目录**: `gpu_irregular/`, `gpu_stride/`, `gpu_sched/`, `ima_hw/`, `ima_sw/`, `related/`
 - **关键文件**: `gpu_prefetcher_impl_provenance.md`
-- **最近修改**: 2026-03-22
+- **最近修改**: 2026-03-30
 
-### 04_prefetcher_design/ (239 files)
+### 04_prefetcher_design/
 - **状态**: 设计框架已定，时序证据持续回填
-- **关键文件**: `流程说明.md`, `extra_pattern/small_1sm_cta5/prefetch_design_summary_lrr.md`
-- **数据/脚本**: 158 csv, 6 py, 6 sh, 31 svg
-- **最近修改**: 2026-03-25
+- **关键文件**: `流程说明.md`, `analyze_grasp_iterations_v2.py`
+- **数据/脚本**: 173 csv, 8 py, 6 sh, 31 svg
+- **最近修改**: 2026-03-28
 
-### 05_implementation/ (53 files)
-- **状态**: GRASP Phase A/B 完成 + 消融实验 + SOTA baseline 复现中
-- **子目录**: `ima_pair_table/`（设计/正确性）, `spmv_deep_dive/`（迭代级分析）, `grasp_ablation/`（消融实验报告）, `sota_baseline/`（4 种 SOTA 实现+进展）
+### 05_implementation/
+- **状态**: GRASP Phase A/B 完成 + ima_med +35.5% + stride fix + 5 种 SOTA baseline 完成
+- **子目录**: `regression/`, `grasp_ablation/`, `sota_baseline/`, `ima_pair_table/`（含 `golden/`）, `grasp_real_diag/`（含 `bfs_stride_fix/`, `bfs_iter/`）, `chain_extraction/`, `debug/`
 - **关键文件**: `experiment_progress.md`, `grasp_ablation/README.md`, `sota_baseline/README.md`
-- **数据/脚本**: 17 md, 4 py, 13 csv, 4 svg
-- **最近修改**: 2026-03-25
+- **数据/脚本**: 23 md, 6 py, 1 sh, 41 csv, 5 svg
+- **最近修改**: 2026-04-01
 
-### 06_evaluation_plan/ (2 files)
-- **状态**: Benchmark suite 定义完成（7 算法 × 3 IMA 级 = 19 trace keys）+ 仿真加速研究完成
-- **关键文件**: `benchmark_suite.md`, `simulation_acceleration_study.md`
-- **最近修改**: 2026-03-25
+### 06_evaluation_plan/
+- **状态**: Benchmark suite + baseline registry + **输出规范** + ideal L1D report + batch run
+- **关键文件**: `benchmark_suite.md`, `output_specification.md`, `baseline_registry.csv`, `ideal_l1d_report.md`
+- **数据**: 9 md, 1 csv
+- **最近修改**: 2026-04-02
 
-### 07_paper_outline/ (39 files)
-- **状态**: 大纲 + insight 清单 + academic 绘图基础设施已就绪
-- **关键文件**: `insight.md`, `introduction.md`, `plot_style/academic.mplstyle`, `plot_style/plot_util.py`
-- **数据/脚本**: 2 md, 4 py, 6 svg, 6 demo figures (pdf/png/svg)
-- **最近修改**: 2026-03-24
+### 07_paper_outline/
+- **状态**: 大纲 + abstract + insight 清单 + academic 绘图 + LaTeX 模板 + figures + 投稿指南
+- **子目录**: `plot_style/`, `latex_template/`, `submission_guidelines/`, `figures/`
+- **关键文件**: `insight.md`, `introduction.md`, `abstract.md`, `plot_style/plot_util.py`
+- **数据/脚本**: 7 md, 5 py, 10 svg, 4 tex, 20 pdf, 18 png
+- **最近修改**: 2026-04-01
 
-### weekly_report/ (8 files)
+### weekly_report/
 - **状态**: 周报文档与配图
 - **关键文件**: `2026-03-21_image_first/README.md`
 - **最近修改**: 2026-03-22
@@ -131,6 +212,7 @@
 | E1 | distance=1 预取不及时 | ✅ 已修复：distance=4 验证有效 |
 | E2 | per-kernel reset 破坏多 kernel 训练 | ✅ 已修复：跨 kernel stride 持久化 |
 | E3 | 缺少 Throttle Control | ⚠️ 已实现但 80% 阈值在 SpMV 上未触发 |
+| E4 | Stride 学习跨 CTA 污染 | ✅ 已修复：stride freeze + warp exit cleanup + trace-driven hook |
 
 ### SpMV 特殊问题
 
@@ -153,36 +235,21 @@
 8. **四类 Pattern Prefetchability** — I/II 高, III 有限, IV 不覆盖
 9. **Ideal L1D 天花板** — 1.75×–3.04×
 10. **写无效化保证正确性** — false positive 清除
-11. **P1 已收敛为 pair-table 方案** — trace-driven 的 runtime payload 缺口由预构建映射补齐
+11. **Stride 学习跨 CTA 污染修复** — PT hit rate 29%→60%，accuracy +3pp
 
 ## GRASP 逐 Iteration 分析工具
-
-对任何 IMA workload 的 GRASP 行为进行逐 iteration 粒度分析，定位加速/未加速原因。
 
 | 文件 | 用途 |
 |------|------|
 | `04_prefetcher_design/tiny_case/grasp_verify/analyze_grasp_iterations.py` | 分析脚本（3 种输出格式） |
-| `04_prefetcher_design/tiny_case/grasp_verify/README.md` | 完整使用流程与诊断指南 |
+| `04_prefetcher_design/analyze_grasp_iterations_v2.py` | v2 增强版分析脚本 |
 
-**输出格式**：
-- `--format summary` (a): 单配置摘要表
-- `--format timeline` (b): 逐 iteration 详细事件流（L1 demand + GRASP 内部事件按 cycle 交错）
-- `--format compare` (c): Baseline vs GRASP 对比表（含 per-iteration speedup）
-
-**典型用法**：
-```bash
-python3 analyze_grasp_iterations.py \
-    --grasp-dir <grasp_output> --baseline-dir <baseline_output> \
-    --warps 1 --format all --output-dir <output>
-```
-
-**何时使用**：分析 GRASP 在某个 workload 上加速不理想时，先看 compare 定位问题 iteration，再用 timeline 检查 CD/CT/IST/PRB 时序。详见 README.md §7。
+**输出格式**：`summary` | `timeline` | `compare`
 
 ## 待解决问题
 
-- `05_implementation/grasp_ablation/`: SpMV ×16 展开使 stride 学习失效，需设计层面解决
-- `05_implementation/grasp_ablation/`: Throttle 80% 阈值在 MSHR 饱和场景未触发，需调整策略
+- `05_implementation/`: SpMV ×16 展开使 stride 学习失效，需设计层面解决
+- `05_implementation/`: Throttle 80% 阈值在 MSHR 饱和场景未触发，需调整策略
 - `05_implementation/sota_baseline/`: Spare Register SpMV 实验待完成
-- `06_evaluation_plan/`: 1SM 全量运行中（bfs/bc/cc），结果将作为 GRASP 多算法评估 ground truth
 - `02_related_work.md`: 论文详细笔记与 gap analysis 待完成
 - `03_performance_ceiling.md`: ima_med / ima_small 的 ideal L1D 数据待补全

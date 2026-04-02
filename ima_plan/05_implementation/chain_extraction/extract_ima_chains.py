@@ -281,7 +281,7 @@ def infer_algorithm_impl(sass_filename: str) -> Tuple[str, str]:
     name = parts[0]  # e.g. "bfs_linear_base"
     # Split: last segment(s) after algorithm name = impl
     # Known algorithms
-    for algo in ["bfs", "sssp", "bc", "cc", "spmv", "pr", "vc", "scc", "tc", "sgd"]:
+    for algo in ["bfs", "sssp", "bc", "cc", "spmv", "pr", "vc", "scc", "tc", "sgd", "mst", "symgs"]:
         if name.startswith(algo + "_"):
             impl = name[len(algo) + 1:]
             return algo, impl

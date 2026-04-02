@@ -24,6 +24,52 @@
   - SSSP **+7.63%**（accuracy 39%，所有 baseline 中最高）
   - BFS 0%（pair table 匹配率低），CC 0%（无 chain CSV）
   - SpMV 待完成
+- **`baseline-caps`（已实现）**：CTA-Aware Prefetcher (Koo et al. IPDPS'18) — CAP + PAS + DIST persistence
+  - **源码**: `baseline_caps.{h,cc}`, PAS 在 `shader.cc`/`shader.h`
+  - Fermi-like 验证 (hotspot): **+1.6% IPC**（baseline 613.58 → 623.65）
+  - A100 结果见下方 §Snake/CAPS 图负载评估表
+
+### Snake / CAPS 图负载评估结果（ima_small, A100 108SM, v3 probe-fix）
+
+> 日志：`worktrees/sota_stride/result/log/{bfs,sssp,spmv,bc}_{np,snake,caps}_v3.log`
+
+#### IPC Speedup
+
+| Workload | NP IPC | Snake IPC | Snake % | CAPS IPC | CAPS % |
+|----------|--------|-----------|---------|----------|--------|
+| BFS | 23.5588 | 23.6000 | **+0.17%** | 23.5689 | +0.04% |
+| SSSP | 28.8141 | 28.9289 | **+0.40%** | 28.7802 | -0.12% |
+| SpMV | 129.6846 | 131.5913 | **+1.47%** | 148.2326 | **+14.30%** |
+| BC | 37.6489 | 38.7625 | **+2.96%** | 37.6802 | +0.08% |
+
+#### Prefetcher Accuracy (useful/issued)
+
+| Workload | Snake | CAPS |
+|----------|-------|------|
+| BFS | 95.0% | 0.1% |
+| SSSP | 94.2% | 0.0% |
+| SpMV | 70.3% | 21.3% |
+| BC | 52.0% | 0.0% |
+
+#### IMA Data Timeliness (`data_hits/(data_hits+data_hit_reserved)`)
+
+| Workload | NP | Snake | CAPS |
+|----------|-----|-------|------|
+| BFS | 17.50% | 17.71% | 16.06% |
+| SSSP | 40.75% | 40.84% | 39.99% |
+| SpMV | 85.45% | 85.34% | 82.77% |
+| BC | 83.39% | 83.18% | 83.13% |
+
+#### IMA Data Coverage (`(NP_data_misses - PF_data_misses) / NP_data_misses`)
+
+| Workload | Snake | CAPS |
+|----------|-------|------|
+| BFS | -0.002% | -0.016% |
+| SSSP | -0.003% | -0.050% |
+| SpMV | +0.032% | -0.307% |
+| BC | -0.010% | -0.093% |
+
+> **结论**: Snake/CAPS 主要作用于 index load（stride prefetch），对 IMA data load 几乎无影响（coverage ≈ 0%）。IPC 提升来自 index load pipeline 效率改善，而非 data miss 消除。Data timeliness 在 NP/Snake/CAPS 间差异 <2%，说明这些 prefetcher 不改变 data load 的 cache 状态。
 
 ### 关键改动（blacklist gating）
 

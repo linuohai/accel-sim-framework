@@ -10,7 +10,7 @@
 ### 层次 1：静态 IMA Chain 分析
 **问题**：代码中有多少 IMA pattern？
 
-从 `tmp/strict_chains/strict_selected_chain_instances.csv` 统计 chain 数量和 PC。
+从 `ima_plan/05_implementation/ima_pair_table/golden/strict_selected_chain_instances.csv` 统计 chain 数量和 PC。
 Chain pattern: `LDG.E (index) → IMAD.WIDE → LDG.E (data)`。
 chain count 反映种类数而非运行时频率（循环展开产生多条 chain）。
 

@@ -200,11 +200,11 @@ LDG Rd
 
 位于：
 
-- [strict_selected_chain_instances.csv](/workspace/prefetch/tmp/strict_chains/strict_selected_chain_instances.csv)
-- [spmv_base_strict.csv](/workspace/prefetch/tmp/strict_chains/spmv_base_strict.csv)
-- [bfs_linear_base_strict.csv](/workspace/prefetch/tmp/strict_chains/bfs_linear_base_strict.csv)
-- [sssp_linear_base_strict.csv](/workspace/prefetch/tmp/strict_chains/sssp_linear_base_strict.csv)
-- [bc_linear_base_strict.csv](/workspace/prefetch/tmp/strict_chains/bc_linear_base_strict.csv)
+- [strict_selected_chain_instances.csv](/workspace/prefetch/ima_plan/05_implementation/ima_pair_table/golden/strict_selected_chain_instances.csv)
+- [spmv_base_strict.csv](/workspace/prefetch/ima_plan/05_implementation/ima_pair_table/golden/spmv_base_strict.csv)
+- [bfs_linear_base_strict.csv](/workspace/prefetch/ima_plan/05_implementation/ima_pair_table/golden/bfs_linear_base_strict.csv)
+- [sssp_linear_base_strict.csv](/workspace/prefetch/ima_plan/05_implementation/ima_pair_table/golden/sssp_linear_base_strict.csv)
+- [bc_linear_base_strict.csv](/workspace/prefetch/ima_plan/05_implementation/ima_pair_table/golden/bc_linear_base_strict.csv)
 
 ### 6.2 当前 strict CSV 中的链数量
 
@@ -226,7 +226,7 @@ LDG Rd
 
 当前使用的 strict chain 总表：
 
-- [strict_selected_chain_instances.csv](/workspace/prefetch/tmp/strict_chains/strict_selected_chain_instances.csv)
+- [strict_selected_chain_instances.csv](/workspace/prefetch/ima_plan/05_implementation/ima_pair_table/golden/strict_selected_chain_instances.csv)
 
 ### 7.2 最小 kernelslist
 
@@ -251,7 +251,7 @@ source /workspace/prefetch/gpu-simulator/setup_environment.sh release
   -gpgpu_max_completed_cta 1 \
   -gpgpu_ima_prefetch_enable 1 \
   -gpgpu_ima_validate_all_idx_pc 1 \
-  -gpgpu_ima_prefetch_chain_csv /workspace/prefetch/tmp/strict_chains/strict_selected_chain_instances.csv \
+  -gpgpu_ima_prefetch_chain_csv /workspace/prefetch/ima_plan/05_implementation/ima_pair_table/golden/strict_selected_chain_instances.csv \
   -gpgpu_ima_prefetch_debug 1
 ```
 
@@ -389,7 +389,7 @@ source /workspace/prefetch/gpu-simulator/setup_environment.sh release
 1. 先看 [validation_status.md](/workspace/prefetch/ima_plan/05_implementation/ima_pair_table/validation_status.md)
 2. 再看这份 [agent_handoff_status.md](/workspace/prefetch/ima_plan/05_implementation/ima_pair_table/agent_handoff_status.md)
 3. 再看 strict CSV：
-   - [strict_selected_chain_instances.csv](/workspace/prefetch/tmp/strict_chains/strict_selected_chain_instances.csv)
+   - [strict_selected_chain_instances.csv](/workspace/prefetch/ima_plan/05_implementation/ima_pair_table/golden/strict_selected_chain_instances.csv)
 4. 若要继续扩 workload，优先复用：
    - [analyze_family_variants.py](/workspace/prefetch/ima_plan/01_ima_characterization/family_variant_sass_analysis/analyze_family_variants.py)
 5. 若要继续 runtime 验证，优先复用：

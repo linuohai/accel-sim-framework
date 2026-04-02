@@ -3,7 +3,7 @@
 > **目的**：统一的实验进度 + 问题追踪文档。记录实验配置、结果、发现的问题和解决方案。
 > **写入规则**：**append-only**——新内容追加到对应 section 末尾，不修改已有条目。多个并发 session 可安全追加。
 >
-> 最近更新：2026-03-28
+> 最近更新：2026-03-31
 
 ---
 
@@ -44,7 +44,7 @@ GRASP 管线**功能正确**（CD 检测链、CT 学 stride、INDEX/DATA_PF 生�
 | `grasp_ist_distance` | 1 | 预取步长 |
 | `grasp_prb_capacity` | 1024 | PRB 容量 |
 | `grasp_tc_mshr_threshold` | 80 | TC 阈值（未实现） |
-| chain CSV | `tmp/strict_chains/strict_selected_chain_instances.csv` | 默认 |
+| chain CSV | `ima_plan/05_implementation/ima_pair_table/golden/strict_selected_chain_instances.csv` | 默认 |
 
 ### 2.3 chain CSV 覆盖范围
 
@@ -344,6 +344,209 @@ ima_small（有向图）的 BFS/SSSP/BC 因 frontier 小而非 memory-bound，GR
 
 ---
 
+## 7b. 实验基础设施改进 + Accuracy/Coverage/Timeliness 首次测量 (2026-03-29)
+
+**版本**: gpgpu-sim commit `7250426` (grasp v7 + prefetch metrics)
+
+**新增基础设施**:
+- `traceL1`: `verify_completion()` 实验完成性验证 + `update_baseline_registry()` 自动写入 baseline
+- `grasp_prefetcher.cc`: `GRASP_CONFIG` / `GRASP_DEMAND` / `GRASP_EFFECT` 三行新输出
+- `gpu-cache.{h,cc}`: `pf_useful` (demand hit prefetched line), `pf_useless` (sector-level evict), `pf_late` (demand merge into pf MSHR)
+- `grasp_regression.sh`: 去掉 baseline 重跑 + 并行化 + `--quick` 模式（默认）
+
+**Prefetch 三指标（SM0, IMA loads only, ima_small/ima_med 全量运行）**:
+
+| Workload | IPC | IMA Misses | pf_useful | pf_useless | pf_late | Accuracy | Coverage | Timeliness |
+|----------|-----|-----------|-----------|------------|---------|----------|----------|------------|
+| BFS | 30.34 | 11,897 | 11,102 | 8,762 | 1,156 | 55.89% | 93.32% | 89.59% |
+| SSSP | 34.59 | 16,767 | 8,977 | 9,274 | 1,378 | 49.19% | 53.54% | 84.65% |
+| SpMV | 152.04 | 42,332 | 6,572 | 16,220 | 1,519 | 28.83% | 15.52% | 76.89% |
+| BC | 44.72 | 33,333 | 19,419 | 18,719 | 2,223 | 50.92% | 58.26% | 88.55% |
+
+**发现**:
+- BFS coverage 93% — GRASP 几乎覆盖所有 IMA miss，是最佳 workload
+- SpMV accuracy 仅 29% — 大量 useless prefetch，与 ×16 展开 + MSHR 饱和一致
+- Timeliness 全部 >76%，说明大部分预取能在 demand 前完成
+- Coverage 使用 IMA-only demand misses 作为分母（更准确反映对目标 load 的覆盖）
+
+---
+
+## 7c. v7→v8 设计审阅 + P4/P5 修复 + MSHR Sweep (2026-03-29)
+
+**版本变更**:
+- **P1** (v7): PRB per-sector → per-instruction（shared PRB, remaining_sectors=N）
+- **P2** (v7): Pair table exact_match_only（只查 active lane 预测地址，不盲扫 sector 8 slot）
+- **P3** (v7): MSHR_HIT piggyback（不 delete mf，cache 持有后由 fill 回调触发 data PF）
+- **P4** (v8): CD 用 `sass_opcode.find("LDG")` 检测 load（排除 ATOM 误判）
+- **P5** (v8): Pair table 按 `data_source_file:line` 归并（展开 PC 共享 addr_map）
+
+**v8 回归（golden = v6 commit 9ebfe62）**:
+
+| Benchmark | Golden GRASP | v8 GRASP | vs Golden | 状态 |
+|-----------|-------------|----------|-----------|------|
+| BFS | 29.75 | **30.34** | +1.98% | PASS |
+| SSSP | 34.28 | **34.59** | +0.91% | PASS |
+| BC | 44.61 | **44.72** | +0.25% | PASS |
+| SpMV | 164.12 | **152.04** | -7.36% | FAIL |
+
+**SpMV 回退根因分析**:
+- P5 归并使 pair_table hit +223%（7081→22889）→ data_pf +117% → MSHR 争用加剧
+- idx_rfail 中 mshr_entry_fail 从 5459 涨到 9252（+69%）
+
+**MSHR Sweep 实验（SpMV, 108SM）**:
+
+| MSHR entries | NP IPC | GRASP IPC | Delta | mshr_entry_fail |
+|-------------|--------|-----------|-------|-----------------|
+| 512 (default) | 129.68 | 152.04 | +17.2% | 9,252 |
+| 1024 | 130.56 | 151.58 | +16.1% | 638 |
+| 2048 | 130.40 | 156.29 | +19.9% | 0 |
+
+**结论**: 增大 MSHR 消除了 mshr_entry_fail 但 GRASP delta 仅从 +17.2% 提升到 +19.9%（+2.7pp）。SpMV 瓶颈不在 MSHR 容量，而在 pair table accuracy（28.8%）和 stride 跨展开 PC 边界问题。
+
+**审阅中发现的其他问题**:
+- BFS 分析脚本 `find_iteration_boundaries` 有 sector 全局去重 bug（同 sector 不同迭代被合并）→ 已修复
+- BFS 1SM 诊断的负 speedup 是因为仅观测到 frontier 极小的早期 kernel（GRASP 收益在中间层级 kernel）
+- `analyze_grasp_iterations_v2.py` 的 iteration 粒度（node 级）比 GRASP stride 学习（循环体级）粗
+
+**日志文件**:
+- `result/log/regress_{bfs,sssp,spmv,bc}_grasp.log` — v8 回归
+- `result/log/spmv_mshr{512,1024,2048}_{np,grasp}.log` — MSHR sweep
+- `result/log/bfs_v8_diag_{base,grasp}.log` — v8 BFS 1SM 诊断
+- `ima_plan/05_implementation/grasp_real_diag/bfs_v8/` — v8 BFS 分析文档
+
+---
+
+## 7d. Timeliness/Coverage 指标体系重构 (2026-03-30)
+
+**问题**：旧 `pf_useful`/`pf_late` 计数器存在计数域不对齐 bug：
+- `ima_reads` 只统计 index PC 的 CT 命中（499），漏了 data demand
+- `pf_useful`/`pf_late` 在 L1 tag_array 统计，不区分 IMA index/data/非 IMA
+- 导致 `pf_late(693) > ima_reads(499)` 的数值矛盾
+
+**方案**：在 ldst_unit 层按 IMA PC 分类统计 L1 probe 结果（HIT/HIT_RESERVED/MISS），不依赖 cache block prefetch flag：
+- `reads = hits + hit_reserved + misses`（恒等式，有 assert 保证）
+- Timeliness = hits / (hits + hit_reserved)
+- Coverage = (baseline_misses - grasp_misses) / baseline_misses
+- Index/Data 分别统计 + 总和
+
+**TinyCase 验证** (2026-03-30)：
+
+| | reads | hits(d) | hit_res(c) | misses(b) | d+c+b=N | Timeliness |
+|---|---|---|---|---|---|---|
+| **GRASP Index** | 512 | 208 | 197 | 107 | 512 ✓ | 51.36% |
+| **GRASP Data** | 4096 | 3291 | 743 | 62 | 4096 ✓ | 81.58% |
+| **Baseline Index** | 512 | 0 | 0 | 512 | 512 ✓ | — |
+| **Baseline Data** | 4096 | 2761 | 1079 | 256 | 4096 ✓ | — |
+
+Data Coverage = (256 - 62) / 256 = **75.78%**. trace-driven 下 N (reads) baseline/GRASP 一致。
+
+**新增输出行**：`GRASP_IMA_DEMAND SM*`、`GRASP_TIMELINESS SM*`、`IMA_DEMAND`（扩展）、`IMA_TIMELINESS`
+
+**日志文件**：`result/log/tiny_metrics_v2.log`、`result/log/tiny_baseline_v2.log`
+
+### BFS Distance Sweep + 四算法新指标 (2026-03-30)
+
+BFS distance d=1~8 sweep + SSSP/SpMV/BC d=1 全部使用新指标体系。
+
+**四算法 d=1 汇总**：
+
+| 算法 | Baseline IPC | GRASP IPC | Speedup | Data Timeliness | Data Coverage | Accuracy | Index Coverage |
+|---|---|---|---|---|---|---|---|
+| BFS | 23.56 | 30.34 | +28.8% | 67.85% | 14.09% | 55.89% | −5.15% |
+| SSSP | 28.81 | 34.59 | +20.1% | 64.36% | 11.54% | 49.19% | +8.05% |
+| SpMV | 129.68 | 152.04 | +17.2% | 93.34% | 5.87% | 28.83% | +5.49% |
+| BC | 37.65 | 44.72 | +18.8% | 85.83% | 11.05% | 50.92% | +4.21% |
+
+**BFS distance sweep**：d=1 最优（IPC 30.34, +28.8%），d 增大后 Data Timeliness/Coverage 单调下降（d=8: timeliness 44.56%, coverage −0.27%）。Index timeliness 随 d 增大而上升（95%→99.97%）。
+
+**关键发现**：
+1. BFS Index Coverage 全为负（−5%~−28%）：index prefetch 导致 cache pollution
+2. SpMV baseline index hit_reserved 370 万（×16 展开的自然 MSHR 共享）
+3. Data HitRes 在 BFS 中几乎不随 d 变化（~44 万），由 L2 latency 决定
+
+**日志文件**：`result/log/bfs_d{2..8}.log`、`result/log/{sssp,spmv,bc}_d1.log`、`result/log/{bfs,sssp,spmv,bc}_baseline_v2.log`
+
+---
+
+## 7e. BFS 循环级 Iteration 分析（2026-03-31）
+
+**目的**：为 BFS kernel 建立循环级（而非 BFS 波级）的 iteration 分析，支持逐 iteration 的 GRASP 行为诊断。
+
+**配置**：SM80_A100_1SM_NOSUBCORE, `--max-completed-cta 5`, `bfs_ima_small`, L1 trace + GRASP trace 开启。
+
+**脚本改动**：`analyze_grasp_iterations_v2.py` 新增 `--iteration-mode bfs`：
+- BFS kernel ×4 展开，5 组 (index_pc, data_pc)，来自 golden chain CSV
+- Boundary PCs = {0x01d0 (prologue), 0x0640 (unroll_0)}，每个 loop trip 一个 iteration
+- 默认 merge_window=300（同一 LDG 的 mem_fetch 在 L1 trace 中散布最大 ~240 cycles）
+
+**结果**（GRASP, 1SM 5CTA）：
+
+| Warp | Iterations | avg_latency | idx_hit_rate | data_hit_rate |
+|------|-----------|-------------|-------------|--------------|
+| 1 | 122 | 9004.8 | 49.6% | 24.8% |
+| 2 | 132 | — | — | — |
+| 3 | 126 | — | — | — |
+
+对比之前 boundary=0x0c0 的 13 iteration（BFS 波级），现在 ~125 iteration 是循环级粒度。
+
+**输出文件**：`ima_plan/05_implementation/grasp_real_diag/bfs_iter/`
+
+**日志文件**：
+- Baseline: `result/log/bfs_iter_base2.log` + `result/L1cache_trace/bfs_iter_base2_l1.csv`
+- GRASP: `result/log/bfs_iter_grasp3.log` + `result/L1cache_trace/bfs_iter_grasp3_l1.csv` + `result/grasp_trace/bfs_iter_grasp3_grasp.csv`
+
+---
+
+## 7f. Stride 学习 Bug 修复（2026-03-31）
+
+### 问题
+
+BFS event timeline 中发现 stride 值出现百万级异常（如 iter_stride=17605328），而非预期的 4（prologue）或 16（4x unrolled loop）。
+
+### 根因分析
+
+三层问题叠加：
+1. **`update_stride()` 允许覆盖已收敛 stride**（`grasp_tables.cc:148-151`）：当 CTA 完成、warp slot 被新 CTA 复用时，跨 CTA 的地址差覆盖了正确的 stride
+2. **`on_warp_exit()` 未清理 stride observation**（`grasp_prefetcher.cc:253-258`）：旧 CTA 的 `last_addr` 残留在 CT 中
+3. **trace-driven warp exit hook 缺失**（`trace_driven.cc:1361-1364`）：trace-driven 模式的 warp exit 走独立代码路径，漏掉了 GRASP hook，导致 cleanup 代码从未执行
+
+### 修复（三处）
+
+| 文件 | 改动 | 行数 |
+|------|------|------|
+| `grasp_tables.cc` | stride 收敛后冻结，不再允许覆盖 | -3 行 |
+| `grasp_prefetcher.cc` | `on_warp_exit()` 清理退出 warp 的 stride observation | +13 行 |
+| `trace_driven.cc` | 补 trace-driven warp exit 的 GRASP hook | +3 行 |
+
+### 验证结果（bfs_ima_small, 108SM 全量）
+
+| 指标 | 修复前 | 修复后 | 变化 |
+|------|--------|--------|------|
+| IPC | 30.34 | 30.47 | +0.43% |
+| Accuracy (SM0) | 55.89% | 58.97% | +3.08pp |
+| pf_useful (SM0) | 11,102 | 14,113 | +27.1% |
+| data_enqueued (SM0) | 9,842 | 18,265 | +85.6% |
+| Coverage (SM0) | 33.86% | 38.88% | +5.02pp |
+| PT hit rate (SM0) | 29.2% | 60.2% | +31.0pp |
+| Index RFAIL rate | 18.3% | 12.3% | -6.0pp |
+| Index timeliness | 95.85% | 89.98% | -5.87pp |
+| Data timeliness | 68.77% | 75.00% | +6.23pp |
+
+**STRIDE_CONVERGE 验证**（1SM trace）：修复后只出现 stride=4（PC 0x01D0）和 stride=16（PC 0x0640-0x1060）。PC 0x00C0（worklist）不再学习到错误 stride。wild delta 完全消除。
+
+### 诊断产出
+
+- Event timeline: `ima_plan/05_implementation/grasp_real_diag/bfs_stride_fix/event_timeline_warp{1,2,3}.txt`
+- Baseline comparison: 同目录 `baseline_comparison_warp{1,2,3}.txt`
+- 实验 log: `result/log/bfs_stride_fix_test.log`（108SM）、`bfs_warp_exit_fix.log`（1SM, 10CTA, hook 验证）
+
+### 遗留
+
+- 回归测试待运行（`grasp_regression.sh check`）
+- Pair table miss 41%（stride 越过邻接表末尾的固有限制，非 bug）
+
+---
+
 ## 8. 日志文件索引
 
 | 日志 | 说明 |
@@ -357,3 +560,6 @@ ima_small（有向图）的 BFS/SSSP/BC 因 frontier 小而非 memory-bound，GR
 | `result/log/bc_baseline.log` | BC 基线 (100 CTA, crashed) |
 | `result/log/bc_grasp.log` | BC GRASP (100 CTA, crashed) |
 | `result/log/grasp_stats_test2.log` | bfs_ima_small GRASP debug (50 CTA) |
+| `result/log/bfs_stride_fix_test.log` | bfs_ima_small stride fix 验证 (108SM 全量) |
+| `result/log/bfs_stride_fix_diag2.log` | bfs_ima_small stride fix 诊断 (1SM, 10CTA, L1+GRASP trace) |
+| `result/log/bfs_warp_exit_fix.log` | bfs_ima_small warp exit hook 验证 (1SM, 10CTA, GRASP trace) |

@@ -112,11 +112,11 @@ LDG Rd
 
 生成位置：
 
-- [strict_selected_chain_instances.csv](/workspace/prefetch/tmp/strict_chains/strict_selected_chain_instances.csv)
-- [spmv_base_strict.csv](/workspace/prefetch/tmp/strict_chains/spmv_base_strict.csv)
-- [bfs_linear_base_strict.csv](/workspace/prefetch/tmp/strict_chains/bfs_linear_base_strict.csv)
-- [sssp_linear_base_strict.csv](/workspace/prefetch/tmp/strict_chains/sssp_linear_base_strict.csv)
-- [bc_linear_base_strict.csv](/workspace/prefetch/tmp/strict_chains/bc_linear_base_strict.csv)
+- [strict_selected_chain_instances.csv](/workspace/prefetch/ima_plan/05_implementation/ima_pair_table/golden/strict_selected_chain_instances.csv)
+- [spmv_base_strict.csv](/workspace/prefetch/ima_plan/05_implementation/ima_pair_table/golden/spmv_base_strict.csv)
+- [bfs_linear_base_strict.csv](/workspace/prefetch/ima_plan/05_implementation/ima_pair_table/golden/bfs_linear_base_strict.csv)
+- [sssp_linear_base_strict.csv](/workspace/prefetch/ima_plan/05_implementation/ima_pair_table/golden/sssp_linear_base_strict.csv)
+- [bc_linear_base_strict.csv](/workspace/prefetch/ima_plan/05_implementation/ima_pair_table/golden/bc_linear_base_strict.csv)
 
 最关键的两个人工纠错点已经得到修正：
 

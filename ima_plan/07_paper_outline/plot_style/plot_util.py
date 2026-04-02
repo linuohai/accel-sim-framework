@@ -78,6 +78,25 @@ COLORS_IMA_ROLE = {
 }
 
 
+# ── Hatching Patterns (for B&W printing) ──────────────────────────────────────
+
+# Standard hatching sequence — use when comparing multiple baselines.
+# Each pattern is visually distinct in grayscale printing.
+# Usage: ax.bar(..., hatch=HATCHES[i], color=CB10[i])
+HATCHES = [
+    "",      # solid (our work — no hatch, stands out)
+    "//",    # diagonal
+    "\\\\",  # reverse diagonal
+    "xx",    # crosshatch
+    "..",    # dots
+    "++",    # plus
+    "oo",    # circles
+    "**",    # stars
+    "OO",    # large circles
+    "--",    # horizontal lines
+]
+
+
 # ── Legend Helpers (anti-overlap) ──────────────────────────────────────────────
 
 

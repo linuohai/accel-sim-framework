@@ -45,7 +45,8 @@ axes.spines.right:  false
 axes.facecolor:     white
 axes.edgecolor:     black
 axes.labelcolor:    black
-axes.grid:          false
+axes.grid:          true
+axes.grid.axis:     y
 axes.axisbelow:     true
 
 # Tableau Colorblind 10 — colorblind-safe default cycle
