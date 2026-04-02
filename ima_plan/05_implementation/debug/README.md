@@ -1,6 +1,6 @@
 # GRASP 小 Case Debug 方法学
 
-> 最近更新: 2026-04-02
+> 最近更新: 2026-04-01
 
 针对 GRASP IMA prefetcher 的小型测例（1SM / limited CTA）debug 规范。核心问题：IMA Data hit rate 偏低——对每个 data miss，追溯它是不是"真正的 miss"。
 

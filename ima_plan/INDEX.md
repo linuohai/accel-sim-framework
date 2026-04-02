@@ -1,10 +1,10 @@
 # IMA Prefetch 研究索引
 
-> 自动生成: 2026-04-02 12:00 | 由 /update-ima-index 生成
+> 自动生成: 2026-04-02 20:30 | 由 /update-ima-index 生成
 
 ## 研究总体状态
 
-当前处于 **Phase 5 评估深化 + Phase 6 评估基础设施完善**。GRASP 核心组件已实现（8 个源文件），ima_med 全量实验取得 **geomean +35.5%**（BFS +49.8%, SSSP +44.0%, SpMV +26.6%, BC +23.3%）。Timeliness/Coverage 指标已重构为 IMA PC 分类统计方案（HIT/HIT_RESERVED/MISS 恒等式）。**Stride 学习 bug 已修复**（3 处代码改动），修复后 PT hit rate 29%→60%，accuracy +3pp。SOTA baseline 5 种已完成（stride-INTRA/INTER/Snake/Spare Register/CAPS），**CAPS 在 SpMV 上 +14.30%** 为非 GRASP 最高。实验输出规范已建立（展示/调试指标分级 + Index/Data/Total 三版本规则）。最终目标：投稿体系结构顶会论文。
+当前处于 **Phase 5 评估深化 + Phase 6 评估基础设施完善**。GRASP 核心组件已实现（8 个源文件），ima_med 全量实验取得 **geomean +35.5%**。**Speculative stride 机制已实现**（默认 OFF）：首次 observation 用 per-chain stride_hint（SASS 分析得出）推测预取，BFS/SSSP/SpMV 提升 +3~7%，BC 退化 -8.6%，记为 DSE 参数。**小 case debug 方法学已建立**（5 阶段 + 7 步归因管线）。BFS 1SM 分析发现 CT 在不同 kernel 切换时全量 reset stride（每轮 BFS level 重训练 7K-29K cycles），也记为 DSE 参数。SOTA baseline 5 种已完成，CAPS 在 SpMV 上 +14.30%。最终目标：投稿体系结构顶会论文。
 
 ## 各阶段状态
 
@@ -14,7 +14,7 @@
 | 02 | 相关工作调研 | 🔄 进行中 | CPU 8 篇 + GPU 9 篇 + 论文重组为 6 个子目录 | 2026-03-30 |
 | 03 | 性能天花板 | 🔄 部分完成 | ima_high ideal L1D: 1.75×–3.04× speedup | 2026-03-14 |
 | 04 | GRASP Prefetcher 设计 | 🔄 设计框架已定 | GRASP 设计框架 + `small_1sm_cta5` 时序证据 | 2026-03-28 |
-| 05 | GPGPU-Sim 实现 | 🔄 **ima_med +35.5% + stride fix + 5 种 SOTA** | ima_med 全量 + stride 修复 + CAPS/Snake v3 评估 | 2026-04-01 |
+| 05 | GPGPU-Sim 实现 | 🔄 **ima_med +35.5% + spec stride + debug 方法学** | speculative stride (DSE) + debug 规范 + CT reset 发现 | 2026-04-02 |
 | 06 | 评估方案 | 🔄 **输出规范 + 批量实验** | benchmark suite + output spec + ideal L1D report + batch run | 2026-04-02 |
 | 07 | 论文大纲 | 🔄 进行中 | 大纲 + 10 insight + academic 绘图 + LaTeX 模板 + figures + abstract | 2026-04-01 |
 
@@ -32,6 +32,8 @@
 10. **四类 IMA pattern 的 prefetchability 层级** — Pattern I/II 可覆盖，III 部分，IV 不覆盖 → `01_ima_characterization.md` §Level 1
 11. **Stride 学习跨 CTA 污染修复** — PT hit rate 29%→60%，accuracy +3pp → `05_implementation/experiment_progress.md` §7f
 12. **CAPS (CTA-Aware Prefetcher) SpMV +14.30%** — stride prefetcher 中 SpMV 最优，但 IMA data coverage ≈ 0% → `05_implementation/sota_baseline/README.md`
+13. **Speculative stride geomean +1.09%**（默认 OFF）— BFS +3.6%, SSSP +3.2%, SpMV +6.8%, BC -8.6%。per-chain stride_hint 从 SASS 分析（inner=4, unrolled×4=16, SpMV ×16=64）→ `05_implementation/dse_ct_reset_policy.md`
+14. **CT kernel 切换全量 reset** — BFS 每轮 level 重训练 stride（5 轮 × 7K-29K cycles = 65K cycles, 4.1%），根因：insert/bfs_kernel 交替触发 `m_ct.reset()` → `05_implementation/dse_ct_reset_policy.md`
 
 ## GRASP ima_med 全量结果（108SM，完整运行）
 
@@ -144,6 +146,8 @@ GRASP 仿真输出行：
 | **回归测试** | `grasp_regression.sh check`（默认 --quick ~34min，--full 4 workload 并行 ~44min） |
 | **Golden Chain CSV** | `ima_pair_table/golden/strict_selected_chain_instances.csv`，所有 GRASP/IMA 仿真的必需输入 |
 | **输出规范** | `06_evaluation_plan/output_specification.md`，展示/调试指标分级 + Index/Data/Total 三版本规则 |
+| **Debug 方法学** | `05_implementation/debug/README.md`，小 case 5 阶段 debug + 7 步 root cause 归因管线 |
+| **DSE 参数** | `05_implementation/dse_ct_reset_policy.md`，speculative stride + CT reset policy 待验证特性 |
 
 ## 目录详情
 
@@ -166,11 +170,11 @@ GRASP 仿真输出行：
 - **最近修改**: 2026-03-28
 
 ### 05_implementation/
-- **状态**: GRASP Phase A/B 完成 + ima_med +35.5% + stride fix + 5 种 SOTA baseline 完成
-- **子目录**: `regression/`, `grasp_ablation/`, `sota_baseline/`, `ima_pair_table/`（含 `golden/`）, `grasp_real_diag/`（含 `bfs_stride_fix/`, `bfs_iter/`）, `chain_extraction/`, `debug/`
-- **关键文件**: `experiment_progress.md`, `grasp_ablation/README.md`, `sota_baseline/README.md`
-- **数据/脚本**: 23 md, 6 py, 1 sh, 41 csv, 5 svg
-- **最近修改**: 2026-04-01
+- **状态**: GRASP +35.5% + speculative stride (DSE) + debug 方法学 + 5 种 SOTA baseline
+- **子目录**: `regression/`, `grasp_ablation/`, `sota_baseline/`, `ima_pair_table/`（含 `golden/`）, `grasp_real_diag/`, `chain_extraction/`, `debug/`（BFS 1SM root cause 分析）, `grasp_metrics/`
+- **关键文件**: `experiment_progress.md`, `dse_ct_reset_policy.md`, `debug/README.md`, `sota_baseline/README.md`
+- **新增（2026-04-02）**: `dse_ct_reset_policy.md`（DSE 参数：speculative stride + CT reset policy）, `debug/README.md`（5 阶段 debug 规范 + 7 步归因管线）, chain CSV `stride_hint` 列
+- **最近修改**: 2026-04-02
 
 ### 06_evaluation_plan/
 - **状态**: Benchmark suite + baseline registry + **输出规范** + ideal L1D report + batch run
@@ -251,5 +255,7 @@ GRASP 仿真输出行：
 - `05_implementation/`: SpMV ×16 展开使 stride 学习失效，需设计层面解决
 - `05_implementation/`: Throttle 80% 阈值在 MSHR 饱和场景未触发，需调整策略
 - `05_implementation/sota_baseline/`: Spare Register SpMV 实验待完成
+- `05_implementation/`: Speculative stride BC 退化 -8.6% 根因待查（stride 值已正确，可能是推测机制副作用）
+- `05_implementation/`: CT kernel 切换 reset policy DSE（full vs tracking_only）待对照实验
 - `02_related_work.md`: 论文详细笔记与 gap analysis 待完成
 - `03_performance_ceiling.md`: ima_med / ima_small 的 ideal L1D 数据待补全
