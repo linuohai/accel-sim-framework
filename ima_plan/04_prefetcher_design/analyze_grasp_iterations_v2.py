@@ -263,7 +263,10 @@ def parse_l1_trace(
                 continue
             if row["op"] != "LD":
                 continue
-            pc = int(row["pc"], 16)
+            pc_str = row["pc"].strip()
+            if pc_str == "NA":
+                continue
+            pc = int(pc_str, 16)
             if pc not in relevant_pcs:
                 continue
             ev = L1Event(

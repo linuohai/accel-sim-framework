@@ -1,6 +1,6 @@
 # DSE: GRASP 可调参数探索
 
-> 最近更新: 2026-04-02
+> 最近更新: 2026-04-03
 
 本文档记录已实现但默认关闭的 GRASP 优化特性，作为后续 DSE（Design Space Exploration）的候选参数。每个特性需通过对照实验（开启 vs 不开启）验证其对各 workload 的影响。
 
@@ -110,15 +110,67 @@ BFS 交替运行 `insert` kernel 和 `bfs_kernel`（不同 kernel function）。
 
 ---
 
+## 3. Throttle Control: Cooldown Timer（已验证，推荐启用）
+
+### 机制
+
+DATA_PF 在 MSHR 占用率超阈值时被抑制，并进入固定长度冷却期（期间所有 DATA_PF 均被丢弃），给 cache/MSHR 子系统排空时间。INDEX_PF 始终不受影响。
+
+### 参数
+
+```
+-grasp_tc_mode 4                    # 0=legacy(默认), 4=cooldown timer
+-grasp_tc_mshr_threshold 40         # MSHR 占用率触发阈值 %（默认 80）
+-grasp_tc_cooldown 200              # 冷却周期数（默认 0=关闭）
+```
+
+### 推荐配置: `tc_mode=4, thr=40, cooldown=200` (T40C200)
+
+### 验证结果（9 workloads, Full-SM）
+
+| Workload | ΔIPC | Baseline Acc | T40 Acc | ΔUseless | 类别 |
+|----------|------|-------------|---------|----------|------|
+| spmv_ima_med (sym) | **+3.47%** | 51.3% | 66.3% | -60.7% | 高收益 |
+| spmv_road_sym | +0.88% | 87.8% | 88.6% | -49.1% | 中收益 |
+| bfs_ima_small (sym) | +0.39% | 55.5% | 62.3% | -25.9% | 中收益 |
+| sssp_ima_small (sym) | +0.37% | 52.5% | 59.1% | -24.3% | 中收益 |
+| bfs_cit_dir | +0.07% | 99.9% | 99.9% | +0.0% | 安全 |
+| sssp_cit_dir | +0.04% | 99.7% | 99.7% | +0.0% | 安全 |
+| bc_cit_dir | +0.03% | 99.6% | 99.6% | +7.7% | 安全 |
+| bc_road_dir | +0.00% | 100.0% | 100.0% | +0.0% | 安全 |
+| bfs_road_dir | +0.00% | 0.0% | 0.0% | +0.0% | 安全 |
+
+**0/9 退化。GeoMean(sym workloads) = +1.40%。**
+
+### 核心发现
+
+- 收益与 baseline accuracy 负相关：acc < 55% → +0.37~3.47%；acc > 99% → ~0%
+- IPC 提升来自 MSHR 拥塞缓解 + cache pollution 减少，不是 miss 数量减少
+- "不伤害"的默认配置：高 accuracy 无影响，低 accuracy 显著改善
+
+### 代码位置
+
+- 策略分发: `grasp_prefetcher.cc:701-761`（`inject_prefetch()` tc_mode dispatch）
+- 配置字段: `grasp_prefetcher.h` `grasp_config_t::tc_mode/tc_mshr_threshold/tc_cooldown_cycles`
+- 运行时状态: `grasp_prefetcher.h` `m_tc_cooldown_until`
+
+### 状态
+
+**已实现 + 已验证（9 workloads）**。推荐作为新默认。详细 DSE 数据见 `dse_throttle_control/README.md`。
+
+---
+
 ## 对照实验总表
 
-后续 DSE 以 2×2 矩阵方式验证两个特性的独立和组合效果：
+后续 DSE 以 2×2×2 矩阵方式验证三个特性的独立和组合效果：
 
-| 配置 | Speculative Stride | CT Reset Policy |
-|------|-------------------|-----------------|
-| A（当前默认） | OFF | full |
-| B | ON (stride_hint) | full |
-| C | OFF | tracking_only |
-| D | ON (stride_hint) | tracking_only |
+| 配置 | Speculative Stride | CT Reset Policy | Throttle Control |
+|------|-------------------|-----------------|------------------|
+| A（当前默认） | OFF | full | legacy (thr=80) |
+| B | ON (stride_hint) | full | legacy (thr=80) |
+| C | OFF | tracking_only | legacy (thr=80) |
+| D | ON (stride_hint) | tracking_only | legacy (thr=80) |
+| E | OFF | full | **cooldown (T40C200)** |
+| F | ON (stride_hint) | full | **cooldown (T40C200)** |
 
 每个配置跑 BFS/SSSP/BC/SpMV，对比 IPC + Coverage + Timeliness。

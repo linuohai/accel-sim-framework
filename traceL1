@@ -30,6 +30,7 @@ GRASP_DEBUG=false
 GRASP_CHAIN_CSV=""
 GRASP_TRACE_ENABLED=false
 GRASP_DISTANCE=0
+GRASP_SPECULATIVE_STRIDE=0
 
 # 额外控制（用于减小仿真时间/输出体量）
 MAX_CYCLE=0
@@ -47,6 +48,7 @@ ICNT_BW_TRACE_ENABLED=false
 L2_BW_TRACE_ENABLED=false
 ICNT_BW_TRACE_PERIOD=500
 L2_BW_TRACE_PERIOD=500
+EXTRA_SIM_ARGS=""                   # raw args appended to gpgpusim config (--sim-args)
 
 # 轻量级 stall reason / pc 统计（替代巨型 issue_trace）
 STALL_REASON_PC_STATS_ENABLED=true
@@ -104,6 +106,11 @@ while [[ $# -gt 0 ]]; do
       ;;
     --grasp-distance)
       GRASP_DISTANCE="$2"
+      shift
+      shift
+      ;;
+    --grasp-speculative-stride)
+      GRASP_SPECULATIVE_STRIDE="$2"
       shift
       shift
       ;;
@@ -322,6 +329,10 @@ while [[ $# -gt 0 ]]; do
       ISSUE_TRACE_COMPRESS_THREADS="$2"
       shift
       shift
+      ;;
+    --sim-args)
+      EXTRA_SIM_ARGS="$2"
+      shift; shift
       ;;
     *)
       POSITIONAL_ARGS+=("$1") # save positional arg
@@ -1046,6 +1057,9 @@ if [ "$GRASP_ENABLED" = true ]; then
     if [ "$GRASP_DISTANCE" -gt 0 ] 2>/dev/null; then
         echo "-grasp_ist_distance $GRASP_DISTANCE" >> "$TEMP_GPGPU_CONFIG"
     fi
+    if [ "$GRASP_SPECULATIVE_STRIDE" -gt 0 ] 2>/dev/null; then
+        echo "-grasp_speculative_stride $GRASP_SPECULATIVE_STRIDE" >> "$TEMP_GPGPU_CONFIG"
+    fi
     if [ -n "$PAIR_TABLE_SCOPE" ]; then
         case "$PAIR_TABLE_SCOPE" in
             warp|0)   echo "-grasp_pair_table_scope 0" >> "$TEMP_GPGPU_CONFIG" ;;
@@ -1066,6 +1080,11 @@ if [ "$GRASP_ENABLED" != true ]; then
     if [ -f "$IMA_CHAIN_CSV" ]; then
         echo "-gpgpu_ima_prefetch_chain_csv \"$IMA_CHAIN_CSV\"" >> "$TEMP_GPGPU_CONFIG"
     fi
+fi
+
+# Extra simulation arguments (--sim-args): appended raw to gpgpusim config
+if [ -n "$EXTRA_SIM_ARGS" ]; then
+    echo "$EXTRA_SIM_ARGS" >> "$TEMP_GPGPU_CONFIG"
 fi
 
 # trace enable 开关（默认与原 config 一致；这里允许从命令行覆盖）
@@ -1352,16 +1371,73 @@ if [ ${PIPESTATUS[0]} -eq 0 ]; then
             grasp_ima_misses=$(echo "$ima_demand_line" | grep -oP 'data_misses=\K[0-9]+')
         fi
 
-        # 7. 提取 GRASP 指标（SM0，仅 GRASP 模式）
+        # 7. 提取 GRASP 指标（全 SM 聚合，仅 GRASP 模式）
         local grasp_effect="" grasp_storage="" grasp_rfail="" grasp_funnel="" coverage_str=""
-        local grasp_ima_demand="" grasp_timeliness=""
         if [ "$GRASP_ENABLED" = true ]; then
-            grasp_effect=$(grep "^GRASP_EFFECT SM0:" "$log_file" | tail -1 | sed 's/^GRASP_EFFECT SM0: //')
-            grasp_storage=$(grep "^GRASP_STORAGE SM0:" "$log_file" | tail -1 | sed 's/^GRASP_STORAGE SM0: //')
-            grasp_rfail=$(grep "^GRASP_RFAIL SM0:" "$log_file" | tail -1 | sed 's/^GRASP_RFAIL SM0: //')
-            grasp_funnel=$(grep "^GRASP_FUNNEL SM0:" "$log_file" | tail -1 | sed 's/^GRASP_FUNNEL SM0: //')
-            grasp_ima_demand=$(grep "^GRASP_IMA_DEMAND SM0:" "$log_file" | tail -1 | sed 's/^GRASP_IMA_DEMAND SM0: //')
-            grasp_timeliness=$(grep "^GRASP_TIMELINESS SM0:" "$log_file" | tail -1 | sed 's/^GRASP_TIMELINESS SM0: //')
+            # GRASP_EFFECT: 累积计数器 → 取每个 SM 最后一次值，全 SM 求和
+            grasp_effect=$(grep "^GRASP_EFFECT SM" "$log_file" | awk '{
+                split($2,a,":"); gsub(/SM/,"",a[1]); sm=a[1]
+                for(i=3;i<=NF;i++){split($i,kv,"=")
+                    if(kv[1]=="pf_useful")useful[sm]=kv[2]+0
+                    if(kv[1]=="pf_useless")useless[sm]=kv[2]+0
+                    if(kv[1]=="pf_late")late[sm]=kv[2]+0}
+            } END {tu=0;ts=0;tl=0
+                for(s in useful){tu+=useful[s];ts+=useless[s];tl+=late[s]}
+                printf "pf_useful=%d pf_useless=%d pf_late=%d",tu,ts,tl
+                if(tu+ts>0)printf " accuracy=%.2f%%",100.0*tu/(tu+ts)}')
+
+            # GRASP_STORAGE: 取各 SM 峰值中的最大值
+            grasp_storage=$(grep "^GRASP_STORAGE SM" "$log_file" | awk '{
+                for(i=3;i<=NF;i++){
+                    if($i~/^prb=/){split($i,a,"/");gsub(/prb=/,"",a[1]);split(a[2],b,"(")
+                        if(a[1]+0>pp){pp=a[1]+0;pc=b[1]+0}}
+                    if($i~/^ct=/){split($i,a,"/");gsub(/ct=/,"",a[1]);split(a[2],b,"(")
+                        if(a[1]+0>cp){cp=a[1]+0;cc=b[1]+0}}
+                    if($i~/^cd_fifo=/){split($i,a,"/");gsub(/cd_fifo=/,"",a[1]);split(a[2],b,"(")
+                        if(a[1]+0>dp){dp=a[1]+0;dc=b[1]+0}}
+                    if($i~/^pf_queue_peak=/){split($i,a,"=");if(a[2]+0>qp)qp=a[2]+0}}
+            } END {printf "prb=%d/%d(%.1f%%) ct=%d/%d(%.1f%%) cd_fifo=%d/%d(%.1f%%) pf_queue_peak=%d",
+                pp,pc,(pc>0?100.0*pp/pc:0),cp,cc,(cc>0?100.0*cp/cc:0),dp,dc,(dc>0?100.0*dp/dc:0),qp}')
+
+            # GRASP_RFAIL: 从百分比还原绝对数，全 SM 求和后重算百分比
+            grasp_rfail=$(grep "^GRASP_RFAIL SM" "$log_file" | awk '{
+                split($2,a,":"); gsub(/SM/,"",a[1]); sm=a[1]
+                for(i=3;i<=NF;i++){split($i,kv,"=")
+                    if(kv[1]=="total")tot[sm]=kv[2]+0}
+                if(tot[sm]>0){
+                    for(i=3;i<=NF;i++){split($i,kv,"=");gsub(/%/,"",kv[2])
+                        if(kv[1]=="line_alloc")la[sm]=int(kv[2]*tot[sm]/100+0.5)
+                        if(kv[1]=="missq")mq[sm]=int(kv[2]*tot[sm]/100+0.5)
+                        if(kv[1]=="mshr_entry")me[sm]=int(kv[2]*tot[sm]/100+0.5)
+                        if(kv[1]=="mshr_merge")mm[sm]=int(kv[2]*tot[sm]/100+0.5)
+                        if(kv[1]=="rw_pending")rw[sm]=int(kv[2]*tot[sm]/100+0.5)}
+                }
+            } END {tt=0;tla=0;tmq=0;tme=0;tmm=0;trw=0
+                for(s in tot){tt+=tot[s];tla+=la[s];tmq+=mq[s];tme+=me[s];tmm+=mm[s];trw+=rw[s]}
+                printf "total=%d",tt
+                if(tt>0)printf " line_alloc=%.1f%% missq=%.1f%% mshr_entry=%.1f%% mshr_merge=%.1f%% rw_pending=%.1f%%",
+                    100.0*tla/tt,100.0*tmq/tt,100.0*tme/tt,100.0*tmm/tt,100.0*trw/tt}')
+
+            # GRASP_FUNNEL: 绝对计数全 SM 求和
+            grasp_funnel=$(grep "^GRASP_FUNNEL SM" "$log_file" | awk '{
+                split($2,a,":"); gsub(/SM/,"",a[1]); sm=a[1]
+                for(i=3;i<=NF;i++){
+                    n=$i; gsub(/\(.*\)/,"",n); split(n,kv,"=")
+                    if(kv[1]=="idx_attempted")ia[sm]=kv[2]+0
+                    if(kv[1]=="idx_rfail")irf[sm]=kv[2]+0
+                    if(kv[1]=="idx_got_data")igd[sm]=kv[2]+0
+                    if(kv[1]=="data_enqueued")de[sm]=kv[2]+0
+                    if(kv[1]=="data_throttled")dt[sm]=kv[2]+0
+                    if(kv[1]=="data_attempted")da[sm]=kv[2]+0
+                    if(kv[1]=="data_rfail")drf[sm]=kv[2]+0
+                    if(kv[1]=="data_got_data")dgd[sm]=kv[2]+0}
+            } END {tia=0;tirf=0;tigd=0;tde=0;tdt=0;tda=0;tdrf=0;tdgd=0
+                for(s in ia){tia+=ia[s];tirf+=irf[s];tigd+=igd[s];tde+=de[s];tdt+=dt[s];tda+=da[s];tdrf+=drf[s];tdgd+=dgd[s]}
+                printf "idx_attempted=%d idx_rfail=%d",tia,tirf
+                if(tia>0)printf "(%.1f%%)",100.0*tirf/tia
+                printf " idx_got_data=%d | data_enqueued=%d data_throttled=%d data_attempted=%d data_rfail=%d",tigd,tde,tdt,tda,tdrf
+                if(tda>0)printf "(%.1f%%)",100.0*tdrf/tda
+                printf " data_got_data=%d",tdgd}')
 
             # 8. 计算 coverage = 1 - grasp_data_misses / baseline_data_misses
             local registry="$BASE_DIR/ima_plan/06_evaluation_plan/baseline_registry.csv"
@@ -1391,16 +1467,13 @@ if [ ${PIPESTATUS[0]} -eq 0 ]; then
                 echo "ima_demand: $ima_demand_line"
             fi
             if [ -n "$grasp_effect" ]; then
-                echo "--- GRASP Metrics (SM0) ---"
+                echo "--- GRASP Metrics (All SMs) ---"
                 echo "effect: $grasp_effect"
-                echo "storage: $grasp_storage"
+                echo "storage(max): $grasp_storage"
                 echo "rfail: $grasp_rfail"
                 echo "funnel: $grasp_funnel"
-                if [ -n "$grasp_ima_demand" ]; then
-                    echo "ima_demand: $grasp_ima_demand"
-                fi
-                if [ -n "$grasp_timeliness" ]; then
-                    echo "timeliness: $grasp_timeliness"
+                if [ -n "$ima_timeliness_line" ]; then
+                    echo "timeliness: $ima_timeliness_line"
                 fi
                 if [ -n "$coverage_str" ]; then
                     echo "coverage=$coverage_str (1 - grasp_data_misses/baseline_data_misses)"
@@ -1418,13 +1491,13 @@ if [ ${PIPESTATUS[0]} -eq 0 ]; then
         echo "  Final cycles: $final_cycles"
         echo "  Status: $status"
         if [ "$GRASP_ENABLED" = true ] && [ -n "$grasp_effect" ]; then
-            echo "  ── GRASP Metrics (SM0) ──"
+            echo "  ── GRASP Metrics (All SMs) ──"
             echo "  $grasp_effect"
-            echo "  storage: $grasp_storage"
+            echo "  storage(max): $grasp_storage"
             echo "  rfail: $grasp_rfail"
             echo "  funnel: $grasp_funnel"
-            if [ -n "$grasp_timeliness" ]; then
-                echo "  timeliness: $grasp_timeliness"
+            if [ -n "$ima_timeliness_line" ]; then
+                echo "  timeliness: $ima_timeliness_line"
             fi
             if [ -n "$coverage_str" ]; then
                 echo "  coverage: $coverage_str"

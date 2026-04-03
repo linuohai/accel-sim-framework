@@ -1,8 +1,9 @@
 # Benchmark Suite IMA 可预取性分析
 
-> 基于 `ima_prefetchability_analysis.md` 的四层框架，对 benchmark_suite.md 定义的 7 个算法逐一分析
+> 基于 `ima_prefetchability_analysis.md` 的四层框架，对 benchmark_suite.md 定义的 6 个算法逐一分析
 >
 > 创建日期：2026-03-25
+> 最近更新: 2026-04-03
 
 ---
 
@@ -15,7 +16,6 @@
 | BC | 19 chains | ✅ | 🔲 待测 | 🔲 待测 | 🔲 待测 | **预期高** |
 | CC | **0 chains** | ❌ | ❌ 0% | — | — | **无** |
 | SpMV | 29 chains | ✅ | ✅ 高 | ⚠️ | ❌ acc 0.001% | **极低** |
-| PR | **0 chains** | ❌ | 🔲 待测 | — | — | **待确认** |
 | VC | **0 chains** | ❌ | 🔲 待测 | — | — | **待确认** |
 
 ✅ 有利 / ⚠️ 有条件 / ❌ 不利 / 🔲 待测
@@ -129,21 +129,7 @@
 - IMA miss share 66.9%，但 data 地址不可预测
 - 唯一可能有效的方法：增大 cache 或 reuse-aware scheduling
 
-### 6. PR (`pr_ima_high/med/small`)
-
-**层次 1 — 静态 chain**: **0 条 chain** in current CSV
-
-**分析**:
-- PageRank 的 CSR 访问模式应与 SpMV 相同：`row_ptr[v]` → `col_idx[e]` → `rank[col_idx[e]]`
-- Chain CSV 缺失可能是因为 PR 的 SASS 分析未执行或 kernel 名不匹配
-- L1 miss rate 64.0%
-
-**预测**:
-- **应与 SpMV 类似**（同为 CSR 矩阵-向量操作）
-- 如果补充 chain CSV：预期 seed_ratio 高，但 accuracy 低（与 SpMV 同理）
-- 优先级：补充 chain CSV → 验证预测
-
-### 7. VC (`vc_ima_high/med/small`)
+### 6. VC (`vc_ima_high/med/small`)
 
 **层次 1 — 静态 chain**: **0 条 chain** in current CSV
 
@@ -175,7 +161,6 @@
 | 算法 | 缺失 | 行动 | 优先级 |
 |------|------|------|--------|
 | **BC** | 无实验数据 | 跑 Spare Reg + Stride-INTRA + Snake 500k suite | **最高** |
-| **PR** | 无 chain CSV | 补充 SASS chain 分析 → 跑 baseline suite | 高 |
 | **VC** | 无 chain CSV | 补充 SASS chain 分析 → 跑 baseline suite | 中 |
 | **CC** | 无 chain CSV（非 CSR-IMA） | 扩展 chain 检测器识别 `A[A[i]]` 模式 | 低（可能不可行） |
 
@@ -188,5 +173,4 @@
 | BC | Spare Register | +5-10% (预测) | 中（类似 BFS/SSSP 混合） |
 | CC | 无 | ~0% | 实测 |
 | SpMV | 无 | ~0% | 实测 |
-| PR | 无 | ~0% (预测) | 低（需验证） |
 | VC | Spare Register? | 待测 | 低 |

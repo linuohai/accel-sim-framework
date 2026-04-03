@@ -1,9 +1,57 @@
 # Benchmark Suite — IMA Prefetcher 评估测例
 
-> 最近更新: 2026-03-31
+> 最近更新: 2026-04-03
 
 > 后续所有实验（baseline / ideal L1D / prefetcher / ablation）均须覆盖本文件定义的全部测例。
 > 各 trace key 定义于 `traceL1` 脚本的 `TRACE_MAP`。
+
+---
+
+## 测例总览（38 个 Workload）
+
+| # | Workload Key | 算法 | 数据集 | Sym |
+|--:|-------------|------|--------|:---:|
+| 1 | `bfs_cit_dir` | BFS | cit-Patents | 0 |
+| 2 | `bfs_cit_sym` | BFS | cit-Patents | 1 |
+| 3 | `sssp_cit_dir` | SSSP | cit-Patents | 0 |
+| 4 | `sssp_cit_sym` | SSSP | cit-Patents | 1 |
+| 5 | `bc_cit_dir` | BC | cit-Patents | 0 |
+| 6 | `bc_cit_sym` | BC | cit-Patents | 1 |
+| 7 | `cc_cit_sym` | CC | cit-Patents | 1 |
+| 8 | `spmv_cit_sym` | SpMV | cit-Patents | 1 |
+| 9 | `vc_cit_sym` | VC | cit-Patents | 1 |
+| 10 | `bfs_web_dir` | BFS | web-Google | 0 |
+| 11 | `bfs_web_sym` | BFS | web-Google | 1 |
+| 12 | `sssp_web_dir` | SSSP | web-Google | 0 |
+| 13 | `sssp_web_sym` | SSSP | web-Google | 1 |
+| 14 | `bc_web_dir` | BC | web-Google | 0 |
+| 15 | `bc_web_sym` | BC | web-Google | 1 |
+| 16 | `cc_web_sym` | CC | web-Google | 1 |
+| 17 | `spmv_web_sym` | SpMV | web-Google | 1 |
+| 18 | `vc_web_sym` | VC | web-Google | 1 |
+| 19 | `bfs_flickr_dir` | BFS | flickr | 0 |
+| 20 | `bfs_flickr_sym` | BFS | flickr | 1 |
+| 21 | `sssp_flickr_dir` | SSSP | flickr | 0 |
+| 22 | `sssp_flickr_sym` | SSSP | flickr | 1 |
+| 23 | `bc_flickr_dir` | BC | flickr | 0 |
+| 24 | `bc_flickr_sym` | BC | flickr | 1 |
+| 25 | `cc_flickr_sym` | CC | flickr | 1 |
+| 26 | `spmv_flickr_sym` | SpMV | flickr | 1 |
+| 27 | `bfs_road_dir` | BFS | roadNet-CA | 0 |
+| 28 | `bfs_road_sym` | BFS | roadNet-CA | 1 |
+| 29 | `sssp_road_dir` | SSSP | roadNet-CA | 0 |
+| 30 | `sssp_road_sym` | SSSP | roadNet-CA | 1 |
+| 31 | `bc_road_dir` | BC | roadNet-CA | 0 |
+| 32 | `bc_road_sym` | BC | roadNet-CA | 1 |
+| 33 | `cc_road_sym` | CC | roadNet-CA | 1 |
+| 34 | `spmv_road_sym` | SpMV | roadNet-CA | 1 |
+| 35 | `vc_road_sym` | VC | roadNet-CA | 1 |
+| 36 | `bfs_socLJ_dir` | BFS | soc-LJ1 | 0 |
+| 37 | `bfs_socLJ_sym` | BFS | soc-LJ1 | 1 |
+| 38 | `spmv_socLJ_sym` | SpMV | soc-LJ1 | 1 |
+
+> **分布**: cit-Patents 9 | web-Google 9 | flickr 8（无 VC） | roadNet-CA 9 | soc-LJ1 3
+> **缺失**: VC-flickr/soc-LJ1 因 MAXCOLOR=128 crash 排除
 
 ---
 
@@ -31,7 +79,7 @@
 
 ---
 
-## 算法（7 个）
+## 算法（6 个）
 
 ### Directed / Undirected 兼容性（A100 真机验证）
 
@@ -42,10 +90,9 @@
 | **BC** | ✅ Correct | ✅ Correct | 19 | 双变体选优 |
 | **CC** | ❌ Wrong | ✅ Correct | 6 | 仅 sym=1 |
 | **SpMV** | ❌ Crash | ✅ Correct | 29 | 仅 sym=1 |
-| **PR** | ✅ Correct | ✅ Correct | 57 | 双变体选优 |
 | **VC** | ❌ Wrong | ✅ Correct | 34 | 仅 sym=1 |
 
-**双变体选优**：BFS / SSSP / BC / PR 在每个数据集上同时跑 sym=0 和 sym=1 baseline，选 ideal L1D 加速更高的变体进入论文。
+**双变体选优**：BFS / SSSP / BC 在每个数据集上同时跑 sym=0 和 sym=1 baseline，选 ideal L1D 加速更高的变体进入论文。
 
 **仅 sym=1**：CC / SpMV / VC 在 directed 图上产生错误结果或崩溃，只能使用 sym=1。
 - SpMV crash 原因：`spmv_base` 使用 `in_rowptr`（CSC），directed 图不构建 reverse → invalid argument
@@ -76,7 +123,6 @@
 | **BFS** | `bfs_cit_dir` / `bfs_cit_sym` | `bfs_web_dir` / `bfs_web_sym` | `bfs_flickr_dir` / `bfs_flickr_sym` | `bfs_road_dir` / `bfs_road_sym` |
 | **SSSP** | `sssp_cit_dir` / `sssp_cit_sym` | `sssp_web_dir` / `sssp_web_sym` | `sssp_flickr_dir` / `sssp_flickr_sym` | `sssp_road_dir` / `sssp_road_sym` |
 | **BC** | `bc_cit_dir` / `bc_cit_sym` | `bc_web_dir` / `bc_web_sym` | `bc_flickr_dir` / `bc_flickr_sym` | `bc_road_dir` / `bc_road_sym` |
-| **PR** | `pr_cit_dir` / `pr_cit_sym` | `pr_web_dir` / `pr_web_sym` | `pr_flickr_dir` / `pr_flickr_sym` | `pr_road_dir` / `pr_road_sym` |
 
 ### 仅 sym=1 算法
 
@@ -97,16 +143,16 @@
 
 ```bash
 # 双变体算法 — directed 变体
-DUAL_DIR="bfs_cit_dir sssp_cit_dir bc_cit_dir pr_cit_dir \
-          bfs_web_dir sssp_web_dir bc_web_dir pr_web_dir \
-          bfs_flickr_dir sssp_flickr_dir bc_flickr_dir pr_flickr_dir \
-          bfs_road_dir sssp_road_dir bc_road_dir pr_road_dir"
+DUAL_DIR="bfs_cit_dir sssp_cit_dir bc_cit_dir \
+          bfs_web_dir sssp_web_dir bc_web_dir \
+          bfs_flickr_dir sssp_flickr_dir bc_flickr_dir \
+          bfs_road_dir sssp_road_dir bc_road_dir"
 
 # 双变体算法 — symmetric 变体
-DUAL_SYM="bfs_cit_sym sssp_cit_sym bc_cit_sym pr_cit_sym \
-          bfs_web_sym sssp_web_sym bc_web_sym pr_web_sym \
-          bfs_flickr_sym sssp_flickr_sym bc_flickr_sym pr_flickr_sym \
-          bfs_road_sym sssp_road_sym bc_road_sym pr_road_sym"
+DUAL_SYM="bfs_cit_sym sssp_cit_sym bc_cit_sym \
+          bfs_web_sym sssp_web_sym bc_web_sym \
+          bfs_flickr_sym sssp_flickr_sym bc_flickr_sym \
+          bfs_road_sym sssp_road_sym bc_road_sym"
 
 # 仅 sym=1 算法
 SYM_ONLY="cc_cit_sym cc_web_sym cc_flickr_sym cc_road_sym \
@@ -124,10 +170,10 @@ ALL_WORKLOADS="$DUAL_DIR $DUAL_SYM $SYM_ONLY $SOCLJ"
 
 | 类别 | Workload 数 |
 |------|:-:|
-| 双变体选优（4 algo × 4 ds × 2 sym） | 32 |
+| 双变体选优（3 algo × 4 ds × 2 sym） | 24 |
 | 仅 sym=1（3 algo × 4 ds，减 VC-flickr） | 11 |
 | soc-LJ1 扩展 | 3 |
-| **合计** | **46** |
+| **合计** | **38** |
 
 ---
 
@@ -135,10 +181,10 @@ ALL_WORKLOADS="$DUAL_DIR $DUAL_SYM $SYM_ONLY $SOCLJ"
 
 | 实验类型 | 覆盖范围 | 说明 |
 |----------|---------|------|
-| Baseline (no prefetch) | 全部 52 workloads | 基准 IPC / miss rate / stall |
-| Ideal L1D 上界（仅 load） | 全部 52 workloads | 性能天花板（`--ideal-l1d`，仅对 load 生效） |
-| 选优决定 | 双变体的 38 workloads | 选 ideal L1D 加速更高的 sym 变体 |
-| GRASP Prefetcher | 选定的 ~32 workloads | 主实验 |
+| Baseline (no prefetch) | 全部 44 workloads | 基准 IPC / miss rate / stall |
+| Ideal L1D 上界（仅 load） | 全部 44 workloads | 性能天花板（`--ideal-l1d`，仅对 load 生效） |
+| 选优决定 | 双变体的 30 workloads | 选 ideal L1D 加速更高的 sym 变体 |
+| GRASP Prefetcher | 选定的 ~24 workloads | 主实验 |
 | SOTA 对比 | 选定的 cit-Patents workloads | 高 IMA 下与已有方案对比 |
 | Ablation Study | 选定的 cit-Patents workloads | 消融实验 |
 | Sensitivity Study | 选 3-4 个代表 | 参数扫描 |
@@ -177,7 +223,7 @@ Ideal L1D（`--ideal-l1d` / `-gpgpu_perfect_l1d 1`）仅对 **load（GLOBAL_ACC_
 ## 算法概述与应用场景
 
 > Chain 数据来源：golden chain CSV (`ima_pair_table/golden/strict_selected_chain_instances.csv`)
-> 2026-03-31 已合并 CC/PR/VC/SymGS chains，共 162 chains
+> 2026-03-31 已合并 CC/VC/SymGS chains，共 105 chains
 
 | 算法 | IMA Chains | 数据结构 | 访问模式 |
 |------|:---------:|---------|---------|
@@ -186,7 +232,6 @@ Ideal L1D（`--ideal-l1d` / `-gpgpu_perfect_l1d 1`）仅对 **load（GLOBAL_ACC_
 | BC | 19 | CSR 图 | forward BFS + reverse 依赖传播，2 个 kernel 各有独立 chain |
 | CC | 6 | CSR 图 | `hook` + `shortcut` — Shiloach-Vishkin 并查集操作 |
 | SpMV | 29 | CSR 稀疏矩阵 | `val[j] * x[col_idx[j]]` — 循环展开产生 29 条 chain |
-| PR | 57 | CSR 图 | `pull_step` + `pull_fused` — CSR 拉取式 rank 累加 |
 | VC | 34 | CSR 图 | `first_fit` 贪心着色 + `conflict_resolve` 冲突修复 |
 
 ### 各算法的典型应用
@@ -198,14 +243,13 @@ Ideal L1D（`--ideal-l1d` / `-gpgpu_perfect_l1d 1`）仅对 **load（GLOBAL_ACC_
 | **BC** | Betweenness Centrality | 社交网络关键节点识别（意见领袖检测）、通信网络脆弱性分析、交通枢纽重要度评估 |
 | **CC** | Connected Components | 图聚类与社区发现、图像分割（像素连通域）、网络故障域隔离 |
 | **SpMV** | Sparse Matrix-Vector Multiply | 科学计算迭代求解器（CFD/FEM）、PageRank 底层内核、推荐系统矩阵分解 |
-| **PR** | PageRank | 搜索引擎网页排名（Google）、论文引用影响力评估、推荐系统节点重要度计算 |
 | **VC** | Vertex Coloring | 并行计算任务调度（避免冲突着色）、编译器寄存器分配、无线网络频谱分配 |
 ### 算法分类
 
-从 IMA 模式的角度，7 个算法可归为三类：
+从 IMA 模式的角度，6 个算法可归为三类：
 
 1. **图遍历类**（BFS, SSSP, BC, CC）：基于 CSR `rowptr → col_idx` 的邻居访问，IMA chain 直接对应图的邻接表遍历。BFS/SSSP/BC 为 frontier-driven（活跃集驱动），CC 为全图迭代
-2. **稀疏线性代数类**（SpMV, PR）：基于 CSR `rowptr → col_idx → value` 的矩阵-向量操作。PR 本质上是 SpMV 的迭代应用，两者 chain 模式相似但 PR 有额外的 rank 累加逻辑
+2. **稀疏线性代数类**（SpMV）：基于 CSR `rowptr → col_idx → value` 的矩阵-向量操作
 3. **图着色类**（VC）：基于 CSR 邻居检查的贪心/冲突修复迭代，chain 模式与图遍历类似但有更高的条件分支
 
 ---
@@ -219,26 +263,23 @@ Ideal L1D（`--ideal-l1d` / `-gpgpu_perfect_l1d 1`）仅对 **load（GLOBAL_ACC_
 | BC | 19 | golden | 70.3% | 3.04× | 70.5% |
 | CC | 6 | golden (合并) | — | 2.22× | 83.6% |
 | SpMV | 29 | golden | — | 2.31× | 66.9% |
-| PR | 57 | golden (合并) | 64.0% | 待测 | 待测 |
 | VC | 34 | golden (合并) | 待测 | 待测 | 待测 |
 
 > **筛选标准**：SASS 中存在 exact_chain（`LDG → IMAD.WIDE → LDG`）且 ideal L1D 加速 > 10%。
-> CC/PR/VC 的 chain 数据于 2026-03-31 从 `chain_extraction/extended_chains.csv` 合并到 golden CSV。
+> CC/VC 的 chain 数据于 2026-03-31 从 `chain_extraction/extended_chains.csv` 合并到 golden CSV。
 
 ---
 
-## PR / VC 仿真可行性
+## VC 仿真可行性
 
-PR 和 VC 在较大数据集上仿真时间极长，需特别注意：
+VC 在较大数据集上仿真时间极长，需特别注意：
 
 | 算法 | 数据集 | 预期 Kernels | 已知耗时 | 备注 |
 |------|--------|:-:|---------|------|
-| PR | cit-Patents sym=1 | 81 | 25.3h（42% 完成后被 Kill） | 预计完整跑需 ~60h |
-| PR | web-Google sym=1 | 117 | 27min 被 Kill（3%） | 预计 ~14h，值得重试 |
 | VC | cit-Patents sym=1 | 14 | 第 1 kernel 未完成 | 单 kernel 极慢 |
 | VC | web-Google sym=1 | 62 | 1.5h 被 Kill（2%） | 单 kernel 极慢 |
 
-**策略**：先在 roadNet-CA sym=1（最小数据集）上验证 PR/VC baseline 是否可行，再逐步扩展到更大数据集。
+**策略**：先在 roadNet-CA sym=1（最小数据集）上验证 VC baseline 是否可行，再逐步扩展到更大数据集。
 
 ---
 

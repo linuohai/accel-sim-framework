@@ -15,6 +15,9 @@
 - 回归测试 → [`ima_plan/05_implementation/regression/grasp_regression.sh`](ima_plan/05_implementation/regression/grasp_regression.sh)（修改 GRASP 代码后必跑，默认 `--quick` 只跑 BFS ~34min，`--full` 跑 4 workload 并行 ~44min）
 - Debug 方法学 → [`ima_plan/05_implementation/debug/README.md`](ima_plan/05_implementation/debug/README.md)（GRASP 小 case 5 阶段 debug 规范）
 - DSE 参数探索 → [`ima_plan/05_implementation/dse_ct_reset_policy.md`](ima_plan/05_implementation/dse_ct_reset_policy.md)（speculative stride、CT reset policy 等待验证特性）
+- **实验结果（唯一数据源）** → [`ima_plan/06_evaluation_plan/experiment_results.md`](ima_plan/06_evaluation_plan/experiment_results.md)（46 workloads × 3 modes，含 source log 标注）
+- 实验耗时参考 → [`ima_plan/06_evaluation_plan/experiment_timing.md`](ima_plan/06_evaluation_plan/experiment_timing.md)（指导时间规划和并行策略）
+- 输出指标规范 → [`ima_plan/06_evaluation_plan/output_specification.md`](ima_plan/06_evaluation_plan/output_specification.md)（§2 展示指标 + §3 调试指标 + §7 报告模板）
 
 ## 跨 Session 状态管理与文档自维护
 
@@ -121,11 +124,23 @@ make -j -C ./gpu-simulator/                  # 编译（或用 cmake）
 ./traceL1 --max-completed-cta 200 bfs_web                            # 限制 CTA（快速验证）
 ./traceL1 --issue-trace-compress gzip bfs_roadnet bfs_roadnet_gz     # 边跑边压缩
 ./traceL1 --plot bfs_roadnet bfs_roadnet_plot                        # 仿真后自动绘图
+./traceL1 --grasp --sim-args "-grasp_tc_mode 4 -grasp_tc_mshr_threshold 40 -grasp_tc_cooldown 200" bfs_ima_small bfs_tc  # 传递额外仿真参数
 ```
 
-`trace_key` 须为 `traceL1` 脚本 `TRACE_MAP` 中的键。常用模式：`{bfs,sssp,bc,cc,spmv}_{roadnet,usa,web,...}`、`{算法}_ima_{high,med,small}`。
+`trace_key` 须为 `traceL1` 脚本 `TRACE_MAP` 中的键。统一命名规范：`{algo}_{dataset}_{dir|sym}`（如 `bfs_cit_sym`、`cc_flickr_sym`）。旧名 `*_ima_high` = `*_cit_sym`，`*_ima_med` = `*_web_sym`（保留兼容）。
 
 > **Trace 输出注意**：默认开启 L1/L2/HBM trace，单实验可产出 10-20 GB。批量实验**必须**关闭（`--no-l1-trace --no-l2-trace --no-hbm-trace`）或开启压缩。
+
+### 批量实验
+
+```bash
+./run_batch_experiments.sh all       # 并行跑全部 baseline + GRASP（带内存监控 + kill 检测）
+./run_batch_experiments.sh baseline  # 只跑 baseline
+./run_batch_experiments.sh grasp     # 只跑 GRASP
+./run_ideal_l1d.sh                   # 并行跑全部 Ideal L1D（load-only）
+```
+
+结果报告自动写入 `ima_plan/06_evaluation_plan/batch_run_report.md` 和 `ideal_l1d_report.md`。
 
 ### 实验完成性验证
 
@@ -154,7 +169,7 @@ make -j -C ./gpu-simulator/                  # 编译（或用 cmake）
 - `IMA_DEMAND:` — index/data reads/hits/hit_reserved/misses 汇总
 - `IMA_TIMELINESS:` — index/data timeliness%
 
-EXPERIMENT SUMMARY（GRASP 模式）会自动从 SM0 提取 EFFECT/STORAGE/RFAIL/TIMELINESS 并显示在终端和 log 末尾。
+EXPERIMENT SUMMARY（GRASP 模式）会自动**聚合全部 SM** 的 EFFECT/STORAGE/RFAIL/FUNNEL 并显示在终端和 log 末尾。TIMELINESS 取自全局 `IMA_TIMELINESS:` 行。
 
 > 完整的指标分级规范（展示/调试分层 + 三版本规则 + 报告模板）见 [`06_evaluation_plan/output_specification.md`](ima_plan/06_evaluation_plan/output_specification.md)
 
@@ -237,6 +252,8 @@ accel-sim-framework/
 | Issue Trace | `-issue_trace_enable 1`（建议 `--issue-trace-compress gzip`） | `gpu-simulator/gpgpu-sim/doc/issue_trace.md` |
 | N-Level 调度器 | `./traceL1 -nl` | `gpu-simulator/gpgpu-sim/doc/n_level_warp_scheduler.md` |
 | Speculative Stride | `-grasp_speculative_stride N`（默认 0=关闭）+ chain CSV `stride_hint` 列 | `ima_plan/05_implementation/dse_ct_reset_policy.md` |
+| Throttle Cooldown | `-grasp_tc_mode 4 -grasp_tc_mshr_threshold 40 -grasp_tc_cooldown 200`（默认 mode=0 thr=80） | `ima_plan/05_implementation/dse_throttle_control/README.md` |
+| Sim Args Passthrough | `--sim-args "<raw gpgpusim options>"`（traceL1 额外参数透传） | traceL1 脚本内 `EXTRA_SIM_ARGS` |
 
 ### GPU 配置
 

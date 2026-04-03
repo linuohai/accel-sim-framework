@@ -91,8 +91,9 @@ def load_pair_table(path: str) -> Tuple[dict, dict]:
 
     Returns:
         forward: (chain_id, idx_addr) → data_addr
-        reverse: (data_addr, warp_id) → [(chain_id, idx_addr, idx_pc)]
-            Per-warp reverse map (scope=0: each warp has its own addr_map)
+        reverse: (data_sector, warp_id) → [(chain_id, idx_addr, idx_pc, data_pc)]
+            Per-warp reverse map keyed by sector-aligned data address
+            (L1 trace records sector addresses, pair table has byte addresses)
     """
     forward: Dict[Tuple[int, int], int] = {}
     reverse: Dict[Tuple[int, int], List[Tuple[int, int, int]]] = defaultdict(list)
@@ -106,7 +107,8 @@ def load_pair_table(path: str) -> Tuple[dict, dict]:
             idx_pc = parse_addr(row["idx_pc"])
             forward[(chain_id, idx_addr)] = data_addr
             data_pc = parse_addr(row["data_pc"])
-            reverse[(data_addr, warp_id)].append((chain_id, idx_addr, idx_pc, data_pc))
+            data_sector = data_addr & SECTOR_MASK
+            reverse[(data_sector, warp_id)].append((chain_id, idx_addr, idx_pc, data_pc))
     return forward, reverse
 
 
@@ -177,7 +179,7 @@ def build_event_indices(events: List[GraspEvent]):
 
     Returns:
         by_warp_event: (warp_id, event_type) → [GraspEvent] sorted by cycle
-        stride_converge: ct_idx → [(cycle, warp_id)]  # per-CT, not per-warp
+        stride_converge: idx_pc → [cycle]  # earliest cycle where stride_valid=1 observed
         idx_enqueue_by_addr: (warp_id, sector_addr) → [GraspEvent]
         fill_dispatch_by_addr: sector_addr → [GraspEvent]
         data_enqueue_by_addr: sector_addr → [GraspEvent]
@@ -193,8 +195,13 @@ def build_event_indices(events: List[GraspEvent]):
     for e in events:
         by_warp_event[(e.warp_id, e.event)].append(e)
         if e.event == "STRIDE_CONVERGE":
-            # CT is per-SM, not per-warp — index by index_pc
             stride_converge[e.pc].append(e.cycle)
+        elif e.event == "DEMAND_CT_HIT":
+            # Fallback: stride may converge speculatively during CT_INSERT
+            # without emitting STRIDE_CONVERGE.  Use stride_valid=1 from
+            # DEMAND_CT_HIT as evidence of convergence.
+            if e.detail.get("stride_valid") == "1":
+                stride_converge[e.pc].append(e.cycle)
         elif e.event == "IDX_PF_ENQUEUE":
             sector = e.addr & SECTOR_MASK
             idx_enqueue_by_addr[(e.warp_id, sector)].append(e)
@@ -247,10 +254,11 @@ def classify_miss(
     warp = miss.warp_id
     miss_cycle = miss.cycle
 
-    # --- Step 1: Reverse lookup (per-warp pair table) ---
-    key = (D, warp)
+    # --- Step 1: Reverse lookup (per-warp pair table, sector-aligned) ---
+    data_sector = D & SECTOR_MASK
+    key = (data_sector, warp)
     if key not in reverse_map:
-        miss.evidence = f"data_addr=0x{D:x} warp={warp} not in pair table"
+        miss.evidence = f"data_addr=0x{D:x} sector=0x{data_sector:x} warp={warp} not in pair table"
         return RC_NOT_IN_TABLE
 
     # Filter by demand data PC to pick the correct chain (avoid ghost entries
@@ -270,7 +278,7 @@ def classify_miss(
     if not converged_before:
         miss.evidence = (
             f"chain={chain_id} idx_pc=0x{idx_pc:x} "
-            f"no STRIDE_CONVERGE before cycle {miss_cycle}"
+            f"no stride_valid=1 (STRIDE_CONVERGE or DEMAND_CT_HIT) before cycle {miss_cycle}"
         )
         return RC_STRIDE_NOT_CONVERGED
 
@@ -422,7 +430,7 @@ def main():
     forward, reverse = load_pair_table(args.pair_table)
     print(
         f"  Forward entries: {len(forward)}, "
-        f"Reverse entries (data_addr, warp_id): {len(reverse)}",
+        f"Reverse entries (data_sector, warp_id): {len(reverse)}",
         file=sys.stderr,
     )
 

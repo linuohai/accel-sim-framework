@@ -3,7 +3,7 @@
 > **目的**：统一的实验进度 + 问题追踪文档。记录实验配置、结果、发现的问题和解决方案。
 > **写入规则**：**append-only**——新内容追加到对应 section 末尾，不修改已有条目。多个并发 session 可安全追加。
 >
-> 最近更新：2026-04-02
+> 最近更新：2026-04-03
 
 ---
 
@@ -593,3 +593,167 @@ BFS event timeline 中发现 stride 值出现百万级异常（如 iter_stride=1
 | `result/log/bfs_stride_fix_test.log` | bfs_ima_small stride fix 验证 (108SM 全量) |
 | `result/log/bfs_stride_fix_diag2.log` | bfs_ima_small stride fix 诊断 (1SM, 10CTA, L1+GRASP trace) |
 | `result/log/bfs_warp_exit_fix.log` | bfs_ima_small warp exit hook 验证 (1SM, 10CTA, GRASP trace) |
+
+## 7g. CT Kernel Reset + CD FIFO Bug Fix (2026-04-02)
+
+### 问题发现
+
+BFS 1SM root cause 分析发现 IDX_NOT_TRIGGERED 占 chain 2-6 非结构性 miss 的 40%。逐案例追踪发现两个 bug：
+
+1. **CT same_kernel 检测失败**：`on_kernel_launch()` 用 `kernel.entry()` 指针比较判断是否同一 kernel。trace-driven 模式下每次 launch 创建新 `kernel_info_t`，指针永远不同 → CT 每次 kernel launch 全量 reset → stride 知识全丢
+2. **CD FIFO invalidation 不回收 m_count**：`invalidate_by_src/dst` 设 `valid=false` 但 `m_count` 不减 → FIFO 永远显示 100% full → 新 push 总覆盖 oldest
+
+### 修复
+
+1. `on_kernel_launch()` 改用 `kernel.get_name()` 字符串比较
+2. CD FIFO `push()` 在 "full" 时先扫描 invalid slot 回收
+
+### 回归结果
+
+| Workload | Golden IPC | 修复后 IPC | Delta |
+|----------|-----------|-----------|-------|
+| BFS | 29.75 | 30.81 | **+3.6%** |
+| SSSP | 34.28 | 35.39 | **+3.2%** |
+| SpMV | 164.12 | 175.35 | **+6.8%** |
+| BC | 44.61 | 40.79 | -8.6%（spec_stride 配置不一致，非本次引入） |
+
+### BFS 1SM 指标改善
+
+| 指标 | 修复前 | 修复后 |
+|------|--------|--------|
+| CT_INSERT | 642 | 6 |
+| DEMAND_CT_MISS | 151,828 | 1,479 |
+| CD drops | 208 | 0 |
+| all_stride_valid | no | yes |
+| Data hits | 26,459 | 29,629 (+3,170) |
+| Data misses | 72,547 | 70,425 (-2,122) |
+
+### 日志文件索引
+
+| 文件 | 说明 |
+|------|------|
+| `result/log/bfs_1sm_debug_ct*.log` | CT debug 实验系列 |
+| `result/log/bfs_1sm_fix_verify.log` | 修复验证 (1SM, 3CTA) |
+| `result/log/regress3_*_grasp.log` | 回归测试 (4 workload) |
+
+## 7h. L1 Miss Queue / MSHR 容量探索 (2026-04-03)
+
+### 目的
+
+Post CT-fix root cause 显示 IDX_PF_RFAIL 占 50.8%（missq 90.4%）。探索：消除 L1 miss queue / MSHR 瓶颈能否减少 data miss。
+
+### 实验配置
+
+| 配置 | miss queue | MSHR | throttle | GPU config |
+|------|-----------|------|----------|------------|
+| baseline | 16 | 512 | — | SM80_A100_1SM |
+| GRASP mq=16 | 16 | 512 | thr=80 | SM80_A100_1SM |
+| GRASP inf-mq | 65536 | 512 | thr=80 | SM80_A100_1SM_infmq |
+| GRASP inf-all | 65536 | 65536 | thr=0 | SM80_A100_1SM_infmq2 |
+
+所有实验：BFS web-Google, 1SM, max_completed_cta=3, spec_stride=0。
+
+### 关键结果
+
+| 指标 | baseline | mq=16 | inf-mq | inf-all |
+|------|----------|-------|--------|---------|
+| IPC | 1.113 | **1.884** | 1.854 | 1.795 |
+| data_misses | 79,020 | 70,425 | 70,973 | 70,210 |
+| coverage | — | 10.9% | 10.2% | 11.1% |
+| accuracy | — | 43.8% | 32.9% | **22.8%** |
+| RFAIL | — | 41,386 | 12,920 | **0** |
+| useless | — | 19,892 | 35,938 | **63,483** |
+| miss_queue_peak | — | 16/16 | 280/65536 | 1052/65536 |
+| mshr_peak | — | — | — | 2208/65536 |
+
+### 关键发现
+
+1. **消除 RFAIL 不减少 data miss**：41K RFAIL 消除后 data miss 仅减 215 (0.3%)
+2. **IPC 反而下降**：1.884→1.795 (−4.7%)，资源放大导致性能退化
+3. **原 RFAIL 预取的去向**：5% useful / 74% useless / 20% late
+4. **L1 cache 污染是核心问题**：accuracy 从 44% 降到 23%，useless 增长 3 倍
+5. **miss queue 真实需求 1052，MSHR 需求 2208**：远超默认 16/512，但放大无收益
+
+### 结论
+
+L1 miss queue / MSHR 不是性能瓶颈。真正限制 coverage 的是：
+- **PT miss**（addr_map 覆盖不完整，~33K 不变）
+- **L1 cache 污染**（useless prefetch 驱逐有用数据）
+- 下一步应聚焦**提高 accuracy**（减少无效预取），而非增加资源
+
+### 日志文件索引
+
+| 文件 | 说明 |
+|------|------|
+| `result/log/bfs_1sm_postfix.log` | post CT-fix baseline (mq=16) |
+| `result/log/bfs_1sm_infmq.log` | inf miss queue (mq=65536) |
+| `result/log/bfs_1sm_infmq2.log` | inf MQ + MSHR + no throttle |
+| `debug/bfs_1sm_postfix_detail.csv` | post-fix root cause detail |
+
+## 7i. PR 算法移除 + vc_road_sym 补齐 (2026-04-03)
+
+### PR (PageRank) 从 benchmark suite 移除
+
+**决策**：PR 在所有数据集上 GRASP speedup 一致为 -0.5%~0%（最佳 pr_cit_dir -0.3%），且单次仿真需 12-38h（pr_cit_sym 38h baseline + 37h GRASP），性价比极低。
+
+**执行**：
+- benchmark_suite.md: 算法 7→6，workload 46→38（删除 8 个 PR workload）
+- golden chain CSV: 删除 57 条 PR chain（162→105 chains），已备份
+- run_batch_experiments.sh / run_ideal_l1d.sh: 删除 PR keys
+- experiment_results.md / baseline_registry.csv / experiment_timing.md / batch_run_commands.md / benchmark_ima_analysis.md: 删除 PR 数据
+- traceL1 TRACE_MAP: 保留 PR 条目不动（仅 key→path 映射）
+
+### vc_road_sym 实验补齐
+
+roadNet-CA VC 是唯一完全空白的 workload。发现 3 个实验已在后台运行（04:25 启动）：
+- Ideal L1D: ✅ 已完成（IPC=787.0948, 24/24 kernels）
+- Baseline (`vc_road_sym_baseline_v2`): 运行中，kernel 5/24，预计 ~28h
+- GRASP (`vc_road_sym_g1_bugfix`): 运行中，同步进度
+- GRASP+specstride (`vc_road_sym_g2_specstride`): 运行中，同步进度
+
+**注意**：VC roadNet-CA 实际仿真时间 ~28h（远超 experiment_timing 原估计的 1-3h），因 first_fit + conflict_resolve 迭代着色的单 kernel 计算量大。
+
+## 7j. Throttle Control DSE (2026-04-03)
+
+### 版本
+
+在 commit 039cfa6 基础上新增 `tc_mode` 节流策略框架（未提交）：
+- `grasp_prefetcher.h/cc`: tc_mode dispatch (mode 0-4), 7 个新 config 字段, m_tc_cooldown_until
+- `gpu-sim.cc/shader.h/shader.cc`: option registration + propagation
+- `gpu-cache.cc/h`: miss_queue_peak/mshr_peak tracking（前 session 遗留）
+- `traceL1`: 新增 `--sim-args` passthrough 机制
+
+### Round 1: 策略筛选（1SM BFS, 18 configs）
+
+测试 4 种策略: S1(双阈值), S2(队列深度), S3(accuracy-gated), S4(cooldown timer)。
+- **冠军 S4d** (tc_mode=4, thr=60, cd=200): IPC +0.33%, accuracy 47.81%, useless -9.6%
+- S2 无效（队列深度不是拥塞信号），S3 微弱（+0.27%）
+
+### Round 2: 参数细化 + Full-SM 验证
+
+Phase 1 (1SM, 18 configs): S4 threshold×cooldown 交叉扫描 + S3 refined。
+- **新冠军 T50C100** (thr=50, cd=100): 1SM IPC +0.54%
+
+Phase 2 (Full-SM BFS+SSSP+SpMV):
+
+| Workload | B1 IPC | T40C200 IPC | ΔIPC | ΔUseless |
+|----------|--------|-------------|------|----------|
+| BFS (web-Google sym) | 30.85 | 30.97 | +0.39% | -25.9% |
+| SSSP (web-Google sym) | 35.39 | 35.52 | +0.37% | -24.3% |
+| SpMV (web-Google sym) | 175.70 | 181.80 | **+3.47%** | **-60.7%** |
+| **S3b on SpMV** | 175.70 | 156.92 | **-10.69%** | +5.9% |
+
+Phase 3 (Extended, 6 fast workloads): dir 图 acc>99% 无收益，spmv_road_sym +0.88%。
+**0/9 workloads 退化。**
+
+### 最终推荐
+
+`tc_mode=4, tc_mshr_threshold=40, tc_cooldown=200` (T40C200)
+- GeoMean(3 sym workloads) = +1.40%
+- 核心发现: 收益与 baseline accuracy 负相关；IPC 提升来自 MSHR 拥塞缓解而非 miss 数量减少
+
+### 数据
+
+详细结果: `ima_plan/05_implementation/dse_throttle_control/README.md`
+CSV: `dse_throttle_control/results/{bfs,sssp,spmv}_fullsm_dse_r2.csv`, `extended_validation.csv`
+实验 logs: `result/log/bfs_1sm_tc_*.log`, `bfs_1sm_tc2_*.log`, `bfs_fs_tc2_*.log`, `{sssp,spmv}_fs_tc2_*.log`, `{bfs,sssp,bc,spmv}_{cit,road}_*_tc_*.log`
