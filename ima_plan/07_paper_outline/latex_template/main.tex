@@ -1,0 +1,520 @@
+%%
+%% This is file `sample-sigconf.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% samples.dtx  (with options: `all,proceedings,bibtex,sigconf')
+%% 
+%% IMPORTANT NOTICE:
+%% 
+%% For the copyright see the source file.
+%% 
+%% Any modified versions of this file must be renamed
+%% with new filenames distinct from sample-sigconf.tex.
+%% 
+%% For distribution of the original source see the terms
+%% for copying and modification in the file samples.dtx.
+%% 
+%% This generated file may be distributed as long as the
+%% original source files, as listed above, are part of the
+%% same distribution. (The sources need not necessarily be
+%% in the same archive or directory.)
+%%
+%%
+%% Commands for TeXCount
+%TC:macro \cite [option:text,text]
+%TC:macro \citep [option:text,text]
+%TC:macro \citet [option:text,text]
+%TC:envir table 0 1
+%TC:envir table* 0 1
+%TC:envir tabular [ignore] word
+%TC:envir displaymath 0 word
+%TC:envir math 0 word
+%TC:envir comment 0 0
+%%
+%%
+%% The first command in your LaTeX source must be the \documentclass
+%% command.
+%%
+%% For submission and review of your manuscript please change the
+%% command to \documentclass[manuscript, screen, review]{acmart}.
+%%
+%% When submitting camera ready or to TAPS, please change the command
+%% to \documentclass[sigconf]{acmart} or whichever template is required
+%% for your publication.
+%%
+%%
+\PassOptionsToPackage{table}{xcolor} % must precede \documentclass (acmart loads xcolor)
+\documentclass[sigconf, screen, review]{acmart}
+
+%% ── Additional packages for GRASP paper ──
+\usepackage{booktabs}
+\usepackage{multirow}
+\let\Bbbk\relax            % avoid clash with newtxmath (loaded by acmart)
+\usepackage{amssymb}       % for \checkmark
+\usepackage{enumitem}      % for itemize options [nosep, leftmargin=*]
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt} % default 20pt, tighten figure-to-text gap
+
+%%
+%% \BibTeX command to typeset BibTeX logo in the docs
+\AtBeginDocument{%
+  \providecommand\BibTeX{{%
+    Bib\TeX}}}
+
+%% Rights management information.  This information is sent to you
+%% when you complete the rights form.  These commands have SAMPLE
+%% values in them; it is your responsibility as an author to replace
+%% the commands and values with those provided to you when you
+%% complete the rights form.
+\setcopyright{none} 
+%\setcopyright{acmlicensed}
+\copyrightyear{2026}
+\acmYear{2026}
+\acmDOI{XXXXXXX.XXXXXXX}
+
+%% These commands are for a PROCEEDINGS abstract or paper.
+\acmConference[MICRO 2026]{The 58th IEEE/ACM International Symposium on Microarchitecture}{October 31--November 04, 2026}{Athens, Greece}
+%%
+%%  Uncomment \acmBooktitle if the title of the proceedings is different
+%%  from ``Proceedings of ...''!
+%%
+%%\acmBooktitle{Woodstock '18: ACM Symposium on Neural Gaze Detection,
+%%  June 03--05, 2018, Woodstock, NY}
+
+\acmISBN{978-X-XXXX-XXXX-X/XX/XX}
+
+
+%%
+%% Submission ID.
+%% Use this when submitting an article to a sponsored event. You'll
+%% receive a unique submission ID from the organizers
+%% of the event, and this ID should be used as the parameter to this command.
+%%\acmSubmissionID{123-A56-BU3}
+
+%%
+%% For managing citations, it is recommended to use bibliography
+%% files in BibTeX format.
+%%
+%% You can then either use BibTeX with the ACM-Reference-Format style,
+%% or BibLaTeX with the acmnumeric or acmauthoryear sytles, that include
+%% support for advanced citation of software artefact from the
+%% biblatex-software package, also separately available on CTAN.
+%%
+%% Look at the sample-*-biblatex.tex files for templates showcasing
+%% the biblatex styles.
+%%
+
+%%
+%% The majority of ACM publications use numbered citations and
+%% references.  The command \citestyle{authoryear} switches to the
+%% "author year" style.
+%%
+%% If you are preparing content for an event
+%% sponsored by ACM SIGGRAPH, you must use the "author year" style of
+%% citations and references.
+%% Uncommenting
+%% the next command will enable that style.
+%%\citestyle{acmauthoryear}
+\settopmatter{printfolios=true}
+\settopmatter{printacmref=false}
+%\pagestyle{plain}
+
+%%
+%% end of the preamble, start of the body of the document source.
+\begin{document}
+
+%%
+%% The "title" command has an optional parameter,
+%% allowing the author to define a "short title" to be used in page headers.
+\title{GRASP: Grasping GPU Indirect Memory Patterns via ISA-Exposed Register-Chain Prefetching}
+\subtitle{\normalsize{MICRO 2026 Submission
+    \textbf{\#NaN} -- Confidential Draft -- Do NOT Distribute!!}}
+%%
+%% The "author" command and its associated commands are used to define
+%% the authors and their affiliations.
+%% Of note is the shared affiliation of the first two authors, and the
+%% "authornote" and "authornotemark" commands
+%% used to denote shared contribution to the research.
+%\author{\normalsize{MICRO 2026 Submission
+ %   \textbf{\#NaN} -- Confidential Draft -- Do NOT Distribute!!}}
+
+%%
+%% By default, the full list of authors will be used in the page
+%% headers. Often, this list is too long, and will overlap
+%% other information printed in the page headers. This command allows
+%% the author to define a more concise list
+%% of authors' names for this purpose.
+
+%%
+%% The abstract is a short summary of the work to be presented in the
+%% article.
+
+%%%%%% -- PAPER CONTENT STARTS-- %%%%%%%%
+
+\begin{abstract}
+
+Indirect memory access (IMA), where one load's address depends on another load's returned data (e.g., $A[B[i]]$), is a major performance bottleneck for graph analytics and sparse linear algebra on GPUs, causing the majority of L1 cache misses. While CPU architects have developed effective IMA prefetchers, their single-threaded assumptions prevent adoption on massively multithreaded GPUs. Meanwhile, existing GPU prefetchers rely on stride-based patterns and cannot handle data-dependent accesses.
+
+We propose GRASP (GPU Register-chain Aware Sector Prefetcher), a hardware prefetcher that exploits a structural property of GPU's SASS ISA: the \texttt{IMAD.WIDE} instruction directly exposes IMA parameters---scale, base address, and index value---as instruction operands, enabling zero-inference detection. GRASP identifies \texttt{LDG}$\to$\texttt{IMAD.WIDE}$\to$\texttt{LDG} dependency chains at the issue stage and employs a two-step index-then-data prefetch pipeline, with per-SM shared tables for training amortization and (base, scale) key merging to handle compiler-induced PC proliferation.
+
+Evaluated on graph workloads with an A100 configuration in Accel-Sim, GRASP achieves a geomean IPC improvement of 35.5\% (up to 49.8\%), at a hardware cost of approximately 2.5\,KB per SM.
+
+\end{abstract}
+%%
+%% The code below is generated by the tool at http://dl.acm.org/ccs.cfm.
+%% Please copy and paste the code instead of the example below.
+%%
+%\begin{CCSXML}
+%<ccs2012>
+% <concept>
+%  <concept_id>00000000.0000000.0000000</concept_id>
+%  <concept_desc>Do Not Use This Code, Generate the Correct Terms for Your Paper</concept_desc>
+%  <concept_significance>500</concept_significance>
+% </concept>
+% <concept>
+%  %<concept_id>00000000.00000000.00000000</concept_id>
+%  <concept_desc>Do Not Use This Code, Generate the Correct Terms for Your Paper</concept_desc>
+%  <concept_significance>300</concept_significance>
+% </concept>
+% <concept>
+%  %<concept_id>00000000.00000000.00000000</concept_id>
+%  <concept_desc>Do Not Use This Code, Generate the Correct Terms for Your Paper</concept_desc>
+%  <concept_significance>100</concept_significance>
+% </concept>
+% <concept>
+ % <concept_id>00000000.00000000.00000000</concept_id>
+%  <concept_desc>Do Not Use This Code, Generate the Correct Terms for Your Paper</concept_desc>
+%  <concept_significance>100</concept_significance>
+% </concept>
+%</ccs2012>
+%\end{CCSXML}
+
+%\ccsdesc[500]{Do Not Use This Code~Generate the Correct Terms for Your Paper}
+%\ccsdesc[300]{Do Not Use This Code~Generate the Correct Terms for Your Paper}
+%\ccsdesc{Do Not Use This Code~Generate the Correct Terms for Your Paper}
+%\ccsdesc[100]{Do Not Use This Code~Generate the Correct Terms for Your Paper}
+
+%%
+%% Keywords. The author(s) should pick words that accurately describe
+%% the work being presented. Separate the keywords with commas.
+\keywords{GPU, prefetching, indirect memory access, graph analytics, cache}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+% ¶1: IMA definition + universality
+Graph analytics (e.g., social networks, road networks, web graphs),
+sparse linear algebra, and data-intensive applications increasingly
+rely on GPUs for acceleration~\cite{wang2016gunrock, xu2019gardenia,
+yang2022graphblast, chen2020pangolin}.
+A defining characteristic of these workloads is the \emph{indirect
+memory access} (IMA) pattern \texttt{A[B[i]]}, in which one load's
+address depends on the return value of a prior
+load~\cite{yu2015imp, fu2024dmp}.
+IMA fundamentally breaks spatial and temporal locality: the data
+array addresses are determined at runtime and scatter unpredictably
+across memory~\cite{talati2021prodigy, xue2024tyche}.
+Because this irregularity is inherent to the data structure---not an
+artifact of poor layout---it cannot be eliminated by data
+reordering~\cite{burtscher2012irregular, shi2018graph}.
+
+% ¶2: IMA breaks GPU latency hiding + Prefetching opportunity + Fig 1
+GPUs hide memory latency by interleaving thousands of concurrent
+warps, yet IMA undermines this mechanism on two fronts.
+First, IMA instructions contribute \textbf{61--93\% of all L1 data cache
+misses} across six representative graph algorithms
+(Figure~\ref{fig:cache-ima}, left), making them the dominant source
+of pipeline stalls.
+Second, the serial dependency between index and data loads doubles
+the effective memory latency per access, inflating the number of
+warps required for full latency hiding well beyond the hardware limit
+of 64 warps per SM (\S\ref{sec:motivation}).
+%
+Crucially, however, a prefetching opportunity exists: while L1 miss
+rates are high (38--59\%), L2 hit rates are also high (70--89\%),
+indicating that the data \emph{resides in L2 but not in L1}
+(Figure~\ref{fig:cache-ima}, left).
+An ideal L1 data cache that eliminates all L1 misses achieves a
+geometric mean speedup of \textbf{2.04$\times$} across 25~workload
+configurations (Figure~\ref{fig:cache-ima}, right), confirming
+substantial headroom for an L1-targeted prefetcher.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/fig1_cache_ima_ideal.pdf}
+  \caption{(a)~L1 miss rate decomposed into IMA data, IMA index, and
+    non-IMA misses (stacked), alongside L2 miss rate (per-algorithm
+    median, symmetric graphs).
+    (b)~Ideal L1D speedup (geometric mean per algorithm; overall
+    2.04$\times$ across 25 configurations).}
+  \label{fig:cache-ima}
+\end{figure}
+
+% Transition to ¶3
+This motivates GPU-specific prefetching for IMA---yet no existing GPU
+prefetcher addresses this access pattern.
+
+% ¶3: GPU stride prefetching — 15 years of progress, IMA blind spot
+GPU prefetching has been studied for over 15~years, achieving
+consistent gains on stride and streaming
+patterns~\cite{lee2010manythread, jog2013orchestrated, oh2016apres,
+koo2018caps, oh2018wasp, mostofi2023snake}.
+These works progressively advanced from inter-thread
+prefetching~\cite{lee2010manythread} and scheduling--prefetch
+co-design~\cite{jog2013orchestrated}, to CTA-aware leading-warp
+detection~\cite{koo2018caps} and variable-length stride
+chains~\cite{mostofi2023snake}.
+However, IMA requires a fundamentally different detection mechanism:
+the data load address is determined by a runtime index value, not by
+an arithmetic stride.
+Indeed, CAPS explicitly skips data-dependent
+accesses~\cite{koo2018caps}, and Snake's chains remain
+stride-based~\cite{mostofi2023snake}.
+
+% ¶4: CPU IMA prefetchers — proven effective but cannot migrate
+Meanwhile, the CPU community has accumulated nearly a decade of
+hardware IMA prefetching, demonstrating that the problem is tractable.
+IMP detects \texttt{A[B[i]]} patterns via address
+differentials~\cite{yu2015imp}, and the state-of-the-art
+DMP~\cite{fu2024dmp} matches four classes of indirect patterns at
+0.9\,KB.
+Subsequent work has progressively addressed multi-level and
+non-linear variants~\cite{cavus2020atp, kaushik2021gretch,
+xue2024tyche, talati2021prodigy}.
+Yet all these designs assume a single-threaded address stream with
+per-core independent state~\cite{ainsworth2019indirect}---assumptions
+that collapse under the 64-warp concurrency of a GPU SM,
+where na\"{\i}ve per-warp replication would cost
+57.6\,KB/SM (\S\ref{sec:motivation}).
+
+% ¶5: Spare Register — sole GPU IMA attempt, decade-long void
+The only hardware prefetcher targeting IMA on GPUs is Spare
+Register~\cite{lakshminarayana2014spare}, which detects load-pairs
+via value-tag propagation and stores prefetched data in idle
+registers, achieving 10\% average IPC improvement.
+However, it was designed and evaluated on the Fermi
+architecture~(2010)---whose cache hierarchy and warp scheduling
+differ substantially from modern SM80+
+designs.
+In the decade since, every subsequent GPU prefetcher has targeted
+stride patterns exclusively~\cite{koo2018caps, oh2018wasp,
+mostofi2023snake}.
+
+% Transition — zero-position landing
+GPU IMA prefetching thus remains an open problem---one that demands a
+detection approach native to the GPU's execution model.
+
+% ¶6: IMAD.WIDE — the ISA structural advantage
+Rather than migrating CPU techniques, we observe that the GPU's own
+ISA provides a more direct path.
+Specifically, NVIDIA's SASS instruction \texttt{IMAD.WIDE\;Rd,
+Rindex, Rscale, c[base]} encodes \emph{all} the information needed
+to prefetch the data load in an IMA chain:
+the \emph{base address} of the data array (a kernel-lifetime constant
+in constant memory), the \emph{scale factor} (element size, a
+compile-time constant), and the \emph{index dependency} (the source
+register linking to the preceding index load).
+A single observation of this instruction suffices to extract every
+prefetch parameter---with \textbf{zero inference}.
+This structural guarantee arises because GPU pointers are 64-bit
+while graph indices are typically 32-bit integers; the resulting
+address computation (32$\times$32$+$64$\to$64) uniquely maps to
+\texttt{IMAD.WIDE} in the SASS ISA, making it the compiler's
+obligatory choice (\S\ref{sec:motivation}).
+Across 12~algorithms compiled for six GPU generations
+(Volta through Hopper), 9 of 12 algorithms exhibit $\geq$86\%
+\texttt{IMAD.WIDE} conformance, confirming the pattern's
+cross-architecture stability.
+
+% ¶7: GRASP overview + selected results
+Based on this insight, we propose \textbf{GRASP} (\textbf{G}PU
+\textbf{R}egister-chain \textbf{A}ware \textbf{S}ector
+\textbf{P}refetcher), which detects
+\texttt{LDG$\to$IMAD.WIDE$\to$LDG} register dependency chains at
+the issue stage and prefetches through a two-step
+index-then-data pipeline.
+GRASP's design inherits two structural advantages from
+\texttt{IMAD.WIDE}: (1)~\emph{(base,\,scale) merging} collapses
+60+ program counters in SpMV into $\sim$2 table entries, eliminating
+PC-space explosion; and (2)~\emph{per-SM shared tables} amortize
+training across 64~warps, requiring only $\sim$2.3\,KB/SM.
+Evaluated on 28~workloads spanning 9~algorithms and 5~datasets,
+GRASP achieves a geometric mean IPC improvement of \textbf{18\%}
+(up to \textbf{122\%}) over an unmodified A100 configuration.
+
+% ¶8: Contributions
+\smallskip\noindent
+This paper makes the following contributions:
+\begin{itemize}[leftmargin=*, nosep]
+\item \textbf{IMA Characterization and IMAD.WIDE Discovery.}
+  We present the first systematic quantification of IMA behavior on
+  modern GPUs, showing that IMA accounts for 61--93\% of L1 misses
+  with an ideal L1D headroom of 2.04$\times$ (geometric mean).
+  We identify \texttt{IMAD.WIDE} as a structurally guaranteed ISA
+  feature that encodes all IMA prefetch parameters, stable across
+  six GPU generations.
+\item \textbf{GRASP Design.}
+  We propose a zero-inference IMA prefetcher built on
+  \texttt{IMAD.WIDE} detection, featuring an index--data two-step
+  pipeline, (base,\,scale) merging, and per-SM shared tables at
+  $\sim$2.3\,KB/SM---the first dedicated IMA prefetcher for modern
+  GPUs.
+\item \textbf{Comprehensive Evaluation.}
+  We evaluate GRASP on 28~workloads across three SOTA GPU
+  prefetcher baselines (Snake, CAPS, Spare Register),
+  demonstrating consistent IPC improvements with a geometric mean
+  of 18\% (up to 122\%).
+\end{itemize}
+
+%%% ====================================================================
+%%% §2 Background & Motivation
+%%% ====================================================================
+\section{Background and Motivation}
+\label{sec:motivation}
+
+\subsection{Indirect Memory Access on GPUs}
+\textit{[IMA definition, CSR traversal pattern, why stride/stream prefetchers fail.]}
+
+\subsection{Performance Impact of IMA}
+\textit{[L1 miss rate 70--77\%, serial dependency chain doubling latency, Little’s Law argument showing warp deficit.]}
+
+\subsection{Why CPU IMA Prefetchers Cannot Migrate}
+\textit{[IMP/DMP/Tyche assume single-thread OoO; GPU has 64 warps sharing L1, no per-thread runahead.]}
+
+
+%%% ====================================================================
+%%% §3 Key Insight
+%%% ====================================================================
+\section{Key Insight: ISA-Exposed IMA Structure}
+\label{sec:insight}
+
+\textit{[IMAD.WIDE exposes scale, base, index as instruction operands — zero-inference detection. Structural guarantee: IMAD.WIDE is the only single-instruction 32×32+64→64 in SASS, compiler will not choose 3-instruction alternative. See insight.md Insight~1.]}
+
+
+%%% ====================================================================
+%%% §4 GRASP Design
+%%% ====================================================================
+\section{GRASP Design}
+\label{sec:design}
+
+\subsection{Overview}
+\textit{[Architecture figure (Fig.~\ref{fig:grasp-arch}) — CD/CT/TT/IPU/DPU/PRB/ACU/TC in cache hierarchy. Two-step prefetch: index first, then data.]}
+
+% \begin{figure}[t]
+%   \centering
+%   \includegraphics[width=\columnwidth]{figures/grasp_architecture.pdf}
+%   \caption{Overview of GRASP hardware design.}
+%   \label{fig:grasp-arch}
+% \end{figure}
+
+\subsection{Chain Detection (CD)}
+\textit{[Monitor issue stage for LDG→IMAD.WIDE→LDG. Extract (index\_PC, data\_PC, base, scale). Write CT + TT entries.]}
+
+\subsection{Stride Learning (IST)}
+\textit{[Per-PC iteration stride tracking. Convergence in 2--3 observations. Cross-kernel persistence.]}
+
+\subsection{Index Prefetch (IPU)}
+\textit{[On demand index load: compute prefetch\_addr = addr + stride × distance. Allocate PRB entry.]}
+
+\subsection{Data Prefetch (DPU + ACU)}
+\textit{[On index fill: ACU reads returned value, computes data\_addr = base + value × scale. DPU issues data prefetch.]}
+
+\subsection{Throttle Control (TC)}
+\textit{[MSHR utilization monitoring. Suppress prefetch when saturated.]}
+
+\subsection{Hardware Budget}
+
+\input{table_templates}  % This imports all table templates;
+% In the final paper, move individual tables to their appropriate sections.
+% For now, they are all included here for preview.
+
+
+%%% ====================================================================
+%%% §5 Implementation
+%%% ====================================================================
+\section{Implementation}
+\label{sec:impl}
+
+\textit{[Accel-Sim / GPGPU-Sim implementation. 8 source files (grasp\_*.h/cc). Trace-driven IMA pair table for runtime value recovery. See 05\_implementation/.]}
+
+
+%%% ====================================================================
+%%% §6 Methodology
+%%% ====================================================================
+\section{Experimental Methodology}
+\label{sec:method}
+
+% Tables 1, 3, 4 belong here in the final paper
+\textit{[GPU config (Table~\ref{tab:gpu-config}), datasets (Table~\ref{tab:datasets}), benchmarks (Table~\ref{tab:ima-patterns}), baselines (Table~\ref{tab:prefetcher-config}).]}
+
+
+%%% ====================================================================
+%%% §7 Evaluation
+%%% ====================================================================
+\section{Evaluation}
+\label{sec:eval}
+
+\subsection{Overall Performance}
+% Table 6 belongs here
+\textit{[IPC speedup across all workloads (Table~\ref{tab:performance}). GRASP vs baselines vs Ideal L1D.]}
+
+\subsection{Prefetch Quality: Accuracy, Coverage, Timeliness}
+\textit{[BFS: acc 55.9\%, cov 93.3\%, time 89.6\%. SpMV: acc 28.8\%, cov 15.5\% — ×16 unroll + MSHR saturation.]}
+
+\subsection{Hardware Overhead}
+% Table 5 belongs here
+\textit{[GRASP budget (Table~\ref{tab:grasp-budget}): ~2.5 KB/SM shared by 64 warps ≈ 39 B/warp.]}
+
+\subsection{Sensitivity Study}
+\textit{[PRB entries, CT entries, prefetch degree, lookahead distance. 2×2 panel line plot.]}
+
+\subsection{Ablation Study}
+\textit{[Disable CD / IST / DPU / TC individually. SSSP +42.2\% full → breakdown.]}
+
+
+%%% ====================================================================
+%%% §8 Related Work
+%%% ====================================================================
+\section{Related Work}
+\label{sec:related}
+
+\subsection{CPU IMA Prefetchers}
+\textit{[IMP, DMP, Tyche, Gretch, Prodigy, Magellan — single-thread assumptions.]}
+
+\subsection{GPU Stride/Stream Prefetchers}
+\textit{[MT-Prefetch, APOGEE, Snake, CAPS — stride-only, cannot handle data-dependent addresses.]}
+
+\subsection{GPU Irregular Access Optimizations}
+\textit{[Spare Register, DSAP, software prefetching on GPU — limited scope or require compiler support.]}
+
+
+%%% ====================================================================
+%%% §9 Conclusion
+%%% ====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+\textit{[GRASP exploits IMAD.WIDE structural property for zero-inference IMA detection on GPUs. Two-step index-then-data prefetch. Geomean +35.5\% IPC at ~2.5 KB/SM.]}
+
+
+\begin{acks}
+   \textit{[To be added after acceptance.]}
+\end{acks}
+
+
+
+%%%%%%% -- PAPER CONTENT ENDS -- %%%%%%%%
+
+%%
+%% The next two lines define the bibliography style to be used, and
+%% the bibliography file.
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{sample-base}
+
+\end{document}
+\endinput
+%%
+%% End of file `sample-sigconf.tex'.

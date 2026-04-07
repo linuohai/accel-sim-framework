@@ -97,5 +97,5 @@ legend.columnspacing: 1.0
 legend.fancybox:    false
 
 # ── Hatching ──────────────────────────────────────────────────────────────────
-hatch.linewidth:    0.5
+hatch.linewidth:    0.7
 hatch.color:        333333

@@ -39,6 +39,25 @@ RohuWmuRbET2.yaml
 .bashrc
 .claude/
 
+# Claude Code / 用户数据迁移目录（root 分区→大盘）
+.claude_global/
+.local_home/
+.codex
+
+# LaTeX 编译产物
+*.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+comment.cut
+
 # 构建产物
 gpu-simulator/build-pgo1/
 gpu-simulator/gpgpu-sim/
