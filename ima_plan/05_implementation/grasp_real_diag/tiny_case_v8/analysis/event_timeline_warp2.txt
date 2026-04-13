@@ -1,0 +1,2069 @@
+
+=== Warp 2, Iteration 0 ===
+
+=== Warp 2, Iteration 1 ===
+
+=== Warp 2, Iteration 2 ===
+
+=== Warp 2, Iteration 3 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle   9775  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..2100  L1=MISS
+  cycle   9775  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..2120  L1=SECTOR_MISS
+  cycle   9775  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..2140  L1=SECTOR_MISS
+  cycle   9775  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..2160  L1=SECTOR_MISS
+  cycle  10215  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..2100  L1=FILL
+  cycle  10219  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..2120  L1=FILL
+  cycle  10222  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..2140  L1=FILL
+  cycle  10226  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..2160  L1=FILL
+  cycle  10309  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..7ed4  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10310  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..7d50  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10311  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..7bcc  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10312  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..7a48  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10313  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..7818  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10313  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..78c4  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10314  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..7694  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10314  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..75bc  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10314  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..7740  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10315  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..7510  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10315  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..7438  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10316  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..738c  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10316  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..72b4  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10317  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..7208  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10317  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..7130  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10318  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..7084  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10318  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..6fac  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10319  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..6f00  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10319  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..6e28  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10319  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..6dfc  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10320  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..6ca4  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10320  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..6c78  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10321  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..699c  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10321  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..6b20  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10321  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..6af4  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10322  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..6970  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10323  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..67ec  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10324  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..6668  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10325  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..64e4  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10326  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..61dc  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10326  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..6360  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  10327  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..6058  L1=HIT_RESERVED  <-- HIT_RES
+  --- latency (idx→data served): 552 cycles
+
+=== Warp 2, Iteration 4 ===
+
+=== Warp 2, Iteration 5 ===
+
+=== Warp 2, Iteration 6 ===
+
+=== Warp 2, Iteration 7 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  11010  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..2500  L1=MISS
+  cycle  11010  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..2520  L1=SECTOR_MISS
+  cycle  11010  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..2540  L1=SECTOR_MISS
+  cycle  11010  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..2560  L1=SECTOR_MISS
+  cycle  11010  [GRASP]  DEMAND_CT_HIT        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..2500  stride_valid=0 iter_stride=0
+  cycle  11442  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..2500  L1=FILL
+  cycle  11446  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..2520  L1=FILL
+  cycle  11450  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..2540  L1=FILL
+  cycle  11453  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..2560  L1=FILL
+  cycle  11523  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..7fa4  L1=HIT  <-- HIT
+  cycle  11523  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..7f78  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  11524  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..7c9c  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  11524  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..7e20  L1=HIT  <-- HIT
+  cycle  11524  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..7df4  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  11525  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..7b18  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  11525  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..7c70  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  11526  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..7994  L1=HIT  <-- HIT
+  cycle  11526  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..7aec  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  11527  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..7810  L1=HIT  <-- HIT
+  cycle  11527  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..7968  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  11528  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..768c  L1=HIT  <-- HIT
+  cycle  11528  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..77e4  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  11529  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..7508  L1=HIT  <-- HIT
+  cycle  11529  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..74dc  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  11529  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..7660  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  11530  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..7384  L1=HIT  <-- HIT
+  cycle  11530  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..7358  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  11531  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..7200  L1=HIT  <-- HIT
+  cycle  11531  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..71d4  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  11532  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..7050  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  11533  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..6ecc  L1=HIT  <-- HIT
+  cycle  11534  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..6d48  L1=HIT  <-- HIT
+  cycle  11535  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..6bc4  L1=HIT  <-- HIT
+  cycle  11536  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..68bc  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  11536  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..6a40  L1=HIT  <-- HIT
+  cycle  11537  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..6738  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  11538  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..65b4  L1=HIT  <-- HIT
+  cycle  11539  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..6430  L1=HIT  <-- HIT
+  cycle  11540  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..62ac  L1=HIT  <-- HIT
+  cycle  11541  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..6128  L1=HIT  <-- HIT
+  cycle  11541  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..60fc  L1=HIT_RESERVED  <-- HIT_RES
+  --- latency (idx→data served): 531 cycles
+
+=== Warp 2, Iteration 8 ===
+  [addr prefix: 0x00007f75d8402...]
+  cycle  12095  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..900  L1=MISS
+  cycle  12095  [GRASP]  DEMAND_CT_HIT        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..900  stride_valid=1 iter_stride=1024
+  cycle  12095  [GRASP]  STRIDE_UPDATE        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..900  delta=1024 stride_valid=1
+  cycle  12095  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..d00  
+  cycle  12095  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..d20  
+  cycle  12095  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..d40  
+  cycle  12095  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..d60  
+  cycle  12096  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..d00  prb=2
+  cycle  12096  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..d20  prb=2
+  cycle  12096  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..d40  prb=2
+  cycle  12096  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..d60  prb=2
+  cycle  12096  [GRASP]  L1_RESULT_RFAIL      pc=0x0000 ()  addr=..d00  kind=INDEX
+  cycle  12096  [GRASP]  L1_RESULT_RFAIL      pc=0x0000 ()  addr=..d20  kind=INDEX
+  cycle  12096  [GRASP]  L1_RESULT_RFAIL      pc=0x0000 ()  addr=..d40  kind=INDEX
+  cycle  12096  [GRASP]  L1_RESULT_RFAIL      pc=0x0000 ()  addr=..d60  kind=INDEX
+  cycle  12545  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..900  L1=FILL
+
+=== Warp 2, Iteration 9 ===
+  [addr prefix: 0x00007f75d8402920...]
+  cycle  12097  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..  L1=SECTOR_MISS
+  cycle  12553  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..  L1=FILL
+
+=== Warp 2, Iteration 10 ===
+  [addr prefix: 0x00007f75d8402940...]
+  cycle  12099  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..  L1=SECTOR_MISS
+  cycle  12560  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..  L1=FILL
+
+=== Warp 2, Iteration 11 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  12101  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..2960  L1=SECTOR_MISS
+  cycle  12545  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..2900  L1=FILL
+  cycle  12553  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..2920  L1=FILL
+  cycle  12560  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..2940  L1=FILL
+  cycle  12568  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..2960  L1=FILL
+  cycle  12645  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..7ec4  L1=HIT  <-- HIT
+  cycle  12645  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..7f70  L1=HIT  <-- HIT
+  cycle  12646  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..7d40  L1=HIT  <-- HIT
+  cycle  12646  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..7dec  L1=HIT  <-- HIT
+  cycle  12647  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..7bbc  L1=HIT  <-- HIT
+  cycle  12647  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..7c68  L1=HIT  <-- HIT
+  cycle  12648  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..7a38  L1=HIT  <-- HIT
+  cycle  12648  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..7ae4  L1=HIT  <-- HIT
+  cycle  12649  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..78b4  L1=HIT  <-- HIT
+  cycle  12650  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..7730  L1=HIT  <-- HIT
+  cycle  12651  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..75ac  L1=HIT  <-- HIT
+  cycle  12652  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..7428  L1=HIT  <-- HIT
+  cycle  12653  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..72a4  L1=HIT  <-- HIT
+  cycle  12654  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..6f9c  L1=HIT  <-- HIT
+  cycle  12654  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..7120  L1=HIT  <-- HIT
+  cycle  12655  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..6e18  L1=HIT  <-- HIT
+  cycle  12656  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..6c94  L1=HIT  <-- HIT
+  cycle  12657  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..6b10  L1=HIT  <-- HIT
+  cycle  12658  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..698c  L1=HIT  <-- HIT
+  cycle  12658  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..6960  L1=HIT  <-- HIT
+  cycle  12659  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..6808  L1=HIT  <-- HIT
+  cycle  12659  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..67dc  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  12660  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..6684  L1=HIT  <-- HIT
+  cycle  12660  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..6658  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  12661  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..6500  L1=HIT  <-- HIT
+  cycle  12661  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..64d4  L1=HIT  <-- HIT
+  cycle  12661  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..63fc  L1=HIT  <-- HIT
+  cycle  12662  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..6350  L1=HIT  <-- HIT
+  cycle  12662  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..6278  L1=HIT  <-- HIT
+  cycle  12663  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..61cc  L1=HIT  <-- HIT
+  cycle  12663  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..60f4  L1=HIT  <-- HIT
+  cycle  12664  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..6048  L1=HIT  <-- HIT
+  --- latency (idx→data served): 563 cycles
+
+=== Warp 2, Iteration 12 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  13105  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..2d00  L1=MISS
+  cycle  13105  [GRASP]  DEMAND_CT_HIT        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..2d00  stride_valid=1 iter_stride=1024
+  cycle  13105  [GRASP]  STRIDE_UPDATE        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..2d00  delta=1024 stride_valid=1
+  cycle  13105  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3100  
+  cycle  13105  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3120  
+  cycle  13105  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3140  
+  cycle  13105  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3160  
+  cycle  13106  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3100  prb=6
+  cycle  13106  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3120  prb=6
+  cycle  13106  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3140  prb=6
+  cycle  13106  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3160  prb=6
+  cycle  13106  [GRASP]  L1_RESULT_RFAIL      pc=0x0000 ()  addr=..3100  kind=INDEX
+  cycle  13106  [GRASP]  L1_RESULT_RFAIL      pc=0x0000 ()  addr=..3120  kind=INDEX
+  cycle  13106  [GRASP]  L1_RESULT_RFAIL      pc=0x0000 ()  addr=..3140  kind=INDEX
+  cycle  13106  [GRASP]  L1_RESULT_RFAIL      pc=0x0000 ()  addr=..3160  kind=INDEX
+  cycle  13550  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..2d00  L1=FILL
+
+=== Warp 2, Iteration 13 ===
+  [addr prefix: 0x00007f75d8402d20...]
+  cycle  13107  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..  L1=SECTOR_MISS
+  cycle  13553  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..  L1=FILL
+
+=== Warp 2, Iteration 14 ===
+  [addr prefix: 0x00007f75d8402d40...]
+  cycle  13109  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..  L1=SECTOR_MISS
+  cycle  13557  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..  L1=FILL
+
+=== Warp 2, Iteration 15 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  13111  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..2d60  L1=SECTOR_MISS
+  cycle  13550  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..2d00  L1=FILL
+  cycle  13553  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..2d20  L1=FILL
+  cycle  13557  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..2d40  L1=FILL
+  cycle  13561  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..2d60  L1=FILL
+  cycle  13691  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..7f94  L1=HIT  <-- HIT
+  cycle  13692  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..7e10  L1=HIT  <-- HIT
+  cycle  13693  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..7c8c  L1=HIT  <-- HIT
+  cycle  13694  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..7b08  L1=HIT  <-- HIT
+  cycle  13695  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..7984  L1=HIT  <-- HIT
+  cycle  13696  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..7800  L1=HIT  <-- HIT
+  cycle  13696  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..76fc  L1=HIT  <-- HIT
+  cycle  13697  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..7578  L1=HIT  <-- HIT
+  cycle  13698  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..73f4  L1=HIT  <-- HIT
+  cycle  13699  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..71c4  L1=HIT  <-- HIT
+  cycle  13699  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..7270  L1=HIT  <-- HIT
+  cycle  13700  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..7040  L1=HIT  <-- HIT
+  cycle  13700  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..70ec  L1=HIT  <-- HIT
+  cycle  13701  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..6ebc  L1=HIT  <-- HIT
+  cycle  13701  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..6f68  L1=HIT  <-- HIT
+  cycle  13702  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..6d38  L1=HIT  <-- HIT
+  cycle  13702  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..6de4  L1=HIT  <-- HIT
+  cycle  13703  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..6bb4  L1=HIT  <-- HIT
+  cycle  13703  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..6adc  L1=HIT  <-- HIT
+  cycle  13703  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..6c60  L1=HIT  <-- HIT
+  cycle  13704  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..6a30  L1=HIT  <-- HIT
+  cycle  13704  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..6958  L1=HIT  <-- HIT
+  cycle  13705  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..68ac  L1=HIT  <-- HIT
+  cycle  13705  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..67d4  L1=HIT  <-- HIT
+  cycle  13706  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..6728  L1=HIT  <-- HIT
+  cycle  13706  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..6650  L1=HIT  <-- HIT
+  cycle  13707  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..65a4  L1=HIT  <-- HIT
+  cycle  13707  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..64cc  L1=HIT  <-- HIT
+  cycle  13708  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..629c  L1=HIT  <-- HIT
+  cycle  13708  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..6420  L1=HIT  <-- HIT
+  cycle  13708  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..6348  L1=HIT  <-- HIT
+  cycle  13709  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..6118  L1=HIT  <-- HIT
+  --- latency (idx→data served): 598 cycles
+
+=== Warp 2, Iteration 16 ===
+
+=== Warp 2, Iteration 17 ===
+
+=== Warp 2, Iteration 18 ===
+
+=== Warp 2, Iteration 19 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  13777  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..3100  L1=MISS
+  cycle  13777  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..3120  L1=SECTOR_MISS
+  cycle  13777  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..3140  L1=SECTOR_MISS
+  cycle  13777  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..3160  L1=SECTOR_MISS
+  cycle  13777  [GRASP]  DEMAND_CT_HIT        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3100  stride_valid=1 iter_stride=1024
+  cycle  13777  [GRASP]  STRIDE_UPDATE        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3100  delta=1024 stride_valid=1
+  cycle  13777  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3500  
+  cycle  13777  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3520  
+  cycle  13777  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3540  
+  cycle  13777  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3560  
+  cycle  13778  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3500  prb=5
+  cycle  13778  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3520  prb=5
+  cycle  13778  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3540  prb=5
+  cycle  13778  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3560  prb=5
+  cycle  13778  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..3500  kind=INDEX
+  cycle  13778  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..3520  kind=INDEX
+  cycle  13778  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..3540  kind=INDEX
+  cycle  13778  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..3560  kind=INDEX
+  cycle  14201  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..3100  L1=FILL
+  cycle  14204  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..3120  L1=FILL
+  cycle  14208  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..3140  L1=FILL
+  cycle  14212  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..3160  L1=FILL
+  cycle  14216  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..3500  prb=5 targets=8
+  cycle  14216  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7400  chain=0 prb=5
+  cycle  14216  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7580  chain=0 prb=5
+  cycle  14216  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7700  chain=0 prb=5
+  cycle  14216  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7880  chain=0 prb=5
+  cycle  14216  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7a20  chain=0 prb=5
+  cycle  14216  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7ba0  chain=0 prb=5
+  cycle  14216  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7d20  chain=0 prb=5
+  cycle  14216  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7ea0  chain=0 prb=5
+  cycle  14216  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7400  
+  cycle  14216  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7580  
+  cycle  14216  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7700  
+  cycle  14216  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7880  
+  cycle  14216  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7400  kind=DATA
+  cycle  14216  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7580  kind=DATA
+  cycle  14216  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7700  kind=DATA
+  cycle  14216  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7880  kind=DATA
+  cycle  14217  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7a20  
+  cycle  14217  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7ba0  
+  cycle  14217  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7d20  
+  cycle  14217  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7ea0  
+  cycle  14217  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7a20  kind=DATA
+  cycle  14217  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7ba0  kind=DATA
+  cycle  14217  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7d20  kind=DATA
+  cycle  14217  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7ea0  kind=DATA
+  cycle  14220  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..3520  prb=5 targets=8
+  cycle  14220  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6020  chain=0 prb=5
+  cycle  14220  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..61a0  chain=0 prb=5
+  cycle  14220  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6320  chain=0 prb=5
+  cycle  14220  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..64a0  chain=0 prb=5
+  cycle  14220  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6640  chain=0 prb=5
+  cycle  14220  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..67c0  chain=0 prb=5
+  cycle  14220  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6940  chain=0 prb=5
+  cycle  14220  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6ac0  chain=0 prb=5
+  cycle  14220  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6020  
+  cycle  14220  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..61a0  
+  cycle  14220  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6320  
+  cycle  14220  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..64a0  
+  cycle  14220  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6020  kind=DATA
+  cycle  14220  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..61a0  kind=DATA
+  cycle  14220  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6320  kind=DATA
+  cycle  14220  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..64a0  kind=DATA
+  cycle  14221  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6640  
+  cycle  14221  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..67c0  
+  cycle  14221  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6940  
+  cycle  14221  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6ac0  
+  cycle  14221  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6640  kind=DATA
+  cycle  14221  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..67c0  kind=DATA
+  cycle  14221  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6940  kind=DATA
+  cycle  14221  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6ac0  kind=DATA
+  cycle  14224  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..3540  prb=5 targets=8
+  cycle  14224  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6c40  chain=0 prb=5
+  cycle  14224  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6dc0  chain=0 prb=5
+  cycle  14224  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6f40  chain=0 prb=5
+  cycle  14224  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..70c0  chain=0 prb=5
+  cycle  14224  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7260  chain=0 prb=5
+  cycle  14224  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..73e0  chain=0 prb=5
+  cycle  14224  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7560  chain=0 prb=5
+  cycle  14224  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..76e0  chain=0 prb=5
+  cycle  14224  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6c40  
+  cycle  14224  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6dc0  
+  cycle  14224  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6f40  
+  cycle  14224  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..70c0  
+  cycle  14224  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6c40  kind=DATA
+  cycle  14224  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6dc0  kind=DATA
+  cycle  14224  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6f40  kind=DATA
+  cycle  14224  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..70c0  kind=DATA
+  cycle  14225  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7260  
+  cycle  14225  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..73e0  
+  cycle  14225  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7560  
+  cycle  14225  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..76e0  
+  cycle  14225  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7260  kind=DATA
+  cycle  14225  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..73e0  kind=DATA
+  cycle  14225  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7560  kind=DATA
+  cycle  14225  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..76e0  kind=DATA
+  cycle  14228  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..3560  prb=5 targets=8
+  cycle  14228  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7860  chain=0 prb=5
+  cycle  14228  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..79e0  chain=0 prb=5
+  cycle  14228  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7b60  chain=0 prb=5
+  cycle  14228  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7ce0  chain=0 prb=5
+  cycle  14228  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7e00  chain=0 prb=5
+  cycle  14228  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7f80  chain=0 prb=5
+  cycle  14228  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6100  chain=0 prb=5
+  cycle  14228  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6280  chain=0 prb=5
+  cycle  14228  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7860  
+  cycle  14228  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..79e0  
+  cycle  14228  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7b60  
+  cycle  14228  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7ce0  
+  cycle  14228  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7860  kind=DATA
+  cycle  14228  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..79e0  kind=DATA
+  cycle  14228  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7b60  kind=DATA
+  cycle  14228  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7ce0  kind=DATA
+  cycle  14229  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7e00  
+  cycle  14229  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7f80  
+  cycle  14229  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6100  
+  cycle  14229  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6280  
+  cycle  14229  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7e00  kind=DATA
+  cycle  14229  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7f80  kind=DATA
+  cycle  14229  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6100  kind=DATA
+  cycle  14229  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6280  kind=DATA
+  cycle  14275  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..7ddc  L1=HIT  <-- HIT
+  cycle  14275  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..7f60  L1=HIT  <-- HIT
+  cycle  14276  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..7c58  L1=HIT  <-- HIT
+  cycle  14277  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..7a28  L1=HIT  <-- HIT
+  cycle  14277  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..7ad4  L1=HIT  <-- HIT
+  cycle  14278  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..78a4  L1=HIT  <-- HIT
+  cycle  14278  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..7950  L1=HIT  <-- HIT
+  cycle  14279  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..7720  L1=HIT  <-- HIT
+  cycle  14279  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..77cc  L1=HIT  <-- HIT
+  cycle  14280  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..759c  L1=HIT  <-- HIT
+  cycle  14280  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..7648  L1=HIT  <-- HIT
+  cycle  14281  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..7418  L1=HIT  <-- HIT
+  cycle  14281  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..74c4  L1=HIT  <-- HIT
+  cycle  14282  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..7294  L1=HIT  <-- HIT
+  cycle  14282  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..71bc  L1=HIT  <-- HIT
+  cycle  14282  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..7340  L1=HIT  <-- HIT
+  cycle  14283  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..7110  L1=HIT  <-- HIT
+  cycle  14283  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..7038  L1=HIT  <-- HIT
+  cycle  14284  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..6f8c  L1=HIT  <-- HIT
+  cycle  14284  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..6eb4  L1=HIT  <-- HIT
+  cycle  14285  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..6e08  L1=HIT  <-- HIT
+  cycle  14285  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..6d30  L1=HIT  <-- HIT
+  cycle  14286  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..6c84  L1=HIT  <-- HIT
+  cycle  14286  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..6bac  L1=HIT  <-- HIT
+  cycle  14287  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..6b00  L1=HIT  <-- HIT
+  cycle  14287  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..69fc  L1=HIT  <-- HIT
+  cycle  14288  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..6878  L1=HIT  <-- HIT
+  cycle  14289  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..66f4  L1=HIT  <-- HIT
+  cycle  14290  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..6570  L1=HIT  <-- HIT
+  cycle  14291  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..63ec  L1=HIT  <-- HIT
+  cycle  14292  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..6268  L1=HIT  <-- HIT
+  cycle  14293  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..60e4  L1=HIT  <-- HIT
+  --- latency (idx→data served): 516 cycles
+
+=== Warp 2, Iteration 20 ===
+
+=== Warp 2, Iteration 21 ===
+
+=== Warp 2, Iteration 22 ===
+
+=== Warp 2, Iteration 23 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  14363  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..3500  L1=HIT  <-- HIT
+  cycle  14363  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..3520  L1=HIT  <-- HIT
+  cycle  14363  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..3540  L1=HIT  <-- HIT
+  cycle  14363  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..3560  L1=HIT  <-- HIT
+  cycle  14363  [GRASP]  DEMAND_CT_HIT        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3500  stride_valid=1 iter_stride=1024
+  cycle  14363  [GRASP]  STRIDE_UPDATE        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3500  delta=1024 stride_valid=1
+  cycle  14363  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3900  
+  cycle  14363  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3920  
+  cycle  14363  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3940  
+  cycle  14363  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3960  
+  cycle  14364  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3900  prb=10
+  cycle  14364  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3920  prb=10
+  cycle  14364  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3940  prb=10
+  cycle  14364  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3960  prb=10
+  cycle  14364  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..3900  kind=INDEX
+  cycle  14364  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..3920  kind=INDEX
+  cycle  14364  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..3940  kind=INDEX
+  cycle  14364  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..3960  kind=INDEX
+  cycle  14408  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..7f84  L1=HIT  <-- HIT
+  cycle  14408  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..7eac  L1=HIT  <-- HIT
+  cycle  14409  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..7e00  L1=HIT  <-- HIT
+  cycle  14409  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..7d28  L1=HIT  <-- HIT
+  cycle  14409  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..7cfc  L1=HIT  <-- HIT
+  cycle  14410  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..7ba4  L1=HIT  <-- HIT
+  cycle  14410  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..7b78  L1=HIT  <-- HIT
+  cycle  14411  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..789c  L1=HIT  <-- HIT
+  cycle  14411  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..7a20  L1=HIT  <-- HIT
+  cycle  14411  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..79f4  L1=HIT  <-- HIT
+  cycle  14412  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..7718  L1=HIT  <-- HIT
+  cycle  14412  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..7870  L1=HIT  <-- HIT
+  cycle  14413  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..7594  L1=HIT  <-- HIT
+  cycle  14413  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..76ec  L1=HIT  <-- HIT
+  cycle  14414  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..7410  L1=HIT  <-- HIT
+  cycle  14414  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..7568  L1=HIT  <-- HIT
+  cycle  14415  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..73e4  L1=HIT  <-- HIT
+  cycle  14416  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..70dc  L1=HIT  <-- HIT
+  cycle  14416  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..7260  L1=HIT  <-- HIT
+  cycle  14417  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..6f58  L1=HIT  <-- HIT
+  cycle  14418  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..6dd4  L1=HIT  <-- HIT
+  cycle  14419  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..6c50  L1=HIT  <-- HIT
+  cycle  14420  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..6acc  L1=HIT  <-- HIT
+  cycle  14421  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..6948  L1=HIT  <-- HIT
+  cycle  14422  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..67c4  L1=HIT  <-- HIT
+  cycle  14423  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..64bc  L1=HIT  <-- HIT
+  cycle  14423  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..6640  L1=HIT  <-- HIT
+  cycle  14424  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..628c  L1=HIT  <-- HIT
+  cycle  14424  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..6338  L1=HIT  <-- HIT
+  cycle  14425  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..6108  L1=HIT  <-- HIT
+  cycle  14425  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..61b4  L1=HIT  <-- HIT
+  cycle  14426  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..6030  L1=HIT  <-- HIT
+  --- latency (idx→data served): 63 cycles
+
+=== Warp 2, Iteration 24 ===
+
+=== Warp 2, Iteration 25 ===
+
+=== Warp 2, Iteration 26 ===
+
+=== Warp 2, Iteration 27 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  14494  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..3900  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  14494  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..3920  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  14494  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..3940  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  14494  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..3960  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  14494  [GRASP]  DEMAND_CT_HIT        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3900  stride_valid=1 iter_stride=1024
+  cycle  14494  [GRASP]  STRIDE_UPDATE        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3900  delta=1024 stride_valid=1
+  cycle  14494  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3d00  
+  cycle  14494  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3d20  
+  cycle  14494  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3d40  
+  cycle  14494  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3d60  
+  cycle  14495  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3d00  prb=6
+  cycle  14495  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3d20  prb=6
+  cycle  14495  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3d40  prb=6
+  cycle  14495  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..3d60  prb=6
+  cycle  14495  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..3d00  kind=INDEX
+  cycle  14495  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..3d20  kind=INDEX
+  cycle  14495  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..3d40  kind=INDEX
+  cycle  14495  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..3d60  kind=INDEX
+  cycle  14786  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..3900  prb=10 targets=8
+  cycle  14786  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7ce0  chain=0 prb=10
+  cycle  14786  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7e60  chain=0 prb=10
+  cycle  14786  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7fe0  chain=0 prb=10
+  cycle  14786  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6100  chain=0 prb=10
+  cycle  14786  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6280  chain=0 prb=10
+  cycle  14786  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6400  chain=0 prb=10
+  cycle  14786  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6580  chain=0 prb=10
+  cycle  14786  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6700  chain=0 prb=10
+  cycle  14786  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7ce0  
+  cycle  14786  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7e60  
+  cycle  14786  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7fe0  
+  cycle  14786  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6100  
+  cycle  14786  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7ce0  kind=DATA
+  cycle  14786  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7e60  kind=DATA
+  cycle  14786  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7fe0  kind=DATA
+  cycle  14786  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6100  kind=DATA
+  cycle  14787  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6280  
+  cycle  14787  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6400  
+  cycle  14787  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6580  
+  cycle  14787  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6700  
+  cycle  14787  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6280  kind=DATA
+  cycle  14787  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6400  kind=DATA
+  cycle  14787  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6580  kind=DATA
+  cycle  14787  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6700  kind=DATA
+  cycle  14790  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..3920  prb=10 targets=8
+  cycle  14790  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6880  chain=0 prb=10
+  cycle  14790  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6a00  chain=0 prb=10
+  cycle  14790  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6b80  chain=0 prb=10
+  cycle  14790  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6d20  chain=0 prb=10
+  cycle  14790  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6ea0  chain=0 prb=10
+  cycle  14790  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7020  chain=0 prb=10
+  cycle  14790  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..71a0  chain=0 prb=10
+  cycle  14790  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7320  chain=0 prb=10
+  cycle  14790  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6880  
+  cycle  14790  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6a00  
+  cycle  14790  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6b80  
+  cycle  14790  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6d20  
+  cycle  14790  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6880  kind=DATA
+  cycle  14790  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6a00  kind=DATA
+  cycle  14790  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6b80  kind=DATA
+  cycle  14790  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6d20  kind=DATA
+  cycle  14791  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6ea0  
+  cycle  14791  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7020  
+  cycle  14791  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..71a0  
+  cycle  14791  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7320  
+  cycle  14791  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6ea0  kind=DATA
+  cycle  14791  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7020  kind=DATA
+  cycle  14791  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..71a0  kind=DATA
+  cycle  14791  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7320  kind=DATA
+  cycle  14794  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..3940  prb=10 targets=8
+  cycle  14794  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..74a0  chain=0 prb=10
+  cycle  14794  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7620  chain=0 prb=10
+  cycle  14794  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..77a0  chain=0 prb=10
+  cycle  14794  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7940  chain=0 prb=10
+  cycle  14794  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7ac0  chain=0 prb=10
+  cycle  14794  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7c40  chain=0 prb=10
+  cycle  14794  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7dc0  chain=0 prb=10
+  cycle  14794  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7f40  chain=0 prb=10
+  cycle  14794  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..74a0  
+  cycle  14794  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7620  
+  cycle  14794  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..77a0  
+  cycle  14794  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7940  
+  cycle  14794  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..74a0  kind=DATA
+  cycle  14794  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7620  kind=DATA
+  cycle  14794  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..77a0  kind=DATA
+  cycle  14794  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7940  kind=DATA
+  cycle  14795  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7ac0  
+  cycle  14795  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7c40  
+  cycle  14795  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7dc0  
+  cycle  14795  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7f40  
+  cycle  14795  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7ac0  kind=DATA
+  cycle  14795  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7c40  kind=DATA
+  cycle  14795  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7dc0  kind=DATA
+  cycle  14795  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7f40  kind=DATA
+  cycle  14797  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..3960  prb=10 targets=8
+  cycle  14797  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..60c0  chain=0 prb=10
+  cycle  14797  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6240  chain=0 prb=10
+  cycle  14797  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..63c0  chain=0 prb=10
+  cycle  14797  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6560  chain=0 prb=10
+  cycle  14797  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..66e0  chain=0 prb=10
+  cycle  14797  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6860  chain=0 prb=10
+  cycle  14797  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..69e0  chain=0 prb=10
+  cycle  14797  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6b60  chain=0 prb=10
+  cycle  14797  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..60c0  
+  cycle  14797  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6240  
+  cycle  14797  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..63c0  
+  cycle  14797  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6560  
+  cycle  14797  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..60c0  kind=DATA
+  cycle  14797  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6240  kind=DATA
+  cycle  14797  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..63c0  kind=DATA
+  cycle  14797  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6560  kind=DATA
+  cycle  14798  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..66e0  
+  cycle  14798  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6860  
+  cycle  14798  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..69e0  
+  cycle  14798  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6b60  
+  cycle  14798  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..66e0  kind=DATA
+  cycle  14798  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6860  kind=DATA
+  cycle  14798  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..69e0  kind=DATA
+  cycle  14798  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6b60  kind=DATA
+  cycle  14873  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..7f50  L1=HIT  <-- HIT
+  cycle  14873  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..7ffc  L1=HIT  <-- HIT
+  cycle  14874  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..7dcc  L1=HIT  <-- HIT
+  cycle  14874  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..7e78  L1=HIT  <-- HIT
+  cycle  14875  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..7c48  L1=HIT  <-- HIT
+  cycle  14875  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..7cf4  L1=HIT  <-- HIT
+  cycle  14876  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..7ac4  L1=HIT  <-- HIT
+  cycle  14877  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..77bc  L1=HIT  <-- HIT
+  cycle  14877  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..7940  L1=HIT  <-- HIT
+  cycle  14878  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..7638  L1=HIT  <-- HIT
+  cycle  14879  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..74b4  L1=HIT  <-- HIT
+  cycle  14880  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..7330  L1=HIT  <-- HIT
+  cycle  14881  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..71ac  L1=HIT  <-- HIT
+  cycle  14882  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..7028  L1=HIT  <-- HIT
+  cycle  14883  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..6ea4  L1=HIT  <-- HIT
+  cycle  14884  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..6b9c  L1=HIT  <-- HIT
+  cycle  14884  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..6d20  L1=HIT  <-- HIT
+  cycle  14884  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..6b70  L1=HIT  <-- HIT
+  cycle  14885  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..6a18  L1=HIT  <-- HIT
+  cycle  14885  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..69ec  L1=HIT  <-- HIT
+  cycle  14886  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..6894  L1=HIT  <-- HIT
+  cycle  14886  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..6868  L1=HIT  <-- HIT
+  cycle  14887  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..6710  L1=HIT  <-- HIT
+  cycle  14887  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..66e4  L1=HIT  <-- HIT
+  cycle  14888  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..658c  L1=HIT  <-- HIT
+  cycle  14888  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..6560  L1=HIT  <-- HIT
+  cycle  14889  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..6408  L1=HIT  <-- HIT
+  cycle  14889  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..63dc  L1=HIT  <-- HIT
+  cycle  14890  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..6284  L1=HIT  <-- HIT
+  cycle  14890  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..6258  L1=HIT  <-- HIT
+  cycle  14891  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..6100  L1=HIT  <-- HIT
+  cycle  14891  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..60d4  L1=HIT  <-- HIT
+  cycle  14918  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..3d00  prb=6 targets=8
+  cycle  14918  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6540  chain=0 prb=6
+  cycle  14918  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..66c0  chain=0 prb=6
+  cycle  14918  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6860  chain=0 prb=6
+  cycle  14918  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..69e0  chain=0 prb=6
+  cycle  14918  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6b60  chain=0 prb=6
+  cycle  14918  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6ce0  chain=0 prb=6
+  cycle  14918  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6e60  chain=0 prb=6
+  cycle  14918  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6fe0  chain=0 prb=6
+  cycle  14918  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6540  
+  cycle  14918  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..66c0  
+  cycle  14918  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6860  
+  cycle  14918  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..69e0  
+  cycle  14918  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6540  kind=DATA
+  cycle  14918  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..66c0  kind=DATA
+  cycle  14918  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6860  kind=DATA
+  cycle  14918  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..69e0  kind=DATA
+  cycle  14919  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6b60  
+  cycle  14919  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6ce0  
+  cycle  14919  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6e60  
+  cycle  14919  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6fe0  
+  cycle  14919  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6b60  kind=DATA
+  cycle  14919  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6ce0  kind=DATA
+  cycle  14919  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6e60  kind=DATA
+  cycle  14919  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6fe0  kind=DATA
+  cycle  14921  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..3d20  prb=6 targets=8
+  cycle  14921  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7160  chain=0 prb=6
+  cycle  14921  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..72e0  chain=0 prb=6
+  cycle  14921  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7400  chain=0 prb=6
+  cycle  14921  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7580  chain=0 prb=6
+  cycle  14921  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7700  chain=0 prb=6
+  cycle  14921  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7880  chain=0 prb=6
+  cycle  14921  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7a00  chain=0 prb=6
+  cycle  14921  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7b80  chain=0 prb=6
+  cycle  14921  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7160  
+  cycle  14921  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..72e0  
+  cycle  14921  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7400  
+  cycle  14921  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7580  
+  cycle  14921  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7160  kind=DATA
+  cycle  14921  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..72e0  kind=DATA
+  cycle  14921  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7400  kind=DATA
+  cycle  14921  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7580  kind=DATA
+  cycle  14922  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7700  
+  cycle  14922  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7880  
+  cycle  14922  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7a00  
+  cycle  14922  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7b80  
+  cycle  14922  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7700  kind=DATA
+  cycle  14922  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7880  kind=DATA
+  cycle  14922  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7a00  kind=DATA
+  cycle  14922  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7b80  kind=DATA
+  cycle  14925  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..3d40  prb=6 targets=8
+  cycle  14925  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7d00  chain=0 prb=6
+  cycle  14925  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7e80  chain=0 prb=6
+  cycle  14925  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6020  chain=0 prb=6
+  cycle  14925  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..61a0  chain=0 prb=6
+  cycle  14925  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6320  chain=0 prb=6
+  cycle  14925  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..64a0  chain=0 prb=6
+  cycle  14925  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6620  chain=0 prb=6
+  cycle  14925  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..67a0  chain=0 prb=6
+  cycle  14925  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7d00  
+  cycle  14925  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7e80  
+  cycle  14925  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6020  
+  cycle  14925  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..61a0  
+  cycle  14925  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7d00  kind=DATA
+  cycle  14925  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7e80  kind=DATA
+  cycle  14925  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6020  kind=DATA
+  cycle  14925  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..61a0  kind=DATA
+  cycle  14926  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6320  
+  cycle  14926  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..64a0  
+  cycle  14926  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6620  
+  cycle  14926  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..67a0  
+  cycle  14926  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6320  kind=DATA
+  cycle  14926  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..64a0  kind=DATA
+  cycle  14926  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6620  kind=DATA
+  cycle  14926  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..67a0  kind=DATA
+  cycle  14929  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..3d60  prb=6 targets=8
+  cycle  14929  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6920  chain=0 prb=6
+  cycle  14929  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6aa0  chain=0 prb=6
+  cycle  14929  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6c40  chain=0 prb=6
+  cycle  14929  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6dc0  chain=0 prb=6
+  cycle  14929  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6f40  chain=0 prb=6
+  cycle  14929  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..70c0  chain=0 prb=6
+  cycle  14929  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7240  chain=0 prb=6
+  cycle  14929  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..73c0  chain=0 prb=6
+  cycle  14929  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6920  
+  cycle  14929  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6aa0  
+  cycle  14929  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6c40  
+  cycle  14929  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6dc0  
+  cycle  14929  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6920  kind=DATA
+  cycle  14929  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6aa0  kind=DATA
+  cycle  14929  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6c40  kind=DATA
+  cycle  14929  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6dc0  kind=DATA
+  cycle  14930  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6f40  
+  cycle  14930  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..70c0  
+  cycle  14930  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7240  
+  cycle  14930  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..73c0  
+  cycle  14930  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6f40  kind=DATA
+  cycle  14930  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..70c0  kind=DATA
+  cycle  14930  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7240  kind=DATA
+  cycle  14930  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..73c0  kind=DATA
+  --- latency (idx→data served): 397 cycles
+
+=== Warp 2, Iteration 28 ===
+
+=== Warp 2, Iteration 29 ===
+
+=== Warp 2, Iteration 30 ===
+
+=== Warp 2, Iteration 31 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  14959  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..3d00  L1=HIT  <-- HIT
+  cycle  14959  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..3d20  L1=HIT  <-- HIT
+  cycle  14959  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..3d40  L1=HIT  <-- HIT
+  cycle  14959  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..3d60  L1=HIT  <-- HIT
+  cycle  14959  [GRASP]  DEMAND_CT_HIT        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3d00  stride_valid=1 iter_stride=1024
+  cycle  14959  [GRASP]  STRIDE_UPDATE        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..3d00  delta=1024 stride_valid=1
+  cycle  14959  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4100  
+  cycle  14959  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4120  
+  cycle  14959  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4140  
+  cycle  14959  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4160  
+  cycle  14960  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4100  prb=4
+  cycle  14960  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4120  prb=4
+  cycle  14960  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4140  prb=4
+  cycle  14960  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4160  prb=4
+  cycle  14960  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4100  kind=INDEX
+  cycle  14960  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4120  kind=INDEX
+  cycle  14960  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4140  kind=INDEX
+  cycle  14960  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4160  kind=INDEX
+  cycle  15004  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..7e9c  L1=HIT  <-- HIT
+  cycle  15005  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..7d18  L1=HIT  <-- HIT
+  cycle  15006  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..7b94  L1=HIT  <-- HIT
+  cycle  15007  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..7a10  L1=HIT  <-- HIT
+  cycle  15008  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..788c  L1=HIT  <-- HIT
+  cycle  15009  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..7708  L1=HIT  <-- HIT
+  cycle  15010  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..7584  L1=HIT  <-- HIT
+  cycle  15011  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..7400  L1=HIT  <-- HIT
+  cycle  15011  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..73d4  L1=HIT  <-- HIT
+  cycle  15011  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..72fc  L1=HIT  <-- HIT
+  cycle  15012  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..7250  L1=HIT  <-- HIT
+  cycle  15012  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..7178  L1=HIT  <-- HIT
+  cycle  15013  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..70cc  L1=HIT  <-- HIT
+  cycle  15013  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..6ff4  L1=HIT  <-- HIT
+  cycle  15014  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..6f48  L1=HIT  <-- HIT
+  cycle  15014  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..6e70  L1=HIT  <-- HIT
+  cycle  15015  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..6dc4  L1=HIT  <-- HIT
+  cycle  15015  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..6cec  L1=HIT  <-- HIT
+  cycle  15016  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..6abc  L1=HIT  <-- HIT
+  cycle  15016  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..6c40  L1=HIT  <-- HIT
+  cycle  15016  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..6b68  L1=HIT  <-- HIT
+  cycle  15017  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..6938  L1=HIT  <-- HIT
+  cycle  15017  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..69e4  L1=HIT  <-- HIT
+  cycle  15018  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..67b4  L1=HIT  <-- HIT
+  cycle  15018  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..66dc  L1=HIT  <-- HIT
+  cycle  15018  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..6860  L1=HIT  <-- HIT
+  cycle  15019  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..6630  L1=HIT  <-- HIT
+  cycle  15019  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..6558  L1=HIT  <-- HIT
+  cycle  15020  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..64ac  L1=HIT  <-- HIT
+  cycle  15021  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..6328  L1=HIT  <-- HIT
+  cycle  15022  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..61a4  L1=HIT  <-- HIT
+  cycle  15023  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..6020  L1=HIT  <-- HIT
+  --- latency (idx→data served): 64 cycles
+
+=== Warp 2, Iteration 32 ===
+
+=== Warp 2, Iteration 33 ===
+
+=== Warp 2, Iteration 34 ===
+
+=== Warp 2, Iteration 35 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  15100  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..4100  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15100  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..4120  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15100  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..4140  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15100  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..4160  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15100  [GRASP]  DEMAND_CT_HIT        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4100  stride_valid=1 iter_stride=1024
+  cycle  15100  [GRASP]  STRIDE_UPDATE        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4100  delta=1024 stride_valid=1
+  cycle  15100  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4500  
+  cycle  15100  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4520  
+  cycle  15100  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4540  
+  cycle  15100  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4560  
+  cycle  15101  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4500  prb=6
+  cycle  15101  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4520  prb=6
+  cycle  15101  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4540  prb=6
+  cycle  15101  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4560  prb=6
+  cycle  15101  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4500  kind=INDEX
+  cycle  15101  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4520  kind=INDEX
+  cycle  15101  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4540  kind=INDEX
+  cycle  15101  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4560  kind=INDEX
+  cycle  15382  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4100  prb=4 targets=8
+  cycle  15382  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6da0  chain=0 prb=4
+  cycle  15382  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6f40  chain=0 prb=4
+  cycle  15382  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..70c0  chain=0 prb=4
+  cycle  15382  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7240  chain=0 prb=4
+  cycle  15382  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..73c0  chain=0 prb=4
+  cycle  15382  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7540  chain=0 prb=4
+  cycle  15382  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..76c0  chain=0 prb=4
+  cycle  15382  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7840  chain=0 prb=4
+  cycle  15382  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6da0  
+  cycle  15382  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6f40  
+  cycle  15382  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..70c0  
+  cycle  15382  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7240  
+  cycle  15382  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6da0  kind=DATA
+  cycle  15382  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6f40  kind=DATA
+  cycle  15382  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..70c0  kind=DATA
+  cycle  15382  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7240  kind=DATA
+  cycle  15383  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..73c0  
+  cycle  15383  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7540  
+  cycle  15383  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..76c0  
+  cycle  15383  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7840  
+  cycle  15383  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..73c0  kind=DATA
+  cycle  15383  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7540  kind=DATA
+  cycle  15383  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..76c0  kind=DATA
+  cycle  15383  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7840  kind=DATA
+  cycle  15386  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4120  prb=4 targets=8
+  cycle  15386  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..79c0  chain=0 prb=4
+  cycle  15386  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7b60  chain=0 prb=4
+  cycle  15386  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7ce0  chain=0 prb=4
+  cycle  15386  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7e60  chain=0 prb=4
+  cycle  15386  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7fe0  chain=0 prb=4
+  cycle  15386  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6160  chain=0 prb=4
+  cycle  15386  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..62e0  chain=0 prb=4
+  cycle  15386  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6460  chain=0 prb=4
+  cycle  15386  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..79c0  
+  cycle  15386  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7b60  
+  cycle  15386  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7ce0  
+  cycle  15386  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7e60  
+  cycle  15386  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..79c0  kind=DATA
+  cycle  15386  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7b60  kind=DATA
+  cycle  15386  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7ce0  kind=DATA
+  cycle  15386  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7e60  kind=DATA
+  cycle  15387  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7fe0  
+  cycle  15387  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6160  
+  cycle  15387  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..62e0  
+  cycle  15387  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6460  
+  cycle  15387  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7fe0  kind=DATA
+  cycle  15387  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6160  kind=DATA
+  cycle  15387  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..62e0  kind=DATA
+  cycle  15387  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6460  kind=DATA
+  cycle  15390  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4140  prb=4 targets=8
+  cycle  15390  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..65e0  chain=0 prb=4
+  cycle  15390  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6700  chain=0 prb=4
+  cycle  15390  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6880  chain=0 prb=4
+  cycle  15390  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6a00  chain=0 prb=4
+  cycle  15390  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6b80  chain=0 prb=4
+  cycle  15390  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6d00  chain=0 prb=4
+  cycle  15390  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6e80  chain=0 prb=4
+  cycle  15390  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7000  chain=0 prb=4
+  cycle  15390  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..65e0  
+  cycle  15390  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6700  
+  cycle  15390  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6880  
+  cycle  15390  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6a00  
+  cycle  15390  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..65e0  kind=DATA
+  cycle  15390  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6700  kind=DATA
+  cycle  15390  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6880  kind=DATA
+  cycle  15390  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6a00  kind=DATA
+  cycle  15391  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6b80  
+  cycle  15391  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6d00  
+  cycle  15391  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6e80  
+  cycle  15391  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7000  
+  cycle  15391  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6b80  kind=DATA
+  cycle  15391  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6d00  kind=DATA
+  cycle  15391  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6e80  kind=DATA
+  cycle  15391  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7000  kind=DATA
+  cycle  15393  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4160  prb=4 targets=8
+  cycle  15393  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7180  chain=0 prb=4
+  cycle  15393  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7320  chain=0 prb=4
+  cycle  15393  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..74a0  chain=0 prb=4
+  cycle  15393  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7620  chain=0 prb=4
+  cycle  15393  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..77a0  chain=0 prb=4
+  cycle  15393  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7920  chain=0 prb=4
+  cycle  15393  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7aa0  chain=0 prb=4
+  cycle  15393  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7c20  chain=0 prb=4
+  cycle  15393  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7180  
+  cycle  15393  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7320  
+  cycle  15393  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..74a0  
+  cycle  15393  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7620  
+  cycle  15393  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7180  kind=DATA
+  cycle  15393  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7320  kind=DATA
+  cycle  15393  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..74a0  kind=DATA
+  cycle  15393  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7620  kind=DATA
+  cycle  15394  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..77a0  
+  cycle  15394  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7920  
+  cycle  15394  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7aa0  
+  cycle  15394  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7c20  
+  cycle  15394  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..77a0  kind=DATA
+  cycle  15394  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7920  kind=DATA
+  cycle  15394  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7aa0  kind=DATA
+  cycle  15394  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7c20  kind=DATA
+  cycle  15440  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..7fec  L1=HIT  <-- HIT
+  cycle  15441  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..7e68  L1=HIT  <-- HIT
+  cycle  15442  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..7c38  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15442  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..7ce4  L1=HIT  <-- HIT
+  cycle  15443  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..7ab4  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15443  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..79dc  L1=HIT  <-- HIT
+  cycle  15443  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..7b60  L1=HIT  <-- HIT
+  cycle  15444  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..7930  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15444  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..7858  L1=HIT  <-- HIT
+  cycle  15445  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..77ac  L1=HIT  <-- HIT
+  cycle  15445  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..76d4  L1=HIT  <-- HIT
+  cycle  15446  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..7628  L1=HIT  <-- HIT
+  cycle  15446  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..7550  L1=HIT  <-- HIT
+  cycle  15447  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..74a4  L1=HIT  <-- HIT
+  cycle  15447  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..73cc  L1=HIT  <-- HIT
+  cycle  15448  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..719c  L1=HIT  <-- HIT
+  cycle  15448  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..7320  L1=HIT  <-- HIT
+  cycle  15448  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..7248  L1=HIT  <-- HIT
+  cycle  15449  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..7018  L1=HIT  <-- HIT
+  cycle  15449  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..70c4  L1=HIT  <-- HIT
+  cycle  15450  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..6e94  L1=HIT  <-- HIT
+  cycle  15450  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..6dbc  L1=HIT  <-- HIT
+  cycle  15450  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..6f40  L1=HIT  <-- HIT
+  cycle  15451  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..6d10  L1=HIT  <-- HIT
+  cycle  15452  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..6b8c  L1=HIT  <-- HIT
+  cycle  15453  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..6a08  L1=HIT  <-- HIT
+  cycle  15454  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..6884  L1=HIT  <-- HIT
+  cycle  15455  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..6700  L1=HIT  <-- HIT
+  cycle  15455  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..65fc  L1=HIT  <-- HIT
+  cycle  15456  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..6478  L1=HIT  <-- HIT
+  cycle  15457  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..62f4  L1=HIT  <-- HIT
+  cycle  15458  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..6170  L1=HIT  <-- HIT
+  cycle  15537  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4500  prb=6 targets=8
+  cycle  15537  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7620  chain=0 prb=6
+  cycle  15537  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..77a0  chain=0 prb=6
+  cycle  15537  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7920  chain=0 prb=6
+  cycle  15537  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7aa0  chain=0 prb=6
+  cycle  15537  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7c20  chain=0 prb=6
+  cycle  15537  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7da0  chain=0 prb=6
+  cycle  15537  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7f20  chain=0 prb=6
+  cycle  15537  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..60a0  chain=0 prb=6
+  cycle  15537  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7620  
+  cycle  15537  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..77a0  
+  cycle  15537  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7920  
+  cycle  15537  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7aa0  
+  cycle  15537  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7620  kind=DATA
+  cycle  15537  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..77a0  kind=DATA
+  cycle  15537  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7920  kind=DATA
+  cycle  15537  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7aa0  kind=DATA
+  cycle  15538  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7c20  
+  cycle  15538  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7da0  
+  cycle  15538  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7f20  
+  cycle  15538  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..60a0  
+  cycle  15538  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7c20  kind=DATA
+  cycle  15538  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7da0  kind=DATA
+  cycle  15538  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7f20  kind=DATA
+  cycle  15538  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..60a0  kind=DATA
+  cycle  15541  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4520  prb=6 targets=8
+  cycle  15541  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6240  chain=0 prb=6
+  cycle  15541  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..63c0  chain=0 prb=6
+  cycle  15541  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6540  chain=0 prb=6
+  cycle  15541  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..66c0  chain=0 prb=6
+  cycle  15541  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6840  chain=0 prb=6
+  cycle  15541  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..69c0  chain=0 prb=6
+  cycle  15541  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6b40  chain=0 prb=6
+  cycle  15541  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6cc0  chain=0 prb=6
+  cycle  15541  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6240  
+  cycle  15541  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..63c0  
+  cycle  15541  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6540  
+  cycle  15541  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..66c0  
+  cycle  15541  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6240  kind=DATA
+  cycle  15541  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..63c0  kind=DATA
+  cycle  15541  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6540  kind=DATA
+  cycle  15541  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..66c0  kind=DATA
+  cycle  15542  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6840  
+  cycle  15542  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..69c0  
+  cycle  15542  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6b40  
+  cycle  15542  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6cc0  
+  cycle  15542  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6840  kind=DATA
+  cycle  15542  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..69c0  kind=DATA
+  cycle  15542  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6b40  kind=DATA
+  cycle  15542  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6cc0  kind=DATA
+  cycle  15544  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4540  prb=6 targets=8
+  cycle  15544  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6e60  chain=0 prb=6
+  cycle  15544  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6fe0  chain=0 prb=6
+  cycle  15544  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7160  chain=0 prb=6
+  cycle  15544  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..72e0  chain=0 prb=6
+  cycle  15544  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7460  chain=0 prb=6
+  cycle  15544  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..75e0  chain=0 prb=6
+  cycle  15544  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7760  chain=0 prb=6
+  cycle  15544  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..78e0  chain=0 prb=6
+  cycle  15544  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6e60  
+  cycle  15544  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6fe0  
+  cycle  15544  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7160  
+  cycle  15544  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..72e0  
+  cycle  15544  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6e60  kind=DATA
+  cycle  15544  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6fe0  kind=DATA
+  cycle  15544  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7160  kind=DATA
+  cycle  15544  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..72e0  kind=DATA
+  cycle  15545  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7460  
+  cycle  15545  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..75e0  
+  cycle  15545  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7760  
+  cycle  15545  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..78e0  
+  cycle  15545  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7460  kind=DATA
+  cycle  15545  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..75e0  kind=DATA
+  cycle  15545  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7760  kind=DATA
+  cycle  15545  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..78e0  kind=DATA
+  cycle  15548  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4560  prb=6 targets=8
+  cycle  15548  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7a00  chain=0 prb=6
+  cycle  15548  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7b80  chain=0 prb=6
+  cycle  15548  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7d00  chain=0 prb=6
+  cycle  15548  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7e80  chain=0 prb=6
+  cycle  15548  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6000  chain=0 prb=6
+  cycle  15548  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6180  chain=0 prb=6
+  cycle  15548  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6300  chain=0 prb=6
+  cycle  15548  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6480  chain=0 prb=6
+  cycle  15548  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7a00  
+  cycle  15548  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7b80  
+  cycle  15548  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7d00  
+  cycle  15548  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7e80  
+  cycle  15548  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7a00  kind=DATA
+  cycle  15548  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7b80  kind=DATA
+  cycle  15548  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7d00  kind=DATA
+  cycle  15548  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7e80  kind=DATA
+  cycle  15549  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6000  
+  cycle  15549  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6180  
+  cycle  15549  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6300  
+  cycle  15549  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6480  
+  cycle  15549  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6000  kind=DATA
+  cycle  15549  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6180  kind=DATA
+  cycle  15549  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6300  kind=DATA
+  cycle  15549  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6480  kind=DATA
+  --- latency (idx→data served): 358 cycles
+
+=== Warp 2, Iteration 36 ===
+
+=== Warp 2, Iteration 37 ===
+
+=== Warp 2, Iteration 38 ===
+
+=== Warp 2, Iteration 39 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  15673  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..4500  L1=HIT  <-- HIT
+  cycle  15673  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..4520  L1=HIT  <-- HIT
+  cycle  15673  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..4540  L1=HIT  <-- HIT
+  cycle  15673  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..4560  L1=HIT  <-- HIT
+  cycle  15673  [GRASP]  DEMAND_CT_HIT        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4500  stride_valid=1 iter_stride=1024
+  cycle  15673  [GRASP]  STRIDE_UPDATE        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4500  delta=1024 stride_valid=1
+  cycle  15673  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4900  
+  cycle  15673  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4920  
+  cycle  15673  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4940  
+  cycle  15673  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4960  
+  cycle  15674  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4900  prb=1
+  cycle  15674  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4920  prb=1
+  cycle  15674  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4940  prb=1
+  cycle  15674  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4960  prb=1
+  cycle  15674  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4900  kind=INDEX
+  cycle  15674  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4920  kind=INDEX
+  cycle  15674  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4940  kind=INDEX
+  cycle  15674  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4960  kind=INDEX
+  cycle  15722  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..7e8c  L1=HIT  <-- HIT
+  cycle  15722  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..7f38  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15723  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..7d08  L1=HIT  <-- HIT
+  cycle  15723  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..7db4  L1=HIT  <-- HIT
+  cycle  15724  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..7b84  L1=HIT  <-- HIT
+  cycle  15724  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..7c30  L1=HIT  <-- HIT
+  cycle  15725  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..7a00  L1=HIT  <-- HIT
+  cycle  15725  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..7aac  L1=HIT  <-- HIT
+  cycle  15726  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..7928  L1=HIT  <-- HIT
+  cycle  15726  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..78fc  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15727  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..77a4  L1=HIT  <-- HIT
+  cycle  15727  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..7778  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15728  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..7620  L1=HIT  <-- HIT
+  cycle  15728  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..75f4  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15729  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..7470  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15730  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..72ec  L1=HIT  <-- HIT
+  cycle  15731  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..7168  L1=HIT  <-- HIT
+  cycle  15732  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..6fe4  L1=HIT  <-- HIT
+  cycle  15733  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..6cdc  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15733  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..6e60  L1=HIT  <-- HIT
+  cycle  15734  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..6b58  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15735  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..69d4  L1=HIT  <-- HIT
+  cycle  15736  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..6850  L1=HIT  <-- HIT
+  cycle  15737  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..66cc  L1=HIT  <-- HIT
+  cycle  15738  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..649c  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15738  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..6548  L1=HIT  <-- HIT
+  cycle  15739  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..6318  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15739  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..63c4  L1=HIT  <-- HIT
+  cycle  15740  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..6194  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15740  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..60bc  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  15740  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..6240  L1=HIT  <-- HIT
+  cycle  15741  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..6010  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16096  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4900  prb=1 targets=8
+  cycle  16096  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7e80  chain=0 prb=1
+  cycle  16096  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6000  chain=0 prb=1
+  cycle  16096  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6180  chain=0 prb=1
+  cycle  16096  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6300  chain=0 prb=1
+  cycle  16096  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6480  chain=0 prb=1
+  cycle  16096  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6600  chain=0 prb=1
+  cycle  16096  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6780  chain=0 prb=1
+  cycle  16096  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6920  chain=0 prb=1
+  cycle  16096  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7e80  
+  cycle  16096  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6000  
+  cycle  16096  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6180  
+  cycle  16096  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6300  
+  cycle  16096  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7e80  kind=DATA
+  cycle  16096  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6000  kind=DATA
+  cycle  16096  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6180  kind=DATA
+  cycle  16096  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6300  kind=DATA
+  cycle  16097  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6480  
+  cycle  16097  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6600  
+  cycle  16097  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6780  
+  cycle  16097  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6920  
+  cycle  16097  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6480  kind=DATA
+  cycle  16097  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6600  kind=DATA
+  cycle  16097  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6780  kind=DATA
+  cycle  16097  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6920  kind=DATA
+  cycle  16100  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4920  prb=1 targets=8
+  cycle  16100  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6aa0  chain=0 prb=1
+  cycle  16100  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6c20  chain=0 prb=1
+  cycle  16100  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6da0  chain=0 prb=1
+  cycle  16100  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6f20  chain=0 prb=1
+  cycle  16100  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..70a0  chain=0 prb=1
+  cycle  16100  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7220  chain=0 prb=1
+  cycle  16100  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..73a0  chain=0 prb=1
+  cycle  16100  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7540  chain=0 prb=1
+  cycle  16100  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6aa0  
+  cycle  16100  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6c20  
+  cycle  16100  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6da0  
+  cycle  16100  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6f20  
+  cycle  16100  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6aa0  kind=DATA
+  cycle  16100  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6c20  kind=DATA
+  cycle  16100  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6da0  kind=DATA
+  cycle  16100  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6f20  kind=DATA
+  cycle  16101  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..70a0  
+  cycle  16101  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7220  
+  cycle  16101  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..73a0  
+  cycle  16101  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7540  
+  cycle  16101  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..70a0  kind=DATA
+  cycle  16101  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7220  kind=DATA
+  cycle  16101  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..73a0  kind=DATA
+  cycle  16101  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7540  kind=DATA
+  cycle  16104  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4940  prb=1 targets=8
+  cycle  16104  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..76c0  chain=0 prb=1
+  cycle  16104  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7840  chain=0 prb=1
+  cycle  16104  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..79c0  chain=0 prb=1
+  cycle  16104  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7b40  chain=0 prb=1
+  cycle  16104  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7cc0  chain=0 prb=1
+  cycle  16104  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7e40  chain=0 prb=1
+  cycle  16104  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7fc0  chain=0 prb=1
+  cycle  16104  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6160  chain=0 prb=1
+  cycle  16104  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..76c0  
+  cycle  16104  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7840  
+  cycle  16104  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..79c0  
+  cycle  16104  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7b40  
+  cycle  16104  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..76c0  kind=DATA
+  cycle  16104  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7840  kind=DATA
+  cycle  16104  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..79c0  kind=DATA
+  cycle  16104  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7b40  kind=DATA
+  cycle  16105  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7cc0  
+  cycle  16105  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7e40  
+  cycle  16105  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7fc0  
+  cycle  16105  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6160  
+  cycle  16105  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7cc0  kind=DATA
+  cycle  16105  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7e40  kind=DATA
+  cycle  16105  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7fc0  kind=DATA
+  cycle  16105  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6160  kind=DATA
+  cycle  16108  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4960  prb=1 targets=8
+  cycle  16108  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..62e0  chain=0 prb=1
+  cycle  16108  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6460  chain=0 prb=1
+  cycle  16108  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..65e0  chain=0 prb=1
+  cycle  16108  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6760  chain=0 prb=1
+  cycle  16108  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..68e0  chain=0 prb=1
+  cycle  16108  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6a60  chain=0 prb=1
+  cycle  16108  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6be0  chain=0 prb=1
+  cycle  16108  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6d00  chain=0 prb=1
+  cycle  16108  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..62e0  
+  cycle  16108  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6460  
+  cycle  16108  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..65e0  
+  cycle  16108  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6760  
+  cycle  16108  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..62e0  kind=DATA
+  cycle  16108  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6460  kind=DATA
+  cycle  16108  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..65e0  kind=DATA
+  cycle  16108  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6760  kind=DATA
+  cycle  16109  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..68e0  
+  cycle  16109  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6a60  
+  cycle  16109  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6be0  
+  cycle  16109  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6d00  
+  cycle  16109  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..68e0  kind=DATA
+  cycle  16109  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6a60  kind=DATA
+  cycle  16109  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6be0  kind=DATA
+  cycle  16109  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6d00  kind=DATA
+  --- latency (idx→data served): 68 cycles
+
+=== Warp 2, Iteration 40 ===
+
+=== Warp 2, Iteration 41 ===
+
+=== Warp 2, Iteration 42 ===
+
+=== Warp 2, Iteration 43 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  16197  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..4900  L1=HIT  <-- HIT
+  cycle  16197  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..4920  L1=HIT  <-- HIT
+  cycle  16197  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..4940  L1=HIT  <-- HIT
+  cycle  16197  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..4960  L1=HIT  <-- HIT
+  cycle  16197  [GRASP]  DEMAND_CT_HIT        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4900  stride_valid=1 iter_stride=1024
+  cycle  16197  [GRASP]  STRIDE_UPDATE        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4900  delta=1024 stride_valid=1
+  cycle  16197  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4d00  
+  cycle  16197  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4d20  
+  cycle  16197  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4d40  
+  cycle  16197  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4d60  
+  cycle  16198  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4d00  prb=0
+  cycle  16198  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4d20  prb=0
+  cycle  16198  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4d40  prb=0
+  cycle  16198  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..4d60  prb=0
+  cycle  16198  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4d00  kind=INDEX
+  cycle  16198  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4d20  kind=INDEX
+  cycle  16198  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4d40  kind=INDEX
+  cycle  16198  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..4d60  kind=INDEX
+  cycle  16242  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..7e84  L1=HIT  <-- HIT
+  cycle  16242  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..7fdc  L1=HIT  <-- HIT
+  cycle  16243  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..7e58  L1=HIT  <-- HIT
+  cycle  16244  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..7cd4  L1=HIT  <-- HIT
+  cycle  16245  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..7b50  L1=HIT  <-- HIT
+  cycle  16246  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..79cc  L1=HIT  <-- HIT
+  cycle  16247  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..7848  L1=HIT  <-- HIT
+  cycle  16248  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..76c4  L1=HIT  <-- HIT
+  cycle  16249  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..73bc  L1=HIT  <-- HIT
+  cycle  16249  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..7540  L1=HIT  <-- HIT
+  cycle  16250  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..7238  L1=HIT  <-- HIT
+  cycle  16251  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..70b4  L1=HIT  <-- HIT
+  cycle  16252  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..6f30  L1=HIT  <-- HIT
+  cycle  16253  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..6d00  L1=HIT  <-- HIT
+  cycle  16253  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..6dac  L1=HIT  <-- HIT
+  cycle  16254  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..6c28  L1=HIT  <-- HIT
+  cycle  16254  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..6bfc  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16255  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..6aa4  L1=HIT  <-- HIT
+  cycle  16255  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..6a78  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16256  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..679c  L1=HIT  <-- HIT
+  cycle  16256  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..6920  L1=HIT  <-- HIT
+  cycle  16256  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..68f4  L1=HIT  <-- HIT
+  cycle  16257  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..6618  L1=HIT  <-- HIT
+  cycle  16257  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..6770  L1=HIT  <-- HIT
+  cycle  16258  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..6494  L1=HIT  <-- HIT
+  cycle  16258  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..65ec  L1=HIT  <-- HIT
+  cycle  16259  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..6310  L1=HIT  <-- HIT
+  cycle  16259  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..6468  L1=HIT  <-- HIT
+  cycle  16260  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..618c  L1=HIT  <-- HIT
+  cycle  16260  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..62e4  L1=HIT  <-- HIT
+  cycle  16261  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..6008  L1=HIT  <-- HIT
+  cycle  16261  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..6160  L1=HIT  <-- HIT
+  --- latency (idx→data served): 64 cycles
+
+=== Warp 2, Iteration 44 ===
+
+=== Warp 2, Iteration 45 ===
+
+=== Warp 2, Iteration 46 ===
+
+=== Warp 2, Iteration 47 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  16600  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..4d00  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16600  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..4d20  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16600  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..4d40  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16600  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..4d60  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16600  [GRASP]  DEMAND_CT_HIT        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4d00  stride_valid=1 iter_stride=1024
+  cycle  16600  [GRASP]  STRIDE_UPDATE        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..4d00  delta=1024 stride_valid=1
+  cycle  16600  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5100  
+  cycle  16600  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5120  
+  cycle  16600  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5140  
+  cycle  16600  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5160  
+  cycle  16601  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5100  prb=10
+  cycle  16601  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5120  prb=10
+  cycle  16601  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5140  prb=10
+  cycle  16601  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5160  prb=10
+  cycle  16601  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5100  kind=INDEX
+  cycle  16601  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5120  kind=INDEX
+  cycle  16601  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5140  kind=INDEX
+  cycle  16601  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5160  kind=INDEX
+  cycle  16621  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4d00  prb=0 targets=8
+  cycle  16621  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6760  chain=0 prb=0
+  cycle  16621  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..68e0  chain=0 prb=0
+  cycle  16621  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6a60  chain=0 prb=0
+  cycle  16621  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6be0  chain=0 prb=0
+  cycle  16621  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6d60  chain=0 prb=0
+  cycle  16621  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6ee0  chain=0 prb=0
+  cycle  16621  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7000  chain=0 prb=0
+  cycle  16621  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7180  chain=0 prb=0
+  cycle  16621  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6760  
+  cycle  16621  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..68e0  
+  cycle  16621  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6a60  
+  cycle  16621  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6be0  
+  cycle  16621  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6760  kind=DATA
+  cycle  16621  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..68e0  kind=DATA
+  cycle  16621  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6a60  kind=DATA
+  cycle  16621  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6be0  kind=DATA
+  cycle  16622  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6d60  
+  cycle  16622  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6ee0  
+  cycle  16622  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7000  
+  cycle  16622  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7180  
+  cycle  16622  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6d60  kind=DATA
+  cycle  16622  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6ee0  kind=DATA
+  cycle  16622  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7000  kind=DATA
+  cycle  16622  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7180  kind=DATA
+  cycle  16624  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4d20  prb=0 targets=8
+  cycle  16624  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7300  chain=0 prb=0
+  cycle  16624  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7480  chain=0 prb=0
+  cycle  16624  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7600  chain=0 prb=0
+  cycle  16624  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7780  chain=0 prb=0
+  cycle  16624  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7900  chain=0 prb=0
+  cycle  16624  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7a80  chain=0 prb=0
+  cycle  16624  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7c20  chain=0 prb=0
+  cycle  16624  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7da0  chain=0 prb=0
+  cycle  16624  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7300  
+  cycle  16624  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7480  
+  cycle  16624  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7600  
+  cycle  16624  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7780  
+  cycle  16624  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7300  kind=DATA
+  cycle  16624  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7480  kind=DATA
+  cycle  16624  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7600  kind=DATA
+  cycle  16624  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7780  kind=DATA
+  cycle  16625  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7900  
+  cycle  16625  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7a80  
+  cycle  16625  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7c20  
+  cycle  16625  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7da0  
+  cycle  16625  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7900  kind=DATA
+  cycle  16625  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7a80  kind=DATA
+  cycle  16625  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7c20  kind=DATA
+  cycle  16625  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7da0  kind=DATA
+  cycle  16628  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4d40  prb=0 targets=8
+  cycle  16628  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7f20  chain=0 prb=0
+  cycle  16628  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..60a0  chain=0 prb=0
+  cycle  16628  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6220  chain=0 prb=0
+  cycle  16628  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..63a0  chain=0 prb=0
+  cycle  16628  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6520  chain=0 prb=0
+  cycle  16628  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..66a0  chain=0 prb=0
+  cycle  16628  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6840  chain=0 prb=0
+  cycle  16628  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..69c0  chain=0 prb=0
+  cycle  16629  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7f20  
+  cycle  16629  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..60a0  
+  cycle  16629  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6220  
+  cycle  16629  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..63a0  
+  cycle  16629  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7f20  kind=DATA
+  cycle  16629  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..60a0  kind=DATA
+  cycle  16629  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6220  kind=DATA
+  cycle  16629  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..63a0  kind=DATA
+  cycle  16630  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6520  
+  cycle  16630  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..66a0  
+  cycle  16630  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6840  
+  cycle  16630  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..69c0  
+  cycle  16630  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6520  kind=DATA
+  cycle  16630  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..66a0  kind=DATA
+  cycle  16630  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6840  kind=DATA
+  cycle  16630  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..69c0  kind=DATA
+  cycle  16632  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..4d60  prb=0 targets=8
+  cycle  16632  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6b40  chain=0 prb=0
+  cycle  16632  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6cc0  chain=0 prb=0
+  cycle  16632  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6e40  chain=0 prb=0
+  cycle  16632  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6fc0  chain=0 prb=0
+  cycle  16632  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7140  chain=0 prb=0
+  cycle  16632  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..72c0  chain=0 prb=0
+  cycle  16632  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7460  chain=0 prb=0
+  cycle  16632  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..75e0  chain=0 prb=0
+  cycle  16633  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6b40  
+  cycle  16633  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6cc0  
+  cycle  16633  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6e40  
+  cycle  16633  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6fc0  
+  cycle  16633  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6b40  kind=DATA
+  cycle  16633  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6cc0  kind=DATA
+  cycle  16633  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6e40  kind=DATA
+  cycle  16633  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6fc0  kind=DATA
+  cycle  16634  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7140  
+  cycle  16634  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..72c0  
+  cycle  16634  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7460  
+  cycle  16634  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..75e0  
+  cycle  16634  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7140  kind=DATA
+  cycle  16634  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..72c0  kind=DATA
+  cycle  16634  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7460  kind=DATA
+  cycle  16634  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..75e0  kind=DATA
+  cycle  16679  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..7f28  L1=HIT  <-- HIT
+  cycle  16680  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..7da4  L1=HIT  <-- HIT
+  cycle  16681  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..7a9c  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16681  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..7c20  L1=HIT  <-- HIT
+  cycle  16682  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..7918  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16683  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..7794  L1=HIT  <-- HIT
+  cycle  16684  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..7610  L1=HIT  <-- HIT
+  cycle  16684  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..75e4  L1=HIT  <-- HIT
+  cycle  16685  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..748c  L1=HIT  <-- HIT
+  cycle  16685  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..7460  L1=HIT  <-- HIT
+  cycle  16686  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..7308  L1=HIT  <-- HIT
+  cycle  16686  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..72dc  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16687  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..7184  L1=HIT  <-- HIT
+  cycle  16687  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..7158  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16688  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..7000  L1=HIT  <-- HIT
+  cycle  16688  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..6fd4  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16688  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..6efc  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16689  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..6e50  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16689  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..6d78  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16690  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..6ccc  L1=HIT  <-- HIT
+  cycle  16690  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..6bf4  L1=HIT  <-- HIT
+  cycle  16691  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..6b48  L1=HIT  <-- HIT
+  cycle  16691  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..6a70  L1=HIT  <-- HIT
+  cycle  16692  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..69c4  L1=HIT  <-- HIT
+  cycle  16692  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..68ec  L1=HIT  <-- HIT
+  cycle  16693  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..66bc  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16693  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..6840  L1=HIT  <-- HIT
+  cycle  16693  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..6768  L1=HIT  <-- HIT
+  cycle  16694  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..6538  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  16695  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..63b4  L1=HIT  <-- HIT
+  cycle  16696  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..6230  L1=HIT  <-- HIT
+  cycle  16697  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..60ac  L1=HIT  <-- HIT
+  cycle  17023  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5100  prb=10 targets=8
+  cycle  17023  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6fc0  chain=0 prb=10
+  cycle  17023  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7140  chain=0 prb=10
+  cycle  17023  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..72c0  chain=0 prb=10
+  cycle  17023  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7440  chain=0 prb=10
+  cycle  17023  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..75c0  chain=0 prb=10
+  cycle  17023  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7760  chain=0 prb=10
+  cycle  17023  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..78e0  chain=0 prb=10
+  cycle  17023  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7a60  chain=0 prb=10
+  cycle  17023  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6fc0  
+  cycle  17023  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7140  
+  cycle  17023  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..72c0  
+  cycle  17023  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7440  
+  cycle  17023  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6fc0  kind=DATA
+  cycle  17023  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7140  kind=DATA
+  cycle  17023  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..72c0  kind=DATA
+  cycle  17023  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7440  kind=DATA
+  cycle  17024  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..75c0  
+  cycle  17024  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7760  
+  cycle  17024  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..78e0  
+  cycle  17024  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7a60  
+  cycle  17024  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..75c0  kind=DATA
+  cycle  17024  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7760  kind=DATA
+  cycle  17024  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..78e0  kind=DATA
+  cycle  17024  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7a60  kind=DATA
+  cycle  17027  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5120  prb=10 targets=8
+  cycle  17027  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7be0  chain=0 prb=10
+  cycle  17027  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7d60  chain=0 prb=10
+  cycle  17027  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7ee0  chain=0 prb=10
+  cycle  17027  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6060  chain=0 prb=10
+  cycle  17027  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..61e0  chain=0 prb=10
+  cycle  17027  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6300  chain=0 prb=10
+  cycle  17027  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6480  chain=0 prb=10
+  cycle  17027  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6600  chain=0 prb=10
+  cycle  17027  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7be0  
+  cycle  17027  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7d60  
+  cycle  17027  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7ee0  
+  cycle  17027  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6060  
+  cycle  17027  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7be0  kind=DATA
+  cycle  17027  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7d60  kind=DATA
+  cycle  17027  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7ee0  kind=DATA
+  cycle  17027  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6060  kind=DATA
+  cycle  17028  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..61e0  
+  cycle  17028  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6300  
+  cycle  17028  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6480  
+  cycle  17028  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6600  
+  cycle  17028  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..61e0  kind=DATA
+  cycle  17028  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6300  kind=DATA
+  cycle  17028  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6480  kind=DATA
+  cycle  17028  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6600  kind=DATA
+  cycle  17031  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5140  prb=10 targets=8
+  cycle  17031  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6780  chain=0 prb=10
+  cycle  17031  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6900  chain=0 prb=10
+  cycle  17031  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6a80  chain=0 prb=10
+  cycle  17031  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6c00  chain=0 prb=10
+  cycle  17031  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6d80  chain=0 prb=10
+  cycle  17031  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6f20  chain=0 prb=10
+  cycle  17031  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..70a0  chain=0 prb=10
+  cycle  17031  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7220  chain=0 prb=10
+  cycle  17031  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6780  
+  cycle  17031  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6900  
+  cycle  17031  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6a80  
+  cycle  17031  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6c00  
+  cycle  17031  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6780  kind=DATA
+  cycle  17031  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6900  kind=DATA
+  cycle  17031  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6a80  kind=DATA
+  cycle  17031  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6c00  kind=DATA
+  cycle  17032  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6d80  
+  cycle  17032  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6f20  
+  cycle  17032  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..70a0  
+  cycle  17032  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7220  
+  cycle  17032  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..6d80  kind=DATA
+  cycle  17032  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6f20  kind=DATA
+  cycle  17032  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..70a0  kind=DATA
+  cycle  17032  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7220  kind=DATA
+  cycle  17035  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5160  prb=10 targets=8
+  cycle  17035  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..73a0  chain=0 prb=10
+  cycle  17035  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7520  chain=0 prb=10
+  cycle  17035  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..76a0  chain=0 prb=10
+  cycle  17035  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7820  chain=0 prb=10
+  cycle  17035  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..79a0  chain=0 prb=10
+  cycle  17035  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7b40  chain=0 prb=10
+  cycle  17035  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7cc0  chain=0 prb=10
+  cycle  17035  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7e40  chain=0 prb=10
+  cycle  17035  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..73a0  
+  cycle  17035  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7520  
+  cycle  17035  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..76a0  
+  cycle  17035  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7820  
+  cycle  17035  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..73a0  kind=DATA
+  cycle  17035  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7520  kind=DATA
+  cycle  17035  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..76a0  kind=DATA
+  cycle  17035  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7820  kind=DATA
+  cycle  17036  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..79a0  
+  cycle  17036  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7b40  
+  cycle  17036  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7cc0  
+  cycle  17036  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7e40  
+  cycle  17036  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..79a0  kind=DATA
+  cycle  17036  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7b40  kind=DATA
+  cycle  17036  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7cc0  kind=DATA
+  cycle  17036  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7e40  kind=DATA
+  --- latency (idx→data served): 97 cycles
+
+=== Warp 2, Iteration 48 ===
+
+=== Warp 2, Iteration 49 ===
+
+=== Warp 2, Iteration 50 ===
+
+=== Warp 2, Iteration 51 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  17291  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..5100  L1=HIT  <-- HIT
+  cycle  17291  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..5120  L1=HIT  <-- HIT
+  cycle  17291  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..5140  L1=HIT  <-- HIT
+  cycle  17291  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..5160  L1=HIT  <-- HIT
+  cycle  17291  [GRASP]  DEMAND_CT_HIT        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5100  stride_valid=1 iter_stride=1024
+  cycle  17291  [GRASP]  STRIDE_UPDATE        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5100  delta=1024 stride_valid=1
+  cycle  17291  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5500  
+  cycle  17291  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5520  
+  cycle  17291  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5540  
+  cycle  17291  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5560  
+  cycle  17292  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5500  prb=2
+  cycle  17292  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5520  prb=2
+  cycle  17292  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5540  prb=2
+  cycle  17292  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5560  prb=2
+  cycle  17292  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5500  kind=INDEX
+  cycle  17292  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5520  kind=INDEX
+  cycle  17292  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5540  kind=INDEX
+  cycle  17292  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5560  kind=INDEX
+  cycle  17343  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..7e48  L1=HIT  <-- HIT
+  cycle  17343  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..7ef4  L1=HIT  <-- HIT
+  cycle  17344  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..7cc4  L1=HIT  <-- HIT
+  cycle  17344  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..7d70  L1=HIT  <-- HIT
+  cycle  17345  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..7b40  L1=HIT  <-- HIT
+  cycle  17345  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..7bec  L1=HIT  <-- HIT
+  cycle  17346  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..79bc  L1=HIT  <-- HIT
+  cycle  17346  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..7a68  L1=HIT  <-- HIT
+  cycle  17347  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..7838  L1=HIT  <-- HIT
+  cycle  17347  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..78e4  L1=HIT  <-- HIT
+  cycle  17348  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..76b4  L1=HIT  <-- HIT
+  cycle  17348  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..75dc  L1=HIT  <-- HIT
+  cycle  17348  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..7760  L1=HIT  <-- HIT
+  cycle  17349  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..7530  L1=HIT  <-- HIT
+  cycle  17349  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..7458  L1=HIT  <-- HIT
+  cycle  17350  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..73ac  L1=HIT  <-- HIT
+  cycle  17350  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..72d4  L1=HIT  <-- HIT
+  cycle  17351  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..7228  L1=HIT  <-- HIT
+  cycle  17351  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..7150  L1=HIT  <-- HIT
+  cycle  17352  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..70a4  L1=HIT  <-- HIT
+  cycle  17352  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..6fcc  L1=HIT  <-- HIT
+  cycle  17353  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..6d9c  L1=HIT  <-- HIT
+  cycle  17353  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..6f20  L1=HIT  <-- HIT
+  cycle  17354  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..6c18  L1=HIT  <-- HIT
+  cycle  17355  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..6a94  L1=HIT  <-- HIT
+  cycle  17356  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..6910  L1=HIT  <-- HIT
+  cycle  17357  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..678c  L1=HIT  <-- HIT
+  cycle  17358  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..6608  L1=HIT  <-- HIT
+  cycle  17359  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..6484  L1=HIT  <-- HIT
+  cycle  17360  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..6300  L1=HIT  <-- HIT
+  cycle  17360  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..61fc  L1=HIT  <-- HIT
+  cycle  17361  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..6078  L1=HIT  <-- HIT
+  --- latency (idx→data served): 70 cycles
+
+=== Warp 2, Iteration 52 ===
+
+=== Warp 2, Iteration 53 ===
+
+=== Warp 2, Iteration 54 ===
+
+=== Warp 2, Iteration 55 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  17459  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..5500  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  17459  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..5520  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  17459  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..5540  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  17459  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..5560  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  17459  [GRASP]  DEMAND_CT_HIT        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5500  stride_valid=1 iter_stride=1024
+  cycle  17459  [GRASP]  STRIDE_UPDATE        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5500  delta=1024 stride_valid=1
+  cycle  17459  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5900  
+  cycle  17459  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5920  
+  cycle  17459  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5940  
+  cycle  17459  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5960  
+  cycle  17460  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5900  prb=10
+  cycle  17460  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5920  prb=10
+  cycle  17460  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5940  prb=10
+  cycle  17460  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5960  prb=10
+  cycle  17460  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5900  kind=INDEX
+  cycle  17460  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5920  kind=INDEX
+  cycle  17460  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5940  kind=INDEX
+  cycle  17460  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5960  kind=INDEX
+  cycle  17714  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5500  prb=2 targets=8
+  cycle  17714  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7820  chain=0 prb=2
+  cycle  17714  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..79a0  chain=0 prb=2
+  cycle  17714  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7b20  chain=0 prb=2
+  cycle  17714  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7ca0  chain=0 prb=2
+  cycle  17714  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7e40  chain=0 prb=2
+  cycle  17714  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7fc0  chain=0 prb=2
+  cycle  17714  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6140  chain=0 prb=2
+  cycle  17714  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..62c0  chain=0 prb=2
+  cycle  17714  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7820  
+  cycle  17714  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..79a0  
+  cycle  17714  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7b20  
+  cycle  17714  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7ca0  
+  cycle  17714  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7820  kind=DATA
+  cycle  17714  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..79a0  kind=DATA
+  cycle  17714  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7b20  kind=DATA
+  cycle  17714  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7ca0  kind=DATA
+  cycle  17715  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7e40  
+  cycle  17715  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7fc0  
+  cycle  17715  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6140  
+  cycle  17715  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..62c0  
+  cycle  17715  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7e40  kind=DATA
+  cycle  17715  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7fc0  kind=DATA
+  cycle  17715  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6140  kind=DATA
+  cycle  17715  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..62c0  kind=DATA
+  cycle  17718  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5520  prb=2 targets=8
+  cycle  17718  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6440  chain=0 prb=2
+  cycle  17718  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..65c0  chain=0 prb=2
+  cycle  17718  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6740  chain=0 prb=2
+  cycle  17718  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..68c0  chain=0 prb=2
+  cycle  17718  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6a60  chain=0 prb=2
+  cycle  17718  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6be0  chain=0 prb=2
+  cycle  17718  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6d60  chain=0 prb=2
+  cycle  17718  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6ee0  chain=0 prb=2
+  cycle  17718  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6440  
+  cycle  17718  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..65c0  
+  cycle  17718  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6740  
+  cycle  17718  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..68c0  
+  cycle  17718  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6440  kind=DATA
+  cycle  17718  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..65c0  kind=DATA
+  cycle  17718  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6740  kind=DATA
+  cycle  17718  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..68c0  kind=DATA
+  cycle  17719  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6a60  
+  cycle  17719  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6be0  
+  cycle  17719  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6d60  
+  cycle  17719  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6ee0  
+  cycle  17719  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6a60  kind=DATA
+  cycle  17719  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6be0  kind=DATA
+  cycle  17719  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6d60  kind=DATA
+  cycle  17719  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6ee0  kind=DATA
+  cycle  17722  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5540  prb=2 targets=8
+  cycle  17722  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7060  chain=0 prb=2
+  cycle  17722  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..71e0  chain=0 prb=2
+  cycle  17722  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7360  chain=0 prb=2
+  cycle  17722  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..74e0  chain=0 prb=2
+  cycle  17722  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7600  chain=0 prb=2
+  cycle  17722  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7780  chain=0 prb=2
+  cycle  17722  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7900  chain=0 prb=2
+  cycle  17722  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7a80  chain=0 prb=2
+  cycle  17722  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7060  
+  cycle  17722  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..71e0  
+  cycle  17722  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7360  
+  cycle  17722  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..74e0  
+  cycle  17722  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7060  kind=DATA
+  cycle  17722  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..71e0  kind=DATA
+  cycle  17722  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7360  kind=DATA
+  cycle  17722  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..74e0  kind=DATA
+  cycle  17723  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7600  
+  cycle  17723  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7780  
+  cycle  17723  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7900  
+  cycle  17723  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7a80  
+  cycle  17723  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7600  kind=DATA
+  cycle  17723  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7780  kind=DATA
+  cycle  17723  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7900  kind=DATA
+  cycle  17723  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7a80  kind=DATA
+  cycle  17726  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5560  prb=2 targets=8
+  cycle  17726  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7c00  chain=0 prb=2
+  cycle  17726  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7d80  chain=0 prb=2
+  cycle  17726  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7f00  chain=0 prb=2
+  cycle  17726  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6080  chain=0 prb=2
+  cycle  17726  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6220  chain=0 prb=2
+  cycle  17726  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..63a0  chain=0 prb=2
+  cycle  17726  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6520  chain=0 prb=2
+  cycle  17726  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..66a0  chain=0 prb=2
+  cycle  17726  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7c00  
+  cycle  17726  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7d80  
+  cycle  17726  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7f00  
+  cycle  17726  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6080  
+  cycle  17726  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7c00  kind=DATA
+  cycle  17726  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7d80  kind=DATA
+  cycle  17726  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..7f00  kind=DATA
+  cycle  17726  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6080  kind=DATA
+  cycle  17727  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6220  
+  cycle  17727  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..63a0  
+  cycle  17727  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6520  
+  cycle  17727  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..66a0  
+  cycle  17727  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6220  kind=DATA
+  cycle  17727  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..63a0  kind=DATA
+  cycle  17727  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6520  kind=DATA
+  cycle  17727  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..66a0  kind=DATA
+  cycle  17775  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..7f18  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  17775  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..7fc4  L1=HIT  <-- HIT
+  cycle  17776  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..7d94  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  17776  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..7cbc  L1=HIT  <-- HIT
+  cycle  17776  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..7e40  L1=HIT  <-- HIT
+  cycle  17777  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..7c10  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  17777  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..7b38  L1=HIT  <-- HIT
+  cycle  17778  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..7a8c  L1=HIT  <-- HIT
+  cycle  17778  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..79b4  L1=HIT  <-- HIT
+  cycle  17779  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..7908  L1=HIT  <-- HIT
+  cycle  17779  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..7830  L1=HIT  <-- HIT
+  cycle  17780  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..7784  L1=HIT  <-- HIT
+  cycle  17781  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..7600  L1=HIT  <-- HIT
+  cycle  17781  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..74fc  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  17782  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..7378  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  17783  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..71f4  L1=HIT  <-- HIT
+  cycle  17784  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..7070  L1=HIT  <-- HIT
+  cycle  17785  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..6eec  L1=HIT  <-- HIT
+  cycle  17786  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..6d68  L1=HIT  <-- HIT
+  cycle  17787  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..6be4  L1=HIT  <-- HIT
+  cycle  17788  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..68dc  L1=HIT  <-- HIT
+  cycle  17788  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..6a60  L1=HIT  <-- HIT
+  cycle  17789  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..66ac  L1=HIT  <-- HIT
+  cycle  17789  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..6758  L1=HIT  <-- HIT
+  cycle  17790  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..6528  L1=HIT  <-- HIT
+  cycle  17790  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..65d4  L1=HIT  <-- HIT
+  cycle  17791  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..63a4  L1=HIT  <-- HIT
+  cycle  17791  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..6450  L1=HIT  <-- HIT
+  cycle  17792  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..6220  L1=HIT  <-- HIT
+  cycle  17792  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..62cc  L1=HIT  <-- HIT
+  cycle  17793  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..609c  L1=HIT  <-- HIT
+  cycle  17793  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..6148  L1=HIT  <-- HIT
+  cycle  17899  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5900  prb=10 targets=8
+  cycle  17899  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6080  chain=0 prb=10
+  cycle  17899  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6200  chain=0 prb=10
+  cycle  17899  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6380  chain=0 prb=10
+  cycle  17899  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6520  chain=0 prb=10
+  cycle  17899  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..66a0  chain=0 prb=10
+  cycle  17899  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6820  chain=0 prb=10
+  cycle  17899  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..69a0  chain=0 prb=10
+  cycle  17899  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6b20  chain=0 prb=10
+  cycle  17900  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6080  
+  cycle  17900  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6200  
+  cycle  17900  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6380  
+  cycle  17900  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6520  
+  cycle  17900  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6080  kind=DATA
+  cycle  17900  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6200  kind=DATA
+  cycle  17900  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6380  kind=DATA
+  cycle  17900  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6520  kind=DATA
+  cycle  17901  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..66a0  
+  cycle  17901  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6820  
+  cycle  17901  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..69a0  
+  cycle  17901  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6b20  
+  cycle  17901  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..66a0  kind=DATA
+  cycle  17901  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6820  kind=DATA
+  cycle  17901  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..69a0  kind=DATA
+  cycle  17901  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6b20  kind=DATA
+  cycle  17903  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5920  prb=10 targets=8
+  cycle  17903  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6ca0  chain=0 prb=10
+  cycle  17903  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6e20  chain=0 prb=10
+  cycle  17903  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6fa0  chain=0 prb=10
+  cycle  17903  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7140  chain=0 prb=10
+  cycle  17903  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..72c0  chain=0 prb=10
+  cycle  17903  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7440  chain=0 prb=10
+  cycle  17903  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..75c0  chain=0 prb=10
+  cycle  17903  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7740  chain=0 prb=10
+  cycle  17904  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6ca0  
+  cycle  17904  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6e20  
+  cycle  17904  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6fa0  
+  cycle  17904  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7140  
+  cycle  17904  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6ca0  kind=DATA
+  cycle  17904  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6e20  kind=DATA
+  cycle  17904  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6fa0  kind=DATA
+  cycle  17904  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7140  kind=DATA
+  cycle  17905  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..72c0  
+  cycle  17905  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7440  
+  cycle  17905  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..75c0  
+  cycle  17905  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7740  
+  cycle  17905  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..72c0  kind=DATA
+  cycle  17905  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7440  kind=DATA
+  cycle  17905  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..75c0  kind=DATA
+  cycle  17905  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7740  kind=DATA
+  cycle  17907  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5940  prb=10 targets=8
+  cycle  17907  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..78c0  chain=0 prb=10
+  cycle  17907  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7a40  chain=0 prb=10
+  cycle  17907  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7bc0  chain=0 prb=10
+  cycle  17907  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7d60  chain=0 prb=10
+  cycle  17907  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7ee0  chain=0 prb=10
+  cycle  17907  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6060  chain=0 prb=10
+  cycle  17907  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..61e0  chain=0 prb=10
+  cycle  17907  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6360  chain=0 prb=10
+  cycle  17908  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..78c0  
+  cycle  17908  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7a40  
+  cycle  17908  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7bc0  
+  cycle  17908  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7d60  
+  cycle  17908  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..78c0  kind=DATA
+  cycle  17908  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7a40  kind=DATA
+  cycle  17908  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7bc0  kind=DATA
+  cycle  17908  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7d60  kind=DATA
+  cycle  17909  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7ee0  
+  cycle  17909  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6060  
+  cycle  17909  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..61e0  
+  cycle  17909  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6360  
+  cycle  17909  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7ee0  kind=DATA
+  cycle  17909  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6060  kind=DATA
+  cycle  17909  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..61e0  kind=DATA
+  cycle  17909  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6360  kind=DATA
+  cycle  17910  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5960  prb=10 targets=8
+  cycle  17910  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..64e0  chain=0 prb=10
+  cycle  17910  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6660  chain=0 prb=10
+  cycle  17910  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..67e0  chain=0 prb=10
+  cycle  17910  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6900  chain=0 prb=10
+  cycle  17910  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6a80  chain=0 prb=10
+  cycle  17910  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6c00  chain=0 prb=10
+  cycle  17910  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6d80  chain=0 prb=10
+  cycle  17910  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6f00  chain=0 prb=10
+  cycle  17912  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..64e0  
+  cycle  17912  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6660  
+  cycle  17912  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..67e0  
+  cycle  17912  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6900  
+  cycle  17912  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..64e0  kind=DATA
+  cycle  17912  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6660  kind=DATA
+  cycle  17912  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..67e0  kind=DATA
+  cycle  17912  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6900  kind=DATA
+  cycle  17913  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6a80  
+  cycle  17913  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6c00  
+  cycle  17913  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6d80  
+  cycle  17913  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6f00  
+  cycle  17913  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6a80  kind=DATA
+  cycle  17913  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6c00  kind=DATA
+  cycle  17913  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6d80  kind=DATA
+  cycle  17913  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6f00  kind=DATA
+  --- latency (idx→data served): 334 cycles
+
+=== Warp 2, Iteration 56 ===
+
+=== Warp 2, Iteration 57 ===
+
+=== Warp 2, Iteration 58 ===
+
+=== Warp 2, Iteration 59 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  18258  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..5900  L1=HIT  <-- HIT
+  cycle  18258  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..5920  L1=HIT  <-- HIT
+  cycle  18258  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..5940  L1=HIT  <-- HIT
+  cycle  18258  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..5960  L1=HIT  <-- HIT
+  cycle  18258  [GRASP]  DEMAND_CT_HIT        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5900  stride_valid=1 iter_stride=1024
+  cycle  18258  [GRASP]  STRIDE_UPDATE        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5900  delta=1024 stride_valid=1
+  cycle  18258  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5d00  
+  cycle  18258  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5d20  
+  cycle  18258  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5d40  
+  cycle  18258  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5d60  
+  cycle  18259  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5d00  prb=2
+  cycle  18259  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5d20  prb=2
+  cycle  18259  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5d40  prb=2
+  cycle  18259  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..5d60  prb=2
+  cycle  18259  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5d00  kind=INDEX
+  cycle  18259  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5d20  kind=INDEX
+  cycle  18259  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5d40  kind=INDEX
+  cycle  18259  [GRASP]  L1_RESULT_MISS       pc=0x0000 ()  addr=..5d60  kind=INDEX
+  cycle  18320  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..7ee4  L1=HIT  <-- HIT
+  cycle  18321  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..7bdc  L1=HIT  <-- HIT
+  cycle  18321  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..7d60  L1=HIT  <-- HIT
+  cycle  18322  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..7a58  L1=HIT  <-- HIT
+  cycle  18323  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..78d4  L1=HIT  <-- HIT
+  cycle  18324  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..7750  L1=HIT  <-- HIT
+  cycle  18325  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..75cc  L1=HIT  <-- HIT
+  cycle  18326  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..7448  L1=HIT  <-- HIT
+  cycle  18327  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..72c4  L1=HIT  <-- HIT
+  cycle  18328  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..6f10  L1=HIT  <-- HIT
+  cycle  18328  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..6fbc  L1=HIT  <-- HIT
+  cycle  18328  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..7140  L1=HIT  <-- HIT
+  cycle  18329  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..6d8c  L1=HIT  <-- HIT
+  cycle  18329  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..6e38  L1=HIT  <-- HIT
+  cycle  18330  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..6c08  L1=HIT  <-- HIT
+  cycle  18330  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..6cb4  L1=HIT  <-- HIT
+  cycle  18331  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..6a84  L1=HIT  <-- HIT
+  cycle  18331  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..6b30  L1=HIT  <-- HIT
+  cycle  18332  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..6900  L1=HIT  <-- HIT
+  cycle  18332  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..69ac  L1=HIT  <-- HIT
+  cycle  18333  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..6828  L1=HIT  <-- HIT
+  cycle  18333  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..67fc  L1=HIT  <-- HIT
+  cycle  18334  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..66a4  L1=HIT  <-- HIT
+  cycle  18334  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..6678  L1=HIT  <-- HIT
+  cycle  18335  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..639c  L1=HIT  <-- HIT
+  cycle  18335  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..6520  L1=HIT  <-- HIT
+  cycle  18335  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..64f4  L1=HIT  <-- HIT
+  cycle  18336  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..6218  L1=HIT  <-- HIT
+  cycle  18336  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..6370  L1=HIT  <-- HIT
+  cycle  18337  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..6094  L1=HIT  <-- HIT
+  cycle  18337  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..61ec  L1=HIT  <-- HIT
+  cycle  18338  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..6068  L1=HIT  <-- HIT
+  --- latency (idx→data served): 80 cycles
+
+=== Warp 2, Iteration 60 ===
+
+=== Warp 2, Iteration 61 ===
+
+=== Warp 2, Iteration 62 ===
+
+=== Warp 2, Iteration 63 ===
+  [addr prefix: 0x00007f75d840...]
+  cycle  18438  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=0   addr=..5d00  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  18438  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=8   addr=..5d20  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  18438  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=16  addr=..5d40  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  18438  [L1   ]  DEMAND 0x470 (idx@ima_tiny_case.cu:)  lane=24  addr=..5d60  L1=HIT_RESERVED  <-- HIT_RES
+  cycle  18438  [GRASP]  DEMAND_CT_HIT        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5d00  stride_valid=1 iter_stride=1024
+  cycle  18438  [GRASP]  STRIDE_UPDATE        pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..5d00  delta=1024 stride_valid=1
+  cycle  18438  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..6100  
+  cycle  18438  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..6120  
+  cycle  18438  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..6140  
+  cycle  18438  [GRASP]  IDX_PF_ENQUEUE       pc=0x0470 (idx@ima_tiny_case.cu:)  addr=..6160  
+  cycle  18439  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..6100  prb=8
+  cycle  18439  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..6120  prb=8
+  cycle  18439  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..6140  prb=8
+  cycle  18439  [GRASP]  IDX_PF_INJECT        pc=0x0000 ()  addr=..6160  prb=8
+  cycle  18439  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6100  kind=INDEX
+  cycle  18439  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6120  kind=INDEX
+  cycle  18439  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6140  kind=INDEX
+  cycle  18439  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6160  kind=INDEX
+  cycle  18440  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..6100  prb=8 targets=0
+  cycle  18440  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..6120  prb=8 targets=0
+  cycle  18440  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..6140  prb=8 targets=0
+  cycle  18440  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..6160  prb=8 targets=0
+  cycle  18681  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5d00  prb=2 targets=8
+  cycle  18681  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6960  chain=0 prb=2
+  cycle  18681  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6ae0  chain=0 prb=2
+  cycle  18681  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6c00  chain=0 prb=2
+  cycle  18681  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6d80  chain=0 prb=2
+  cycle  18681  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6f00  chain=0 prb=2
+  cycle  18681  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7080  chain=0 prb=2
+  cycle  18681  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7200  chain=0 prb=2
+  cycle  18681  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7380  chain=0 prb=2
+  cycle  18681  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6960  
+  cycle  18681  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6ae0  
+  cycle  18681  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6c00  
+  cycle  18681  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6d80  
+  cycle  18681  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6960  kind=DATA
+  cycle  18681  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6ae0  kind=DATA
+  cycle  18681  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6c00  kind=DATA
+  cycle  18681  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6d80  kind=DATA
+  cycle  18682  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6f00  
+  cycle  18682  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7080  
+  cycle  18682  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7200  
+  cycle  18682  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7380  
+  cycle  18682  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6f00  kind=DATA
+  cycle  18682  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7080  kind=DATA
+  cycle  18682  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7200  kind=DATA
+  cycle  18682  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7380  kind=DATA
+  cycle  18685  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5d20  prb=2 targets=8
+  cycle  18685  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7500  chain=0 prb=2
+  cycle  18685  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7680  chain=0 prb=2
+  cycle  18685  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7820  chain=0 prb=2
+  cycle  18685  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..79a0  chain=0 prb=2
+  cycle  18685  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7b20  chain=0 prb=2
+  cycle  18685  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7ca0  chain=0 prb=2
+  cycle  18685  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7e20  chain=0 prb=2
+  cycle  18685  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7fa0  chain=0 prb=2
+  cycle  18687  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7500  
+  cycle  18687  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7680  
+  cycle  18687  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7820  
+  cycle  18687  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..79a0  
+  cycle  18687  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7500  kind=DATA
+  cycle  18687  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7680  kind=DATA
+  cycle  18687  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7820  kind=DATA
+  cycle  18687  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..79a0  kind=DATA
+  cycle  18688  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7b20  
+  cycle  18688  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7ca0  
+  cycle  18688  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7e20  
+  cycle  18688  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7fa0  
+  cycle  18688  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7b20  kind=DATA
+  cycle  18688  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7ca0  kind=DATA
+  cycle  18688  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7e20  kind=DATA
+  cycle  18688  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7fa0  kind=DATA
+  cycle  18689  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5d40  prb=2 targets=8
+  cycle  18689  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6120  chain=0 prb=2
+  cycle  18689  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..62a0  chain=0 prb=2
+  cycle  18689  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6440  chain=0 prb=2
+  cycle  18689  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..65c0  chain=0 prb=2
+  cycle  18689  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6740  chain=0 prb=2
+  cycle  18689  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..68c0  chain=0 prb=2
+  cycle  18689  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6a40  chain=0 prb=2
+  cycle  18689  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6bc0  chain=0 prb=2
+  cycle  18691  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6120  
+  cycle  18691  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..62a0  
+  cycle  18691  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6440  
+  cycle  18691  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..65c0  
+  cycle  18691  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6120  kind=DATA
+  cycle  18691  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..62a0  kind=DATA
+  cycle  18691  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6440  kind=DATA
+  cycle  18691  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..65c0  kind=DATA
+  cycle  18692  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6740  
+  cycle  18692  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..68c0  
+  cycle  18692  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6a40  
+  cycle  18692  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6bc0  
+  cycle  18692  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6740  kind=DATA
+  cycle  18692  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..68c0  kind=DATA
+  cycle  18692  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6a40  kind=DATA
+  cycle  18692  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6bc0  kind=DATA
+  cycle  18693  [GRASP]  FILL_DISPATCH        pc=0x0000 ()  addr=..5d60  prb=2 targets=8
+  cycle  18693  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6d40  chain=0 prb=2
+  cycle  18693  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..6ec0  chain=0 prb=2
+  cycle  18693  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7060  chain=0 prb=2
+  cycle  18693  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..71e0  chain=0 prb=2
+  cycle  18693  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7360  chain=0 prb=2
+  cycle  18693  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..74e0  chain=0 prb=2
+  cycle  18693  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..7660  chain=0 prb=2
+  cycle  18693  [GRASP]  DATA_PF_ENQUEUE      pc=0x0000 ()  addr=..77e0  chain=0 prb=2
+  cycle  18695  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6d40  
+  cycle  18695  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..6ec0  
+  cycle  18695  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7060  
+  cycle  18695  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..71e0  
+  cycle  18695  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6d40  kind=DATA
+  cycle  18695  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..6ec0  kind=DATA
+  cycle  18695  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7060  kind=DATA
+  cycle  18695  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..71e0  kind=DATA
+  cycle  18696  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7360  
+  cycle  18696  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..74e0  
+  cycle  18696  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..7660  
+  cycle  18696  [GRASP]  DATA_PF_INJECT       pc=0x0000 ()  addr=..77e0  
+  cycle  18696  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7360  kind=DATA
+  cycle  18696  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..74e0  kind=DATA
+  cycle  18696  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..7660  kind=DATA
+  cycle  18696  [GRASP]  L1_RESULT_HIT        pc=0x0000 ()  addr=..77e0  kind=DATA
+  cycle  18755  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=15  addr=..7fb4  L1=HIT  <-- HIT
+  cycle  18756  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=14  addr=..7e30  L1=HIT  <-- HIT
+  cycle  18757  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=13  addr=..7cac  L1=HIT  <-- HIT
+  cycle  18758  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=12  addr=..7b28  L1=HIT  <-- HIT
+  cycle  18759  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=11  addr=..79a4  L1=HIT  <-- HIT
+  cycle  18760  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=9   addr=..769c  L1=HIT  <-- HIT
+  cycle  18760  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=10  addr=..7820  L1=HIT  <-- HIT
+  cycle  18760  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=31  addr=..77f4  L1=HIT  <-- HIT
+  cycle  18761  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=8   addr=..7518  L1=HIT  <-- HIT
+  cycle  18761  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=30  addr=..7670  L1=HIT  <-- HIT
+  cycle  18762  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=7   addr=..7394  L1=HIT  <-- HIT
+  cycle  18762  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=29  addr=..74ec  L1=HIT  <-- HIT
+  cycle  18763  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=6   addr=..7210  L1=HIT  <-- HIT
+  cycle  18763  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=28  addr=..7368  L1=HIT  <-- HIT
+  cycle  18764  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=5   addr=..708c  L1=HIT  <-- HIT
+  cycle  18764  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=27  addr=..71e4  L1=HIT  <-- HIT
+  cycle  18765  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=4   addr=..6f08  L1=HIT  <-- HIT
+  cycle  18765  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=25  addr=..6edc  L1=HIT  <-- HIT
+  cycle  18765  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=26  addr=..7060  L1=HIT  <-- HIT
+  cycle  18766  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=3   addr=..6d84  L1=HIT  <-- HIT
+  cycle  18766  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=24  addr=..6d58  L1=HIT  <-- HIT
+  cycle  18767  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=2   addr=..6c00  L1=HIT  <-- HIT
+  cycle  18767  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=23  addr=..6bd4  L1=HIT  <-- HIT
+  cycle  18767  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=1   addr=..6afc  L1=HIT  <-- HIT
+  cycle  18768  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=22  addr=..6a50  L1=HIT  <-- HIT
+  cycle  18768  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=0   addr=..6978  L1=HIT  <-- HIT
+  cycle  18769  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=21  addr=..68cc  L1=HIT  <-- HIT
+  cycle  18770  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=20  addr=..6748  L1=HIT  <-- HIT
+  cycle  18771  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=19  addr=..65c4  L1=HIT  <-- HIT
+  cycle  18772  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=17  addr=..62bc  L1=HIT  <-- HIT
+  cycle  18772  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=18  addr=..6440  L1=HIT  <-- HIT
+  cycle  18773  [L1   ]  DEMAND 0x4a0 (dat@ima_tiny_case.cu:)  lane=16  addr=..6138  L1=HIT  <-- HIT
+  --- latency (idx→data served): 335 cycles

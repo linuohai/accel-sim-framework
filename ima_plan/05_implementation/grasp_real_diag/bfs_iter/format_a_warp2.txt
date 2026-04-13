@@ -1,0 +1,138 @@
+=== Warp 2, IMA region (132 iterations) ===
+
+iter | idx_cycle |               idx_L1 | data_cycle |                   data_L1 |                                 grasp_summary | latency
+------------------------------------------------------------------------------------------------------------------------------------------
+   0 |    543886 |        [25L] 25xMISS |     546744 | [24L] 21xMISS,2xHIT,1xHIT_RES |                                             - |    4828
+   1 |    549589 | [18L] 13xHIT,3xHIT_RES,2xMISS |     550326 |        [16L] 9xMISS,7xHIT | L1_MISSx19; IDX_ENQx18; IDX_INJx18; FILL_Dx18; DAT_ENQx16; DAT_INJx16; L1_HITx15; CT_HIT |    1832
+   2 |    552033 |           [7L] 7xHIT |     552082 |                [7L] 7xHIT | IDX_ENQx7; IDX_INJx7; L1_HITx7; FILL_Dx7; DAT_ENQx4; DAT_INJx4; L1_MISSx4; CT_HIT |      51
+   3 |    552717 |  [20L] 19xHIT,1xMISS |     553309 |       [20L] 14xMISS,6xHIT |                                             - |    7370
+   4 |    560912 |         [17L] 17xHIT |     561581 |        [17L] 9xHIT,8xMISS | IDX_ENQx68; IDX_INJx68; FILL_Dx68; L1_HITx64; L1_MISSx52; DAT_ENQx48; DAT_INJx48; CT_HITx4 |    6785
+   5 |    568308 |         [12L] 12xHIT |     568359 |              [12L] 12xHIT | IDX_ENQx48; IDX_INJx48; L1_HITx48; FILL_Dx48; DAT_ENQx24; L1_MISSx24; DAT_INJx24; CT_HITx4 |    2012
+   6 |    570933 |           [6L] 6xHIT |     570980 |                [6L] 6xHIT | L1_HITx25; IDX_ENQx24; IDX_INJx24; FILL_Dx24; DAT_ENQx12; DAT_INJx12; L1_MISSx11; CT_HITx4 |    1972
+   7 |    573506 |           [3L] 3xHIT |     573551 |                [3L] 3xHIT | L1_HITx13; IDX_ENQx12; IDX_INJx12; FILL_Dx12; DAT_ENQx12; DAT_INJx12; L1_MISSx11; CT_HITx4 |    1942
+   8 |    576043 |           [3L] 3xHIT |     576089 |                [3L] 3xHIT | L1_HITx15; IDX_ENQx12; IDX_INJx12; FILL_Dx12; CT_HITx4; DAT_ENQx4; DAT_INJx4; L1_MISS |    1941
+   9 |    578579 |           [1L] 1xHIT |     578624 |                [1L] 1xHIT | CT_HITx4; IDX_ENQx4; IDX_INJx4; L1_MISSx4; L1_HIT; FILL_D; DAT_ENQ; DAT_INJ |     303
+  10 |    578933 |           [1L] 1xHIT |     578978 |                [1L] 1xHIT | L1_MISSx7; FILL_Dx7; DAT_ENQx7; DAT_INJx7; CT_HITx4; IDX_ENQx4; IDX_INJx4; L1_HITx4 |    1375
+  11 |    580359 |           [1L] 1xHIT |     580404 |                [1L] 1xHIT | CT_HITx4; IDX_ENQx4; IDX_INJx4; FILL_Dx4; L1_MISSx3; L1_HIT |     845
+  12 |    609764 |        [16L] 16xMISS |          0 |                       N/A |                                             - |     N/A
+  13 |    610779 |          [5L] 5xMISS |     619478 |   [17L] 14xMISS,3xHIT_RES |                                             - |   15389
+  14 |    633120 |        [14L] 14xMISS |     633704 |       [13L] 12xMISS,1xHIT |                                        CT_HIT |    1781
+  15 |    637213 | [5L] 3xMISS,1xHIT,1xHIT_RES |     639953 |         [5L] 4xMISS,1xHIT | L1_MISSx6; IDX_ENQx5; IDX_INJx5; FILL_Dx5; DAT_ENQx4; DAT_INJx4; L1_HITx3; CT_HIT |    5346
+  16 |    643990 |        [18L] 18xMISS |     646609 |       [18L] 11xMISS,7xHIT |                                CT_HITx4; CDx2 |   13134
+  17 |    657950 |           [9L] 9xHIT |     660354 |         [9L] 6xMISS,3xHIT | IDX_ENQx36; IDX_INJx36; FILL_Dx31; L1_MISSx25; L1_HITx24; DAT_ENQx21; DAT_INJx21; L1_RFAILx8; CT_HITx4; CDx3; STR_UPDx2 |   15270
+  18 |    674496 |           [6L] 6xHIT |     674551 |         [6L] 3xMISS,3xHIT | L1_HITx32; IDX_ENQx24; IDX_INJx24; FILL_Dx24; DAT_ENQx20; DAT_INJx20; L1_MISSx12; CT_HITx4; CDx4 |    3471
+  19 |    679474 |           [5L] 5xHIT |     679524 |      [5L] 3xHIT,2xHIT_RES | IDX_ENQx20; IDX_INJx20; L1_HITx18; FILL_Dx17; DAT_ENQx11; DAT_INJx11; L1_MISSx9; CT_HITx4; L1_RFAILx4; CDx3 |     540
+  20 |    683204 |           [3L] 3xHIT |     683250 |                [3L] 3xHIT | IDX_ENQx12; IDX_INJx12; FILL_Dx10; L1_HITx8; L1_MISSx8; CT_HITx4; DAT_ENQx4; DAT_INJx4; CDx4 |    1725
+  21 |    684982 |           [1L] 1xHIT |     685027 |                [1L] 1xHIT | FILL_Dx6; CT_HITx4; IDX_ENQx4; IDX_INJx4; L1_HITx4; CDx4 |    2459
+  22 |    746830 |        [14L] 14xMISS |          0 |                       N/A |                                             - |     N/A
+  23 |    747984 |          [2L] 2xMISS |     755235 | [16L] 9xMISS,6xHIT_RES,1xHIT |                                             - |   13143
+  24 |    767223 |          [9L] 9xMISS |     767964 |     [9L] 5xMISS,4xHIT_RES |                                        CT_HIT |    3459
+  25 |    771489 |    [5L] 3xMISS,2xHIT |     773456 |         [3L] 2xHIT,1xMISS | L1_MISSx7; IDX_ENQx5; IDX_INJx5; FILL_Dx5; DAT_ENQx4; DAT_INJx4; L1_HITx2; CT_HIT |    3439
+  26 |    775568 |        [18L] 18xMISS |     777757 |        [18L] 9xMISS,9xHIT |                                CT_HITx3; CDx2 |   20095
+  27 |    796493 | [14L] 9xMISS,4xHIT_RES,1xHIT |     797751 |        [14L] 7xHIT,7xMISS | IDX_ENQx42; IDX_INJx42; L1_MISSx41; FILL_Dx35; DAT_ENQx23; DAT_INJx23; L1_HITx16; L1_RFAILx8; CT_HITx4; STR_UPDx3; CDx2 |   17429
+  28 |    814745 |           [9L] 9xHIT |     814794 |         [9L] 6xHIT,3xMISS | IDX_ENQx36; IDX_INJx36; FILL_Dx36; L1_HITx34; L1_MISSx14; DAT_ENQx12; DAT_INJx12; CT_HITx4; CDx4; STR_UPDx3 |    6269
+  29 |    821631 |           [3L] 3xHIT |     821678 |                [3L] 3xHIT | IDX_ENQx12; IDX_INJx12; FILL_Dx12; L1_HITx10; L1_MISSx6; CT_HITx4; DAT_ENQx4; DAT_INJx4; CDx4 |    2180
+  30 |    824412 |           [1L] 1xHIT |     824458 |                [1L] 1xHIT | CT_HITx4; IDX_ENQx4; IDX_INJx4; L1_MISSx4; CDx4; L1_HIT; FILL_D; DAT_ENQ; DAT_INJ |     307
+  31 |    824774 |           [1L] 1xHIT |     824819 |                [1L] 1xHIT | L1_MISSx9; FILL_Dx7; DAT_ENQx7; DAT_INJx7; CT_HITx4; IDX_ENQx4; IDX_INJx4; CDx4; L1_HITx2 |     860
+  32 |    825685 |           [1L] 1xHIT |     825731 |                [1L] 1xHIT | CT_HITx4; IDX_ENQx4; IDX_INJx4; L1_MISSx4; CDx4; L1_HIT; FILL_D; DAT_ENQ; DAT_INJ |     308
+  33 |    826044 |           [1L] 1xHIT |     826089 |                [1L] 1xHIT | FILL_Dx7; CDx6; CT_HITx5; L1_MISSx5; IDX_ENQx4; IDX_INJx4; DAT_ENQx3; DAT_INJx3; L1_HITx2 |     580
+  34 |    829676 | [20L] 12xHIT_RES,8xMISS |     832586 |   [19L] 18xMISS,1xHIT_RES | L1_MISSx31; IDX_ENQx20; IDX_INJx20; FILL_Dx17; DAT_ENQx14; DAT_INJx14; L1_RFAILx3; CT_HIT; CD |    4418
+  35 |    835549 |         [13L] 13xHIT |     835600 |              [13L] 13xHIT | IDX_ENQx13; IDX_INJx13; FILL_Dx13; L1_HITx12; L1_MISSx11; DAT_ENQx11; DAT_INJx11; CT_HIT; CD; L1_RFAIL |      57
+  36 |    837143 |           [4L] 4xHIT |     837189 |         [4L] 3xHIT,1xMISS | IDX_ENQx4; IDX_INJx4; L1_HITx4; FILL_Dx4; CT_HIT; DAT_ENQ; DAT_INJ; L1_MISS; CD |     254
+  37 |    840531 | [20L] 15xMISS,3xHIT_RES,2xHIT |     845039 | [20L] 14xMISS,5xHIT,1xHIT_RES | IDX_ENQx80; IDX_INJx80; L1_MISSx69; FILL_Dx64; DAT_ENQx33; DAT_INJx29; L1_HITx22; L1_RFAILx18; CT_HITx4; CDx2 |   30433
+  38 |    875302 |        [13L] 13xMISS |     875614 |        [13L] 7xMISS,6xHIT | IDX_ENQx52; IDX_INJx52; L1_RFAILx29; L1_MISSx23; FILL_Dx23; CT_HITx4; CDx4 |   19904
+  39 |    895806 |          [8L] 8xMISS |     898021 |         [8L] 4xHIT,4xMISS | IDX_ENQx32; IDX_INJx32; FILL_Dx22; L1_MISSx16; L1_RFAILx11; L1_HITx7; CT_HITx4; DAT_ENQx2; DAT_INJx2; CDx2 |   22855
+  40 |    920261 |           [3L] 3xHIT |     922033 |         [3L] 2xMISS,1xHIT | IDX_ENQx12; IDX_INJx12; FILL_Dx9; L1_MISSx6; L1_HITx6; CT_HITx4; L1_RFAILx3; DAT_ENQx3; DAT_INJx3; CDx3 |   11525
+  41 |    932396 |           [3L] 3xHIT |     932443 |         [3L] 2xHIT,1xMISS | IDX_ENQx12; IDX_INJx12; FILL_Dx12; L1_MISSx8; CT_HITx4; CDx4; L1_HITx4 |    9703
+  42 |   1035105 | [20L] 19xMISS,1xRFAIL |          0 |                       N/A |                                             - |     N/A
+  43 |   1035406 |          [1L] 1xMISS |          0 |                       N/A |                                             - |     N/A
+  44 |   1036254 |          [5L] 5xMISS |    1044914 | [23L] 17xMISS,5xHIT,1xHIT_RES |                                             - |   14452
+  45 |   1056541 |        [21L] 21xMISS |    1057242 |       [21L] 17xMISS,4xHIT |                                        CT_HIT |    2851
+  46 |   1062456 | [9L] 7xHIT_RES,2xMISS |    1063357 |         [9L] 8xMISS,1xHIT | L1_MISSx13; IDX_ENQx9; IDX_INJx9; FILL_Dx9; DAT_ENQx4; DAT_INJx4; CT_HIT; CD |    2504
+  47 |   1065788 |        [18L] 18xMISS |    1067843 |       [18L] 16xMISS,2xHIT |                        CT_INSx2; CT_HITx2; CD |   37570
+  48 |   1107597 |        [11L] 11xMISS |    1108154 |             [11L] 11xMISS | IDX_ENQx44; IDX_INJx44; L1_RFAILx28; L1_MISSx22; FILL_Dx16; DAT_ENQx11; DAT_INJx8; CT_HITx4; STR_UPDx3; CDx2; L1_HITx2 |   26656
+  49 |   1139998 |           [8L] 8xHIT |    1141244 |               [8L] 8xMISS | IDX_ENQx32; IDX_INJx32; FILL_Dx32; L1_MISSx27; L1_HITx21; DAT_ENQx16; DAT_INJx16; CT_HITx4; CDx4 |   16552
+  50 |   1157954 |           [4L] 4xHIT |    1158000 |               [4L] 4xMISS | IDX_ENQx16; IDX_INJx16; FILL_Dx16; L1_HITx14; L1_MISSx14; DAT_ENQx12; DAT_INJx12; CT_HITx4; CDx4 |    9359
+  51 |   1168944 |           [3L] 3xHIT |    1168990 |                [3L] 3xHIT | IDX_ENQx12; IDX_INJx12; FILL_Dx12; L1_HITx10; L1_MISSx10; DAT_ENQx8; DAT_INJx8; CT_HITx4; CDx4 |    2065
+  52 |   1171610 |           [2L] 2xHIT |    1171655 |                [2L] 2xHIT | L1_HITx9; IDX_ENQx8; IDX_INJx8; FILL_Dx8; DAT_ENQx8; DAT_INJx8; L1_MISSx7; CT_HITx4; CDx4 |    1981
+  53 |   1174195 |           [2L] 2xHIT |    1174240 |                [2L] 2xHIT | L1_MISSx9; IDX_ENQx8; IDX_INJx8; FILL_Dx8; DAT_ENQx8; DAT_INJx8; L1_HITx7; CT_HITx4; CDx4 |    1976
+  54 |   1176774 |           [2L] 2xHIT |    1176819 |                [2L] 2xHIT | IDX_ENQx8; IDX_INJx8; L1_HITx8; FILL_Dx8; CT_HITx4; DAT_ENQx4; DAT_INJx4; L1_MISSx4; CDx4 |    1418
+  55 |   1178786 |           [1L] 1xHIT |    1178831 |                [1L] 1xHIT | CT_HITx4; IDX_ENQx4; IDX_INJx4; L1_HITx4; FILL_Dx4; DAT_ENQx4; CDx4; DAT_INJx2; L1_MISSx2 |    1796
+  56 |   1180633 |           [1L] 1xHIT |    1180678 |               [1L] 1xMISS | CT_HITx4; IDX_ENQx4; IDX_INJx4; FILL_Dx4; DAT_ENQx4; CDx4; L1_MISSx3; L1_HIT |    7898
+  57 |   1188584 |           [1L] 1xHIT |    1188629 |               [1L] 1xMISS | CT_HITx4; IDX_ENQx4; IDX_INJx4; L1_HITx4; FILL_Dx4; DAT_ENQx4; DAT_INJx4; L1_MISSx4; CDx4 |    7167
+  58 |   1195804 |           [1L] 1xHIT |    1195849 |                [1L] 1xHIT | CDx6; CT_HITx5; IDX_ENQx4; IDX_INJx4; FILL_Dx4; L1_MISSx3; L1_HIT |     305
+  59 |   1210763 | [17L] 9xMISS,8xHIT_RES |    1214391 |       [17L] 14xMISS,3xHIT | L1_MISSx29; IDX_ENQx17; IDX_INJx17; FILL_Dx17; DAT_ENQx14; DAT_INJx14; CT_HIT; L1_HIT; L1_RFAIL; CD |    6942
+  60 |   1219984 |  [11L] 10xMISS,1xHIT |    1220258 |        [11L] 7xHIT,4xMISS | IDX_ENQx11; IDX_INJx11; L1_MISSx11; FILL_Dx11; CT_HIT |    2141
+  61 |   1228889 |          [3L] 3xMISS |    1231258 |               [3L] 3xMISS | IDX_ENQx3; IDX_INJx3; L1_MISSx3; FILL_Dx3; CT_HIT |    5893
+  62 |   1236561 |        [21L] 21xMISS |    1239898 | [21L] 16xMISS,4xHIT,1xHIT_RES | IDX_ENQx84; IDX_INJx84; L1_RFAILx66; L1_MISSx27; FILL_Dx18; DAT_ENQx9; DAT_INJx9; CT_HITx4; CDx3 |   35723
+  63 |   1276391 | [12L] 9xMISS,2xHIT_RES,1xHIT |    1278356 |       [12L] 11xMISS,1xHIT | IDX_ENQx48; IDX_INJx48; L1_MISSx41; FILL_Dx39; L1_RFAILx9; DAT_ENQx6; DAT_INJx6; CT_HITx4; L1_HITx4; STR_UPDx3; CDx3 |   25942
+  64 |   1304272 |           [9L] 9xHIT |    1304320 |         [9L] 6xMISS,3xHIT | IDX_ENQx36; IDX_INJx36; FILL_Dx35; L1_HITx33; L1_MISSx19; DAT_ENQx16; DAT_INJx16; CT_HITx4; CDx4; STR_UPDx3 |   14455
+  65 |   1319538 |           [4L] 4xHIT |    1319584 |                [4L] 4xHIT | IDX_ENQx16; IDX_INJx16; FILL_Dx16; L1_HITx12; L1_MISSx12; DAT_ENQx8; DAT_INJx8; CT_HITx4; CDx4; STR_UPDx3 |    2030
+  66 |   1322178 |           [2L] 2xHIT |    1322224 |                [2L] 2xHIT | FILL_Dx9; IDX_ENQx8; IDX_INJx8; L1_HITx7; L1_MISSx5; CT_HITx4; DAT_ENQx4; DAT_INJx4; CDx4 |    3697
+  67 |   1325926 |           [1L] 1xHIT |    1325971 |            [1L] 1xHIT_RES | CT_HITx4; IDX_ENQx4; IDX_INJx4; L1_MISSx4; CDx4; L1_HITx3; FILL_Dx3; DAT_ENQx3; DAT_INJx3 |     310
+  68 |   1326912 |           [1L] 1xHIT |    1326957 |                [1L] 1xHIT | CT_HITx4; IDX_ENQx4; IDX_INJx4; L1_MISSx4; CDx4; FILL_Dx3; L1_HIT; DAT_ENQ; DAT_INJ |    2513
+  69 |   1329477 |           [1L] 1xHIT |    1329522 |                [1L] 1xHIT | FILL_Dx6; L1_MISSx5; CT_HITx4; IDX_ENQx4; IDX_INJx4; CDx4; DAT_ENQx4; DAT_INJx4; L1_HITx3 |    7116
+  70 |   1336649 |           [1L] 1xHIT |    1336694 |                [1L] 1xHIT | IDX_ENQx8; IDX_INJx8; CDx6; CT_HITx5; FILL_Dx4; L1_RFAILx4; L1_HITx2; L1_MISSx2 |    8755
+  71 |   1401588 |        [23L] 23xMISS |    1405526 | [23L] 21xMISS,1xHIT,1xHIT_RES | IDX_ENQx23; IDX_INJx23; L1_MISSx12; FILL_Dx12; L1_RFAILx11; CT_HIT; CD |    8195
+  72 |   1414640 |        [11L] 11xMISS |    1417049 |   [11L] 10xMISS,1xHIT_RES | IDX_ENQx11; IDX_INJx11; L1_RFAILx11; CT_HIT; CD |    6233
+  73 |   1425505 |          [6L] 6xMISS |    1427987 |               [6L] 6xMISS |  IDX_ENQx6; IDX_INJx6; L1_RFAILx6; CT_HIT; CD |    4926
+  74 |   1432486 |  [21L] 20xMISS,1xHIT |    1436367 |   [21L] 20xMISS,1xHIT_RES | IDX_ENQx84; IDX_INJx84; L1_RFAILx54; L1_MISSx40; FILL_Dx33; DAT_ENQx14; DAT_INJx14; CT_HITx4; L1_HITx4; CDx4 |   28010
+  75 |   1464207 |         [16L] 16xHIT |    1465719 |       [16L] 15xMISS,1xHIT | IDX_ENQx64; IDX_INJx64; FILL_Dx58; L1_HITx34; L1_MISSx32; DAT_ENQx8; DAT_INJx8; L1_RFAILx6; CT_HITx4; CDx4; STR_UPDx3 |   14922
+  76 |   1482918 |           [8L] 8xHIT |    1482966 |         [8L] 6xMISS,2xHIT | L1_MISSx33; IDX_ENQx32; IDX_INJx32; FILL_Dx32; DAT_ENQx21; DAT_INJx21; L1_HITx20; CT_HITx4; CDx3 |    9166
+  77 |   1493186 |           [7L] 7xHIT |    1493234 |                [7L] 7xHIT | IDX_ENQx28; IDX_INJx28; FILL_Dx28; L1_HITx23; L1_MISSx15; DAT_ENQx12; DAT_INJx12; CT_HITx4; CDx4; L1_RFAILx2 |    4165
+  78 |   1499675 |           [4L] 4xHIT |    1499722 |         [4L] 3xMISS,1xHIT | IDX_ENQx16; IDX_INJx16; FILL_Dx16; L1_MISSx12; L1_HITx10; DAT_ENQx6; DAT_INJx6; CT_HITx4; CDx4 |   11041
+  79 |   1510769 |           [2L] 2xHIT |    1510814 |      [2L] 1xHIT,1xHIT_RES | IDX_ENQx8; IDX_INJx8; L1_MISSx6; FILL_Dx6; CT_HITx4; CDx4; L1_HITx4; DAT_ENQx3; DAT_INJx3; L1_RFAIL |    1778
+  80 |   1512842 |           [2L] 2xHIT |    1512887 |                [2L] 2xHIT | IDX_ENQx8; IDX_INJx8; L1_MISSx7; FILL_Dx6; CT_HITx4; CDx4; L1_HITx2; DAT_ENQ; DAT_INJ |    5090
+  81 |   1517983 |           [2L] 2xHIT |    1519843 |               [2L] 2xMISS | FILL_Dx11; IDX_ENQx8; IDX_INJx8; L1_HITx6; CT_HITx4; CDx4; L1_MISSx2 |    9198
+  82 |   1527235 |           [1L] 1xHIT |    1527280 |               [1L] 1xMISS | CT_HITx4; IDX_ENQx4; IDX_INJx4; CDx4; FILL_Dx4; L1_MISSx3; L1_HIT |    4857
+  83 |   1532145 |           [1L] 1xHIT |    1533045 |               [1L] 1xMISS | CT_HITx4; IDX_ENQx4; IDX_INJx4; CDx4; FILL_Dx4; L1_MISSx3; L1_HIT |    9884
+  84 |   1542082 |           [1L] 1xHIT |    1542127 |               [1L] 1xMISS | IDX_ENQx8; IDX_INJx8; CDx6; CT_HITx5; L1_MISSx4; FILL_Dx4; L1_RFAILx4 |    6811
+  85 |   1555740 | [28L] 19xMISS,9xHIT_RES |    1558920 | [28L] 25xMISS,2xHIT,1xHIT_RES | IDX_ENQx28; IDX_INJx28; L1_MISSx23; L1_RFAILx15; FILL_Dx13; DAT_ENQx10; DAT_INJx10; CT_HIT; CD |    6246
+  86 |   1565150 | [14L] 6xHIT_RES,5xHIT,3xMISS |    1567698 |       [14L] 12xMISS,2xHIT | L1_MISSx19; IDX_ENQx14; IDX_INJx14; FILL_Dx14; DAT_ENQx11; DAT_INJx11; L1_HITx6; CT_HIT |    4707
+  87 |   1571349 |           [5L] 5xHIT |    1571395 |                [5L] 5xHIT | IDX_ENQx5; IDX_INJx5; L1_MISSx5; FILL_Dx4; L1_HITx3; DAT_ENQx3; DAT_INJx3; CT_HIT; CD |      48
+  88 |   1572235 | [20L] 19xHIT,1xHIT_RES |    1573293 |             [20L] 20xMISS | IDX_ENQx80; IDX_INJx80; FILL_Dx67; L1_MISSx56; L1_HITx17; L1_RFAILx14; DAT_ENQx7; DAT_INJx7; CT_HITx4; CDx4 |   17914
+  89 |   1592062 |           [8L] 8xHIT |    1592111 |               [8L] 8xMISS | IDX_ENQx32; IDX_INJx32; FILL_Dx24; L1_MISSx22; L1_RFAILx7; L1_HITx7; CT_HITx4; DAT_ENQx4; DAT_INJx4; CDx3 |   18791
+  90 |   1611451 |           [4L] 4xHIT |    1611497 |               [4L] 4xMISS | IDX_ENQx16; IDX_INJx16; L1_MISSx16; FILL_Dx13; CT_HITx4; CDx4 |    9316
+  91 |   1620820 |           [2L] 2xHIT |    1623576 |                [2L] 2xHIT | FILL_Dx16; IDX_ENQx12; IDX_INJx12; L1_MISSx11; CDx6; CT_HITx5; L1_HITx3; DAT_ENQx2; DAT_INJx2 |    7089
+  92 |   1645418 | [22L] 11xMISS,11xHIT_RES |    1649573 |       [22L] 21xMISS,1xHIT | L1_MISSx26; IDX_ENQx22; IDX_INJx22; FILL_Dx15; DAT_ENQx13; DAT_INJx13; L1_RFAILx7; L1_HITx2; CT_HIT; CD |    8450
+  93 |   1658655 |        [13L] 13xMISS |    1659780 |       [12L] 11xMISS,1xHIT | IDX_ENQx13; IDX_INJx13; L1_MISSx9; FILL_Dx9; L1_RFAILx4; CT_HIT |    3601
+  94 |   1664589 |           [4L] 4xHIT |    1664637 |               [4L] 4xMISS | IDX_ENQx4; IDX_INJx4; L1_MISSx4; FILL_Dx4; CT_HIT; CD |    1628
+  95 |   1667065 |         [16L] 16xHIT |    1669011 |       [16L] 15xMISS,1xHIT | IDX_ENQx64; IDX_INJx64; FILL_Dx61; L1_MISSx54; L1_HITx23; DAT_ENQx22; DAT_INJx16; CT_HITx4; L1_RFAILx3; CDx3 |   22719
+  96 |   1690606 |         [11L] 11xHIT |    1690657 |             [11L] 11xMISS | IDX_ENQx44; IDX_INJx44; FILL_Dx41; L1_MISSx33; L1_HITx13; CT_HITx4; CDx4; DAT_ENQx4; DAT_INJx4; L1_RFAILx2 |   16120
+  97 |   1707328 | [4L] 3xHIT,1xHIT_RES |    1707375 |               [4L] 4xMISS | FILL_Dx17; IDX_ENQx16; IDX_INJx16; L1_MISSx16; CT_HITx4; CDx4; L1_HITx4; DAT_ENQx4; DAT_INJx4 |    9897
+  98 |   1717834 |           [2L] 2xHIT |    1717880 |         [2L] 1xMISS,1xHIT | IDX_ENQx12; IDX_INJx12; FILL_Dx8; CDx6; CT_HITx5; L1_MISSx5; L1_RFAILx4; L1_HITx3 |    9302
+  99 |   1755438 |        [19L] 19xMISS |    1760302 |             [19L] 19xMISS | IDX_ENQx19; IDX_INJx19; L1_RFAILx19; CT_HIT; CD |   10552
+ 100 |   1773533 |        [15L] 15xMISS |    1773868 |       [15L] 14xMISS,1xHIT | IDX_ENQx15; IDX_INJx15; L1_RFAILx15; CT_HIT; CD |    2752
+ 101 |   1780239 |          [6L] 6xMISS |    1782074 |         [6L] 5xMISS,1xHIT |  IDX_ENQx6; IDX_INJx6; L1_RFAILx6; CT_HIT; CD |    4095
+ 102 |   1786503 |    [7L] 5xMISS,2xHIT |    1790846 |               [7L] 7xMISS | IDX_ENQx28; IDX_INJx28; L1_MISSx21; FILL_Dx21; L1_RFAILx7; CT_HITx4; CDx3 |   24338
+ 103 |   1811768 |           [2L] 2xHIT |    1811813 |               [2L] 2xMISS | IDX_ENQx12; IDX_INJx12; FILL_Dx8; CDx6; CT_HITx5; L1_MISSx4; L1_HITx4; L1_RFAILx4 |   11350
+ 104 |   1866095 |        [22L] 22xMISS |    1868838 |             [22L] 22xMISS | IDX_ENQx22; IDX_INJx22; L1_RFAILx13; L1_MISSx9; FILL_Dx9; CT_HIT; CD |    6531
+ 105 |   1875809 |    [8L] 5xHIT,3xMISS |    1877796 |     [8L] 7xMISS,1xHIT_RES | IDX_ENQx8; IDX_INJx8; L1_MISSx8; FILL_Dx8; CT_HIT |    4255
+ 106 |   1888079 |          [3L] 3xMISS |    1891842 |               [3L] 3xMISS | IDX_ENQx3; IDX_INJx3; L1_MISSx3; FILL_Dx3; CT_HIT; CD |    6951
+ 107 |   1895868 |         [12L] 12xHIT |    1898526 |             [12L] 12xMISS | IDX_ENQx48; IDX_INJx48; FILL_Dx48; L1_MISSx39; L1_HITx21; DAT_ENQx15; DAT_INJx12; CT_HITx4; CDx3 |   19207
+ 108 |   1917659 |           [5L] 5xHIT |    1917706 |               [5L] 5xMISS | IDX_ENQx20; IDX_INJx20; L1_MISSx20; FILL_Dx10; CT_HITx4; CDx4 |    7559
+ 109 |   1925273 |           [2L] 2xHIT |    1925319 |               [2L] 2xMISS | FILL_Dx18; IDX_ENQx12; IDX_INJx12; CDx6; CT_HITx5; L1_MISSx4; L1_HITx4; L1_RFAILx4 |    8831
+ 110 |   1973793 |        [18L] 18xMISS |    1977914 |             [18L] 18xMISS | IDX_ENQx18; IDX_INJx18; L1_MISSx9; L1_RFAILx9; FILL_Dx9; CT_HIT; CD |    9036
+ 111 |   1988511 |        [10L] 10xMISS |    1988783 |             [10L] 10xMISS | IDX_ENQx10; IDX_INJx10; L1_MISSx8; FILL_Dx8; L1_RFAILx2; CT_HIT |    4354
+ 112 |   1992916 |           [3L] 3xHIT |    1992962 |         [3L] 2xMISS,1xHIT | IDX_ENQx3; IDX_INJx3; FILL_Dx3; L1_HITx2; CT_HIT; L1_MISS; CD |    3992
+ 113 |   1996995 |           [9L] 9xHIT |    1998396 |               [9L] 9xMISS | IDX_ENQx36; IDX_INJx36; FILL_Dx34; L1_MISSx18; L1_HITx18; CT_HITx4; STR_UPDx3; CDx3 |   12631
+ 114 |   2009680 |           [5L] 5xHIT |    2012866 |         [5L] 4xMISS,1xHIT | IDX_ENQx20; IDX_INJx20; FILL_Dx17; L1_HITx8; L1_MISSx7; L1_RFAILx5; CT_HITx4; CDx4 |   17880
+ 115 |   2027613 |           [2L] 2xHIT |    2027658 |         [2L] 1xMISS,1xHIT | IDX_ENQx8; IDX_INJx8; L1_MISSx5; FILL_Dx5; CT_HITx4; CDx4; L1_RFAILx2; L1_HIT |   15357
+ 116 |   2043025 |           [1L] 1xHIT |    2043070 |               [1L] 1xMISS | FILL_Dx5; CT_HITx4; IDX_ENQx4; IDX_INJx4; CDx4; L1_MISSx3; L1_HITx2; DAT_ENQ; DAT_INJ |    5732
+ 117 |   2048811 |           [1L] 1xHIT |    2048856 |               [1L] 1xMISS | IDX_ENQx8; IDX_INJx8; CDx6; CT_HITx5; FILL_Dx4; L1_RFAILx4; L1_HITx3; L1_MISS |    4339
+ 118 |   2068649 |        [12L] 12xMISS |    2073155 |   [12L] 11xMISS,1xHIT_RES | IDX_ENQx12; IDX_INJx12; L1_MISSx10; FILL_Dx10; L1_RFAILx2; CT_HIT; CD |    7974
+ 119 |   2079443 |    [5L] 4xHIT,1xMISS |    2079710 |               [5L] 5xMISS | IDX_ENQx5; IDX_INJx5; L1_MISSx5; FILL_Dx5; CT_HIT; CD |    3025
+ 120 |   2083225 |           [2L] 2xHIT |    2083274 |               [2L] 2xMISS | IDX_ENQx2; IDX_INJx2; L1_MISSx2; FILL_Dx2; CT_HIT; CD |    1584
+ 121 |   2085667 |           [6L] 6xHIT |    2088714 |               [6L] 6xMISS | IDX_ENQx24; IDX_INJx24; FILL_Dx18; L1_MISSx13; L1_HITx10; L1_RFAILx7; DAT_ENQx6; DAT_INJx6; CT_HITx4; CDx2 |   15385
+ 122 |   2101144 |           [1L] 1xHIT |          0 |                       N/A | IDX_ENQx3; IDX_INJx3; L1_HITx2; FILL_Dx2; CT_HIT; L1_RFAIL |     N/A
+ 123 |   2101493 |           [3L] 3xHIT |    2101539 |               [3L] 3xMISS | IDX_ENQx9; IDX_INJx9; FILL_Dx9; L1_MISSx8; CDx4; CT_HITx3; L1_HIT |   14540
+ 124 |   2180670 |        [18L] 18xMISS |          0 |                       N/A |                                             - |     N/A
+ 125 |   2181618 |          [5L] 5xMISS |    2186706 | [22L] 17xMISS,4xHIT_RES,1xHIT |                                             - |    7193
+ 126 |   2190544 |  [18L] 14xHIT,4xMISS |    2191087 |       [17L] 10xMISS,7xHIT |                                        CT_HIT |    1302
+ 127 |   2192921 | [9L] 6xHIT,2xHIT_RES,1xMISS |    2193500 |         [9L] 6xMISS,3xHIT | IDX_ENQx9; IDX_INJx9; FILL_Dx9; L1_HITx8; L1_MISSx5; DAT_ENQx4; DAT_INJx4; CT_HIT; STR_UPD |    1413
+ 128 |   2194971 | [11L] 9xHIT,1xHIT_RES,1xMISS |    2195598 | [11L] 7xHIT,2xMISS,2xHIT_RES | L1_MISSx12; IDX_ENQx11; IDX_INJx11; FILL_Dx11; DAT_ENQx6; DAT_INJx6; L1_HITx5; CT_HITx4 |    7238
+ 129 |   2202817 |           [6L] 6xHIT |    2202867 |                [6L] 6xHIT | L1_HITx31; IDX_ENQx24; IDX_INJx24; FILL_Dx24; DAT_ENQx16; DAT_INJx16; L1_MISSx9; CT_HITx4; STR_UPD |    2749
+ 130 |   2206161 |           [4L] 4xHIT |    2206207 |                [4L] 4xHIT | IDX_ENQx16; IDX_INJx16; FILL_Dx16; L1_HITx13; L1_MISSx11; DAT_ENQx8; DAT_INJx8; CT_HITx4; STR_UPD |     856
+ 131 |   2207612 |           [2L] 2xHIT |    2207657 |                [2L] 2xHIT | IDX_ENQx8; IDX_INJx8; CT_HITx4; L1_MISSx4; L1_HITx4; FILL_Dx4; STR_UPD |     304
+------------------------------------------------------------------------------------------------------------------------------------------
+  avg_latency=8024.3  idx_hit_rate=47.0%  data_hit_rate=28.3%

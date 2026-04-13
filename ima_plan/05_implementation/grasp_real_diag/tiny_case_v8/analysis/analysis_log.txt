@@ -1,0 +1,80 @@
+GRASP Per-Iteration Analysis Log (v2 — generalized)
+Generated: 2026-03-30 07:15:39
+
+Input files:
+  L1 trace (GRASP):    ima_plan/05_implementation/grasp_real_diag/tiny_case_v8/grasp/tiny_v8_grasp_l1.csv
+  L1 trace (baseline): ima_plan/05_implementation/grasp_real_diag/tiny_case_v8/baseline/tiny_v8_base_l1.csv
+  GRASP event trace:   ima_plan/05_implementation/grasp_real_diag/tiny_case_v8/grasp/tiny_v8_grasp_grasp.csv
+
+PC configuration:
+  Index PCs:    ['0x470']
+  Data PCs:     ['0x4a0']
+  Boundary PCs: ['0x370', '0x470']
+  Warmup PC:    0x290
+  Tail PCs:     ['0x960', '0x9f0']
+
+Warp 0:
+  Iterations:          64
+  Avg baseline latency: 786.7 cycles
+  Avg GRASP latency:    315.1 cycles
+  Overall speedup:      2.50x
+
+Warp 1:
+  Iterations:          64
+  Avg baseline latency: 748.4 cycles
+  Avg GRASP latency:    316.1 cycles
+  Overall speedup:      2.37x
+
+Warp 2:
+  Iterations:          64
+  Avg baseline latency: 605.9 cycles
+  Avg GRASP latency:    293.1 cycles
+  Overall speedup:      2.07x
+
+Warp 3:
+  Iterations:          64
+  Avg baseline latency: 877.6 cycles
+  Avg GRASP latency:    281.6 cycles
+  Overall speedup:      3.12x
+
+Warp 4:
+  Iterations:          64
+  Avg baseline latency: 580.0 cycles
+  Avg GRASP latency:    580.0 cycles
+  Overall speedup:      1.00x
+
+Warp 5:
+  Iterations:          64
+  Avg baseline latency: 761.4 cycles
+  Avg GRASP latency:    278.4 cycles
+  Overall speedup:      2.73x
+
+Warp 6:
+  Iterations:          64
+  Avg baseline latency: 763.0 cycles
+  Avg GRASP latency:    350.2 cycles
+  Overall speedup:      2.18x
+
+Warp 7:
+  Iterations:          64
+  Avg baseline latency: 986.5 cycles
+  Avg GRASP latency:    791.5 cycles
+  Overall speedup:      1.25x
+
+Output files:
+  event_timeline_warp0.txt
+  baseline_comparison_warp0.txt
+  event_timeline_warp1.txt
+  baseline_comparison_warp1.txt
+  event_timeline_warp2.txt
+  baseline_comparison_warp2.txt
+  event_timeline_warp3.txt
+  baseline_comparison_warp3.txt
+  event_timeline_warp4.txt
+  baseline_comparison_warp4.txt
+  event_timeline_warp5.txt
+  baseline_comparison_warp5.txt
+  event_timeline_warp6.txt
+  baseline_comparison_warp6.txt
+  event_timeline_warp7.txt
+  baseline_comparison_warp7.txt

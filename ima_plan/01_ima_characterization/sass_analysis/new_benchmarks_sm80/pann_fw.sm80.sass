@@ -1,0 +1,79 @@
+	.headerflags	@"EF_CUDA_TEXMODE_UNIFIED EF_CUDA_64BIT_ADDRESS EF_CUDA_SM80 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM80)"
+	.elftype	@"ET_EXEC"
+
+
+//--------------------- .text._Z13floydwarshallPiS_ii --------------------------
+	.section	.text._Z13floydwarshallPiS_ii,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+
+
+
+
+        .global         _Z13floydwarshallPiS_ii
+        .type           _Z13floydwarshallPiS_ii,@function
+        .size           _Z13floydwarshallPiS_ii,(.L_x_1 - _Z13floydwarshallPiS_ii)
+        .other          _Z13floydwarshallPiS_ii,@"STO_CUDA_ENTRY STV_DEFAULT"
+_Z13floydwarshallPiS_ii:
+.text._Z13floydwarshallPiS_ii:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/fw/kernel.cu", line 66
+        /*0000*/                   MOV R1, c[0x0][0x28] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/fw/kernel.cu", line 71
+        /*0010*/                   S2R R3, SR_CTAID.Y ;
+        /*0020*/                   S2R R2, SR_TID.Y ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/fw/kernel.cu", line 69
+        /*0030*/                   S2R R0, SR_CTAID.X ;
+        /*0040*/                   S2R R5, SR_TID.X ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/fw/kernel.cu", line 71
+        /*0050*/                   IMAD R3, R3, c[0x0][0x4], R2 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/fw/kernel.cu", line 73
+        /*0060*/                   ISETP.GE.AND P0, PT, R3, c[0x0][0x170], PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/fw/kernel.cu", line 69
+        /*0070*/                   IMAD R0, R0, c[0x0][0x0], R5 ;
+        /*0080*/                   ISETP.GE.OR P0, PT, R0, c[0x0][0x170], P0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/fw/kernel.cu", line 73
+        /*0090*/               @P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/fw/kernel.cu", line 75
+        /*00a0*/                   MOV R4, c[0x0][0x170] ;
+        /*00b0*/                   HFMA2.MMA R7, -RZ, RZ, 0, 2.384185791015625e-07 ;
+        /*00c0*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*00d0*/                   IMAD R2, R0, R4, c[0x0][0x174] ;
+        /*00e0*/                   IMAD R4, R4, c[0x0][0x174], R3.reuse ;
+        /*00f0*/                   IMAD R0, R0, c[0x0][0x170], R3 ;
+        /*0100*/                   IMAD.WIDE R2, R2, R7, c[0x0][0x160] ;
+        /*0110*/                   IMAD.WIDE R4, R4, R7.reuse, c[0x0][0x160] ;
+        /*0120*/                   LDG.E R3, [R2.64] ;
+        /*0130*/                   IMAD.WIDE R6, R0, R7, c[0x0][0x160] ;
+        /*0140*/                   LDG.E R4, [R4.64] ;
+        /*0150*/                   LDG.E R8, [R6.64] ;
+        /*0160*/                   IADD3 R9, R4, R3, RZ ;
+        /*0170*/                   ISETP.GE.AND P0, PT, R9, R8, PT ;
+        /*0180*/               @P0 EXIT ;
+        /*0190*/                   SHF.R.S32.HI R3, RZ, 0x1f, R0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/fw/kernel.cu", line 76
+        /*01a0*/                   STG.E [R6.64], R9 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/fw/kernel.cu", line 77
+        /*01b0*/                   LEA R2, P0, R0.reuse, c[0x0][0x168], 0x2 ;
+        /*01c0*/                   MOV R5, c[0x0][0x174] ;
+        /*01d0*/                   LEA.HI.X R3, R0, c[0x0][0x16c], R3, 0x2, P0 ;
+        /*01e0*/                   STG.E [R2.64], R5 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/fw/kernel.cu", line 80
+        /*01f0*/                   EXIT ;
+.L_x_0:
+        /*0200*/                   BRA `(.L_x_0);
+        /*0210*/                   NOP;
+        /*0220*/                   NOP;
+        /*0230*/                   NOP;
+        /*0240*/                   NOP;
+        /*0250*/                   NOP;
+        /*0260*/                   NOP;
+        /*0270*/                   NOP;
+        /*0280*/                   NOP;
+        /*0290*/                   NOP;
+        /*02a0*/                   NOP;
+        /*02b0*/                   NOP;
+        /*02c0*/                   NOP;
+        /*02d0*/                   NOP;
+        /*02e0*/                   NOP;
+        /*02f0*/                   NOP;
+.L_x_1:

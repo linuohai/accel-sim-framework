@@ -1,0 +1,38 @@
+GRASP Per-Iteration Analysis Log (v2 — generalized)
+Generated: 2026-03-31 09:09:49
+
+Input files:
+  L1 trace (GRASP):    /tmp/bfs_iter_input/grasp/bfs_iter_grasp3_l1.csv
+  L1 trace (baseline): /tmp/bfs_iter_input/baseline/bfs_iter_base2_l1.csv
+  GRASP event trace:   /tmp/bfs_iter_input/grasp/bfs_iter_grasp3_grasp.csv
+
+PC configuration:
+  Index PCs:    ['0x1060', '0x1d0', '0x640', '0x9a0', '0xd00']
+  Data PCs:     ['0x1090', '0x200', '0x670', '0x9d0', '0xd30']
+  Boundary PCs: ['0x1d0', '0x640']
+
+Warp 1:
+  Iterations:          122
+  Avg baseline latency: 7551.4 cycles
+  Avg GRASP latency:    9072.3 cycles
+  Overall speedup:      0.83x
+
+Warp 2:
+  Iterations:          126
+  Avg baseline latency: 6790.6 cycles
+  Avg GRASP latency:    8331.2 cycles
+  Overall speedup:      0.82x
+
+Warp 3:
+  Iterations:          120
+  Avg baseline latency: 7017.5 cycles
+  Avg GRASP latency:    8757.6 cycles
+  Overall speedup:      0.80x
+
+Output files:
+  event_timeline_warp1.txt
+  baseline_comparison_warp1.txt
+  event_timeline_warp2.txt
+  baseline_comparison_warp2.txt
+  event_timeline_warp3.txt
+  baseline_comparison_warp3.txt

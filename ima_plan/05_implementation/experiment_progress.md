@@ -3,7 +3,7 @@
 > **目的**：统一的实验进度 + 问题追踪文档。记录实验配置、结果、发现的问题和解决方案。
 > **写入规则**：**append-only**——新内容追加到对应 section 末尾，不修改已有条目。多个并发 session 可安全追加。
 >
-> 最近更新：2026-04-03
+> 最近更新：2026-04-07
 
 ---
 
@@ -757,3 +757,95 @@ Phase 3 (Extended, 6 fast workloads): dir 图 acc>99% 无收益，spmv_road_sym 
 详细结果: `ima_plan/05_implementation/dse_throttle_control/README.md`
 CSV: `dse_throttle_control/results/{bfs,sssp,spmv}_fullsm_dse_r2.csv`, `extended_validation.csv`
 实验 logs: `result/log/bfs_1sm_tc_*.log`, `bfs_1sm_tc2_*.log`, `bfs_fs_tc2_*.log`, `{sssp,spmv}_fs_tc2_*.log`, `{bfs,sssp,bc,spmv}_{cit,road}_*_tc_*.log`
+
+## 7k. Bug-Fix & Speculative Stride 大规模评估 (2026-04-03 ~ 2026-04-05)
+
+### 目的
+
+对比两项 GRASP 改动的独立效果：
+1. **Bug fix**: CT kernel reset by name + CD FIFO invalid slot 回收
+2. **Speculative stride**: `-grasp_speculative_stride 4` + per-chain CSV stride_hint
+
+### 实验配置
+
+- 38 workloads × 2 组 = 76 实验（排除 PR）+ vc_road_sym baseline/ideal 补齐
+- Group 1 (G1): `--grasp`（bug-fix only, spec_stride=0）
+- Group 2 (G2): `--grasp --grasp-speculative-stride 4`
+- Chain CSV 更新: CC 5 chains + VC 29 chains 的 stride_hint（SASS 分析确认）
+- 所有实验关闭 L1/L2/HBM trace
+
+### 关键结果
+
+**Bug-Fix (G1 vs Old GRASP)**:
+- road_sym (728 kernels): BFS **+5.0%**, SSSP +4.2%, BC +2.5% — CT reset fix 跨 kernel 保持 stride
+- CC 回退: flickr **-19.4%**, web -6.4%, cit -0.3% — 同名 kernel 保留的 stride 在高度数图上有害
+- SpMV 全线回退: web -3.3%, socLJ -2.3%, cit -1.5%, road -0.9% — Accuracy 暴跌 (cit: 32.9%→20.4%)
+- Accuracy 下降是 SpMV/VC 回退的核心原因（VC cit: 40.6%→21.2%）
+
+**Speculative Stride (G2 vs G1)**:
+- cc_flickr **+23.6%** — CSV hint 绕过错误的 runtime stride 学习，完全补偿 bug-fix 回退
+- bc_web +2.5%, vc_web +1.0% — 中高度数图首次迭代 prefetch 有价值
+- cc_web **-4.1%** — 非所有场景都能补偿
+- Data coverage 提升 +5~7pp（road/cit_dir）但 data timeliness 下降 -4~6pp — 覆盖更广但时效变差
+- SpMV 完全无补偿 — 问题在 chain detection 而非 stride learning
+
+### 数据
+
+详细结果: `ima_plan/06_evaluation_plan/experiment_bugfix_specstride.md`
+实验 logs: `result/log/*_g1_bugfix.log`, `*_g2_specstride.log`
+
+---
+
+## 7l. §5.5 Effectiveness Analysis Prototypes (2026-04-07)
+
+### 目的
+
+为论文 §5.5（"why GRASP works" 机制级证据）准备 5 个原型图。第二轮 prototype，
+位于 `ima_plan/07_paper_outline/figures/eval_prototypes/proto_r2_e[1-5]_*.py`。
+
+### 数据来源
+
+`ima_plan/07_paper_outline/figures/effectiveness_data.json`（28 workloads，
+baseline + GRASP 全量字段：IMA miss split、stall_breakdown、grasp_funnel、
+grasp_storage、grasp_effect、grasp_rfail、derived 派生指标）。
+
+### 五个原型
+
+| 文件 | 类型 | 内容 | 关键统计 |
+|------|------|------|----------|
+| `proto_r2_e1_miss_reduction.py` | 配对堆叠条 | L1 IMA miss 归一化（baseline=1.0）→ idx vs data 拆分 | 26 workloads，平均 reduction 19.6%（max 54.8% CC-fl） |
+| `proto_r2_e2_pipeline_funnel.py` | 横向堆叠条 | Pipeline funnel：Idx Attempted → Delivered/Throttled/Idx RFAIL/Data RFAIL/Other/Bonus | 27 workloads，按 delivery% 排序，mean delivery 41% |
+| `proto_r2_e3_ct_reuse.py` | 横向条 + log x | CT 复用率（pf_useful / ct_peak），按 CT size 着色 | 27 workloads，geomean 166K, max 7.6M (CC-cp)，CT 5-30 |
+| `proto_r2_e4_stall_reduction.py` | 配对堆叠条 | MEM_WAIT vs Other stall，归一化 baseline | 28 workloads，MEM_WAIT 平均 reduction +10.7%, max +27.9% (BFS-cp) |
+| `proto_r2_e5_correlation.py` | 单栏散点 + 回归 | IMA miss reduction% → IPC speedup% 因果链 | n=26, Pearson r=+0.642, R²=0.41, slope=+1.32 |
+
+### 跳过的 workloads
+
+- **MST-rm**（ls_mst_rmat12）：no IMA chain（baseline IMA reads = null）→ E1/E2/E5 跳过；E3/E4 中 MST 无 grasp_funnel/ct_reuse 也跳过；仅 E4 保留（stall breakdown 仍有）
+- **MIS-fl**（pann_mis_flickr）：no IMA chain → E1/E5 跳过；E2/E3/E4 保留（funnel/storage/stall 字段都存在）
+
+### 关键发现
+
+1. **CC-fl 是单点性能爆点**：54.8% IMA miss reduction → 122% speedup（远高于 ~1:1 回归线）
+2. **Funnel delivery 范围 2.9% (SpM-cp) → 87% (CC-rd)**：低 delivery 主要由 throttle（spmv/vc 类）+ idx_rfail（road 类 MSHR 压力）造成
+3. **CT 复用率达 7 个数量级**：5K → 7.6M，证明 5-30 entry CT 完全足够
+4. **MEM_WAIT 减少强相关于内存型 workload**：BFS-cp/BFS-fl/CC-wg 取得 +25~28% MEM_WAIT 削减；compute-bound (MST/VC) 不动
+5. **CC-cp 是回退案例**：MEM_WAIT 反而 +7.3%，对应 -3.7% speedup → 同名 kernel CT 保留的 stride 在高度数图上有害（参见 §7k）
+
+### 视觉迭代
+
+首版渲染发现 4 个问题，已修复：
+- E1/E4：title pad=18 + legend bbox=(0,1.16) → 标题被 legend 覆盖。改为 `fig.legend()` 顶置 + `subplots_adjust(top=0.86)` 给 legend 单独行
+- E2：bottom row SpM-cp delivery=2.93%，白色文字宽度大于条宽 → 阈值 <8% 时改为外置绿色标签
+- E4：MIS-fl total stall ratio=1.13（>1.0 因 other stall 增长），y_lim 1.22 → 改为 1.30
+- E5：CC-rd 与 SpM-rd 两个 outlier label 在 (~29, 0) 重叠 → outlier 用按 rank 交替的 offset
+
+### 输出文件
+
+- `eval_prototypes/proto_r2_e1_miss_reduction.{py,pdf,svg}` (8K/29K/55K)
+- `eval_prototypes/proto_r2_e2_pipeline_funnel.{py,pdf,svg}` (9K/31K/75K)
+- `eval_prototypes/proto_r2_e3_ct_reuse.{py,pdf,svg}` (6K/25K/48K)
+- `eval_prototypes/proto_r2_e4_stall_reduction.{py,pdf,svg}` (7K/30K/57K)
+- `eval_prototypes/proto_r2_e5_correlation.{py,pdf,svg}` (8K/31K/29K)
+
+供 §5.5 草稿选用，最终图表数量待 round 2 review。

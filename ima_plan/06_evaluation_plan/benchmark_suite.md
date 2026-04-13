@@ -1,11 +1,199 @@
 # Benchmark Suite — IMA Prefetcher 评估测例
 
-> 最近更新: 2026-04-03
-
-> 后续所有实验（baseline / ideal L1D / prefetcher / ablation）均须覆盖本文件定义的全部测例。
-> 各 trace key 定义于 `traceL1` 脚本的 `TRACE_MAP`。
+> 最近更新: 2026-04-07
 
 ---
+
+## **>>> 论文最终评估范围（Paper Evaluation Scope）<<<**
+
+> **本节是论文写作和图表绘制的唯一权威依据。**
+> 下方「初始设计」部分为实验早期的完整设计，随着实验推进已有调整。
+> 当两者冲突时，以本节为准。
+> 最近更新: 2026-04-07
+
+### 总体范围
+
+| 类别 | 算法 | Workloads | 说明 |
+|------|------|:---------:|------|
+| **核心实验（Gardenia）** | BFS, SSSP, BC, CC, SpMV, VC | 38 | 6 算法 × 5 数据集，含 dir+sym 双变体 |
+| **扩展实验** | MIS, Color, MST | 3 | Pannotia (MIS, Color) + LonestarGPU (MST) |
+| **合计** | 9 | **41** | |
+
+> 扩展实验的目的是证明 GRASP 跨 benchmark suite 的泛化性（引用覆盖 Gardenia + Pannotia + LonestarGPU）。
+
+### 选优后论文主表（28 workloads）
+
+双变体选优规则：cit-Patents 选 dir（Speedup 更高），其余选 sym。选优后 25 Gardenia + 3 Extended = 28。
+
+| # | Key | 算法 | 来源 | 数据集 | GRASP TC 配置 | GRASP 数据源 |
+|--:|-----|------|------|--------|:------------:|-------------|
+| 1 | `bfs_cit_dir` | BFS | Gardenia | cit-Patents | D5b | `throttle_control_results.md` |
+| 2 | `sssp_cit_dir` | SSSP | Gardenia | cit-Patents | D5b | `throttle_control_results.md` |
+| 3 | `bc_cit_dir` | BC | Gardenia | cit-Patents | D5b | `throttle_control_results.md` |
+| 4 | `cc_cit_sym` | CC | Gardenia | cit-Patents | D5b | `throttle_control_results.md` |
+| 5 | `spmv_cit_sym` | SpMV | Gardenia | cit-Patents | D5b | `throttle_control_results.md` |
+| 6 | `vc_cit_sym` | VC | Gardenia | cit-Patents | D5b | `throttle_control_results.md` |
+| 7 | `bfs_web_sym` | BFS | Gardenia | web-Google | D5b | `throttle_control_results.md` |
+| 8 | `sssp_web_sym` | SSSP | Gardenia | web-Google | D5b | `throttle_control_results.md` |
+| 9 | `bc_web_sym` | BC | Gardenia | web-Google | D5b | `throttle_control_results.md` |
+| 10 | `cc_web_sym` | CC | Gardenia | web-Google | D5b | `throttle_control_results.md` |
+| 11 | `spmv_web_sym` | SpMV | Gardenia | web-Google | D5b | `throttle_control_results.md` |
+| 12 | `vc_web_sym` | VC | Gardenia | web-Google | D5b | `throttle_control_results.md` |
+| 13 | `bfs_flickr_sym` | BFS | Gardenia | flickr | D5b | `throttle_control_results.md` |
+| 14 | `sssp_flickr_sym` | SSSP | Gardenia | flickr | D5b | `throttle_control_results.md` |
+| 15 | `bc_flickr_sym` | BC | Gardenia | flickr | D5b | `throttle_control_results.md` |
+| 16 | `cc_flickr_sym` | CC | Gardenia | flickr | D5b | `throttle_control_results.md` |
+| 17 | `spmv_flickr_sym` | SpMV | Gardenia | flickr | D5b | `throttle_control_results.md` |
+| 18 | `bfs_road_sym` | BFS | Gardenia | roadNet-CA | D5b | `throttle_control_results.md` |
+| 19 | `sssp_road_sym` | SSSP | Gardenia | roadNet-CA | D5b | `throttle_control_results.md` |
+| 20 | `bc_road_sym` | BC | Gardenia | roadNet-CA | D5b | `throttle_control_results.md` |
+| 21 | `cc_road_sym` | CC | Gardenia | roadNet-CA | D5b | `throttle_control_results.md` |
+| 22 | `spmv_road_sym` | SpMV | Gardenia | roadNet-CA | D5b | `throttle_control_results.md` |
+| 23 | `vc_road_sym` | VC | Gardenia | roadNet-CA | D5b | `throttle_control_results.md` |
+| 24 | `bfs_socLJ_sym` | BFS | Gardenia | soc-LJ1 | ⏳ Default→D5b | `experiment_results.md`（D5b 仿真中，完成后替换） |
+| 25 | `spmv_socLJ_sym` | SpMV | Gardenia | soc-LJ1 | ⏳ Default→D5b | `experiment_results.md`（D5b 仿真中，完成后替换） |
+| 26 | `pann_mis_flickr` | MIS | Pannotia | flickr | Default | `extra_case/extra_case_results.csv` |
+| 27 | `pann_color_eco` | Color | Pannotia | ecology1 | Default | `extra_case/extra_case_results.csv` |
+| 28 | `ls_mst_rmat12` | MST | LonestarGPU | rmat12 | Default | `extra_case/extra_case_results.csv` |
+
+> soc-LJ1 两个 workload 目前使用 Default 配置结果（与 D5b 差异预计 <1pp），D5b 仿真完成后替换。
+
+### 各实验类型 Workloads 与数据源
+
+#### L1: 主性能评估（Speedup 表）
+
+**范围**: 28 workloads（上表全部）
+**展示指标**: Baseline IPC, GRASP IPC, Speedup%, Ideal IPC, Headroom%
+
+| 子集 | Workloads | Baseline 数据源 | GRASP 数据源 | Ideal L1D 数据源 |
+|------|:---------:|----------------|-------------|-----------------|
+| Gardenia 23 (D5b) | 23 | `throttle_control_results.md` | `throttle_control_results.md` (D5b) | `experiment_results.md` |
+| Gardenia soc-LJ1 | 2 | `experiment_results.md` | `experiment_results.md` (Default ⏳) | `experiment_results.md` |
+| Extended MIS + Color | 2 | `extra_case/extra_case_results.csv` | `extra_case/extra_case_results.csv` | 无（未跑 ideal L1D） |
+| Extended MST | 1 | `extra_case/extra_case_results.csv` | `extra_case/extra_case_results.csv` | 无 |
+
+**Extended Log 文件**:
+
+| Key | Baseline Log | GRASP Log |
+|-----|-------------|-----------|
+| `pann_mis_flickr` | `pann_mis_flickr_baseline.log` | `pann_mis_flickr_grasp2.log` |
+| `pann_color_eco` | `pann_color_eco_baseline.log` | `pann_color_eco_grasp.log` |
+| `ls_mst_rmat12` | `ls_mst_rmat12_baseline.log` | `ls_mst_rmat12_grasp.log` |
+
+#### L2: Prefetch 有效性（Coverage / Timeliness / Accuracy）
+
+**范围**: 27 workloads（28 − MST）
+**排除 MST 原因**: rmat12 数据集上目标 kernel 未执行，0 prefetch 活动，无有效指标
+**展示指标**: Idx/Data Coverage%, Idx/Data Timeliness%, Accuracy%
+**数据源**: 同 L1，从对应 GRASP log 中 `IMA_DEMAND:` / `IMA_TIMELINESS:` / `GRASP_EFFECT` 提取
+
+#### L3: SOTA Baseline 对比
+
+**范围**: 25 Gardenia + 3 Extended = 28 workloads × 3 baselines = 84 实验
+**Baselines**: Snake (MICRO'23), CAPS (IPDPS'18), Spare Register (HPCA'14)
+**展示指标**: Speedup%, Accuracy%, Coverage%
+**数据源**: `05_implementation/sota_baseline/sota_experiment_results.md`
+
+> 3 个 Extended 测例的 SOTA 数据已包含在该文件 "Extended Benchmarks" 章节中。
+
+#### L4: 组件消融（Exp-A: Index-Only / Data-Only / Full）
+
+**范围**: 20 Gardenia workloads（仅核心实验）
+
+```
+bfs_cit_dir  sssp_cit_dir  bc_cit_dir  spmv_web_sym  bfs_web_sym
+cc_flickr_sym  spmv_flickr_sym  bfs_flickr_sym
+bfs_road_sym  sssp_road_sym  cc_road_sym  bc_road_sym
+sssp_flickr_sym  sssp_web_sym  vc_web_sym  spmv_cit_sym
+bc_flickr_sym  bc_web_sym  vc_cit_sym  cc_web_sym
+```
+
+**配置**: Baseline / Index-Only / Data-Only / Full GRASP (D5b)
+**展示指标**: Speedup%（grouped bar chart）
+**数据源**: `06_evaluation_plan/sensitivity_ablation/sensitivity_ablation_experiments.md` §Exp-A
+
+#### L5: 节流消融（Exp-B: Throttle Control）
+
+**范围**: 22 Gardenia workloads（同 L4 + vc_road_sym + spmv_road_sym）
+**配置**: Default (tc_mode=0) / D5b (论文版, tc_mode=5) / T40C200 (tc_mode=4)
+**展示指标**: Speedup% + Accuracy% + Data Coverage%
+**数据源**: `06_evaluation_plan/sensitivity_ablation/sensitivity_ablation_experiments.md` §Exp-B
+  + `throttle_control_results.md`（D5b / T40C200 原始数据）
+
+#### L6: 预取距离敏感性（Exp-C: Distance = 1, 2, 4, 8）
+
+**范围**: 20 Gardenia workloads（同 L4）
+**展示指标**: Speedup%（折线图, x=distance）
+**数据源**: `06_evaluation_plan/sensitivity_ablation/sensitivity_ablation_experiments.md` §Exp-C
+
+#### L7: 存储预算敏感性（Exp-D: S1~S4）
+
+**范围**: 20 Gardenia workloads（同 L4）
+**配置**: S1(712B/0.54%L1D) / S2(1.1KB) / S3(1.9KB) / S4(3.6KB)
+**展示指标**: Speedup%（grouped bar chart + 面积标注）
+**数据源**: `06_evaluation_plan/sensitivity_ablation/sensitivity_ablation_experiments.md` §Exp-D
+
+#### L8: 有效性分解（Exp-E: Miss Reduction + Pipeline Funnel）
+
+**范围**: 8 Gardenia workloads（代表子集）
+
+```
+bfs_cit_dir  sssp_cit_dir  bc_cit_dir  spmv_web_sym
+bfs_web_sym  cc_flickr_sym  spmv_flickr_sym  bfs_flickr_sym
+```
+
+**展示指标**: IMA Miss Reduction%, CT Entry 复用率, Pipeline 转化率
+**数据源**: `06_evaluation_plan/sensitivity_ablation/sensitivity_ablation_experiments.md` §Exp-E
+  （从已有 baseline + D5b log 提取，无需额外仿真）
+
+### 非选优变体（补充数据，13 workloads）
+
+不进入论文主表，但可用于附录或补充分析。全部使用 Default 配置。
+
+| # | Key | 算法 | 数据集 | 数据源 |
+|--:|-----|------|--------|--------|
+| 1 | `bfs_cit_sym` | BFS | cit-Patents | `experiment_results.md` |
+| 2 | `sssp_cit_sym` | SSSP | cit-Patents | `experiment_results.md` |
+| 3 | `bc_cit_sym` | BC | cit-Patents | `experiment_results.md` |
+| 4 | `bfs_web_dir` | BFS | web-Google | `experiment_results.md` |
+| 5 | `sssp_web_dir` | SSSP | web-Google | `experiment_results.md` |
+| 6 | `bc_web_dir` | BC | web-Google | `experiment_results.md` |
+| 7 | `bfs_flickr_dir` | BFS | flickr | `experiment_results.md` |
+| 8 | `sssp_flickr_dir` | SSSP | flickr | `experiment_results.md` |
+| 9 | `bc_flickr_dir` | BC | flickr | `experiment_results.md` |
+| 10 | `bfs_road_dir` | BFS | roadNet-CA | `experiment_results.md` |
+| 11 | `sssp_road_dir` | SSSP | roadNet-CA | `experiment_results.md` |
+| 12 | `bc_road_dir` | BC | roadNet-CA | `experiment_results.md` |
+| 13 | `bfs_socLJ_dir` | BFS | soc-LJ1 | `experiment_results.md` |
+
+### 数据文件索引
+
+| 文件 | 相对路径 | 内容 | Workloads |
+|------|---------|------|:---------:|
+| **Throttle Control 结果** | `06_evaluation_plan/throttle_control_results.md` | D5b + T40C200 全指标 | 23 Gardenia |
+| **全量实验结果** | `06_evaluation_plan/experiment_results.md` | Default 全指标 + Ideal L1D | 38 Gardenia |
+| **扩展测例结果** | `06_evaluation_plan/extra_case/extra_case_results.csv` | Extended 全指标 | 3 Extended |
+| **扩展测例说明** | `06_evaluation_plan/extra_case/README.md` | Bug fix + 0pf 分析 | — |
+| **SOTA Baseline** | `05_implementation/sota_baseline/sota_experiment_results.md` | 3 baselines × 28 workloads | 28 |
+| **敏感性 + 消融** | `06_evaluation_plan/sensitivity_ablation/sensitivity_ablation_experiments.md` | Exp-A~E, 186 次仿真 | 8~22 Gardenia |
+| **Golden Chain CSV** | `05_implementation/ima_pair_table/golden/strict_selected_chain_instances.csv` | 205 chains（全算法） | — |
+| **Baseline Registry** | `06_evaluation_plan/baseline_registry.csv` | 避免重跑 baseline | — |
+| **Log 文件目录** | `result/log/` | 全部仿真 log | — |
+
+### 待办
+
+- [ ] `bfs_socLJ_sym` / `spmv_socLJ_sym` D5b 仿真完成后，将数据从 `experiment_results.md` 替换为 D5b 结果，并更新 `throttle_control_results.md`
+
+---
+---
+
+## 以下为初始设计（历史参考）
+
+> **注意**: 以下内容是实验初期的完整设计方案。随着实验推进，部分内容已被上方「论文最终评估范围」调整和覆盖。
+> 保留此部分用于追溯设计决策和参考算法/数据集的详细说明。
+> **当两者冲突时，以上方 Paper Evaluation Scope 为准。**
+
+> 各 trace key 定义于 `traceL1` 脚本的 `TRACE_MAP`。
 
 ## 测例总览（38 个 Workload）
 
@@ -174,6 +362,21 @@ ALL_WORKLOADS="$DUAL_DIR $DUAL_SYM $SYM_ONLY $SOCLJ"
 | 仅 sym=1（3 algo × 4 ds，减 VC-flickr） | 11 |
 | soc-LJ1 扩展 | 3 |
 | **合计** | **38** |
+
+### 迭代分层策略
+
+| 层级 | Workload 数 | 用途 | 并行关键路径 |
+|------|:-:|------|:-:|
+| **快速迭代（常规）** | 22 | 参数调优、代码改动验证 | ~12h (cc_web_sym) |
+| **完整评估** | 25 | 里程碑版本、论文数据 | ~31h (cc_cit_sym) |
+
+**快速迭代排除项（3 个）：**
+- `cc_cit_sym`：GRASP -7.0% 退化 + 30.9h（关键路径瓶颈）
+- `bfs_socLJ_sym` / `spmv_socLJ_sym`：各 ~17h，仅在重大改动时跑
+
+**双变体选优结果（基于 GRASP speedup）：**
+- cit-Patents → dir（BFS +13.6%, SSSP +11.0%, BC +9.8%）
+- web-Google / flickr / roadNet-CA / soc-LJ1 → sym
 
 ---
 

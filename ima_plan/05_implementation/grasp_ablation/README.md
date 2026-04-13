@@ -16,7 +16,7 @@
 | 组件 | 状态 | 说明 |
 |------|------|------|
 | CD (Chain Detector) | ✅ | 2-warp tracked, FIFO depth=20, LDG→IMAD.WIDE→LDG |
-| CT (Chain Table) | ✅ | per-warp stride observation (MAX=16), 2-observation 收敛 |
+| CT (Chain Table) | ✅ | stride observation (W=2 slots), 2-observation 收敛 |
 | TT (Target Table) | ✅ | placeholder (trace-driven), 由 pair table 替代 |
 | Warp-level coalesce | ✅ | 32 lane → deduplicate by 32B sector |
 | Instruction UID dedup | ✅ | 同一条指令的多个 mem_fetch 不重复生成预取 |

@@ -1,0 +1,70 @@
+=== Warp 5, IMA region (64 iterations) ===
+
+iter | idx_cycle |               idx_L1 | data_cycle |                   data_L1 |                                 grasp_summary | latency
+------------------------------------------------------------------------------------------------------------------------------------------
+   0 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+   1 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+   2 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+   3 |      9805 |          [4L] 4xMISS |      10366 |          [32L] 32xHIT_RES |                                             - |     579
+   4 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+   5 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+   6 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+   7 |     11009 |          [4L] 4xMISS |      11504 |   [32L] 16xHIT,16xHIT_RES |                                        CT_HIT |     513
+   8 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+   9 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  10 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  11 |     12088 |          [4L] 4xMISS |      12569 | [32L] 28xHIT,3xHIT_RES,1xMISS | DAT_ENQx32; DAT_INJx32; L1_MISSx18; L1_HITx18; IDX_ENQx4; IDX_INJx4; FILL_Dx4; CT_HIT; STR_UPD |     917
+  12 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  13 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  14 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  15 |     13092 |           [4L] 4xHIT |      13137 |              [32L] 32xHIT | IDX_ENQx4; IDX_INJx4; L1_MISSx4; CT_HIT; STR_UPD |      63
+  16 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  17 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  18 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  19 |     13223 |       [4L] 4xHIT_RES |      13575 |    [32L] 30xHIT,2xHIT_RES | DAT_ENQx64; DAT_INJx64; L1_HITx49; L1_MISSx19; FILL_Dx8; IDX_ENQx4; IDX_INJx4; CT_HIT; STR_UPD |     370
+  20 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  21 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  22 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  23 |     14033 |           [4L] 4xHIT |      14078 |              [32L] 32xHIT | IDX_ENQx4; IDX_INJx4; L1_MISSx4; CT_HIT; STR_UPD |      63
+  24 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  25 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  26 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  27 |     14182 |       [4L] 4xHIT_RES |      14515 |    [32L] 30xHIT,2xHIT_RES | DAT_ENQx64; DAT_INJx64; L1_HITx49; L1_MISSx19; FILL_Dx8; IDX_ENQx4; IDX_INJx4; CT_HIT; STR_UPD |     351
+  28 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  29 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  30 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  31 |     14713 |           [4L] 4xHIT |      14795 |   [32L] 19xHIT,13xHIT_RES | DAT_ENQx32; DAT_INJx32; L1_HITx26; L1_MISSx10; IDX_ENQx4; IDX_INJx4; FILL_Dx4; CT_HIT; STR_UPD |     101
+  32 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  33 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  34 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  35 |     15208 |           [4L] 4xHIT |      15300 |    [32L] 26xHIT,6xHIT_RES | DAT_ENQx32; DAT_INJx32; L1_HITx20; L1_MISSx16; IDX_ENQx4; IDX_INJx4; FILL_Dx4; CT_HIT; STR_UPD |     111
+  36 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  37 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  38 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  39 |     15721 |           [4L] 4xHIT |      15818 |   [32L] 20xHIT,12xHIT_RES | DAT_ENQx32; DAT_INJx32; L1_HITx21; L1_MISSx15; IDX_ENQx4; IDX_INJx4; FILL_Dx4; CT_HIT; STR_UPD |     115
+  40 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  41 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  42 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  43 |     16230 |           [4L] 4xHIT |      16363 |    [32L] 28xHIT,4xHIT_RES | IDX_ENQx4; IDX_INJx4; L1_MISSx4; CT_HIT; STR_UPD |     152
+  44 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  45 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  46 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  47 |     16619 |       [4L] 4xHIT_RES |      16774 |   [32L] 22xHIT,10xHIT_RES | DAT_ENQx64; DAT_INJx64; L1_HITx38; L1_MISSx30; FILL_Dx8; IDX_ENQx4; IDX_INJx4; CT_HIT; STR_UPD |     173
+  48 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  49 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  50 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  51 |     17321 |           [4L] 4xHIT |      17400 |    [32L] 30xHIT,2xHIT_RES | IDX_ENQx4; IDX_INJx4; L1_MISSx4; CT_HIT; STR_UPD |      97
+  52 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  53 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  54 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  55 |     17557 |       [4L] 4xHIT_RES |      17832 |    [32L] 27xHIT,5xHIT_RES | DAT_ENQx64; DAT_INJx64; L1_HITx59; L1_MISSx9; FILL_Dx8; IDX_ENQx4; IDX_INJx4; CT_HIT; STR_UPD |     293
+  56 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  57 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  58 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  59 |     18263 |           [4L] 4xHIT |      18397 |              [32L] 32xHIT | IDX_ENQx4; IDX_INJx4; L1_MISSx4; CT_HIT; STR_UPD |     152
+  60 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  61 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  62 |         0 |                  N/A |          0 |                       N/A |                                             - |     N/A
+  63 |     18483 |       [4L] 4xHIT_RES |      18812 |              [32L] 32xHIT | L1_HITx36; DAT_ENQx32; DAT_INJx32; FILL_Dx8; IDX_ENQx4; IDX_INJx4; CT_HIT; STR_UPD |     348
+------------------------------------------------------------------------------------------------------------------------------------------
+  avg_latency=274.9  idx_hit_rate=81.2%  data_hit_rate=99.8%

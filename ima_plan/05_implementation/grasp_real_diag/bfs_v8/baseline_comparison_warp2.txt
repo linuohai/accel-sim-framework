@@ -1,0 +1,19 @@
+=== Warp 2, Baseline vs GRASP (13 iterations) ===
+
+iter | base_idx_cyc |     base_idx_L1 | base_data_cyc |         base_data_L1 | grasp_idx_cyc |    grasp_idx_L1 | grasp_data_cyc |        grasp_data_L1 | speedup
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+   0 |       541455 | [30L] 22xHIT,8xMISS |        541849 | [32L] 16xMISS,13xHIT,3xHIT_RES |        541455 | [30L] 25xHIT,5xMISS |         541849 | [32L] 21xHIT,8xMISS,3xHIT_RES |   1.36x
+   1 |       605309 | [27L] 17xMISS,10xHIT |        605985 | [32L] 18xMISS,8xHIT,6xHIT_RES |        590029 | [27L] 17xMISS,10xHIT |         590343 | [32L] 16xMISS,10xHIT,6xHIT_RES |   1.01x
+   2 |       769256 | [23L] 17xHIT,6xMISS |        776168 | [32L] 12xHIT_RES,11xHIT,9xMISS |        723462 | [23L] 12xMISS,9xHIT,2xHIT_RES |         726722 | [32L] 15xHIT,11xHIT_RES,6xMISS |   1.00x
+   3 |       876455 | [28L] 23xHIT,5xMISS |        877125 | [32L] 19xMISS,7xHIT_RES,6xHIT |        827222 | [28L] 17xMISS,9xHIT,2xHIT_RES |         827801 | [32L] 14xMISS,14xHIT,4xHIT_RES |   0.61x
+   4 |      1084737 | [28L] 21xMISS,7xHIT |       1085431 | [32L] 28xMISS,4xHIT_RES |       1008010 | [28L] 17xMISS,8xHIT,3xHIT_RES |        1008561 | [32L] 25xMISS,4xHIT,3xHIT_RES |   0.99x
+   5 |      1293447 | [26L] 15xHIT,11xMISS |       1294106 | [32L] 24xMISS,5xHIT,3xHIT_RES |       1204650 | [26L] 16xMISS,10xHIT |        1206451 | [32L] 18xMISS,10xHIT,4xHIT_RES |   0.72x
+   6 |      1441119 | [25L] 13xHIT,12xMISS |       1442218 | [32L] 24xMISS,7xHIT_RES,1xHIT |       1393738 | [29L] 17xHIT,12xMISS |        1397018 | [32L] 24xMISS,4xHIT,4xHIT_RES |   0.53x
+   7 |      1631726 | [30L] 22xHIT,8xMISS |       1632260 | [32L] 28xMISS,3xHIT_RES,1xHIT |       1549240 | [30L] 22xHIT,4xMISS,4xHIT_RES |        1551397 | [32L] 24xMISS,6xHIT,2xHIT_RES |   0.96x
+   8 |      1721075 | [25L] 18xHIT,7xMISS |       1722325 | [32L] 24xMISS,8xHIT_RES |       1640696 | [29L] 17xHIT,10xMISS,2xHIT_RES |        1642307 | [32L] 28xMISS,3xHIT_RES,1xHIT |   0.97x
+   9 |      1841614 | [22L] 14xHIT,8xMISS |       1842377 | [32L] 21xMISS,8xHIT_RES,3xHIT |       1749795 | [23L] 20xMISS,3xHIT |        1751231 | [32L] 22xMISS,8xHIT_RES,2xHIT |   0.65x
+  10 |      1925075 | [23L] 14xHIT,9xMISS |       1925888 | [32L] 22xMISS,9xHIT_RES,1xHIT |       1863255 | [26L] 14xHIT,12xMISS |        1863839 | [32L] 27xMISS,5xHIT_RES |   0.52x
+  11 |      1988191 | [21L] 12xHIT,9xMISS |       1988950 | [32L] 18xMISS,10xHIT_RES,4xHIT |       1968888 | [22L] 12xMISS,10xHIT |        1970050 | [32L] 21xMISS,9xHIT_RES,2xHIT |   0.40x
+  12 |      2046208 | [27L] 18xHIT,9xMISS |       2046829 | [32L] 19xMISS,9xHIT,4xHIT_RES |       2063060 | [16L] 8xMISS,8xHIT |        2064594 | [32L] 17xHIT_RES,15xMISS |   0.48x
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+  avg baseline latency=76775.8, avg GRASP latency=98901.8, overall speedup=0.78x

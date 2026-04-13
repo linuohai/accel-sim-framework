@@ -1,0 +1,38 @@
+GRASP Per-Iteration Analysis Log (v2 — generalized)
+Generated: 2026-03-31 13:31:49
+
+Input files:
+  L1 trace (GRASP):    /workspace/prefetch/ima_plan/05_implementation/grasp_real_diag/bfs_stride_fix/grasp/bfs_stride_fix_diag2_l1.csv
+  L1 trace (baseline): /workspace/prefetch/ima_plan/05_implementation/grasp_real_diag/bfs_stride_fix/baseline/bfs_v8_diag_base_l1.csv
+  GRASP event trace:   /workspace/prefetch/ima_plan/05_implementation/grasp_real_diag/bfs_stride_fix/grasp/bfs_stride_fix_diag2_grasp.csv
+
+PC configuration:
+  Index PCs:    ['0x0c0', '0x1060', '0x1d0', '0x640', '0x9a0', '0xd00']
+  Data PCs:     ['0x0f0', '0x100', '0x1090', '0x200', '0x670', '0x9d0', '0xd30']
+  Boundary PCs: ['0x0c0', '0x1060', '0x1d0', '0x640', '0x9a0', '0xd00']
+
+Warp 1:
+  Iterations:          4350
+  Avg baseline latency: 1881.6 cycles
+  Avg GRASP latency:    1752.1 cycles
+  Overall speedup:      1.07x
+
+Warp 2:
+  Iterations:          4516
+  Avg baseline latency: 1440.2 cycles
+  Avg GRASP latency:    960.8 cycles
+  Overall speedup:      1.50x
+
+Warp 3:
+  Iterations:          4043
+  Avg baseline latency: 1351.7 cycles
+  Avg GRASP latency:    1051.3 cycles
+  Overall speedup:      1.29x
+
+Output files:
+  event_timeline_warp1.txt
+  baseline_comparison_warp1.txt
+  event_timeline_warp2.txt
+  baseline_comparison_warp2.txt
+  event_timeline_warp3.txt
+  baseline_comparison_warp3.txt

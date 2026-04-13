@@ -1,0 +1,71 @@
+WARNING: iteration count mismatch: baseline=64, grasp=65. Showing min(64).
+=== Warp 4, Baseline vs GRASP (64 iterations) ===
+
+iter | base_idx_cyc |     base_idx_L1 | base_data_cyc |         base_data_L1 | grasp_idx_cyc |    grasp_idx_L1 | grasp_data_cyc |        grasp_data_L1 | speedup
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+   0 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+   1 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+   2 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+   3 |         9811 |     [4L] 4xMISS |         10385 |     [32L] 32xHIT_RES |          9811 |     [4L] 4xMISS |          10385 |     [32L] 32xHIT_RES |   1.00x
+   4 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+   5 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+   6 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+   7 |        11011 |     [4L] 4xMISS |         11561 | [32L] 16xHIT,16xHIT_RES |         11011 |     [4L] 4xMISS |          11561 | [32L] 16xHIT,16xHIT_RES |   1.00x
+   8 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+   9 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  10 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  11 |        12063 |     [4L] 4xMISS |         12594 | [32L] 21xHIT,11xHIT_RES |         12092 | [4L] 3xMISS,1xRFAIL |              0 |                  N/A |     N/A
+  12 |            0 |             N/A |             0 |                  N/A |         12093 |     [1L] 1xMISS |          12588 | [32L] 29xHIT,3xHIT_RES |     N/A
+  13 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  14 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  15 |        13110 |     [4L] 4xMISS |         13636 | [32L] 22xHIT,10xHIT_RES |             0 |             N/A |              0 |                  N/A |     N/A
+  16 |            0 |             N/A |             0 |                  N/A |         13094 |     [4L] 4xMISS |          13594 |         [32L] 32xHIT |     N/A
+  17 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  18 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  19 |        14147 |     [4L] 4xMISS |         14693 | [32L] 22xHIT,10xHIT_RES |             0 |             N/A |              0 |                  N/A |     N/A
+  20 |            0 |             N/A |             0 |                  N/A |         13710 |      [4L] 4xHIT |          13755 | [32L] 30xHIT,2xHIT_RES |     N/A
+  21 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  22 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  23 |        15199 |     [4L] 4xMISS |         15725 | [32L] 22xHIT,9xHIT_RES,1xMISS |             0 |             N/A |              0 |                  N/A |     N/A
+  24 |            0 |             N/A |             0 |                  N/A |         14038 |  [4L] 4xHIT_RES |          14192 |         [32L] 32xHIT |     N/A
+  25 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  26 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  27 |        16232 |     [4L] 4xMISS |         16762 | [32L] 22xHIT,10xHIT_RES |             0 |             N/A |              0 |                  N/A |     N/A
+  28 |            0 |             N/A |             0 |                  N/A |         14294 |  [4L] 4xHIT_RES |          14534 | [32L] 30xHIT,2xHIT_RES |     N/A
+  29 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  30 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  31 |        17266 |     [4L] 4xMISS |         17804 | [32L] 21xHIT,11xHIT_RES |             0 |             N/A |              0 |                  N/A |     N/A
+  32 |            0 |             N/A |             0 |                  N/A |         14714 |  [4L] 4xHIT_RES |          14815 | [32L] 19xHIT,13xHIT_RES |     N/A
+  33 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  34 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  35 |        18311 |     [4L] 4xMISS |         18825 | [32L] 20xHIT,12xHIT_RES |             0 |             N/A |              0 |                  N/A |     N/A
+  36 |            0 |             N/A |             0 |                  N/A |         15204 |      [4L] 4xHIT |          15281 | [32L] 28xHIT,4xHIT_RES |     N/A
+  37 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  38 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  39 |        19379 |     [4L] 4xMISS |         19874 | [32L] 20xHIT,12xHIT_RES |             0 |             N/A |              0 |                  N/A |     N/A
+  40 |            0 |             N/A |             0 |                  N/A |         15678 |      [4L] 4xHIT |          15742 | [32L] 20xHIT,12xHIT_RES |     N/A
+  41 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  42 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  43 |        20426 |     [4L] 4xMISS |         20926 | [32L] 21xHIT,10xHIT_RES,1xMISS |             0 |             N/A |              0 |                  N/A |     N/A
+  44 |            0 |             N/A |             0 |                  N/A |         16204 |      [4L] 4xHIT |          16283 | [32L] 29xHIT,3xHIT_RES |     N/A
+  45 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  46 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  47 |        21472 |     [4L] 4xMISS |         22003 | [32L] 22xHIT,8xHIT_RES,2xMISS |             0 |             N/A |              0 |                  N/A |     N/A
+  48 |            0 |             N/A |             0 |                  N/A |         16610 |  [4L] 4xHIT_RES |          16717 | [32L] 22xHIT,10xHIT_RES |     N/A
+  49 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  50 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  51 |        22512 |     [4L] 4xMISS |         23057 | [32L] 22xHIT,8xHIT_RES,2xMISS |             0 |             N/A |              0 |                  N/A |     N/A
+  52 |            0 |             N/A |             0 |                  N/A |         17320 |      [4L] 4xHIT |          17381 | [32L] 30xHIT,2xHIT_RES |     N/A
+  53 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  54 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  55 |        23568 |     [4L] 4xMISS |         24093 | [32L] 27xHIT,5xHIT_RES |             0 |             N/A |              0 |                  N/A |     N/A
+  56 |            0 |             N/A |             0 |                  N/A |         17556 |  [4L] 4xHIT_RES |          17813 | [32L] 27xHIT,5xHIT_RES |     N/A
+  57 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  58 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  59 |        24569 |     [4L] 4xMISS |         25141 |         [32L] 32xHIT |             0 |             N/A |              0 |                  N/A |     N/A
+  60 |            0 |             N/A |             0 |                  N/A |         18260 |      [4L] 4xHIT |          18358 |         [32L] 32xHIT |     N/A
+  61 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  62 |            0 |             N/A |             0 |                  N/A |             0 |             N/A |              0 |                  N/A |     N/A
+  63 |        25227 |     [4L] 4xMISS |         25777 |         [32L] 32xHIT |             0 |             N/A |              0 |                  N/A |     N/A
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+  avg baseline latency=580.0, avg GRASP latency=580.0, overall speedup=1.00x

@@ -1,0 +1,127 @@
+WARNING: iteration count mismatch: baseline=120, grasp=126. Showing min(120).
+=== Warp 3, Baseline vs GRASP (120 iterations) ===
+
+iter | base_idx_cyc |     base_idx_L1 | base_data_cyc |         base_data_L1 | grasp_idx_cyc |    grasp_idx_L1 | grasp_data_cyc |        grasp_data_L1 | speedup
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+   0 |       542814 |   [19L] 19xMISS |        546634 | [17L] 14xMISS,2xHIT,1xHIT_RES |        542814 |   [19L] 19xMISS |         546634 | [17L] 14xMISS,2xHIT,1xHIT_RES |   1.00x
+   1 |       549488 | [12L] 7xHIT,5xMISS |        550027 | [12L] 6xMISS,4xHIT,2xHIT_RES |        549488 | [12L] 7xHIT,3xHIT_RES,2xMISS |         550097 |   [12L] 6xHIT,6xMISS |   0.67x
+   2 |       551464 |      [5L] 5xHIT |        551513 |    [4L] 2xHIT,2xMISS |        552046 |      [5L] 5xHIT |         552093 |           [4L] 4xHIT |  12.15x
+   3 |       552681 | [17L] 15xHIT,2xMISS |        553280 |   [17L] 9xMISS,8xHIT |        552731 | [17L] 15xHIT,2xMISS |         553355 | [17L] 8xMISS,8xHIT,1xHIT_RES |   0.97x
+   4 |       560277 | [14L] 13xHIT,1xMISS |        560965 |  [14L] 10xMISS,4xHIT |        560550 |    [14L] 14xHIT |         561077 |  [14L] 10xMISS,4xHIT |   0.98x
+   5 |       567363 | [12L] 11xHIT,1xMISS |        567414 |   [12L] 6xMISS,6xHIT |        567981 |    [12L] 12xHIT |         568032 |         [12L] 12xHIT |   2.81x
+   6 |       573586 |      [7L] 7xHIT |        574108 |    [7L] 4xHIT,3xMISS |        570583 |      [7L] 7xHIT |         570632 |           [7L] 7xHIT |   2.54x
+   7 |       579204 |      [4L] 4xHIT |        579250 |    [4L] 3xHIT,1xMISS |        573160 |      [4L] 4xHIT |         573206 |           [4L] 4xHIT |   2.64x
+   8 |       582060 |      [1L] 1xHIT |        582105 |           [1L] 1xHIT |        574613 |      [1L] 1xHIT |         574658 |           [1L] 1xHIT |   1.00x
+   9 |       620635 |   [17L] 17xMISS |             0 |                  N/A |        606036 |   [17L] 17xMISS |              0 |                  N/A |     N/A
+  10 |       621575 |     [3L] 3xMISS |        630947 |        [20L] 20xMISS |        607653 |     [3L] 3xMISS |         616519 | [20L] 19xMISS,1xHIT_RES |   1.14x
+  11 |       649138 |   [14L] 14xMISS |        649831 |  [13L] 11xMISS,2xHIT |        633525 |   [14L] 14xMISS |         634189 | [13L] 9xMISS,2xHIT_RES,2xHIT |   0.75x
+  12 |       652461 | [7L] 6xHIT,1xMISS |        652717 |          [7L] 7xMISS |        638863 | [7L] 4xMISS,2xHIT_RES,1xHIT |         639127 |    [7L] 6xMISS,1xHIT |   0.52x
+  13 |       655105 |   [16L] 16xMISS |        656619 |  [16L] 11xMISS,5xHIT |        643703 |   [16L] 16xMISS |         644622 |  [16L] 11xMISS,5xHIT |   1.35x
+  14 |       674240 |      [8L] 8xHIT |        675549 |    [8L] 6xMISS,2xHIT |        657298 | [8L] 6xHIT,2xMISS |         658852 |    [8L] 6xMISS,2xHIT |   0.73x
+  15 |       685946 | [5L] 3xHIT,2xMISS |        685994 |    [5L] 3xMISS,2xHIT |        675011 |      [5L] 5xHIT |         676606 |    [5L] 3xMISS,2xHIT |   0.64x
+  16 |       694711 |      [2L] 2xHIT |        695235 |    [2L] 1xHIT,1xMISS |        688311 |      [2L] 2xHIT |         688362 |           [2L] 2xHIT |   2.31x
+  17 |       695979 |      [1L] 1xHIT |        696024 |           [1L] 1xHIT |        688891 |      [1L] 1xHIT |         688938 |           [1L] 1xHIT |   2.18x
+  18 |       696768 |      [1L] 1xHIT |        697437 |           [1L] 1xHIT |        689292 |      [1L] 1xHIT |         689461 |           [1L] 1xHIT |   1.75x
+  19 |       790127 |   [11L] 11xMISS |             0 |                  N/A |        741900 |   [11L] 11xMISS |              0 |                  N/A |     N/A
+  20 |       791105 |     [7L] 7xMISS |        800541 | [18L] 14xMISS,4xHIT_RES |        742647 |    [1L] 1xRFAIL |              0 |                  N/A |     N/A
+  21 |       813438 |     [9L] 9xMISS |        814130 | [9L] 7xMISS,2xHIT_RES |        742948 |     [7L] 7xMISS |         751070 |        [18L] 18xMISS |   0.22x
+  22 |       817346 | [2L] 1xMISS,1xHIT |        817856 |    [2L] 1xHIT,1xMISS |        766985 |     [9L] 9xMISS |         767655 |          [9L] 9xMISS |   0.33x
+  23 |       818153 |   [14L] 14xMISS |        818996 |  [14L] 11xMISS,3xHIT |        769972 | [2L] 1xMISS,1xHIT |         771925 |           [2L] 2xHIT |   8.57x
+  24 |       835495 | [9L] 8xMISS,1xHIT |        835544 | [9L] 7xMISS,1xHIT_RES,1xHIT |        772010 |   [14L] 14xMISS |         773674 |  [14L] 12xMISS,2xHIT |   0.88x
+  25 |       850096 |      [7L] 7xHIT |        850958 |    [7L] 4xHIT,3xMISS |        788358 | [9L] 6xHIT,3xMISS |         788407 | [9L] 7xMISS,1xHIT_RES,1xHIT |   0.78x
+  26 |       862737 | [2L] 1xHIT,1xMISS |        862782 | [2L] 1xMISS,1xHIT_RES |        804573 |      [7L] 7xHIT |         806332 |    [7L] 4xHIT,3xMISS |   0.09x
+  27 |       880620 |   [20L] 20xMISS |        882492 | [18L] 9xMISS,7xHIT,2xHIT_RES |        821252 |      [2L] 2xHIT |         821297 |           [2L] 2xHIT |   8.44x
+  28 |       884363 | [9L] 8xHIT,1xMISS |        884876 | [7L] 3xMISS,2xHIT_RES,2xHIT |        829329 | [20L] 11xHIT_RES,9xMISS |         832116 | [18L] 17xMISS,1xHIT_RES |   0.19x
+  29 |       886538 |      [5L] 5xHIT |        886585 |    [5L] 3xMISS,2xHIT |        835763 |      [9L] 9xHIT |         835810 |           [7L] 7xHIT |  11.60x
+  30 |       887183 |    [25L] 25xHIT |        887835 | [25L] 14xMISS,10xHIT,1xHIT_RES |        837173 | [25L] 22xMISS,3xHIT_RES |         837220 | [25L] 15xMISS,9xHIT,1xHIT_RES |   0.29x
+  31 |       898430 | [18L] 17xHIT,1xMISS |        899522 |   [18L] 9xMISS,9xHIT |        875749 | [18L] 12xHIT,6xMISS |         879598 | [18L] 8xHIT,8xMISS,2xHIT_RES |   0.62x
+  32 |       918077 |    [12L] 12xHIT |        919950 |   [12L] 7xMISS,5xHIT |        907351 |    [12L] 12xHIT |         910097 | [12L] 7xMISS,4xHIT,1xHIT_RES |   0.41x
+  33 |       926438 | [8L] 7xHIT,1xMISS |        929247 |          [8L] 8xMISS |        926965 |      [8L] 8xHIT |         927012 |    [8L] 5xMISS,3xHIT |   2.75x
+  34 |       944305 |      [3L] 3xHIT |        944819 |          [3L] 3xMISS |        933506 |      [3L] 3xHIT |         933552 |    [3L] 2xMISS,1xHIT |   2.09x
+  35 |       950990 |      [1L] 1xHIT |        951835 |           [1L] 1xHIT |        936725 |      [1L] 1xHIT |         936770 |           [1L] 1xHIT |   5.21x
+  36 |       953928 |      [1L] 1xHIT |        953973 |          [1L] 1xMISS |        937330 |      [1L] 1xHIT |         937376 |       [1L] 1xHIT_RES |   2.89x
+  37 |       956144 |      [1L] 1xHIT |        957050 |           [1L] 1xHIT |        939394 |      [1L] 1xHIT |         939439 |           [1L] 1xHIT |   1.01x
+  38 |       958536 |      [1L] 1xHIT |        958585 |          [1L] 1xMISS |        941751 |      [1L] 1xHIT |         941796 |           [1L] 1xHIT |  10.02x
+  39 |       961696 |      [1L] 1xHIT |        962207 |          [1L] 1xMISS |        942113 |      [1L] 1xHIT |         943300 |           [1L] 1xHIT |   0.75x
+  40 |       965037 |      [1L] 1xHIT |        965082 |          [1L] 1xMISS |        946530 |      [1L] 1xHIT |         946575 |       [1L] 1xHIT_RES |   2.29x
+  41 |       966268 |      [1L] 1xHIT |        966784 |          [1L] 1xMISS |        947230 |      [1L] 1xHIT |         947276 |           [1L] 1xHIT |   7.07x
+  42 |      1103241 |   [14L] 14xMISS |             0 |                  N/A |       1025583 |   [18L] 18xMISS |              0 |                  N/A |     N/A
+  43 |      1103542 |     [4L] 4xMISS |             0 |                  N/A |       1026492 |     [2L] 2xMISS |        1034270 |        [20L] 20xMISS |     N/A
+  44 |      1104264 |     [2L] 2xMISS |       1113000 | [20L] 19xMISS,1xHIT_RES |       1056838 | [13L] 12xMISS,1xHIT |        1057955 | [13L] 9xMISS,3xHIT,1xHIT_RES |   2.75x
+  45 |      1134716 |   [13L] 13xMISS |       1135866 | [13L] 8xMISS,4xHIT,1xHIT_RES |       1063989 | [6L] 4xMISS,2xHIT_RES |        1064261 |    [6L] 5xMISS,1xHIT |   1.64x
+  46 |      1141095 |     [6L] 6xMISS |       1141680 |    [6L] 5xMISS,1xHIT |       1071336 |   [16L] 16xMISS |        1074770 |  [16L] 14xMISS,2xHIT |   0.09x
+  47 |      1148973 |   [16L] 16xMISS |       1152059 |  [16L] 14xMISS,2xHIT |       1111754 | [12L] 6xMISS,6xHIT_RES |        1114440 |        [12L] 12xMISS |   1.26x
+  48 |      1189969 | [12L] 6xMISS,6xHIT |       1192220 |        [12L] 12xMISS |       1145566 |      [6L] 6xHIT |        1146719 |    [6L] 3xMISS,3xHIT |   1.18x
+  49 |      1213093 |      [6L] 6xHIT |       1215726 |    [6L] 4xMISS,2xHIT |       1164912 |      [3L] 3xHIT |        1164959 |           [3L] 3xHIT |   5.56x
+  50 |      1228189 | [3L] 2xHIT,1xMISS |       1228238 |          [3L] 3xMISS |       1168113 |      [1L] 1xHIT |        1168159 |           [1L] 1xHIT |   4.54x
+  51 |      1237760 |      [1L] 1xHIT |       1237805 |          [1L] 1xMISS |       1170140 |  [1L] 1xHIT_RES |        1170185 |       [1L] 1xHIT_RES |   9.31x
+  52 |      1241832 |     [1L] 1xMISS |       1241877 |          [1L] 1xMISS |       1209197 | [25L] 13xMISS,12xHIT_RES |        1212420 | [25L] 22xMISS,2xHIT,1xHIT_RES |   0.45x
+  53 |      1297242 |   [25L] 25xMISS |       1300649 |  [25L] 23xMISS,2xHIT |       1219555 |   [15L] 15xMISS |        1222424 |  [13L] 10xMISS,3xHIT |   0.87x
+  54 |      1309196 |   [15L] 15xMISS |       1312169 |  [13L] 10xMISS,3xHIT |       1230004 |     [8L] 8xMISS |        1230628 |    [8L] 7xMISS,1xHIT |   1.36x
+  55 |      1316122 |      [8L] 8xHIT |       1316170 |    [8L] 7xMISS,1xHIT |       1236192 |   [19L] 19xMISS |        1239225 |  [19L] 15xMISS,4xHIT |   0.06x
+  56 |      1319083 | [19L] 15xHIT,4xMISS |       1322272 |  [19L] 17xMISS,2xHIT |       1272515 | [14L] 11xHIT,2xHIT_RES,1xMISS |        1274790 |        [14L] 14xMISS |   0.93x
+  57 |      1341734 | [14L] 12xHIT,2xMISS |       1343422 |        [14L] 14xMISS |       1299667 |    [10L] 10xHIT |        1300674 |        [10L] 10xMISS |   1.71x
+  58 |      1360224 | [10L] 8xHIT,2xMISS |       1361397 |        [10L] 10xMISS |       1310756 |      [7L] 7xHIT |        1310841 |    [7L] 6xMISS,1xHIT |   1.01x
+  59 |      1369435 | [7L] 6xHIT,1xMISS |       1369482 |    [7L] 6xMISS,1xHIT |       1322076 |  [1L] 1xHIT_RES |        1322121 |          [1L] 1xMISS |   1.62x
+  60 |      1375810 |     [1L] 1xMISS |       1375855 |          [1L] 1xMISS |       1402040 |   [20L] 20xMISS |        1406402 | [20L] 17xMISS,3xHIT_RES |   0.26x
+  61 |      1445164 |   [22L] 22xMISS |       1448944 |  [22L] 21xMISS,1xHIT |       1415553 |     [9L] 9xMISS |        1419219 |          [9L] 9xMISS |   0.94x
+  62 |      1455742 |   [14L] 14xMISS |       1457062 |        [14L] 14xMISS |       1423708 |     [3L] 3xMISS |        1424377 |          [3L] 3xMISS |   0.95x
+  63 |      1461076 | [7L] 6xHIT,1xMISS |       1461828 |          [7L] 7xMISS |       1427771 |   [19L] 19xMISS |        1430847 |        [19L] 19xMISS |   0.15x
+  64 |      1469686 | [18L] 16xHIT,2xMISS |       1473243 |        [18L] 18xMISS |       1458666 |    [15L] 15xHIT |        1461279 |        [15L] 15xMISS |   1.47x
+  65 |      1494069 |      [6L] 6xHIT |       1494116 |          [6L] 6xMISS |       1475595 |      [7L] 7xHIT |        1475643 |           [7L] 7xHIT |  10.73x
+  66 |      1504945 |      [3L] 3xHIT |       1506000 |          [3L] 3xMISS |       1476604 |      [5L] 5xHIT |        1476651 |           [5L] 5xHIT |   3.30x
+  67 |      1514082 |      [2L] 2xHIT |       1514128 |    [2L] 1xMISS,1xHIT |       1479240 |      [3L] 3xHIT |        1479286 |    [3L] 2xMISS,1xHIT |   0.96x
+  68 |      1519792 |      [1L] 1xHIT |       1519837 |          [1L] 1xMISS |       1484617 |      [2L] 2xHIT |        1484663 |           [2L] 2xHIT |   1.31x
+  69 |      1635872 |   [19L] 19xMISS |       1640664 |        [19L] 19xMISS |       1486882 |      [1L] 1xHIT |        1486927 |       [1L] 1xHIT_RES |  15.33x
+  70 |      1646066 | [12L] 10xHIT,2xMISS |       1646713 |  [12L] 11xMISS,1xHIT |       1489906 |      [1L] 1xHIT |        1489951 |           [1L] 1xHIT |   4.34x
+  71 |      1649611 | [8L] 7xHIT,1xMISS |       1650318 |          [8L] 8xMISS |       1490473 |      [1L] 1xHIT |        1490518 |           [1L] 1xHIT |   2.06x
+  72 |      1652481 | [16L] 13xHIT,3xMISS |       1657338 |  [16L] 13xMISS,3xHIT |       1553546 | [20L] 14xMISS,6xHIT_RES |        1556535 |        [20L] 20xMISS |   2.92x
+  73 |      1671846 | [12L] 10xHIT,2xMISS |       1672604 |        [12L] 12xMISS |       1559747 | [7L] 6xHIT,1xMISS |        1562242 |    [7L] 4xMISS,3xHIT |   2.47x
+  74 |      1684635 | [5L] 4xHIT,1xMISS |       1684681 |          [5L] 5xMISS |       1565822 |    [20L] 20xHIT |        1565869 |  [20L] 16xMISS,4xHIT |   0.27x
+  75 |      1690439 | [5L] 4xHIT,1xMISS |       1693233 |    [5L] 4xMISS,1xHIT |       1584127 |      [7L] 7xHIT |        1584175 |           [7L] 7xHIT |   2.96x
+  76 |      1707855 |      [1L] 1xHIT |       1707900 |          [1L] 1xMISS |       1589750 |      [3L] 3xHIT |        1591291 |           [3L] 3xHIT |   0.72x
+  77 |      1723844 |   [25L] 25xMISS |       1727377 |        [25L] 25xMISS |       1595625 |      [1L] 1xHIT |        1595670 |          [1L] 1xMISS |   0.47x
+  78 |      1731687 | [17L] 14xHIT,3xMISS |       1733923 |  [17L] 16xMISS,1xHIT |       1644630 | [20L] 11xHIT_RES,9xMISS |        1648614 |        [20L] 20xMISS |   0.66x
+  79 |      1743839 |     [6L] 6xMISS |       1744098 |          [6L] 6xMISS |       1656277 |     [8L] 8xMISS |        1657359 |    [8L] 5xHIT,3xMISS |   0.60x
+  80 |      1746572 |    [12L] 12xHIT |       1749183 |  [12L] 11xMISS,1xHIT |       1662222 |      [5L] 5xHIT |        1662278 |          [5L] 5xMISS |   2.85x
+  81 |      1760159 | [6L] 5xHIT,1xMISS |       1761397 |    [6L] 5xMISS,1xHIT |       1667407 | [17L] 14xMISS,3xHIT_RES |        1669194 |        [17L] 17xMISS |   0.34x
+  82 |      1769734 |      [2L] 2xHIT |       1769779 |          [2L] 2xMISS |       1693475 |    [14L] 14xHIT |        1697213 |  [14L] 13xMISS,1xHIT |   0.25x
+  83 |      1774835 | [2L] 1xHIT,1xMISS |       1774881 |          [2L] 2xMISS |       1714282 |    [10L] 10xHIT |        1714329 |        [10L] 10xMISS |   0.32x
+  84 |      1844499 |   [22L] 22xMISS |       1847247 |  [22L] 21xMISS,1xHIT |       1726302 |      [6L] 6xHIT |        1726349 |    [6L] 3xMISS,3xHIT |   0.52x
+  85 |      1853586 |    [10L] 10xHIT |       1853637 |   [10L] 9xMISS,1xHIT |       1735920 |      [3L] 3xHIT |        1735965 |    [3L] 2xHIT,1xMISS |   0.25x
+  86 |      1856362 | [5L] 3xHIT,2xMISS |       1858377 |          [5L] 5xMISS |       1744742 |      [3L] 3xHIT |        1744787 |           [3L] 3xHIT |   0.71x
+  87 |      1859796 | [13L] 11xHIT,2xMISS |       1860845 |        [13L] 13xMISS |       1755892 | [19L] 17xMISS,1xHIT_RES,1xRFAIL |              0 |                  N/A |     N/A
+  88 |      1873070 | [9L] 8xHIT,1xMISS |       1873589 |          [9L] 9xMISS |       1756193 |     [5L] 5xMISS |        1761647 | [23L] 20xMISS,2xHIT_RES,1xHIT |   1.70x
+  89 |      1892607 | [3L] 2xHIT,1xMISS |       1892652 |          [3L] 3xMISS |       1773518 | [9L] 5xHIT_RES,4xMISS |        1775677 | [9L] 8xMISS,1xHIT_RES |   2.29x
+  90 |      1903359 |      [2L] 2xHIT |       1903406 |          [2L] 2xMISS |       1782563 |     [4L] 4xMISS |        1783162 |          [4L] 4xMISS |   4.27x
+  91 |      1908741 |      [1L] 1xHIT |       1908786 |          [1L] 1xMISS |       1784983 | [13L] 10xHIT,3xMISS |        1787725 |  [13L] 12xMISS,1xHIT |   0.39x
+  92 |      1917775 |      [1L] 1xHIT |       1917820 |          [1L] 1xMISS |       1807274 |      [5L] 5xHIT |        1807322 |    [5L] 4xMISS,1xHIT |   0.46x
+  93 |      1928618 |   [20L] 20xMISS |       1931789 |  [20L] 18xMISS,2xHIT |       1867647 |   [18L] 18xMISS |        1870872 |        [18L] 18xMISS |   0.81x
+  94 |      1935990 | [11L] 10xHIT,1xMISS |       1936709 |  [11L] 10xMISS,1xHIT |       1882865 |     [9L] 9xMISS |              0 |                  N/A |     N/A
+  95 |      1940358 |      [7L] 7xHIT |       1940405 |          [7L] 7xMISS |       1883518 |    [1L] 1xRFAIL |              0 |                  N/A |     N/A
+  96 |      1941997 |    [13L] 13xHIT |       1942885 |  [13L] 12xMISS,1xHIT |       1883819 |     [1L] 1xMISS |        1885315 |        [10L] 10xMISS |   1.26x
+  97 |      1950449 | [6L] 5xHIT,1xMISS |       1952006 |          [6L] 6xMISS |       1894296 | [3L] 2xMISS,1xHIT_RES |        1896476 |          [3L] 3xMISS |   2.35x
+  98 |      1963849 |      [3L] 3xHIT |       1963895 |          [3L] 3xMISS |       1904957 |      [9L] 9xHIT |        1908321 |    [9L] 8xMISS,1xHIT |   0.47x
+  99 |      1992860 |   [17L] 17xMISS |       1995433 |  [17L] 16xMISS,1xHIT |       1926426 | [6L] 4xHIT,2xMISS |        1927099 |          [6L] 6xMISS |   0.47x
+ 100 |      2000531 | [11L] 7xHIT,4xMISS |       2002058 |  [11L] 10xMISS,1xHIT |       1940621 |      [4L] 4xHIT |        1944559 |          [4L] 4xMISS |   0.18x
+ 101 |      2005265 | [5L] 4xHIT,1xMISS |       2007851 |    [5L] 3xHIT,2xMISS |       1956853 |      [2L] 2xHIT |        1956898 |           [2L] 2xHIT |   0.69x
+ 102 |      2009705 | [7L] 6xHIT,1xMISS |       2011906 |    [7L] 4xMISS,3xHIT |       1962979 |      [1L] 1xHIT |        1963026 |           [1L] 1xHIT |  11.53x
+ 103 |      2019926 | [2L] 1xHIT,1xMISS |       2019971 |    [2L] 1xHIT,1xMISS |       1963870 |      [1L] 1xHIT |        1964233 |           [1L] 1xHIT |   2.83x
+ 104 |      2026680 |      [1L] 1xHIT |       2026725 |          [1L] 1xMISS |       1974770 |   [17L] 17xMISS |        1978665 | [17L] 16xMISS,1xHIT_RES |   0.40x
+ 105 |      2050532 |   [21L] 21xMISS |       2053568 | [21L] 14xMISS,5xHIT,2xHIT_RES |       1988560 | [12L] 11xMISS,1xHIT |        1990999 |        [12L] 12xMISS |   0.62x
+ 106 |      2056543 | [11L] 9xHIT,2xMISS |       2057239 |   [11L] 6xHIT,5xMISS |       1998149 | [5L] 3xHIT_RES,2xHIT |        1999188 |    [5L] 4xMISS,1xHIT |   0.45x
+ 107 |      2058364 | [8L] 7xHIT,1xMISS |       2058883 |    [8L] 5xHIT,3xMISS |       2001505 | [8L] 7xHIT,1xMISS |        2005065 |          [8L] 8xMISS |   0.05x
+ 108 |      2059537 | [18L] 15xHIT,3xMISS |       2060494 |   [18L] 9xHIT,9xMISS |       2023597 |      [4L] 4xHIT |        2023643 |          [4L] 4xMISS |   0.38x
+ 109 |      2069448 |    [10L] 10xHIT |       2069966 |   [10L] 5xHIT,5xMISS |       2048328 | [3L] 2xHIT,1xHIT_RES |        2048373 |          [3L] 3xMISS |   0.57x
+ 110 |      2075508 | [5L] 4xHIT,1xMISS |       2075556 |    [5L] 3xMISS,2xHIT |       2057916 |      [1L] 1xHIT |        2057961 |          [1L] 1xMISS |   1.21x
+ 111 |      2080875 |      [1L] 1xHIT |       2080920 |          [1L] 1xMISS |       2067844 |   [17L] 17xMISS |        2072667 |        [17L] 17xMISS |   0.47x
+ 112 |      2125392 |   [15L] 15xMISS |             0 |                  N/A |       2080956 |     [9L] 9xMISS |        2082541 | [9L] 7xMISS,1xHIT_RES,1xHIT |     N/A
+ 113 |      2126246 |     [5L] 5xMISS |       2131057 | [18L] 16xMISS,2xHIT_RES |       2089309 |      [3L] 3xHIT |        2089354 |          [3L] 3xMISS |   3.45x
+ 114 |      2137609 | [17L] 14xHIT,3xMISS |       2138193 |  [17L] 13xMISS,4xHIT |       2091742 | [7L] 5xHIT,2xHIT_RES |        2095486 |          [7L] 7xMISS |   0.06x
+ 115 |      2140020 | [10L] 8xHIT,2xMISS |       2140609 | [10L] 8xMISS,1xHIT_RES,1xHIT |       2115891 |      [2L] 2xHIT |        2115936 |           [2L] 2xHIT |   0.20x
+ 116 |      2142285 | [10L] 9xHIT,1xMISS |       2142922 |   [10L] 9xHIT,1xMISS |       2179700 |     [9L] 9xMISS |              0 |                  N/A |     N/A
+ 117 |      2147998 | [6L] 4xHIT,2xMISS |       2148523 | [5L] 3xHIT,1xMISS,1xHIT_RES |       2180101 |     [6L] 6xMISS |              0 |                  N/A |     N/A
+ 118 |      2153348 |      [1L] 1xHIT |       2153393 |          [1L] 1xMISS |       2180886 | [5L] 4xMISS,1xRFAIL |              0 |                  N/A |     N/A
+ 119 |      2154847 |      [1L] 1xHIT |       2154892 |          [1L] 1xMISS |       2181187 |     [1L] 1xMISS |        2185103 | [18L] 11xMISS,5xHIT_RES,2xHIT |   0.30x
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+  avg baseline latency=7017.5, avg GRASP latency=8757.6, overall speedup=0.80x

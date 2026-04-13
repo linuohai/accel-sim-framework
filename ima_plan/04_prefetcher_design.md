@@ -142,7 +142,7 @@
                           ┌─────────────────────────────────┐
                           │    Chain Detector (CD)           │
     指令流 ───────────────→│    (decode/issue 阶段)          │
-    (PC, opcode,          │                                 │
+    (PC, opcode,          │    2 tracked warps, FIFO=20     │
      registers)           │  追踪 LDG→IMAD.WIDE→LDG 依赖   │
                           └──────┬───────────┬──────────────┘
                                  │           │
@@ -197,14 +197,14 @@
 | 缩写 / 名称 | 全称 | 在 GRASP 中的作用 |
 |-------------|------|-------------------|
 | `GRASP` | GPU Register-chain Aware Sector Prefetcher | 本工作的 GPU IMA 预取器总名，通过寄存器依赖链和两阶段 pipeline 实现 L2→L1 的 IMA 预取 |
-| `CD` | Chain Detector | 在 issue/decode 阶段检测 `LDG→IMAD.WIDE→LDG` 依赖链，识别哪些 load 是 IMA index load |
+| `CD` | Chain Detector | 在 issue/decode 阶段用 **2 tracked warps** 的 FIFO（depth=20）检测 `LDG→IMAD.WIDE→LDG` 依赖链，识别哪些 load 是 IMA index load |
 | `CT` | Chain Table | 以 `index_load_PC` 为 key 记录 IMA 链信息，包括 `data_load_PC`、`tt_idx[]`、`iter_stride` 等 |
 | `TT` | Target Table | 存储 target array 的 `(base_addr, scale)`，供 data 地址计算与 one-to-many target 映射使用 |
 | `IPU` | Index Prefetch Unit | 在 index load 发出时，根据 `iter_stride` 发出下一轮 index prefetch，并分配 PRB 条目 |
 | `DPU` | Data Prefetch Unit | 在 index prefetch 返回后，读取 target 参数并发出 data prefetch 请求 |
 | `TC` | Throttle Controller | 对预取发出进行节流与门控；当前核心门控条件是 `stride_valid`，后续可扩展 accuracy / 带宽监控 |
-| `IST` | Iteration Stride Tracker | 按 PC 学习跨 outer iteration 的地址步长，为 IPU 提供 `iter_stride` |
-| `PRB` | Prefetch Request Buffer | 跟踪在途 index prefetch，保存 `tt_idx[]`、`num_targets` 和 `remaining_sectors` 等状态 |
+| `IST` | Iteration Stride Tracker | CT 扩展功能：任意 warp 的 demand load 均可参与 per-PC stride 学习，首个 warp 第 2 次访问时确定 `iter_stride` |
+| `PRB` | Prefetch Request Buffer | 跟踪在途 index prefetch。软件仿真存 `tt_idx[]` 快照；硬件仅存 `ct_idx`（见 §7.1） |
 | `ACU` | Address Computation Unit | 将返回的 index 值转换为 `base + value × scale` 的 data 地址，驱动 data-side 预取 |
 | `FIFO` | Register FIFO | CD 使用的小型寄存器依赖追踪队列，用于暂存最近的 `LDG` / `IMAD.WIDE` 关系 |
 | `Response FIFO` | Response FIFO | 缓冲 L1 返回的 index prefetch sector 响应，避免返回带宽高于 ACU 吞吐时出现拥堵 |
@@ -217,17 +217,17 @@
 
 用于将 PC 分类为"IMA index load"或"普通 load"。
 
-| 字段 | 大小 | 说明 |
-|------|------|------|
-| **key** | 32 bit | `index_load_PC` |
-| **data_load_PC** | 32 bit | 对应的 data load 的 PC |
-| **IMAD_PC** | 32 bit | 依赖链中 IMAD.WIDE 的 PC |
-| **tt_idx[K]** | K×4 bit | 指向 TT 的索引（最多 K=3 个 target array），替代原先存储的 scale/data_base（建表时从 IMAD.WIDE 操作数实时获取，无需持久化） |
-| **num_targets** | 2 bit | 当前已发现的 target 数量（0..K），用于 one-to-many 累积检测 |
-| **tracked_warp_id** | — | SM 级共享的 tracked warp（6 bit），与 Chain Detector (CD) FIFO 共用同一 warp。存储在 SM 全局状态中，不占用 per-entry 空间 |
-| **last_addr** | 64 bit | 该代表 warp 上次触发此 PC 的地址 |
-| **iter_stride** | 32 bit | 学到的 iteration stride，单位 bytes |
-| **stride_valid** | 1 bit | stride 是否已学到 |
+| 字段 | 大小 | 硬件持久化 | 说明 |
+|------|------|:---------:|------|
+| **key** | 24 bit (tag) | ✅ | `index_load_PC`，CT 唯一 key，demand load 匹配用 |
+| **data_load_PC** | 32 bit | ❌ | CD 检测阶段使用，不存入 CT（data prefetch 通过 TT 完成） |
+| **IMAD_PC** | 32 bit | ❌ | CD 检测阶段提取 (base, scale) 写入 TT 后即完成使命，不存入 CT |
+| **tt_idx[K]** | ceil(log₂TT)×K bit | ✅ | 指向 TT 的索引（最多 K=3 个 target array），建表时从 IMAD.WIDE 操作数实时获取 |
+| **num_targets** | 2 bit | ✅ | 当前已发现的 target 数量（0..K），用于 one-to-many 累积检测 |
+| **tracked_warp_id** | — | SM 全局 | SM 级共享的 tracked warp（6 bit），不占用 per-entry 空间 |
+| **stride_obs[2]** | 2×38 bit | ✅ | 2 个 observation slot：{warp_id(6b), first_addr(32b)}，任意 warp 首次访问记录地址 |
+| **iter_stride** | 16 bit | ✅ | 学到的 iteration stride，单位 bytes |
+| **stride_valid** | 1 bit | ✅ | stride 是否已学到 |
 
 **淘汰策略**：当 CT 满且需插入新 entry 时，优先驱逐 `stride_valid == false` 的 entry。理由：`stride_valid == false` 意味着该 PC 要么是前序代码（只执行一次，stride 永不收敛），要么是刚写入尚未完成学习的 entry。前者永远不产生 prefetch，是 CT 的"死 entry"；后者重新写入后会重新学习，代价仅为延迟一个 iteration。若所有 entry 均 `stride_valid == true`，回退到标准 LRU 淘汰。
 
@@ -332,6 +332,8 @@ BFS 实测数据（`bfs_ima_small`, 1SM+CTA5）：44.5% 的 index load coalesce 
 | 未来 mask 是否预测 | 不预测 | 条件分支（如 BFS `if dists[dst] == INF`）使未来 mask 不可知 |
 | 浪费如何处理 | 由 throttle 消化 | 少数 lane 的 prefetch 可能无用，但代价可控 |
 
+**Deduplication**：A100 L1 以 32B sector 为操作单位，一条 warp 的 demand load 可能触发多个 sector 请求（如 128B cache line = 4 sectors）。Prefetcher 必须对同一 warp 指令的多个 sector 去重——否则同一 index load 的每个 sector 都会重复触发 stride learning 和 prefetch generation。实现中通过 per-warp 的 `(ct_idx, inst_uid)` 去重，确保每条 warp 指令仅触发一次 prefetch generation。此外，per-lane 地址去重（多个 lane 预测相同 byte address）和 sector 级合并（多 lane → 同一 data sector）进一步减少冗余请求。
+
 **Prefetcher 作为 L1 Client**：Prefetcher 是 L1 cache 的一个独立 client，与 warp demand load 平级。请求通过独立端口发送，不与 demand load 竞争发射带宽。L1 对 prefetcher 请求和 demand 请求使用相同的 tag check → MSHR → fill 流程，但响应路径不同：index prefetch 的响应需要携带数据返回给 prefetcher（用于 Step 2 地址计算），而 data prefetch 是 fire-and-forget。
 
 **Prefetch 与 L1 Cache 的交互流程**（区分 index prefetch 和 data prefetch）：
@@ -341,9 +343,9 @@ BFS 实测数据（`bfs_ima_small`, 1SM+CTA5）：44.5% 的 index load coalesce 
 | **HIT** | L1 返回 {prb_entry_id, sector_data[32B], element_mask[8bit]} 给 prefetcher | 丢弃（数据已在 L1），仅更新 LRU |
 | **MISS, MSHR 有匹配** | 合并到现有 MSHR entry（携带 prb_entry_id） | 合并到现有 MSHR entry |
 | **MISS, MSHR 无匹配** | 分配新 MSHR entry（携带 prb_entry_id），向 L2 发出 fill request；fill 后数据返回给 prefetcher | 分配新 MSHR entry，向 L2 发出 fill request |
-| **MISS, MSHR 满** | **阻塞等待**，MSHR 有空位后重发 | **丢弃**（fire-and-forget） |
+| **MISS, MSHR 满** (RESERVATION_FAIL) | **放弃该 sector**，标记 RFAIL；对应的 PRB sector 不生成 data prefetch | **丢弃**（fire-and-forget） |
 
-**Index Prefetch 在 MSHR 满时阻塞而非丢弃**：Index prefetch 是Index-Data Pipeline 的 Step 1——如果丢弃，对应的 data prefetch（Step 2）将无法触发，等于浪费了依赖链检测和地址生成的所有工作。反压通过 prefetcher 内部 pipeline stall 实现，不影响 demand load 路径（prefetcher 使用独立的 L1 端口）。Data prefetch 在 MSHR 满时丢弃，因为它是最终步骤，丢弃的代价仅为一次预取机会损失。
+**Index Prefetch 在 MSHR 满时放弃而非阻塞**：初始设计考虑过阻塞等待（保证 Index-Data Pipeline 不断裂），但实现中发现**放弃更优**——阻塞会 stall 整个 prefetch queue（包括后续其他 warp 的请求），导致 prefetch 堆积和时效性下降。放弃仅损失该 sector 对应的 data prefetch 机会；同一 index load 的其他 sector（如果 MSHR 有空位）仍可正常完成。PRB 通过 `remaining_sectors` 计数器跟踪，RFAIL 的 sector 计入已完成但不触发 data prefetch。Data prefetch 在 MSHR 满时同样丢弃——它是最终步骤，丢弃的代价仅为一次预取机会损失。
 
 **MSHR 合并（merge）场景**：当 prefetch 请求的 sector 已有一个 in-flight demand load（另一个 warp 已发出请求），prefetch 不产生额外的 L2 流量——它合并到现有 MSHR entry 中。SM80_A100 的 L1 MSHR 配置为 512 entries（max_merge=64），合并容量充裕。
 
@@ -363,12 +365,12 @@ BFS 实测数据（`bfs_ima_small`, 1SM+CTA5）：44.5% 的 index load coalesce 
 **检测算法伪代码**：
 
 ```python
-# SM 级单一 FIFO（8 entries），仅追踪一个"tracked warp"的寄存器依赖
+# SM 级共享 FIFO（20 entries），追踪 2 个"tracked warps"的寄存器依赖
 # 每条 entry: {dst_reg, type, PC, ima_info?}
 # 查找方式: 在 FIFO 中反向搜索匹配 src_reg 的最新 entry
 #
 # SM 全局状态:
-#   tracked_warp_id: 6 bit (当前被追踪的 warp，UNSET = 无)
+#   tracked_warp_ids[2]: 2×6 bit (当前被追踪的 2 个 warp，UNSET = 无)
 #   tracked_warp_priority: 1 bit (调度器 tie-breaking hint)
 #
 # FIFO entry 结构（~6 bytes）:
@@ -381,8 +383,11 @@ BFS 实测数据（`bfs_ima_small`, 1SM+CTA5）：44.5% 的 index load coalesce 
 # 直接从寄存器文件/指令操作数读取，无需通过 FIFO 间接获取。
 #
 # 设计理由：去除 confidence 后，单次完整链观测即可写入 CT/TT。
-# 无需 64 个 per-warp FIFO 并行检测——单一 tracked warp 的 FIFO 即可
-# 完成所有 IMA 链检测 + stride 学习，硬件开销从 3 KB 降至 ~48 B。
+# 无需 64 个 per-warp FIFO 并行检测——2 个 tracked warp 的共享 FIFO 即可
+# 完成所有 IMA 链检测，硬件开销从 3 KB 降至 ~120 B。
+# 使用 2 个而非 1 个 tracked warp 的原因：单个 warp 可能在首次 outer loop
+# iteration 后即 EXIT（例如 frontier-driven 算法中处理完自己的邻居），
+# 导致 stride 永远学不到。2 个 tracked warp 大幅缓解此问题。
 
 def fifo_lookup(reg):
     """在 tracked warp 的 FIFO 中反向查找最近写入 reg 的 entry"""
@@ -397,14 +402,18 @@ def on_instruction_issue(warp_id, PC, opcode, dst_reg, src_regs, operands):
     if training_frozen:
         return  # 所有 stride 已学到，CD 休眠（省功耗）
 
-    # === 仅追踪 tracked warp 的指令 ===
-    if tracked_warp_id == UNSET:
+    # === 仅追踪 2 个 tracked warp 的指令 ===
+    if not is_tracked_warp(warp_id):
         if opcode == LDG:
-            tracked_warp_id = warp_id  # 首个发出 LDG 的 warp 成为 tracked warp
+            if tracked_warp_ids[0] == UNSET:
+                tracked_warp_ids[0] = warp_id  # 首个发出 LDG 的 warp
+            elif tracked_warp_ids[1] == UNSET and warp_id != tracked_warp_ids[0]:
+                tracked_warp_ids[1] = warp_id  # 第二个（不同 warp）
+            else:
+                return  # 已有 2 个 tracked warp，忽略其他 warp
         else:
             return
-    if warp_id != tracked_warp_id:
-        return  # 非 tracked warp 的指令对 FIFO 不可见
+    # 非 tracked warp 的指令对 FIFO 不可见
 
     # === FIFO Invalidation（两种可选机制，见 §4.1.1）===
     # 默认使用 Read Detection:
@@ -473,12 +482,13 @@ def on_instruction_issue(warp_id, PC, opcode, dst_reg, src_regs, operands):
 
 | 设计要点 | 说明 |
 |---------|------|
-| **为什么单一 FIFO 而非 per-warp** | 去除 confidence 后，单次完整链观测即可写入 CT/TT。无需 64 个 warp 并行检测——单一 tracked warp 即可完成所有 IMA 链发现。Stride learning 同样只需 tracked warp 的两次 PC 命中。统一为单一 FIFO 后，硬件从 3 KB 降至 **~48 B**（1 × 8 × 6B）。 |
-| **为什么用 FIFO 而非全量表** | IMA 依赖链 `LDG→IMAD.WIDE→LDG` 通常跨 3-5 条指令。8-entry FIFO 足以覆盖 unrolled 循环体（BFS unroll×4 = 4 条 LDG + 4 条 IMAD.WIDE = 8 条相关指令）。全量 `[reg]` 表需要追踪 256 个寄存器，绝大部分 entry 永远不会被查到。 |
-| **Tracked warp 选择** | 首个发出 LDG 的 warp 自动成为 tracked warp。所有非 tracked warp 的指令对 FIFO 不可见。Tracked warp EXIT 时清空 FIFO 并重置 tracked_warp_id = UNSET，下一个发出 LDG 的 warp 自动接替。 |
-| **查找方式** | 反向线性搜索 FIFO（8 entries，硬件实现为 8 个并行比较器 + 优先编码器），与 CPU store buffer 的 CAM 查找类似 |
+| **为什么共享 FIFO 而非 per-warp** | 去除 confidence 后，单次完整链观测即可写入 CT/TT。无需 64 个 warp 并行检测——2 个 tracked warp 的共享 FIFO 即可完成所有 IMA 链发现。硬件从 3 KB 降至 **~120 B**（1 × 20 × 6B）。 |
+| **为什么用 FIFO 而非全量表** | IMA 依赖链 `LDG→IMAD.WIDE→LDG` 通常跨 3-5 条指令。20-entry FIFO 足以覆盖 SpMV ×16 展开体（峰值 17 entries，见 FIFO 深度分析）。全量 `[reg]` 表需要追踪 256 个寄存器，绝大部分 entry 永远不会被查到。 |
+| **为什么 2 个 tracked warp** | 单个 tracked warp 可能在首次 outer loop iteration 后即 EXIT（frontier-driven 算法中 warp 处理完邻居即退出），导致 stride 永远学不到。2 个 tracked warp 确保至少有一个完成 stride 学习。FIFO 共享，只处理这 2 个 warp 的指令。 |
+| **Tracked warp 选择** | 前两个发出 LDG 的不同 warp 自动成为 tracked warp。所有非 tracked warp 的指令对 FIFO 不可见。 |
+| **查找方式** | 反向线性搜索 FIFO（20 entries，硬件实现为 20 个并行比较器 + 优先编码器），与 CPU store buffer 的 CAM 查找类似 |
 | **淘汰策略** | 两层淘汰：① 无效化（write-invalidation 或 read-detection，见 §4.1.1）及时清除失效 entry；② FIFO 满时自然淘汰最旧 entry |
-| **存储开销** | 1 × 8 entries × 6B/entry + tracked_warp_id(6b) + priority(1b) ≈ **~49 B/SM**（对比原 per-warp 方案 3 KB，节省 98%） |
+| **存储开销** | 1 × 20 entries × 6B/entry + tracked_warp_ids[2](12b) + priority(1b) ≈ **~122 B/SM**（对比原 per-warp 方案 3 KB，节省 96%） |
 | **只记录相关指令** | 仅 LDG、IMA 相关的 IMAD.WIDE 入 FIFO（IMAD.MOV 不追踪——scale 在 IMAD.WIDE issue 时从 RF 直接读取）；其他指令仅触发无效化检查，不写入 FIFO |
 | **调度器优先 hint** | Tracked warp 标记 1-bit priority hint，调度器在多个 ready warp 间 tie-breaking 时优先选择 tracked warp。不阻塞其他 warp——仅影响 tie-breaking 顺序（参考 CAPS [Koo 2018] 的 PAS 机制） |
 
@@ -530,13 +540,13 @@ FIFO=8 时 col_idx[6-10] 和 col_idx[13-15] 因两波溢出被 DROP（val/x[] da
 | SSSP | ×1/×4 | ~3 | 100% | weight/edge_weight 非 IMA load，间距短 |
 | CC | ×1 | ~2 | 100% | 循环体简单 |
 | BC | ×1 | ~4 | 100% | 条件路径多，每迭代独立 |
-| **SpMV** | **×16** | **17** | **50%** | 48 条 LDG 交错，唯一瓶颈 |
+| **SpMV** | **×16** | **17** | **50%** (FIFO=8) / **100%** (FIFO=20) | 48 条 LDG 交错，FIFO=20 零丢失 |
 
-**实现建议——动态 FIFO + 运行时统计**：
+**实现结果——FIFO=20 + 运行时统计**：
 
-FIFO 深度的最优值取决于编译器的展开策略和寄存器分配，静态分析只能覆盖已知 workload。在模拟器实现时建议采用以下策略：
+FIFO 深度的最优值取决于编译器的展开策略和寄存器分配。实现中采用 FIFO=20 作为默认值（`-cd_fifo_depth 20`），在所有目标 workload 上实现 0% 丢失率，包括 SpMV ×16 的极端场景（峰值=17）。具体策略：
 
-1. **使用可配置深度的 FIFO**：通过参数（如 `-cd_fifo_depth N`）控制深度，默认值设为保守的较大值（如 20），确保所有程序都能正确完成训练
+1. **可配置深度的 FIFO**：通过参数 `-cd_fifo_depth N` 控制深度，默认值 20（SpMV ×16 峰值 17 + 安全裕量 3）
 2. **添加运行时峰值监测**：记录每个 workload 运行期间 FIFO 的 `peak_occupancy` 和 `drop_count`（因 FIFO 满导致的丢弃次数）
 3. **参数扫描确定最优值**：在所有目标 workload 上扫描 FIFO 深度（4/8/12/16/20），结合 `drop_count=0` 的最小值和硬件面积约束，确定最终深度
 4. **硬件设计预留**：最终硬件深度按扫描结果 + 安全余量确定（如 peak=17 → 硬件取 20），SASS 仿真的 17 entries 作为下界参考
@@ -611,19 +621,19 @@ SpMV SASS 中 R16 被所有 30+ 个 unrolled IMAD.WIDE 共享（`R16.reuse`）�
 
 | 层面 | 粒度 | 说明 |
 |------|------|------|
-| **寄存器追踪（FIFO）** | SM 级单一 | 整个 SM 共享一个 8-entry FIFO，仅追踪 tracked warp 的寄存器依赖链 |
+| **寄存器追踪（FIFO）** | SM 级共享 | 整个 SM 共享一个 20-entry FIFO，追踪 2 个 tracked warp 的寄存器依赖链 |
 | **知识存储（CT/TT）** | SM 级共享 | 所有 warp 共享同一份 CT 和 TT |
-| **Stride 学习** | Per-PC（CT） | 每个 CT entry 记录 tracked warp 的上次地址，计算 iter_stride |
+| **Stride 学习** | Per-PC（CT） | 任意 warp 的 demand load 均可参与；每 warp 追踪首个 active lane 的地址，第 2 次访问时确定 iter_stride |
 
 **单次检测，全 SM 复用**：IMA 依赖链的结构性模式匹配（`LDG→IMAD.WIDE→LDG` 寄存器依赖 + IMAD.WIDE 参数直接提取）已具备足够选择性（BFS 全 SASS 验证零误检），无需多次观测积累 confidence。Tracked warp 的单次完整链观测即可写入 CT/TT，之后所有 64 个 warp 共享该知识。
 
-训练包含两个阶段，均由 tracked warp 完成：
+训练包含两个阶段，分工不同：
 
-1. **IMA 依赖链检测**（填充 CT/TT）：tracked warp 在 issue 阶段观察到 `LDG→IMAD.WIDE→LDG` 的寄存器依赖链时立即写入 CT/TT。由于无需 confidence 积累，首次观测即完成训练。调度器 tie-breaking hint 确保 tracked warp 获得优先发射，加速链检测和 stride 收敛。
+1. **IMA 依赖链检测**（填充 CT/TT，由 2 个 tracked warp 完成）：tracked warp 在 issue 阶段观察到 `LDG→IMAD.WIDE→LDG` 的寄存器依赖链时立即写入 CT/TT。由于无需 confidence 积累，首次观测即完成训练。调度器 tie-breaking hint 确保 tracked warp 获得优先发射，加速链检测。
 
-2. **Stride 学习**（CT 的 `iter_stride`）：需要 tracked warp 对同一 PC 的 index load 执行两次以计算地址差。这要求 tracked warp 经历至少 2 次 outer loop iteration。对 BFS（unroll×4）约需 ~3200 cycles。Stride 一旦学到，即对所有 warp 的后续 prefetch 生效。
+2. **Stride 学习**（CT 的 `iter_stride`，由任意 warp 完成）：每个 CT entry 维护 2 个 observation slot（硬件仅需 2×38 bit = 76 bit），记录最近 2 个 warp 的首次 active lane 地址。任意 warp 发出 demand index load 时，若该 warp 已有记录，计算地址差即为 iter_stride。**首个完成两次观测的 warp 确定 stride，之后所有 warp 共享**。IMA stride 是固定值（由数据结构 element size 决定），2 个 slot 足以快速收敛。这比仅依赖 tracked warp 更鲁棒——任意 warp 完成一次 outer iteration 即可学到 stride。
 
-与 CPU 的本质差异：CPU 的 IMP/DMP 是 per-core 检测器，每个 core 为自己的线程独立学习（复用率 1:1）。GPU 的独特之处在于大量执行相同代码的 warp **共享同一份 pattern 知识**（复用率 1:64）——这是 SIMT 执行模型的天然产物。单一 tracked warp 的训练开销被 64 倍分摊。
+与 CPU 的本质差异：CPU 的 IMP/DMP 是 per-core 检测器，每个 core 为自己的线程独立学习（复用率 1:1）。GPU 的独特之处在于大量执行相同代码的 warp **共享同一份 pattern 知识**（复用率 1:64）——这是 SIMT 执行模型的天然产物。2 个 tracked warp 的训练开销被 64 倍分摊。
 
 #### 4.1.1 FIFO 无效化机制
 
@@ -727,7 +737,7 @@ def on_index_load_issue(warp_id, PC, current_addr):
     # 同一 index load 的所有 sector 请求共享同一个 PRB entry
     for req in sector_reqs:
         issue_l1_request(req.sector_addr, req.element_mask, prb_entry_id=prb_id, type=INDEX_PF)
-        # 若 MSHR 满 → stall 等待，不丢弃
+        # 若 MSHR 满 → RESERVATION_FAIL: 放弃该 sector，PRB.remaining_sectors--，不生成 data PF
 ```
 
 **为什么不需要 per-warp 状态表**：
@@ -792,7 +802,7 @@ Prefetcher 是 L1 cache 的一个独立 client（与 warp demand load 平级）�
 |------|----------|---------|
 | **填充 L1 cache** | ✅ 是 | ✅ 是 |
 | **返回数据给 prefetcher** | ✅ 是（sector_data + element_mask） | ❌ 否（fire-and-forget） |
-| **MSHR 满时行为** | 阻塞等待（保证 pipeline 不断裂） | 丢弃（隐式节流） |
+| **MSHR 满时行为** | 放弃该 sector（RFAIL），PRB 标记 failed | 丢弃（隐式节流） |
 | **L1 实现要求** | MSHR subentry 需携带 `prb_entry_id`；sector refill 时向 prefetcher 响应端口发送数据 | 仅常规 prefetch fill，无额外响应路径 |
 
 INDEX_PF 是Index-Data Pipeline 的 Step 1（index refill → ACU → data prefetch），丢弃会导致整条 pipeline 断裂。DATA_PF 是终端操作（fill L1 即完成），丢弃仅损失一次 prefetch 机会。
@@ -801,7 +811,7 @@ INDEX_PF 是Index-Data Pipeline 的 Step 1（index refill → ACU → data prefe
 
 PRB 跟踪在途 index prefetch，**每个 index load（而非每个 sector）占用 1 个 entry**。一次 index load 经 Index Coalescer 后产生 1~32 个 sector 请求，这些 sector 共享同一个 PRB entry，由 `remaining_sectors` 计数器跟踪完成进度。
 
-**为什么存 tt_idx 而非 ct_idx**：PRB entry 生命周期可达数百 cycle（index prefetch miss L1 → 走 HBM）。在此期间 CT 可能发生驱逐（SpMV 30+ PC 竞争 32 slot），导致 `ct_idx` 指向已被替换的 entry → 错误的 prefetch 地址 → 浪费带宽 + 污染 L1。直接存 `tt_idx[]` 快照解耦了 PRB 对 CT 的生命周期依赖（TT 仅 1-3 个 entry 活跃，驱逐概率极低）。
+**软件仿真 vs 硬件实现**：软件仿真中 PRB 存 `tt_idx[]` 快照以解耦 CT 生命周期（防止 CT 驱逐导致 ct_idx 失效）。**硬件实现**中 PRB 仅存 `ct_idx`（4-7 bit，见 §7.1），因为实测表明 CT 驱逐极少发生（BFS/SSSP/CC 用 5-6 entries，远小于 CT=32 容量）。SpMV（25/32）是唯一接近满的情况，但其 stride 收敛后 CT entry 不会被驱逐。若需要额外保护，可在 CT 中增加引用计数（1 bit per entry），防止有 pending PRB 引用的 entry 被驱逐。
 
 | 字段 | 大小 | 说明 |
 |------|------|------|
@@ -838,7 +848,7 @@ PRB 跟踪在途 index prefetch，**每个 index load（而非每个 sector）�
 
 Phase 1 中 PRB 无限大意味着 prefetcher 永不因 PRB 满而 stall，prefetch 流量最大化，memory 子系统承受最大压力。因此 Phase 1 测到的 peak occupancy 是真实需求的**上界**——有背压时实际需求更低。但上界正是容量确定所需要的。
 
-PRB 每 entry 仅 18 bit，即使扩到 128 entries 也只有 ~288 bytes/SM，对比 register file 256 KB，硬件开销仍极小。
+PRB 每 entry 仅需 ct_idx（4-7 bit），即使扩到 2048 entries 也只有 ~2 KB/SM，对比 register file 256 KB，硬件开销仍极小。
 
 #### 4.3.3 Response FIFO 与反压
 
@@ -1055,32 +1065,60 @@ SpMV 的 19% 有效率不可接受——81% 的 prefetch 仅产生 MSHR merge（
 
 | 新增字段 | 大小 | 说明 |
 |---------|------|------|
-| `last_addr` | 64 bit | tracked warp 上次触发此 PC 的地址（per-entry） |
-| `iter_stride` | 32 bit | 学到的 iteration stride（bytes）（per-entry） |
+| `stride_obs[2]` | 2×(6+32) = 76 bit | 2 个 observation slot：{warp_id(6b), first_addr(32b, sector-aligned)}。任意 warp 首次访问记录地址，同 warp 第 2 次确定 stride。IMA stride 为固定值，2 slot 足以快速收敛 |
+| `iter_stride` | 16 bit | 学到的 iteration stride（bytes）（per-entry），±32KB 覆盖所有 IMA stride |
 | `stride_valid` | 1 bit | stride 是否已学到（per-entry） |
-| **额外存储** | **~12 B/entry** | 32 entries × 12B = **384 B** |
+| `stride_speculative` | 1 bit | stride 是否为 speculative（通过 element size 推断，尚未经真实观测确认） |
+| **额外存储** | **~12 B/entry** | 32 entries × 12B = **~384 B**（含 stride obs） |
 
-注：`tracked_warp_id` 已提升为 SM 级全局状态（与 Chain Detector (CD) FIFO 共享），不再占用 per-entry 空间。
+注：`tracked_warp_ids[2]` 已提升为 SM 级全局状态（与 Chain Detector (CD) FIFO 共享），不占用 per-entry 空间。Stride 学习与 chain 检测的分工不同——chain 检测仅由 tracked warp 驱动，但 stride 学习由**任意 warp** 的 demand load 触发。
 
 **学习算法**：
 
 ```python
-def on_index_load_issue(warp_id, PC, current_addr):
+def on_index_load_issue(warp_id, PC, current_addr, lane_id, cycle):
     if PC not in CT:
         return
 
     entry_a = CT[PC]
 
-    # === Stride Learning ===
-    # 使用 SM 级 tracked_warp_id（与 Chain Detector (CD) FIFO 共享同一个 tracked warp）
+    # === Stride Learning (任意 warp 参与) ===
+    obs = find_obs_for_warp(entry_a, warp_id)
+
+    if obs is None:
+        # 首次访问：记录该 warp 的 first-lane 地址（硬件仅 2 个 slot）
+        if entry_a.num_stride_obs < 2:  # W=2 observation slots
+            entry_a.stride_obs[entry_a.num_stride_obs++] = {
+                warp_id, lane_id, current_addr, cycle
+            }
+        # Speculative stride: 可从 element size 推断（见 §4.5.4）
+        if not entry_a.stride_valid and speculative_hint != 0:
+            entry_a.iter_stride = speculative_hint
+            entry_a.stride_valid = True
+            entry_a.stride_speculative = True
+        return
+
+    # Dedup: 同 cycle 的多个 sector 不重复计算
+    if obs.last_cycle == cycle: return
+    obs.last_cycle = cycle
+
+    # Lane 一致性: 同一 warp 必须用同一 lane 保证地址序列可比
+    if obs.lane_id != lane_id: return
+
+    delta = current_addr - obs.last_addr
+    obs.last_addr = current_addr
+    if delta == 0: return
+
     if not entry_a.stride_valid:
-        if warp_id == tracked_warp_id:  # 仅 tracked warp 参与 stride 学习
-            if entry_a.last_addr == UNSET:
-                entry_a.last_addr = current_addr  # 首次触发：记录地址
-            else:
-                entry_a.iter_stride = current_addr - entry_a.last_addr
-                entry_a.stride_valid = True
-                entry_a.last_addr = current_addr
+        # 首个 warp 的第 2 次观测 → stride 确定
+        entry_a.iter_stride = delta
+        entry_a.stride_valid = True
+        entry_a.stride_speculative = False
+    elif entry_a.stride_speculative:
+        # Speculative → 用真实观测确认或修正
+        entry_a.iter_stride = delta
+        entry_a.stride_speculative = False
+    # 已确认的 stride 不再更新（防止跨 CTA warp 复用导致的抖动）
 
     # === Prefetch ===
     if not entry_a.stride_valid:
@@ -1119,21 +1157,31 @@ SpMV 的 Duff's device 包含 ×16/×8/×4/×1 四个版本，共 30+ 个 CT ent
 
 每个版本的 prefetch 都恰好跨过自己的 unroll 窗口边界 → **100% 有效**，零冗余。
 
-**训练速度**：stride learning 需要 tracked warp 触发同一 PC 两次，即经历 1 个完整的 outer loop iteration。对于 BFS 内循环（邻居遍历），这通常在 kernel 启动后数百 cycles 内完成。调度器 tie-breaking hint 可进一步加速 tracked warp 的迭代进度。
+**训练速度**：stride learning 需要任意 warp 的同一 PC demand load 触发两次（同一 warp、同一 lane），即该 warp 经历 1 个完整的 outer loop iteration。由于所有 64 个 warp 都可以贡献观测，实际上首个完成 outer iteration 的 warp 即可确定 stride。对于 BFS 内循环（邻居遍历），这通常在 kernel 启动后数百 cycles 内完成。
 
-**代表 warp 的合法性**：所有 warp 执行相同的 kernel 代码，unroll 结构完全相同，只是数据地址不同。因此一个 warp 学到的 stride 对所有 warp 有效——`iter_stride` 是代码结构属性，不是数据属性。
+**任意 warp stride 的合法性**：所有 warp 执行相同的 kernel 代码，unroll 结构完全相同，只是数据地址不同。因此一个 warp 学到的 stride 对所有 warp 有效——`iter_stride` 是代码结构属性，不是数据属性。
+
+#### 4.5.4 Speculative Stride — 跳过学习延迟
+
+在正常 stride learning 中，prefetcher 需要等待至少一次 outer loop iteration 才能确定 stride。��于短循环或 warp 快速退出的场景，这一延迟可能导致 prefetcher 在 kernel 的大部分运行时间内���于静默状态。
+
+**Speculative stride** 允许在**首次 demand load** 时即设置 `stride_valid=true`，跳过学习延迟：
+
+- **推断来源**：index LDG 的 `sizeof(element)` 可在 chain detection 阶段从 IMAD.WIDE 的 `scale` 操作数推断。例如，`scale=4`（32-bit index）意味�� `iter_stride = 4 bytes`（×1 版本）或 `4 × U bytes`（×U 展开版本）。对于 ×1 版本，speculative stride = `scale` 即可。
+- **确认/修��**：后续任意 warp 的真实观测会自动替换 speculative 值（`stride_speculative → false`）。
+- **风险极低**：对 ×1 展开，speculative 值精确；对 ×U 展开，speculative 值偏小（产生 in-window 冗余 prefetch，合并到 MSHR 不产生额外带宽），真实观测修正后恢复 100% 有效。
 
 **Tracked Warp 调度器优先 Hint**：
 
-Tracked warp 同时承担 IMA 链检测和 stride 学习两项任务，其执行进度直接决定 prefetcher 何时开始工作。为加速训练收敛，调度器对 tracked warp 施加**轻量级 tie-breaking 优先**：
+Tracked warp 承担 IMA 链检测任务，其执行进度直接决定 CT/TT 何时填充完成。为加速训练收敛，调度器对 tracked warp 施加**轻量级 tie-breaking 优先**：
 
 | 属性 | 说明 |
 |------|------|
 | **机制** | Tracked warp 标记 1-bit `priority` 位。调度器在选择下一个发射的 warp 时，若多个 warp 同时 ready，优先选择 `priority=1` 的 warp |
 | **不阻塞其他 warp** | 这不是排他性调度——只影响 ready warp 之间的 tie-breaking 顺序。若仅有一个 warp ready，无论是否为 tracked warp 都立即发射 |
-| **参考** | CAPS [Koo et al. 2018] 的 Prefetch-Aware Scheduler (PAS)：leading warp 获得 1-bit priority hint，调度器 tie-breaking 时优先选择。本设计复用相同思路，但 tracked warp 的选择逻辑不同（首个发出 LDG 的 warp，而非 CAPS 的 per-CTA 进度最快 warp） |
-| **效果** | Tracked warp 更快完成 outer loop iteration → stride 更快收敛 → prefetch 更早启动。对其他 warp 的调度延迟影响极小（仅在 tie-breaking 时被延后一次选择） |
-| **硬件开销** | 1 bit/SM（存储在 tracked_warp_id 旁边）+ 调度器比较逻辑中增加一个 OR 门 |
+| **参考** | CAPS [Koo et al. 2018] 的 Prefetch-Aware Scheduler (PAS)：leading warp 获得 1-bit priority hint，调度器 tie-breaking 时优先选择。本设计复用相同思路，但 tracked warp 的选择逻辑不同（前两个发出 LDG 的 warp，而非 CAPS 的 per-CTA 进度最快 warp） |
+| **效果** | Tracked warp 更快完成 chain detection → CT/TT 更快填充 → 结合 speculative stride 或其他 warp 的 stride 学习，prefetch 更早启动 |
+| **硬件开销** | 1 bit/SM（存储在 tracked_warp_ids 旁边）+ 调度器比较逻辑中增加一个 OR 门 |
 
 ### 4.6 表生命周期管理
 
@@ -1141,17 +1189,17 @@ Prefetcher 的各状态表在不同事件下需要清理或重置，以避免跨
 
 | 事件 | 清理范围 | 理由 |
 |------|---------|------|
-| **Kernel Launch** | 清空 CT + TT + Register FIFO + PRB + Response FIFO + Data Coalescer Buffer + tracked_warp_id + training_frozen=false | 新 kernel 的 PC 空间、base address、scale 全部不同，旧数据完全无效；冻结标志复位以重新启动训练 |
-| **Tracked Warp EXIT（训练未完成）** | 清空 Register FIFO + 重置 tracked_warp_id = UNSET + priority = 0 | 下一个发出 LDG 的 warp 自动接替为新 tracked warp；CT/TT 保留供所有 warp 使用；PRB 条目由 L1 响应触发 `remaining_sectors--` 自然回收 |
-| **Tracked Warp EXIT（训练冻结）** | 清空 Register FIFO + 设置 `training_frozen = true` + **不重置 tracked_warp_id**（保持 FROZEN 状态） | 当 CT 中所有有效 entry 均 `stride_valid=true` 时触发。冻结后：(1) 不选择新 tracked warp，(2) CD FIFO 停止追踪指令，(3) 调度器 priority hint 关闭。**效果**：省去 FIFO 写入 + FIFO lookup 的动态功耗。对 BFS/SpMV 等稳态 kernel，冻结在第一轮外层迭代结束后即可触发 |
+| **Kernel Launch** | 清空 CT + TT + Register FIFO + PRB + Response FIFO + Data Coalescer Buffer + tracked_warp_ids[2] + training_frozen=false | 新 kernel 的 PC 空间、base address、scale 全部不同，旧数据完全无效；冻结标志复位以重新启动训练 |
+| **训练冻结（两个触发条件）** | 设置 `training_frozen = true`：(1) 不选择新 tracked warp，(2) CD FIFO 停止追踪指令，(3) 调度器 priority hint 关闭 | **触发条件 1**：Stride 收敛后 `check_freeze()` 检查 CT 中所有有效 entry 均 `stride_valid=true`——正常完成路径，通常在第 1-2 次 outer iteration 后触发。**触发条件 2**：任一 tracked warp EXIT——warp 生命周期结束。两条路径均可触发冻结。 |
+| **Tracked Warp EXIT** | 清空该 warp 在 Register FIFO 中的 entries + 永久冻结（见上） | 对 iterative graph algorithms，tracked warp EXIT 通常发生在条件 1 已触发之后 |
 | **非 Tracked Warp EXIT** | 无额外操作 | 非 tracked warp 的指令不影响 FIFO，无需清理 |
 | **CTA 完成** | 无额外操作 | CTA 完成时其所有 warp 已 EXIT（已触发上述清理）；CT/TT 为 SM 级共享，不受 CTA 生命周期影响 |
 
 **实现要点**：
 
-1. **Kernel Launch 清表**：在 GPGPU-Sim 中对应 `gpu_sim_cycle()` 中 kernel launch 的初始化路径。可通过 `memset` 一次性清零所有表（CT 704B + TT 80B + Register FIFO 48B + PRB 72B + Response FIFO 272B + Data Coalescer 192B ≈ 1.4 KB，单 cycle 内可完成）。
+1. **Kernel Launch 清表**：可通过 `memset` 一次性清零所有表（CT ~544B + TT ~80B + CD FIFO ~300B + PRB ~1.0KB），单 cycle 内可完成。
 
-2. **Tracked Warp EXIT**：将 FIFO head/tail 指针重置为 0。检查 CT 所有有效 entry 是否均 `stride_valid=true`：若是 → 设置 `training_frozen=true`（CD 休眠，不选新 tracked warp）；若否 → `tracked_warp_id = UNSET`（下一个 LDG 自动选新 tracked warp）。PRB 无 warp_id 字段——条目由 L1 sector 响应触发 `remaining_sectors--`，归零时自动回收。
+2. **训练冻结**：两条路径——(a) 每次 stride 收敛时 `check_freeze(ct)` 检查 `all_stride_valid()`；(b) tracked warp EXIT 时永久冻结。冻结后 prefetcher 仍正常工作（CT/TT 已填充完成，仅依赖 stride_valid 门控的 address-triggered prefetch），但 FIFO 写入/查找的动态功耗降为零。PRB 无 warp_id 字段——条目由 L1 sector 响应触发 `remaining_sectors--`，归零时自动回收。
 
 ---
 
@@ -1253,12 +1301,12 @@ Index prefetch 返回 value=1234:
 | **覆盖 Pattern** | I + II（Linear & Frontier Gather） | 覆盖 BFS/SSSP/BC/SpMV 的核心 IMA 链 | 扩展到 III（timeliness 几乎为零）；IV（物理不可预取） |
 | **ISA 扩展** | 不需要（纯 hardware detection） | 保持通用性，无需重编译；对比 COMPASS 等 software hint 方案 | 编译器标注 IMA 组（更精确但破坏通用性） |
 | **节流方式** | `stride_valid` 门控 + MSHR 隐式节流 | IMA 链检测选择性已足够，无需 confidence；stride 未学到时不发 prefetch 自然过滤前序链 | Confidence counter（增加复杂度但无收益）；Misprediction counter（后期扩展） |
-| **Prefetch depth** | Per-PC iter_stride（自适应学习，仅 stride_valid 时发出） | `small_1sm_cta5 / lrr` 代表窗口表明：`index_issue_to_refill_p50=536-853`、`data_issue_to_refill_p50=512-1055`，而 `refill_to_data_issue_p50` 对多数 workload 仅 `9` cycles（SpMV 为 `35`）。因此 lookahead 必须绑定到 per-PC 的 outer-iteration 窗口，而不是基于固定 `2×200 cycles` 假设。固定 n 在高展开 workload（SpMV ×16）下 81% 冗余，per-PC stride 精确区分不同展开版本，100% 有效；移除 fallback n=3，仅 stride_valid 时发出 prefetch：前序链（stride 不收敛）自然过滤，保证仅循环内 IMA 触发 prefetch | 固定 n=max(U)（需预知 U）；TT distinct_pc_count（简单但对 Duff's device 高估） |
+| **Prefetch depth** | Per-PC iter_stride（自适应学习 + speculative stride 快启动） | lookahead 必须绑定到 per-PC 的 outer-iteration 窗口。固定 n 在 SpMV ×16 下 81% 冗余，per-PC stride 100% 有效。Speculative stride 通过 element size 推断，可在首次 demand load 即启动 prefetch（§4.5.4）。前序链（stride 不收敛）自然过滤 | 固定 n=max(U)（需预知 U）；TT distinct_pc_count（简单但对 Duff's device 高估） |
 | **Max target arrays K** | K=3 | 覆盖 BC reverse（最大 case：3 个数组） | K=1（更简单但不覆盖 BC） |
 | **Index prefetch 返回数据路由** | L1 client 模式（PRB entry ID 随请求穿过 L1/MSHR） | PRB 18 bit/entry（72B/SM）；per-index-load 设计，直接存 tt_idx[] 快照避免 CT 驱逐风险 | MSHR 标记（不覆盖 L1 HIT）；独立 Pending Buffer + CAM |
 | **Prefetch coalescing** | Prefetcher 自带 Index/Data Coalescer（32B sector 粒度） | 对齐 A100 L1 sector 架构；LD/ST 流水线 coalescing unit 与指令结构性绑定 | 复用 LD/ST coalescer（不可行）；per-lane 独立请求（MSHR 压力过高） |
-| **MSHR 满时行为** | Index prefetch: 阻塞等待；Data prefetch: 丢弃 | Index prefetch 是Index-Data Pipeline 的 Step 1，丢弃会导致 Step 2 断裂；Data prefetch 是 fire-and-forget | 统一丢弃（原设计，损失 prefetch 机会） |
-| **Register FIFO 范围** | SM 级单一 FIFO（tracked warp only） | 去除 confidence 后单次链观测即可训练；tracked warp 同时用于链检测和 stride 学习；硬件从 3 KB 降至 ~48 B | Per-warp FIFO（64×8×6B=3KB，98% 浪费在非 tracked warp） |
+| **MSHR 满时行为** | Index prefetch: 放弃该 sector（RFAIL）；Data prefetch: 丢弃 | 阻塞会 stall 整个 prefetch queue 导致时效性下降；放弃仅损失该 sector 的 data PF 机会，其他 sector 不受影响 | 阻塞等待（初始设计，但 stall 副作用过大） |
+| **Register FIFO 范围** | SM 级共享 FIFO（2 tracked warps, depth=20） | 去除 confidence 后单次链观测即可训练；2 tracked warp 用于链检测，stride 学习由任意 warp 完成；硬件从 3 KB 降至 ~120 B | Per-warp FIFO（64×8×6B=3KB，96% 浪费）；单一 tracked warp（容易在首次 iteration 后 EXIT） |
 | **FIFO 无效化** | Read Detection（默认），Write Invalidation（备选） | 两种机制在目标 workload 上等价（零误检）；Read Detection 对 8-entry 小 FIFO 周转更快 | 无无效化（87.5% 准确率，存在 false positive 风险） |
 | **调度器辅助** | Tracked warp 1-bit tie-breaking priority hint | 加速 stride 收敛和链检测，不阻塞其他 warp | 无调度器辅助（训练慢但简单）；CAPS 式强优先调度（影响其他 warp 延迟） |
 | **地址计算并行度** | 32-wide 并行 ACU（4 sectors/cycle，匹配 L1 4-bank 返回带宽） | 避免 ACU 成为瓶颈；32 shifter+adder 面积极小 | 8-wide（1 sector/cycle，L1 高带宽时积压 Response FIFO）；串行（太慢） |
@@ -1272,14 +1320,21 @@ Index prefetch 返回 value=1234:
 
 | 组件 | 条目数 | 每条大小 | 总大小 | 说明 |
 |------|--------|---------|--------|------|
-| **CT** (Chain Table) | 32 | PC(32b) + data_PC(32b) + IMAD_PC(32b) + tt_idx[3](12b) + num_targets(2b) + valid(1b) + last_addr(64b) + iter_stride(32b) + stride_valid(1b) ≈ 22B | **~704 B** | 覆盖 SpMV 30+ unrolled PC；移除 scale/data_base，改用 tt_idx 间接引用 TT |
-| **TT** (Target Table) | 8 | base_addr(64b) + scale(8b) + valid(1b) ≈ 10B | **~80 B** | 每 entry 存单一 target；one-to-many 由 CT 的 tt_idx[] 指向多个 entry |
-| **PRB** (Prefetch Request Buffer) | **Phase 1: 1024; Phase 2: 由实测 peak 确定** | valid(1b) + remaining_sectors(6b) + tt_idx[3](9b) + num_targets(2b) = 18 bit | **Phase 1: ~2.3 KB; Phase 2: TBD** | Per-index-load 跟踪；直接存 tt_idx 快照，解耦 CT 生命周期。原估算 32 entry 未考虑多 warp 并发压力（见 §4.3.2），实际需求可能为 64–256 entries |
-| **Response FIFO** | **Phase 1: 128; Phase 2: 由实测 peak 确定** | prb_entry_id(5b) + sector_data(32B) + element_mask(8b) ≈ 34B | **Phase 1: ~4.3 KB; Phase 2: TBD** | 缓冲 L1 返回的 sector 级 index prefetch 响应。PRB 扩容后 burst 可能增大（见 §4.3.3） |
-| **Data Coalescer Buffer** | 32 | sector_addr(~40b) + valid(1b) ≈ 6B | **~192 B** | 缓冲 ACU 输出的 data prefetch sector 请求 |
-| **Register FIFO** | 1 × 8 entries | dst_reg(8b) + type(2b) + PC(32b) + ima_info(可选) ≈ 6B | **~48 B** | SM 级单一 FIFO，仅追踪 tracked warp。深度 8 为初始值，SASS 仿真表明 SpMV ×16 需 17 entries 实现零丢失（见 §4.1 FIFO 深度分析），实现时以可配置参数 + 运行时峰值监测确定最优值 |
-| **SM 全局状态** | 1 | tracked_warp_id(6b) + priority(1b) + training_frozen(1b) | **~1 B** | Tracked warp 标识 + 调度器 hint + 训练冻结标志 |
-| **总计** | | | **~1.4 KB/SM** | |
+| **CT** (Chain Table) | 32 | index_pc_tag(24b) + tt_idx[3](ceil(log₂TT)×3) + num_targets(2b) + valid(1b) + iter_stride(16b) + stride_valid(1b) + stride_speculative(1b) + stride_obs[2](2×38b=76b) + LRU(5b) ≈ **17 B** | **~544 B** | 仅存 index_pc 作为 key；data_pc/imad_pc 在 CD 检测阶段完成使命后不存入 CT。stride_obs 精简为 2 slot（IMA stride 固定，2 个 warp 观测即可收敛）。覆盖 SpMV 30+ unrolled PC |
+| **TT** (Target Table) | 8 | base_addr_tag(32b) + scale(3b) + valid(1b) ≈ **5 B** | **~40 B** | 每 entry 存单一 target 的 (base, scale)；one-to-many 由 CT 的 tt_idx[] 指向多个 entry |
+| **PRB** (Prefetch Request Buffer) | 1024 | valid(1b) + ct_idx(ceil(log₂CT)) ≈ **4–7 bit** | **~1.0 KB** | 仅存 CT 表项索引。L1 fill 返回时携带 PRB entry ID + index 数据，通过 ct_idx 查 TT 即可计算 data address，无需冗余存储 tt_idx 快照或 warp_id |
+| **Register FIFO** (CD) | 1 × 20 entries | dst_reg(8b) + type(2b) + PC(24b) + ima_info(可选) ≈ **15 B** | **~300 B** | SM 级共享 FIFO，追踪 2 个 tracked warps。深度 20（SpMV ×16 峰值 17 + 安全裕量） |
+| **SM 全局状态** | 1 | tracked_warp_ids[2](12b) + priority(1b) + training_frozen(1b) | **~2 B** | 2 个 tracked warp 标识 + 调度器 hint + 训练冻结标志 |
+| **总计（默认配置）** | | | **~1.9 KB/SM** | 占 L1D (128 KB) 的 1.5% |
+
+**Storage Budget Sensitivity 四档位**（用于论文 sensitivity 实验）：
+
+| 档位 | CT | TT | PRB | CD FIFO (固定) | 总计/SM | 占 L1D |
+|------|---:|---:|----:|:--------------:|-----------:|:------:|
+| **S1 (不够)** | 8×17B=136B | 4×5B=20B | 256×1B=256B | 300B | **712 B** | **0.54%** |
+| **S2 (勉强)** | 16×17B=272B | 8×5B=40B | 512×1B=512B | 300B | **1.1 KB** | **0.86%** |
+| **S3 (充裕/默认)** | 32×17B=544B | 16×5B=80B | 1024×1B=1.0KB | 300B | **1.9 KB** | **1.5%** |
+| **S4 (过剩)** | 64×17B=1.1KB | 32×5B=160B | 2048×1B=2.0KB | 300B | **3.6 KB** | **2.7%** |
 
 **CT 容量设计依据**：
 
@@ -1293,7 +1348,7 @@ CT 的 32 entry 由 loop unrolling 分析确定——compiler 的循环展开直
 | BC reverse | ~5 | ×4 + remainder | one-to-many 不增加 CT 占用（共享 index_PC） |
 | CC hook | ~5 | ×4 + remainder | 同 BFS |
 
-SpMV 的 30+ PC 是 sizing bottleneck。32 entry 覆盖所有已分析 workload，但余量有限（~2 空闲 entry）。如目标扩展到更激进展开的 kernel，可扩展至 48 或 64 entry（每 entry ~22B，增量 ~0.35-0.7 KB）。
+SpMV 的 30+ PC 是 sizing bottleneck。32 entry 覆盖所有已分析 workload，但余量有限（~2 空闲 entry）。如目标扩展到更激进展开的 kernel，可扩展至 48 或 64 entry（每 entry ~17B，增量 ~0.27-0.54 KB）。
 
 BC reverse 的 one-to-many（3 个 target array）**不增加 CT entry 数**——所有 target 共享同一个 `index_PC` 的 CT entry，差异由 `tt_idx[K=3]` 指向不同的 TT entry 吸收。
 
@@ -1330,20 +1385,26 @@ BC reverse 的 one-to-many（3 个 target array）**不增加 CT entry 数**—�
 | IMP | 0.7 KB | Indirect Memory Prefetcher (2015) |
 | Tyche | 0.57 KB | Tyche (2024) |
 | Spare Register | 1.365 KB | Spare Register Aware Prefetching (2014) |
-| **本方案** | **~1.4 KB** | 含 SM 级单一 Register FIFO（48 B） |
+| **本方案（默认 S3）** | **~1.9 KB** | CT(544B) + TT(80B) + PRB(1.0KB) + CD FIFO(300B) |
+| **本方案（最小 S1）** | **~712 B** | CT=8, TT=4, PRB=256 — 覆盖图遍历类 workload |
 
 ### 7.3 存储开销分析
 
-SM 级单一 FIFO（~48 B）替代原 per-warp 方案（64 warp × 8 entries × 6B = 3 KB）。CT/TT 结构优化（CT 去除 scale/data_base 改用 tt_idx，TT 单 entry 单 target）后，总存储降至 **~1.4 KB/SM**——低于 IMP/Tyche，开销极可接受。
+**三项关键精简**使存储开销大幅降低：
 
-关键优化：去除 confidence 后无需 64 个 warp 并行检测，tracked warp 单次链观测即可填充 CT/TT。Register FIFO 从主要存储瓶颈（原占 64%）降为边际开销（现占 ~3%）。
+1. **CT 去掉 data_pc / imad_pc**：CD 检测到 `LDG→IMAD.WIDE→LDG` 链时，IMAD 的 (base, scale) 在插入阶段直接写入 TT。CT 只需存 `index_pc` 作为 key（24b tag），后续 demand load 匹配和 prefetch 触发均通过 index_pc 完成，data_pc 和 imad_pc 不参与任何后续查找。每 entry 省 48 bit。
 
-**进一步优化空间**（实现阶段验证）：
+2. **stride_obs 从 16 slot → 2 slot**：IMA stride 是由数据结构 element size 决定的固定值（如 4B/8B/64B），极易学习。硬件只需 2 个 observation slot（2×38bit = 76bit），记录 2 个 warp 的首次访问地址。首个完成两次观测的 warp 即确定 stride，之后所有 64 个 warp 共享。每 entry 省 ~2100 bit（从 16×140b 降至 76b）。
 
-1. **训练-冻结机制**（已纳入 §4.6 生命周期管理）：当 tracked warp EXIT 时检查 CT 所有有效 entry 是否均 `stride_valid=true`。若是，设置 `training_frozen=true`，关闭 CD FIFO 追踪 + 调度器 priority hint。冻结后 prefetcher 仍正常工作（CT/TT 已填充完成，仅依赖 stride_valid 门控的 address-triggered prefetch），但 FIFO 写入/查找和调度器比较逻辑的动态功耗降为零。对 BFS/SpMV 等稳态 kernel，冻结在第一轮外层迭代结束后即可触发（~数百 cycles）。
-2. **FIFO 深度调优**：SASS 逐指令仿真（见 §4.1 FIFO 深度分析）表明 BFS/SSSP/CC/BC 峰值 ≤ 4 entries（FIFO=8 充裕），但 SpMV ×16 因 48 条 LDG 交错调度导致峰值 = 17（FIFO=8 丢失 50% IMA 链）。实现时建议使用可配置深度参数（默认较大值如 20），添加 `fifo_peak_occupancy` 和 `fifo_drop_count` 运行时计数器，在所有目标 workload 上扫描后确定最优深度。存储影响：从 8→17 entries 仅增加 54 B/SM（总预算从 ~1.4 KB 到 ~1.45 KB），硬件面积代价可忽略。
+3. **PRB 只存 ct_idx**：L1 fill 返回时携带 PRB entry ID + 实际 index 数据。PRB 通过 ct_idx 查到 CT entry 的 tt_idx[] → TT 的 (base, scale) → 计算 data address。无需冗余存储 tt_idx 快照或 warp_id，每 entry 仅 4-7 bit。
 
-**相对参考**：A100 每 SM 的 register file 为 256 KB，L1D/shared memory 为 192 KB。1.4 KB 约占 register file 的 0.55%，开销极小。
+关键设计要点：
+- Register FIFO（CD）从主要存储瓶颈（原 per-warp 方案 3 KB）降为 ~300 B（SM 级共享 FIFO）
+- CT 的 2-slot stride obs 允许任意 warp 贡献 stride 学习，比仅 tracked warp 更鲁棒
+- 训练冻结机制（§4.6）在所有 stride 收敛后关闭 CD FIFO 追踪 + 调度器 hint，动态功耗降为零
+- 单个 CT entry 复用率极高（实测平均每 entry 触发数万次 prefetch），因此小表即可支撑大量 IMA 访存
+
+**相对参考**：A100 每 SM 的 register file 为 256 KB，L1D/shared memory 为 192 KB。默认配置 1.9 KB 约占 L1D 的 1.5%，即使最大配置（S4, 3.6 KB）也仅占 2.7%，开销极小。
 
 **硬件逻辑开销**（非存储）：
 - 32 × barrel shifter + 32 × 64-bit adder（ACU，32-wide 并行地址计算，4 sectors/cycle）
@@ -1380,18 +1441,18 @@ SM 级单一 FIFO（~48 B）替代原 per-warp 方案（64 warp × 8 entries × 
 | ~~需要 software hint / ISA 扩展？~~ | 不需要，纯 hardware detection | §6 决策表 |
 | ~~Unified 还是 hybrid 方案？~~ | Unified Index-Data Pipeline，覆盖 Pattern I+II | §3 |
 | ~~Coalescing 交互~~ | Prefetcher 自带 Index/Data Coalescer（32B sector 粒度），不复用 LD/ST 流水线 | §3.3.1 |
-| ~~MSHR 竞争~~ | 共享 MSHR；Index prefetch MSHR 满时阻塞等待（保证 Step 2 触发），Data prefetch MSHR 满时丢弃 | §3.3.1 |
-| ~~Register Producer Table 精简~~ | 已改为 SM 级单一 FIFO（8 entry/tracked warp），~48 B/SM（原 per-warp 3 KB 降 98%） | §4.1 / §7 |
+| ~~MSHR 竞争~~ | 共享 MSHR；Index prefetch MSHR 满时放弃该 sector（RFAIL），Data prefetch MSHR 满时丢弃 | §3.3.1 |
+| ~~Register Producer Table 精简~~ | 已改为 SM 级共享 FIFO（20 entry/2 tracked warps），~120 B/SM（原 per-warp 3 KB 降 96%） | §4.1 / §7 |
 | ~~Active Mask 处理~~ | 使用当前 active_mask，不预测未来 mask | §3.3.1 |
 | ~~表清理策略~~ | Kernel launch 清全表（含 PRB + Response FIFO + Data Coalescer）；tracked warp EXIT 清 Register FIFO + 重置 tracked_warp_id | §4.6 |
-| ~~训练模型~~ | SM 级单一 FIFO tracked warp detection + shared CT/TT；单次链检测即训练完成，调度器 tie-breaking hint 加速 stride 收敛 | §4.1 |
+| ~~训练模型~~ | SM 级共享 FIFO（2 tracked warps）用于 chain detection + shared CT/TT；stride 学习由任意 warp 完成；speculative stride 可跳过学习延迟 | §4.1 / §4.5.3 / §4.5.4 |
 | ~~Data prefetch 带宽~~ | 已知风险（32 scattered × K），先实验再节流 | §4.3 |
 | ~~地址计算硬件~~ | 32-wide 并行 ACU（32 × barrel shifter + 32 × 64-bit adder），4 sectors/cycle，不需要乘法器 | §4.3.4 |
 | ~~Cache hit 处理~~ | L1 tag check + MSHR merge，标准流程；HIT/merge 时不消耗额外 L2 带宽 | §3.3.1 |
 | ~~Pending Buffer 设计~~ | PRB per-index-load，直接存 tt_idx[] 快照（解耦 CT 生命周期）；容量由两阶段法确定（Phase 1 大数组探测 peak，Phase 2 固定） | §4.3.2, §7.1 |
 | ~~Sector 粒度~~ | 对齐 A100 L1 sector（32B）架构，prefetcher 以 sector 为操作单位（请求/响应/coalescing 均为 32B 粒度） | §3.3.1, §4.3 |
 | ~~多响应并发~~ | Response FIFO 缓冲 L1 返回的 sector 响应，满时反压 L1（不影响 demand load）；深度由两阶段法确定 | §4.3.3, §7.1 |
-| ~~Prefetch distance~~ | Per-PC iter_stride 自适应学习（仅 stride_valid 时发出，无 fallback），精确区分不同展开版本 | §4.5 |
+| ~~Prefetch distance~~ | Per-PC iter_stride 自适应学习 + speculative stride 快启动（仅 stride_valid 时发出），精确区分不同展开版本 | §4.5 / §4.5.4 |
 | ~~Unrolling 与 MLP 交互~~ | LDG 是 non-blocking（scoreboard-based），unrolling 创造 MLP；固定 n=3 在 SpMV ×16 下 81% 冗余，per-PC stride 解决 | §4.5 |
 | ~~False positive 风险~~ | 两种无效化机制（write-invalidation / read-detection）均保证 FIFO 不变量，BFS 实证 14 条 IMAD.WIDE 零误检 | §4.1.1 |
 | ~~前序链无效 prefetch~~ | Gate on stride_valid + CT 淘汰优先驱逐 stride_valid=false entry | §4.5, §3.2 |
