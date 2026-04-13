@@ -1,0 +1,17 @@
+A clean, professional, publication-ready technical diagram for a computer architecture paper (MICRO/ISCA/HPCA style) illustrating a GRASP GPU prefetcher. The canvas is 1920x1080 pixels with a white background, no shadows, no gradients, no 3D effects, and no title text at the top. All colored boxes have rounded corners (4-6pt radius) and white text. Hex addresses are in monospace font.
+
+Top-Right: A #6B8E6B (Storage) box [x=1400, y=20, w=480, h=80] containing centered white text "TT[0]: base=dists_base (c[0x178]), scale=4". A dashed arrow curves down from its bottom-center to the ACU top-center.
+
+Left Section: A white box with a dark border [x=30, y=250, w=320, h=300] containing black text: "**Demand Index Load**" (top-aligned), "Warp 10, PC 0x0650", "addr = 0xA000", "CT → stride_valid=true", "iter_stride=16". A black solid arrow points from its right-center to the IPU left-center, labeled "triggers prefetch" above it.
+
+Center-Left: A #C0714A (Logic) box [x=400, y=250, w=320, h=250] containing white text: "**IPU** (Index Prefetch Unit)", "pf_addr = current + dist × stride", "= 0xA000 + 1 × 16", and "= 0xA010" highlighted in #5B7DB1. A #3A7D44 (forest green) dashed arrow points from its right-center to the PRB left-center, labeled "index PF req: 0xA010" above it.
+
+Center: A #6B8E6B (Storage) box [x=770, y=200, w=310, h=250] containing white text: "**PRB** (Prefetch Request Buffer)", "Snapshot: tt_idx=[0]", "num_targets=1", "remaining_sectors=1". A #3A7D44 dashed arrow points from its bottom-center to the L1 D-Cache top-center, labeled "Index PF → L1" to its right.
+Below it, a white box with a thin dark border [x=800, y=520, w=250, h=130] containing centered black text "L1 D-Cache". A #3A7D44 dashed arrow points from its top-right to the ACU bottom-left, labeled "fill: val=42857" above it and "~560 cy latency" below it.
+
+Center-Right: A #C0714A (Logic) box [x=1130, y=250, w=350, h=230] containing white text: "**ACU** (Address Computation Unit)", "data_addr = base + val × scale", "= dists_base + 42857 × 4", and "= dists_base + 0x29FA4" highlighted in #5B7DB1. A solid black arrow points from its bottom-center to the DPU top-center.
+Below it, a #C0714A (Logic) box [x=1180, y=540, w=250, h=140] containing white text: "**DPU** (Data Prefetch Unit)", "Queue data prefetch". A #C0714A (terracotta) dashed arrow points from its right-center to the Result L1 left-center, labeled "data PF: dists+0x29FA4" above it.
+
+Right Section: A white box with a thin border [x=1530, y=400, w=350, h=100] containing black text "L1 D-Cache". Below it, a #3A7D44 (Success) box [x=1530, y=520, w=350, h=130] containing white text: "Later: Demand Load", "PC 0x0680: LDG dists[42857]", "**→ L1 HIT!**".
+
+Bottom Legend: A horizontal row [x=100, y=980, w=1700, h=80] containing evenly spaced items: a #6B8E6B swatch with "Storage (PRB/TT)", a #C0714A swatch with "Logic (IPU/ACU/DPU)", a #3A7D44 dashed line with "Index Prefetch", a #C0714A dashed line with "Data Prefetch", and a #3A7D44 swatch with "L1 HIT".

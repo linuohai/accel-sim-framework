@@ -1,0 +1,130 @@
+Here is the comprehensive review and enhanced matplotlib specification for your MICRO/ISCA/HPCA paper figure. 
+
+### Review & Enhancements
+
+1. **Color Accessibility & Line Styles**: While Matplotlib's default blue (`#1f77b4`) and red (`#d62728`) are distinct in color, they can map to similar luminance values in grayscale print. 
+   * *Enhancement*: The current use of solid vs. dashed lines is good. We will further differentiate by making the Threshold line slightly thicker (`lw=2.0`) and using a distinct dotted style for the baseline. 
+2. **Font Consistency**: Academic papers require serif fonts (Times New Roman). 
+   * *Enhancement*: Explicitly specify `rcParams['font.family'] = 'serif'` and enforce a minimum of 8pt for annotations and 9pt for axis labels.
+3. **Data-Ink Ratio**: The mapping box on the right is useful but adds chart junk if heavily bordered. 
+   * *Enhancement*: Remove the border of the mapping box. Use direct labeling for the reference lines rather than adding them to a legend.
+4. **Annotation Clarity**: The legend is currently doing too much work. 
+   * *Enhancement*: Direct label the "MSHR Occupancy" and "Effective Threshold" lines right at their endpoints in the right margin. This drastically reduces the cognitive load (the "< 5 seconds" rule).
+5. **Axis Formatting**: Raw cycle counts (e.g., 10000) are hard to read.
+   * *Enhancement*: Apply a custom formatter to the X-axis to display `10K`, `20K`, etc. Ensure Y-axes are strictly bounded (e.g., `0` to `100`).
+6. **Cooldown Shading**: Throttling is a system-wide state. 
+   * *Enhancement*: The `#ff9896` shading must span **both** the top and bottom charts to visually link the timeline across both subplots.
+7. **Causal Arrows**: Standard annotations won't cross subplots easily. 
+   * *Enhancement*: Use `matplotlib.patches.ConnectionPatch` to draw arrows directly from the bottom chart's accuracy drop up to the top chart's threshold drop.
+8. **Legend Optimization**: 
+   * *Enhancement*: With direct labeling, the legend can be reduced to just two items: "Without Throttle Baseline" and "Cooldown Region (DATA_PF Suppressed)".
+
+---
+
+### FINAL Matplotlib-Ready Specification
+
+```python
+# --- 1. Global Setup & Fonts ---
+plt.rcParams.update({
+    'font.family': 'serif',
+    'font.serif': ['Times New Roman'],
+    'font.size': 9,
+    'axes.labelsize': 9,
+    'xtick.labelsize': 8,
+    'ytick.labelsize': 8,
+    'legend.fontsize': 8,
+    'axes.linewidth': 0.8
+})
+
+# --- 2. Figure Size & GridSpec ---
+fig = plt.figure(figsize=(7.0, 3.5))
+gs = fig.add_gridspec(2, 1, height_ratios=[2.2, 1.0], hspace=0.1)
+ax1 = fig.add_subplot(gs[0]) # Top: MSHR & Threshold
+ax2 = fig.add_subplot(gs[1], sharex=ax1) # Bottom: Window Accuracy
+
+# Margins
+plt.subplots_adjust(left=0.07, right=0.82, top=0.92, bottom=0.18)
+
+# --- 3. Curve Styling ---
+# Top Chart (ax1)
+# MSHR Occupancy
+ax1.plot(x, mshr, color='#1f77b4', linewidth=1.5, linestyle='-', zorder=3)
+# Effective Threshold
+ax1.plot(x, threshold, color='#d62728', linewidth=2.0, linestyle='--', zorder=4)
+# Baseline (No Throttle)
+ax1.plot(x, baseline, color='#7f7f7f', linewidth=1.2, linestyle=':', alpha=0.7, zorder=2)
+
+# Bottom Chart (ax2)
+# Window Accuracy
+ax2.plot(x, accuracy, color='#2ca02c', linewidth=1.5, zorder=3)
+ax2.fill_between(x, accuracy, 0, color='#2ca02c', alpha=0.2, zorder=2)
+
+# --- 4. Shading (Cooldown Regions) ---
+# Apply to BOTH axes to show system-wide state
+for start, end in cooldown_intervals:
+    ax1.axvspan(start, end, color='#ff9896', alpha=0.25, linewidth=0, zorder=1)
+    ax2.axvspan(start, end, color='#ff9896', alpha=0.25, linewidth=0, zorder=1)
+
+# --- 5. Reference Lines & Right-Side Labels ---
+# Top Chart References
+ax1.axhline(90, color='#7f7f7f', linestyle=':', linewidth=1.0, alpha=0.8, zorder=1)
+ax1.axhline(50, color='#7f7f7f', linestyle=':', linewidth=1.0, alpha=0.8, zorder=1)
+ax1.text(1.02, 90, 'Threshold High', transform=ax1.get_yaxis_transform(), fontsize=8, va='center', color='#555555')
+ax1.text(1.02, 50, 'Threshold Low', transform=ax1.get_yaxis_transform(), fontsize=8, va='center', color='#555555')
+
+# Bottom Chart References
+ax2.axhline(60, color='#7f7f7f', linestyle=':', linewidth=1.0, alpha=0.8, zorder=1)
+ax2.axhline(30, color='#7f7f7f', linestyle=':', linewidth=1.0, alpha=0.8, zorder=1)
+ax2.text(1.02, 60, 'Acc. High', transform=ax2.get_yaxis_transform(), fontsize=8, va='center', color='#555555')
+ax2.text(1.02, 30, 'Acc. Low', transform=ax2.get_yaxis_transform(), fontsize=8, va='center', color='#555555')
+
+# Direct Line Labels (Right Margin)
+ax1.text(1.02, final_mshr_val, 'MSHR Occupancy', transform=ax1.get_yaxis_transform(), color='#1f77b4', fontsize=8, fontweight='bold', va='center')
+ax1.text(1.02, final_thresh_val, 'Eff. Threshold', transform=ax1.get_yaxis_transform(), color='#d62728', fontsize=8, fontweight='bold', va='center')
+
+# --- 6. Annotations & Causal Arrows ---
+# Cooldown Label (Only in the widest region)
+ax1.text(widest_cooldown_center, 75, '❌ DATA_PF Suppressed', fontsize=8, color='#8c564b', ha='center', va='center')
+ax1.text(early_safe_region, 15, '✅ INDEX_PF Active', fontsize=8, color='#2ca02c', ha='center', va='center')
+
+# Cooldown Bracket
+ax1.annotate('', xy=(start_cd, 95), xytext=(end_cd, 95), arrowprops=dict(arrowstyle='|-|', color='black', lw=1.0))
+ax1.text((start_cd+end_cd)/2, 98, 'Cooldown', fontsize=8, ha='center', va='bottom')
+
+# Causal Arrow (Accuracy Drop -> Threshold Drop)
+from matplotlib.patches import ConnectionPatch
+con = ConnectionPatch(xyA=(drop_x, drop_thresh_y), xyB=(drop_x, drop_acc_y), 
+                      coordsA="data", coordsB="data", axesA=ax1, axesB=ax2,
+                      arrowstyle="<-", color="black", alpha=0.6, linestyle="--", lw=1.2)
+ax1.add_artist(con)
+
+# Mapping Box (Right Margin, spanning the gap)
+fig.text(0.83, 0.48, "Mechanism:\nLow Acc → Tight Thresh\nHigh Acc → Loose Thresh", 
+         fontsize=8, va='center', bbox=dict(facecolor='none', edgecolor='none')) # Removed border for data-ink ratio
+
+# --- 7. Axis Formatting ---
+# Hide X-ticks for top chart
+plt.setp(ax1.get_xticklabels(), visible=False)
+ax1.tick_params(axis='x', length=0)
+
+# X-Axis 'K' Formatter
+from matplotlib.ticker import FuncFormatter
+ax2.xaxis.set_major_formatter(FuncFormatter(lambda x, pos: f'{int(x/1000)}K'))
+ax2.set_xlabel('Execution Timeline (Cycles)', labelpad=4)
+
+# Y-Axis Limits & Labels
+ax1.set_ylim(0, 105)
+ax1.set_ylabel('MSHR Entries', labelpad=4)
+ax2.set_ylim(0, 100)
+ax2.set_ylabel('Accuracy (%)', labelpad=4)
+
+# --- 8. Optimized Legend ---
+# Create custom handles for the simplified legend
+import matplotlib.patches as mpatches
+import matplotlib.lines as mlines
+baseline_line = mlines.Line2D([], [], color='#7f7f7f', linestyle=':', lw=1.2, label='Baseline (No Throttle)')
+cooldown_patch = mpatches.Patch(color='#ff9896', alpha=0.4, label='Cooldown Region')
+
+fig.legend(handles=[baseline_line, cooldown_patch], loc='lower center', 
+           bbox_to_anchor=(0.45, 0.02), ncol=2, fontsize=8, frameon=False, handlelength=2.5)
+```

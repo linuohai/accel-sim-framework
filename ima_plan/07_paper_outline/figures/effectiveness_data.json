@@ -1,0 +1,5289 @@
+{
+  "workloads": {
+    "bfs_cit_dir": {
+      "short_name": "BFS-cp",
+      "baseline": {
+        "log_file": "bfs_cit_dir_baseline",
+        "status": "COMPLETE",
+        "ipc": 5.3349,
+        "final_cycles": 1515007,
+        "expected_kernels": 15,
+        "completed_kernels": 15,
+        "l1_misses": 514122,
+        "l1_pending_hits": 99443,
+        "ima_total_reads": 694289,
+        "ima_total_misses": 436100,
+        "ima_idx_reads": 228896,
+        "ima_idx_hits": 155777,
+        "ima_idx_hit_reserved": 5,
+        "ima_idx_misses": 73114,
+        "ima_data_reads": 465393,
+        "ima_data_hits": 7252,
+        "ima_data_hit_reserved": 95155,
+        "ima_data_misses": 362986,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 50458593,
+            "fraction": 0.74363685
+          },
+          "REG_WAIT": {
+            "events": 6090,
+            "fraction": 8.975e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 607271,
+            "fraction": 0.0089497
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 16762343,
+            "fraction": 0.24703614
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 19512,
+            "fraction": 0.00028756
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "bfs_cit_dir_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 6.0789,
+        "final_cycles": 1329564,
+        "expected_kernels": 15,
+        "completed_kernels": 15,
+        "l1_misses": 526078,
+        "l1_pending_hits": 121808,
+        "ima_total_reads": 694289,
+        "ima_total_misses": 331965,
+        "ima_idx_reads": 228896,
+        "ima_idx_hits": 173355,
+        "ima_idx_hit_reserved": 10673,
+        "ima_idx_misses": 44868,
+        "ima_data_reads": 465393,
+        "ima_data_hits": 82288,
+        "ima_data_hit_reserved": 96008,
+        "ima_data_misses": 287097,
+        "ima_timeliness": {
+          "index_pct": 94.2,
+          "data_pct": 46.15
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 36381768,
+            "fraction": 0.67688549
+          },
+          "REG_WAIT": {
+            "events": 6090,
+            "fraction": 0.0001133
+          },
+          "IBUFFER_EMPTY": {
+            "events": 668929,
+            "fraction": 0.01244547
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 16670906,
+            "fraction": 0.31016344
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 21085,
+            "fraction": 0.00039229
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 171716,
+          "idx_rfail": 586,
+          "idx_rfail_pct": 0.3,
+          "idx_got_data": 171130,
+          "data_enqueued": 79146,
+          "data_throttled": 0,
+          "data_attempted": 79115,
+          "data_rfail": 358,
+          "data_rfail_pct": 0.5,
+          "data_got_data": 78757,
+          "end_to_end_conv_pct": 45.86468354725244
+        },
+        "grasp_storage": {
+          "prb_peak": 11,
+          "prb_max": 1024,
+          "prb_pct": 1.1,
+          "ct_peak": 6,
+          "ct_max": 32,
+          "ct_pct": 18.8,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 30
+        },
+        "grasp_effect": {
+          "pf_useful": 110202,
+          "pf_useless": 128,
+          "pf_late": 11539,
+          "accuracy_pct": 99.88
+        },
+        "grasp_rfail": {
+          "total": 944,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 100.0,
+          "mshr_entry_pct": 0.0,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 13.945903390878925,
+        "cycle_reduction_pct": 12.240405489875625,
+        "ima_idx_reduction_pct": 38.632819979757635,
+        "ima_data_reduction_pct": 20.906866931507,
+        "ima_total_reduction_pct": 23.878697546434307,
+        "l1_miss_reduction_pct": -2.3255180676959943,
+        "memwait_reduction_pct": 27.897775508722567,
+        "ct_reuse_per_entry": 18367.0
+      }
+    },
+    "bfs_web_sym": {
+      "short_name": "BFS-wg",
+      "baseline": {
+        "log_file": "bfs_web_sym_baseline",
+        "status": "COMPLETE",
+        "ipc": 7.3528,
+        "final_cycles": 18473259,
+        "expected_kernels": 16,
+        "completed_kernels": 16,
+        "l1_misses": 13856104,
+        "l1_pending_hits": 683605,
+        "ima_total_reads": 18947822,
+        "ima_total_misses": 12935459,
+        "ima_idx_reads": 8689493,
+        "ima_idx_hits": 4735922,
+        "ima_idx_hit_reserved": 533,
+        "ima_idx_misses": 3953038,
+        "ima_data_reads": 10258329,
+        "ima_data_hits": 621151,
+        "ima_data_hit_reserved": 654757,
+        "ima_data_misses": 8982421,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 1895923776,
+            "fraction": 0.64618567
+          },
+          "REG_WAIT": {
+            "events": 25170,
+            "fraction": 8.58e-06
+          },
+          "IBUFFER_EMPTY": {
+            "events": 879448,
+            "fraction": 0.00029974
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 892839137,
+            "fraction": 0.30430541
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 144355707,
+            "fraction": 0.0492006
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "bfs_web_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 11.4992,
+        "final_cycles": 11812097,
+        "expected_kernels": 16,
+        "completed_kernels": 16,
+        "l1_misses": 15483885,
+        "l1_pending_hits": 2527096,
+        "ima_total_reads": 18947822,
+        "ima_total_misses": 9554501,
+        "ima_idx_reads": 8689493,
+        "ima_idx_hits": 4973728,
+        "ima_idx_hit_reserved": 778344,
+        "ima_idx_misses": 2937421,
+        "ima_data_reads": 10258329,
+        "ima_data_hits": 2815812,
+        "ima_data_hit_reserved": 825437,
+        "ima_data_misses": 6617080,
+        "ima_timeliness": {
+          "index_pct": 86.47,
+          "data_pct": 77.33
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 1572826221,
+            "fraction": 0.57870603
+          },
+          "REG_WAIT": {
+            "events": 24968,
+            "fraction": 9.19e-06
+          },
+          "IBUFFER_EMPTY": {
+            "events": 1347902,
+            "fraction": 0.00049595
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 1004113831,
+            "fraction": 0.36945387
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 139519848,
+            "fraction": 0.05133496
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 8338624,
+          "idx_rfail": 1887781,
+          "idx_rfail_pct": 22.6,
+          "idx_got_data": 6450843,
+          "data_enqueued": 4596100,
+          "data_throttled": 1328706,
+          "data_attempted": 3263159,
+          "data_rfail": 64603,
+          "data_rfail_pct": 2.0,
+          "data_got_data": 3198556,
+          "end_to_end_conv_pct": 38.35831907038859
+        },
+        "grasp_storage": {
+          "prb_peak": 72,
+          "prb_max": 1024,
+          "prb_pct": 7.0,
+          "ct_peak": 6,
+          "ct_max": 32,
+          "ct_pct": 18.8,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 51
+        },
+        "grasp_effect": {
+          "pf_useful": 3179856,
+          "pf_useless": 1753524,
+          "pf_late": 953328,
+          "accuracy_pct": 64.46
+        },
+        "grasp_rfail": {
+          "total": 1952384,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 43.4,
+          "mshr_entry_pct": 56.6,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 56.39212272875639,
+        "cycle_reduction_pct": 36.058402039401926,
+        "ima_idx_reduction_pct": 25.69206266167945,
+        "ima_data_reduction_pct": 26.33300086914207,
+        "ima_total_reduction_pct": 26.13713204919903,
+        "l1_miss_reduction_pct": -11.74775391408725,
+        "memwait_reduction_pct": 17.041695404108903,
+        "ct_reuse_per_entry": 529976.0
+      }
+    },
+    "bfs_flickr_sym": {
+      "short_name": "BFS-fl",
+      "baseline": {
+        "log_file": "bfs_flickr_sym_baseline",
+        "status": "COMPLETE",
+        "ipc": 9.7943,
+        "final_cycles": 17844753,
+        "expected_kernels": 12,
+        "completed_kernels": 12,
+        "l1_misses": 13349365,
+        "l1_pending_hits": 711378,
+        "ima_total_reads": 28124275,
+        "ima_total_misses": 12541435,
+        "ima_idx_reads": 13345855,
+        "ima_idx_hits": 9620777,
+        "ima_idx_hit_reserved": 11850,
+        "ima_idx_misses": 3713228,
+        "ima_data_reads": 14778420,
+        "ima_data_hits": 5274670,
+        "ima_data_hit_reserved": 675543,
+        "ima_data_misses": 8828207,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 2271957567,
+            "fraction": 0.67841908
+          },
+          "REG_WAIT": {
+            "events": 23909,
+            "fraction": 7.14e-06
+          },
+          "IBUFFER_EMPTY": {
+            "events": 6376841,
+            "fraction": 0.00190416
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 937195090,
+            "fraction": 0.27985163
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 133346468,
+            "fraction": 0.03981799
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "bfs_flickr_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 12.4545,
+        "final_cycles": 14033264,
+        "expected_kernels": 12,
+        "completed_kernels": 12,
+        "l1_misses": 15267305,
+        "l1_pending_hits": 5088230,
+        "ima_total_reads": 28124275,
+        "ima_total_misses": 6922893,
+        "ima_idx_reads": 13345855,
+        "ima_idx_hits": 10091388,
+        "ima_idx_hit_reserved": 960666,
+        "ima_idx_misses": 2293801,
+        "ima_data_reads": 14778420,
+        "ima_data_hits": 9006820,
+        "ima_data_hit_reserved": 1142508,
+        "ima_data_misses": 4629092,
+        "ima_timeliness": {
+          "index_pct": 91.31,
+          "data_pct": 88.74
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 1666464639,
+            "fraction": 0.57108781
+          },
+          "REG_WAIT": {
+            "events": 23897,
+            "fraction": 8.19e-06
+          },
+          "IBUFFER_EMPTY": {
+            "events": 8880327,
+            "fraction": 0.00304324
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 1109648661,
+            "fraction": 0.38027019
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 133035725,
+            "fraction": 0.04559057
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 12796280,
+          "idx_rfail": 1126268,
+          "idx_rfail_pct": 8.8,
+          "idx_got_data": 11670012,
+          "data_enqueued": 10644009,
+          "data_throttled": 1406905,
+          "data_attempted": 9072463,
+          "data_rfail": 15709,
+          "data_rfail_pct": 0.2,
+          "data_got_data": 9056754,
+          "end_to_end_conv_pct": 70.77646003369729
+        },
+        "grasp_storage": {
+          "prb_peak": 99,
+          "prb_max": 1024,
+          "prb_pct": 9.7,
+          "ct_peak": 6,
+          "ct_max": 32,
+          "ct_pct": 18.8,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 77
+        },
+        "grasp_effect": {
+          "pf_useful": 5679007,
+          "pf_useless": 1757461,
+          "pf_late": 1432087,
+          "accuracy_pct": 76.37
+        },
+        "grasp_rfail": {
+          "total": 1141977,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 50.3,
+          "mshr_entry_pct": 49.7,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 27.160695506570143,
+        "cycle_reduction_pct": 21.35915806736019,
+        "ima_idx_reduction_pct": 38.22622796122403,
+        "ima_data_reduction_pct": 47.56475465516384,
+        "ima_total_reduction_pct": 44.79983351187484,
+        "l1_miss_reduction_pct": -14.36727514754447,
+        "memwait_reduction_pct": 26.650714643386646,
+        "ct_reuse_per_entry": 946501.1666666666
+      }
+    },
+    "bfs_road_sym": {
+      "short_name": "BFS-rd",
+      "baseline": {
+        "log_file": "bfs_road_sym_baseline",
+        "status": "COMPLETE",
+        "ipc": 14.303,
+        "final_cycles": 12760500,
+        "expected_kernels": 728,
+        "completed_kernels": 728,
+        "l1_misses": 9824815,
+        "l1_pending_hits": 1665772,
+        "ima_total_reads": 15162648,
+        "ima_total_misses": 8864465,
+        "ima_idx_reads": 5759871,
+        "ima_idx_hits": 3138200,
+        "ima_idx_hit_reserved": 16222,
+        "ima_idx_misses": 2605449,
+        "ima_data_reads": 9402777,
+        "ima_data_hits": 1573937,
+        "ima_data_hit_reserved": 1569824,
+        "ima_data_misses": 6259016,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 459430783,
+            "fraction": 0.72073112
+          },
+          "REG_WAIT": {
+            "events": 6927,
+            "fraction": 1.087e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 13283834,
+            "fraction": 0.02083899
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 164437920,
+            "fraction": 0.25796166
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 291550,
+            "fraction": 0.00045737
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "bfs_road_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 15.5202,
+        "final_cycles": 11759739,
+        "expected_kernels": 728,
+        "completed_kernels": 728,
+        "l1_misses": 10183960,
+        "l1_pending_hits": 2368356,
+        "ima_total_reads": 15162648,
+        "ima_total_misses": 7233022,
+        "ima_idx_reads": 5759871,
+        "ima_idx_hits": 3446877,
+        "ima_idx_hit_reserved": 460887,
+        "ima_idx_misses": 1852107,
+        "ima_data_reads": 9402777,
+        "ima_data_hits": 2405787,
+        "ima_data_hit_reserved": 1616075,
+        "ima_data_misses": 5380915,
+        "ima_timeliness": {
+          "index_pct": 88.21,
+          "data_pct": 59.82
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 386210526,
+            "fraction": 0.68547613
+          },
+          "REG_WAIT": {
+            "events": 6919,
+            "fraction": 1.228e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 13262089,
+            "fraction": 0.02353858
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 163643045,
+            "fraction": 0.29044626
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 296785,
+            "fraction": 0.00052676
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 5296351,
+          "idx_rfail": 1089942,
+          "idx_rfail_pct": 20.6,
+          "idx_got_data": 4206409,
+          "data_enqueued": 1256978,
+          "data_throttled": 0,
+          "data_attempted": 1255255,
+          "data_rfail": 104655,
+          "data_rfail_pct": 8.3,
+          "data_got_data": 1150600,
+          "end_to_end_conv_pct": 21.724391000520924
+        },
+        "grasp_storage": {
+          "prb_peak": 8,
+          "prb_max": 1024,
+          "prb_pct": 0.8,
+          "ct_peak": 6,
+          "ct_max": 32,
+          "ct_pct": 18.8,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 48
+        },
+        "grasp_effect": {
+          "pf_useful": 1776569,
+          "pf_useless": 0,
+          "pf_late": 506305,
+          "accuracy_pct": 100.0
+        },
+        "grasp_rfail": {
+          "total": 1194597,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 100.0,
+          "mshr_entry_pct": 0.0,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 8.510102775641473,
+        "cycle_reduction_pct": 7.842647231691548,
+        "ima_idx_reduction_pct": 28.91409503697827,
+        "ima_data_reduction_pct": 14.029377780788547,
+        "ima_total_reduction_pct": 18.404303023363507,
+        "l1_miss_reduction_pct": -3.6554886784127745,
+        "memwait_reduction_pct": 15.937168276336417,
+        "ct_reuse_per_entry": 296094.8333333333
+      }
+    },
+    "bfs_socLJ_sym": {
+      "short_name": "BFS-sl",
+      "baseline": {
+        "log_file": "bfs_socLJ_sym_baseline",
+        "status": "COMPLETE",
+        "ipc": 22.249,
+        "final_cycles": 49894229,
+        "expected_kernels": 14,
+        "completed_kernels": 14,
+        "l1_misses": 111302359,
+        "l1_pending_hits": 3942244,
+        "ima_total_reads": 181489427,
+        "ima_total_misses": 105238835,
+        "ima_idx_reads": 86290289,
+        "ima_idx_hits": 55350007,
+        "ima_idx_hit_reserved": 11258,
+        "ima_idx_misses": 30929024,
+        "ima_data_reads": 95199138,
+        "ima_data_hits": 17064094,
+        "ima_data_hit_reserved": 3825233,
+        "ima_data_misses": 74309811,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 17491979185,
+            "fraction": 0.69226567
+          },
+          "REG_WAIT": {
+            "events": 24320,
+            "fraction": 9.6e-07
+          },
+          "IBUFFER_EMPTY": {
+            "events": 16042074,
+            "fraction": 0.00063488
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 6994667188,
+            "fraction": 0.27682219
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 765013092,
+            "fraction": 0.03027629
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "bfs_socLJ_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 29.2004,
+        "final_cycles": 38016370,
+        "expected_kernels": 14,
+        "completed_kernels": 14,
+        "l1_misses": 138662666,
+        "l1_pending_hits": 27068720,
+        "ima_total_reads": 181489427,
+        "ima_total_misses": 81145391,
+        "ima_idx_reads": 86290289,
+        "ima_idx_hits": 55205101,
+        "ima_idx_hit_reserved": 7429209,
+        "ima_idx_misses": 23655979,
+        "ima_data_reads": 95199138,
+        "ima_data_hits": 31815660,
+        "ima_data_hit_reserved": 5894066,
+        "ima_data_misses": 57489412,
+        "ima_timeliness": {
+          "index_pct": 88.14,
+          "data_pct": 84.37
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 16882113290,
+            "fraction": 0.62733759
+          },
+          "REG_WAIT": {
+            "events": 24609,
+            "fraction": 9.1e-07
+          },
+          "IBUFFER_EMPTY": {
+            "events": 33945863,
+            "fraction": 0.00126142
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 9191280753,
+            "fraction": 0.34154705
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 803366730,
+            "fraction": 0.02985302
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 83931627,
+          "idx_rfail": 13831115,
+          "idx_rfail_pct": 16.5,
+          "idx_got_data": 70100512,
+          "data_enqueued": 59161248,
+          "data_throttled": 16337233,
+          "data_attempted": 41829965,
+          "data_rfail": 1056309,
+          "data_rfail_pct": 2.5,
+          "data_got_data": 40773656,
+          "end_to_end_conv_pct": 48.57960873318945
+        },
+        "grasp_storage": {
+          "prb_peak": 130,
+          "prb_max": 1024,
+          "prb_pct": 12.7,
+          "ct_peak": 6,
+          "ct_max": 32,
+          "ct_pct": 18.8,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 73
+        },
+        "grasp_effect": {
+          "pf_useful": 27439620,
+          "pf_useless": 23435172,
+          "pf_late": 9486569,
+          "accuracy_pct": 53.94
+        },
+        "grasp_rfail": {
+          "total": 14887424,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 59.8,
+          "mshr_entry_pct": 40.2,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 31.243651400062923,
+        "cycle_reduction_pct": 23.806077853212244,
+        "ima_idx_reduction_pct": 23.51527484346095,
+        "ima_data_reduction_pct": 22.63550232956453,
+        "ima_total_reduction_pct": 22.894061873641988,
+        "l1_miss_reduction_pct": -24.58196505969833,
+        "memwait_reduction_pct": 3.4865459680113378,
+        "ct_reuse_per_entry": 4573270.0
+      }
+    },
+    "sssp_cit_dir": {
+      "short_name": "SSSP-cp",
+      "baseline": {
+        "log_file": "sssp_cit_dir_baseline",
+        "status": "COMPLETE",
+        "ipc": 5.9499,
+        "final_cycles": 1466570,
+        "expected_kernels": 15,
+        "completed_kernels": 15,
+        "l1_misses": 579165,
+        "l1_pending_hits": 99343,
+        "ima_total_reads": 694351,
+        "ima_total_misses": 436316,
+        "ima_idx_reads": 228900,
+        "ima_idx_hits": 155686,
+        "ima_idx_hit_reserved": 11,
+        "ima_idx_misses": 73203,
+        "ima_data_reads": 465451,
+        "ima_data_hits": 7141,
+        "ima_data_hit_reserved": 95197,
+        "ima_data_misses": 363113,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 49215591,
+            "fraction": 0.72604574
+          },
+          "REG_WAIT": {
+            "events": 2557,
+            "fraction": 3.772e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 580418,
+            "fraction": 0.00856253
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 17952613,
+            "fraction": 0.26484327
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 34621,
+            "fraction": 0.00051074
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "sssp_cit_dir_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 6.592,
+        "final_cycles": 1323722,
+        "expected_kernels": 15,
+        "completed_kernels": 15,
+        "l1_misses": 595215,
+        "l1_pending_hits": 118660,
+        "ima_total_reads": 694351,
+        "ima_total_misses": 339867,
+        "ima_idx_reads": 228900,
+        "ima_idx_hits": 172793,
+        "ima_idx_hit_reserved": 9175,
+        "ima_idx_misses": 46932,
+        "ima_data_reads": 465451,
+        "ima_data_hits": 76713,
+        "ima_data_hit_reserved": 95803,
+        "ima_data_misses": 292935,
+        "ima_timeliness": {
+          "index_pct": 94.96,
+          "data_pct": 44.47
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 38539715,
+            "fraction": 0.67516705
+          },
+          "REG_WAIT": {
+            "events": 2557,
+            "fraction": 4.48e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 619162,
+            "fraction": 0.01084694
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 17882073,
+            "fraction": 0.3132713
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 38240,
+            "fraction": 0.00066992
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 170465,
+          "idx_rfail": 3648,
+          "idx_rfail_pct": 2.1,
+          "idx_got_data": 166817,
+          "data_enqueued": 73278,
+          "data_throttled": 0,
+          "data_attempted": 73257,
+          "data_rfail": 221,
+          "data_rfail_pct": 0.3,
+          "data_got_data": 73036,
+          "end_to_end_conv_pct": 42.84515883025841
+        },
+        "grasp_storage": {
+          "prb_peak": 9,
+          "prb_max": 1024,
+          "prb_pct": 0.9,
+          "ct_peak": 6,
+          "ct_max": 32,
+          "ct_pct": 18.8,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 28
+        },
+        "grasp_effect": {
+          "pf_useful": 102761,
+          "pf_useless": 306,
+          "pf_late": 9814,
+          "accuracy_pct": 99.7
+        },
+        "grasp_rfail": {
+          "total": 3869,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 100.0,
+          "mshr_entry_pct": 0.0,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 10.791778013075836,
+        "cycle_reduction_pct": 9.740278336526725,
+        "ima_idx_reduction_pct": 35.88787344780952,
+        "ima_data_reduction_pct": 19.32676604803463,
+        "ima_total_reduction_pct": 22.10530899623209,
+        "l1_miss_reduction_pct": -2.771230996348191,
+        "memwait_reduction_pct": 21.69206095686223,
+        "ct_reuse_per_entry": 17126.833333333332
+      }
+    },
+    "sssp_web_sym": {
+      "short_name": "SSSP-wg",
+      "baseline": {
+        "log_file": "sssp_web_sym_baseline",
+        "status": "COMPLETE",
+        "ipc": 9.558,
+        "final_cycles": 17997932,
+        "expected_kernels": 16,
+        "completed_kernels": 16,
+        "l1_misses": 23026714,
+        "l1_pending_hits": 674311,
+        "ima_total_reads": 18950975,
+        "ima_total_misses": 13827567,
+        "ima_idx_reads": 8689503,
+        "ima_idx_hits": 3970199,
+        "ima_idx_hit_reserved": 342,
+        "ima_idx_misses": 4718962,
+        "ima_data_reads": 10261472,
+        "ima_data_hits": 518235,
+        "ima_data_hit_reserved": 634632,
+        "ima_data_misses": 9108605,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 2049618233,
+            "fraction": 0.49193605
+          },
+          "REG_WAIT": {
+            "events": 2598,
+            "fraction": 6.2e-07
+          },
+          "IBUFFER_EMPTY": {
+            "events": 902213,
+            "fraction": 0.00021654
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 1036277468,
+            "fraction": 0.24872058
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 1079631785,
+            "fraction": 0.2591262
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "sssp_web_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 14.0398,
+        "final_cycles": 12252574,
+        "expected_kernels": 16,
+        "completed_kernels": 16,
+        "l1_misses": 24541556,
+        "l1_pending_hits": 2031818,
+        "ima_total_reads": 18950975,
+        "ima_total_misses": 10895338,
+        "ima_idx_reads": 8689503,
+        "ima_idx_hits": 4260406,
+        "ima_idx_hit_reserved": 544471,
+        "ima_idx_misses": 3884626,
+        "ima_data_reads": 10261472,
+        "ima_data_hits": 2514804,
+        "ima_data_hit_reserved": 735956,
+        "ima_data_misses": 7010712,
+        "ima_timeliness": {
+          "index_pct": 88.67,
+          "data_pct": 77.36
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 1805118105,
+            "fraction": 0.4520128
+          },
+          "REG_WAIT": {
+            "events": 2595,
+            "fraction": 6.5e-07
+          },
+          "IBUFFER_EMPTY": {
+            "events": 1115893,
+            "fraction": 0.00027943
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 1089060231,
+            "fraction": 0.27270745
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 1098214245,
+            "fraction": 0.27499967
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 8350064,
+          "idx_rfail": 3011774,
+          "idx_rfail_pct": 36.1,
+          "idx_got_data": 5338290,
+          "data_enqueued": 3852060,
+          "data_throttled": 1010315,
+          "data_attempted": 2837904,
+          "data_rfail": 62123,
+          "data_rfail_pct": 2.2,
+          "data_got_data": 2775781,
+          "end_to_end_conv_pct": 33.24263143372314
+        },
+        "grasp_storage": {
+          "prb_peak": 64,
+          "prb_max": 1024,
+          "prb_pct": 6.2,
+          "ct_peak": 6,
+          "ct_max": 32,
+          "ct_pct": 18.8,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 45
+        },
+        "grasp_effect": {
+          "pf_useful": 2738818,
+          "pf_useless": 1373759,
+          "pf_late": 650986,
+          "accuracy_pct": 66.6
+        },
+        "grasp_rfail": {
+          "total": 3073897,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 19.3,
+          "mshr_entry_pct": 80.7,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 46.89056287926344,
+        "cycle_reduction_pct": 31.922323075784487,
+        "ima_idx_reduction_pct": 17.68049838078798,
+        "ima_data_reduction_pct": 23.03199007971034,
+        "ima_total_reduction_pct": 21.20567558992844,
+        "l1_miss_reduction_pct": -6.578628631076063,
+        "memwait_reduction_pct": 11.929057034300884,
+        "ct_reuse_per_entry": 456469.6666666667
+      }
+    },
+    "sssp_flickr_sym": {
+      "short_name": "SSSP-fl",
+      "baseline": {
+        "log_file": "sssp_flickr_sym_baseline",
+        "status": "COMPLETE",
+        "ipc": 11.7493,
+        "final_cycles": 19258555,
+        "expected_kernels": 12,
+        "completed_kernels": 12,
+        "l1_misses": 21512601,
+        "l1_pending_hits": 763750,
+        "ima_total_reads": 28127368,
+        "ima_total_misses": 13864113,
+        "ima_idx_reads": 13344962,
+        "ima_idx_hits": 8946645,
+        "ima_idx_hit_reserved": 11583,
+        "ima_idx_misses": 4386734,
+        "ima_data_reads": 14782406,
+        "ima_data_hits": 4619765,
+        "ima_data_hit_reserved": 685262,
+        "ima_data_misses": 9477379,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 2474785559,
+            "fraction": 0.58944484
+          },
+          "REG_WAIT": {
+            "events": 1097,
+            "fraction": 2.6e-07
+          },
+          "IBUFFER_EMPTY": {
+            "events": 6890919,
+            "fraction": 0.00164128
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 1095888876,
+            "fraction": 0.26101899
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 620935946,
+            "fraction": 0.14789463
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "sssp_flickr_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 14.0946,
+        "final_cycles": 16053998,
+        "expected_kernels": 12,
+        "completed_kernels": 12,
+        "l1_misses": 23066359,
+        "l1_pending_hits": 3985122,
+        "ima_total_reads": 28127368,
+        "ima_total_misses": 7973531,
+        "ima_idx_reads": 13344962,
+        "ima_idx_hits": 9678833,
+        "ima_idx_hit_reserved": 736251,
+        "ima_idx_misses": 2929878,
+        "ima_data_reads": 14782406,
+        "ima_data_hits": 8825005,
+        "ima_data_hit_reserved": 913748,
+        "ima_data_misses": 5043653,
+        "ima_timeliness": {
+          "index_pct": 92.93,
+          "data_pct": 90.62
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 2030891717,
+            "fraction": 0.52351808
+          },
+          "REG_WAIT": {
+            "events": 1118,
+            "fraction": 2.9e-07
+          },
+          "IBUFFER_EMPTY": {
+            "events": 8247513,
+            "fraction": 0.00212602
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 1206591588,
+            "fraction": 0.3110321
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 633583376,
+            "fraction": 0.16332351
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 12825173,
+          "idx_rfail": 1900912,
+          "idx_rfail_pct": 14.8,
+          "idx_got_data": 10924261,
+          "data_enqueued": 10065834,
+          "data_throttled": 1307818,
+          "data_attempted": 8632882,
+          "data_rfail": 16217,
+          "data_rfail_pct": 0.2,
+          "data_got_data": 8616665,
+          "end_to_end_conv_pct": 67.18556545007229
+        },
+        "grasp_storage": {
+          "prb_peak": 80,
+          "prb_max": 1024,
+          "prb_pct": 7.8,
+          "ct_peak": 6,
+          "ct_max": 32,
+          "ct_pct": 18.8,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 54
+        },
+        "grasp_effect": {
+          "pf_useful": 5793226,
+          "pf_useless": 1298957,
+          "pf_late": 970709,
+          "accuracy_pct": 81.68
+        },
+        "grasp_rfail": {
+          "total": 1917129,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 18.0,
+          "mshr_entry_pct": 82.0,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 19.961189177227578,
+        "cycle_reduction_pct": 16.639654428901856,
+        "ima_idx_reduction_pct": 33.21049327358349,
+        "ima_data_reduction_pct": 46.78219579485003,
+        "ima_total_reduction_pct": 42.48798318363389,
+        "l1_miss_reduction_pct": -7.222548310174116,
+        "memwait_reduction_pct": 17.93665881012198,
+        "ct_reuse_per_entry": 965537.6666666666
+      }
+    },
+    "sssp_road_sym": {
+      "short_name": "SSSP-rd",
+      "baseline": {
+        "log_file": "sssp_road_sym_baseline",
+        "status": "COMPLETE",
+        "ipc": 17.5696,
+        "final_cycles": 12361038,
+        "expected_kernels": 728,
+        "completed_kernels": 728,
+        "l1_misses": 12417476,
+        "l1_pending_hits": 1653869,
+        "ima_total_reads": 15163125,
+        "ima_total_misses": 7716011,
+        "ima_idx_reads": 5759875,
+        "ima_idx_hits": 3141934,
+        "ima_idx_hit_reserved": 12479,
+        "ima_idx_misses": 2605462,
+        "ima_data_reads": 9403250,
+        "ima_data_hits": 2761255,
+        "ima_data_hit_reserved": 1531446,
+        "ima_data_misses": 5110549,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 404430524,
+            "fraction": 0.68986542
+          },
+          "REG_WAIT": {
+            "events": 2557,
+            "fraction": 4.36e-06
+          },
+          "IBUFFER_EMPTY": {
+            "events": 13026442,
+            "fraction": 0.02222011
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 165406244,
+            "fraction": 0.28214499
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 3379774,
+            "fraction": 0.00576512
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "sssp_road_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 18.6726,
+        "final_cycles": 11630875,
+        "expected_kernels": 728,
+        "completed_kernels": 728,
+        "l1_misses": 13131706,
+        "l1_pending_hits": 1997833,
+        "ima_total_reads": 15163125,
+        "ima_total_misses": 6649863,
+        "ima_idx_reads": 5759875,
+        "ima_idx_hits": 3406635,
+        "ima_idx_hit_reserved": 209152,
+        "ima_idx_misses": 2144088,
+        "ima_data_reads": 9403250,
+        "ima_data_hits": 3348487,
+        "ima_data_hit_reserved": 1548988,
+        "ima_data_misses": 4505775,
+        "ima_timeliness": {
+          "index_pct": 94.22,
+          "data_pct": 68.37
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 353970241,
+            "fraction": 0.66138073
+          },
+          "REG_WAIT": {
+            "events": 2557,
+            "fraction": 4.78e-06
+          },
+          "IBUFFER_EMPTY": {
+            "events": 12993517,
+            "fraction": 0.02427792
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 164835062,
+            "fraction": 0.30798842
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 3397524,
+            "fraction": 0.00634815
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 5268938,
+          "idx_rfail": 1522662,
+          "idx_rfail_pct": 28.9,
+          "idx_got_data": 3746276,
+          "data_enqueued": 954976,
+          "data_throttled": 0,
+          "data_attempted": 953412,
+          "data_rfail": 15103,
+          "data_rfail_pct": 1.6,
+          "data_got_data": 938309,
+          "end_to_end_conv_pct": 17.808313553888848
+        },
+        "grasp_storage": {
+          "prb_peak": 10,
+          "prb_max": 1024,
+          "prb_pct": 1.0,
+          "ct_peak": 6,
+          "ct_max": 32,
+          "ct_pct": 18.8,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 41
+        },
+        "grasp_effect": {
+          "pf_useful": 1157261,
+          "pf_useless": 0,
+          "pf_late": 217393,
+          "accuracy_pct": 100.0
+        },
+        "grasp_rfail": {
+          "total": 1537765,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 100.0,
+          "mshr_entry_pct": 0.0,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 6.277889081140139,
+        "cycle_reduction_pct": 5.906971566627334,
+        "ima_idx_reduction_pct": 17.707953522254403,
+        "ima_data_reduction_pct": 11.833836247338594,
+        "ima_total_reduction_pct": 13.817346813009987,
+        "l1_miss_reduction_pct": -5.751813009342639,
+        "memwait_reduction_pct": 12.476873036417993,
+        "ct_reuse_per_entry": 192876.83333333334
+      }
+    },
+    "bc_cit_dir": {
+      "short_name": "BC-cp",
+      "baseline": {
+        "log_file": "bc_cit_dir_baseline",
+        "status": "COMPLETE",
+        "ipc": 95.2826,
+        "final_cycles": 3600635,
+        "expected_kernels": 49,
+        "completed_kernels": 49,
+        "l1_misses": 2972005,
+        "l1_pending_hits": 200946,
+        "ima_total_reads": 1604266,
+        "ima_total_misses": 875179,
+        "ima_idx_reads": 460444,
+        "ima_idx_hits": 311522,
+        "ima_idx_hit_reserved": 2330,
+        "ima_idx_misses": 146592,
+        "ima_data_reads": 1143822,
+        "ima_data_hits": 224923,
+        "ima_data_hit_reserved": 190312,
+        "ima_data_misses": 728587,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 172220970,
+            "fraction": 0.45191464
+          },
+          "REG_WAIT": {
+            "events": 875157,
+            "fraction": 0.00229645
+          },
+          "IBUFFER_EMPTY": {
+            "events": 52278319,
+            "fraction": 0.13718038
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 39627565,
+            "fraction": 0.1039843
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 40350033,
+            "fraction": 0.10588008
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 75739774,
+            "fraction": 0.19874416
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "bc_cit_dir_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 104.6116,
+        "final_cycles": 3279540,
+        "expected_kernels": 49,
+        "completed_kernels": 49,
+        "l1_misses": 2979173,
+        "l1_pending_hits": 213491,
+        "ima_total_reads": 1604266,
+        "ima_total_misses": 811040,
+        "ima_idx_reads": 460444,
+        "ima_idx_hits": 322400,
+        "ima_idx_hit_reserved": 8722,
+        "ima_idx_misses": 129322,
+        "ima_data_reads": 1143822,
+        "ima_data_hits": 271658,
+        "ima_data_hit_reserved": 190446,
+        "ima_data_misses": 681718,
+        "ima_timeliness": {
+          "index_pct": 97.37,
+          "data_pct": 58.79
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 167829295,
+            "fraction": 0.44999622
+          },
+          "REG_WAIT": {
+            "events": 875112,
+            "fraction": 0.00234641
+          },
+          "IBUFFER_EMPTY": {
+            "events": 51916401,
+            "fraction": 0.13920206
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 37087948,
+            "fraction": 0.09944293
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 39695844,
+            "fraction": 0.10643541
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 75552525,
+            "fraction": 0.20257697
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 103866,
+          "idx_rfail": 582,
+          "idx_rfail_pct": 0.6,
+          "idx_got_data": 103284,
+          "data_enqueued": 49863,
+          "data_throttled": 0,
+          "data_attempted": 49850,
+          "data_rfail": 155,
+          "data_rfail_pct": 0.3,
+          "data_got_data": 49695,
+          "end_to_end_conv_pct": 47.84530067587083
+        },
+        "grasp_storage": {
+          "prb_peak": 9,
+          "prb_max": 1024,
+          "prb_pct": 0.9,
+          "ct_peak": 6,
+          "ct_max": 32,
+          "ct_pct": 18.8,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 31
+        },
+        "grasp_effect": {
+          "pf_useful": 68207,
+          "pf_useless": 282,
+          "pf_late": 6552,
+          "accuracy_pct": 99.59
+        },
+        "grasp_rfail": {
+          "total": 737,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 100.0,
+          "mshr_entry_pct": 0.0,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 9.790874724241355,
+        "cycle_reduction_pct": 8.917732566616722,
+        "ima_idx_reduction_pct": 11.78099759877756,
+        "ima_data_reduction_pct": 6.432862513330598,
+        "ima_total_reduction_pct": 7.328672191631655,
+        "l1_miss_reduction_pct": -0.24118398185736567,
+        "memwait_reduction_pct": 2.5500233798474135,
+        "ct_reuse_per_entry": 11367.833333333334
+      }
+    },
+    "bc_web_sym": {
+      "short_name": "BC-wg",
+      "baseline": {
+        "log_file": "bc_web_sym_baseline",
+        "status": "COMPLETE",
+        "ipc": 10.8322,
+        "final_cycles": 41346547,
+        "expected_kernels": 52,
+        "completed_kernels": 52,
+        "l1_misses": 34524470,
+        "l1_pending_hits": 1392388,
+        "ima_total_reads": 46479051,
+        "ima_total_misses": 27267331,
+        "ima_idx_reads": 17405746,
+        "ima_idx_hits": 9244319,
+        "ima_idx_hit_reserved": 24277,
+        "ima_idx_misses": 8137150,
+        "ima_data_reads": 29073305,
+        "ima_data_hits": 8631992,
+        "ima_data_hit_reserved": 1311132,
+        "ima_data_misses": 19130181,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 3637756414,
+            "fraction": 0.7331775
+          },
+          "REG_WAIT": {
+            "events": 286083,
+            "fraction": 5.766e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 31463997,
+            "fraction": 0.00634146
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 605656,
+            "fraction": 0.00012207
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 1031403138,
+            "fraction": 0.20787581
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 260116017,
+            "fraction": 0.0524255
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "bc_web_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 11.9936,
+        "final_cycles": 37342888,
+        "expected_kernels": 52,
+        "completed_kernels": 52,
+        "l1_misses": 35573567,
+        "l1_pending_hits": 2060485,
+        "ima_total_reads": 46479051,
+        "ima_total_misses": 25701796,
+        "ima_idx_reads": 17405746,
+        "ima_idx_hits": 9387533,
+        "ima_idx_hit_reserved": 330666,
+        "ima_idx_misses": 7687547,
+        "ima_data_reads": 29073305,
+        "ima_data_hits": 9718458,
+        "ima_data_hit_reserved": 1340598,
+        "ima_data_misses": 18014249,
+        "ima_timeliness": {
+          "index_pct": 96.6,
+          "data_pct": 87.88
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 3478229844,
+            "fraction": 0.714627
+          },
+          "REG_WAIT": {
+            "events": 287616,
+            "fraction": 5.909e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 31557898,
+            "fraction": 0.00648379
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 606548,
+            "fraction": 0.00012462
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 1099664344,
+            "fraction": 0.22593384
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 256849993,
+            "fraction": 0.05277165
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 4152917,
+          "idx_rfail": 968083,
+          "idx_rfail_pct": 23.3,
+          "idx_got_data": 3184834,
+          "data_enqueued": 2347991,
+          "data_throttled": 410680,
+          "data_attempted": 1934804,
+          "data_rfail": 70582,
+          "data_rfail_pct": 3.6,
+          "data_got_data": 1864222,
+          "end_to_end_conv_pct": 44.889459625607735
+        },
+        "grasp_storage": {
+          "prb_peak": 50,
+          "prb_max": 1024,
+          "prb_pct": 4.9,
+          "ct_peak": 6,
+          "ct_max": 32,
+          "ct_pct": 18.8,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 50
+        },
+        "grasp_effect": {
+          "pf_useful": 1650792,
+          "pf_useless": 927295,
+          "pf_late": 341106,
+          "accuracy_pct": 64.03
+        },
+        "grasp_rfail": {
+          "total": 1038665,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 74.8,
+          "mshr_entry_pct": 25.2,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 10.721737043259914,
+        "cycle_reduction_pct": 9.68317620332358,
+        "ima_idx_reduction_pct": 5.525312916684588,
+        "ima_data_reduction_pct": 5.833358293891731,
+        "ima_total_reduction_pct": 5.741431018679459,
+        "l1_miss_reduction_pct": -3.0387055905564955,
+        "memwait_reduction_pct": 4.385301043963742,
+        "ct_reuse_per_entry": 275132.0
+      }
+    },
+    "bc_flickr_sym": {
+      "short_name": "BC-fl",
+      "baseline": {
+        "log_file": "bc_flickr_sym_baseline",
+        "status": "COMPLETE",
+        "ipc": 13.4772,
+        "final_cycles": 42988421,
+        "expected_kernels": 40,
+        "completed_kernels": 40,
+        "l1_misses": 33395685,
+        "l1_pending_hits": 1439351,
+        "ima_total_reads": 69418790,
+        "ima_total_misses": 26351605,
+        "ima_idx_reads": 26697513,
+        "ima_idx_hits": 19188876,
+        "ima_idx_hit_reserved": 34367,
+        "ima_idx_misses": 7474270,
+        "ima_data_reads": 42721277,
+        "ima_data_hits": 22496138,
+        "ima_data_hit_reserved": 1347804,
+        "ima_data_misses": 18877335,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 4161321935,
+            "fraction": 0.74963878
+          },
+          "REG_WAIT": {
+            "events": 260733,
+            "fraction": 4.697e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 30027315,
+            "fraction": 0.00540925
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 1379850,
+            "fraction": 0.00024857
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 1118567974,
+            "fraction": 0.20150374
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 239545005,
+            "fraction": 0.04315269
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "bc_flickr_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 16.4246,
+        "final_cycles": 35273965,
+        "expected_kernels": 40,
+        "completed_kernels": 40,
+        "l1_misses": 34384154,
+        "l1_pending_hits": 3055197,
+        "ima_total_reads": 69418790,
+        "ima_total_misses": 22302197,
+        "ima_idx_reads": 26697513,
+        "ima_idx_hits": 19817759,
+        "ima_idx_hit_reserved": 305296,
+        "ima_idx_misses": 6574458,
+        "ima_data_reads": 42721277,
+        "ima_data_hits": 25520517,
+        "ima_data_hit_reserved": 1473021,
+        "ima_data_misses": 15727739,
+        "ima_timeliness": {
+          "index_pct": 98.48,
+          "data_pct": 94.54
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 3686660226,
+            "fraction": 0.71619589
+          },
+          "REG_WAIT": {
+            "events": 260338,
+            "fraction": 5.058e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 29882832,
+            "fraction": 0.00580524
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 1277666,
+            "fraction": 0.00024821
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 1187151151,
+            "fraction": 0.23062412
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 242326247,
+            "fraction": 0.04707596
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 8274287,
+          "idx_rfail": 630407,
+          "idx_rfail_pct": 7.6,
+          "idx_got_data": 7643880,
+          "data_enqueued": 7470106,
+          "data_throttled": 423103,
+          "data_attempted": 6979333,
+          "data_rfail": 32884,
+          "data_rfail_pct": 0.5,
+          "data_got_data": 6946449,
+          "end_to_end_conv_pct": 83.95223660963175
+        },
+        "grasp_storage": {
+          "prb_peak": 77,
+          "prb_max": 1024,
+          "prb_pct": 7.5,
+          "ct_peak": 6,
+          "ct_max": 32,
+          "ct_pct": 18.8,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 89
+        },
+        "grasp_effect": {
+          "pf_useful": 4237130,
+          "pf_useless": 745287,
+          "pf_late": 404789,
+          "accuracy_pct": 85.04
+        },
+        "grasp_rfail": {
+          "total": 663291,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 68.1,
+          "mshr_entry_pct": 31.9,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 21.86952779509098,
+        "cycle_reduction_pct": 17.945427676908626,
+        "ima_idx_reduction_pct": 12.038794424070847,
+        "ima_data_reduction_pct": 16.684537303597143,
+        "ima_total_reduction_pct": 15.366836289478384,
+        "l1_miss_reduction_pct": -2.9598704143963506,
+        "memwait_reduction_pct": 11.406512555727078,
+        "ct_reuse_per_entry": 706188.3333333334
+      }
+    },
+    "bc_road_sym": {
+      "short_name": "BC-rd",
+      "baseline": {
+        "log_file": "bc_road_sym_baseline",
+        "status": "COMPLETE",
+        "ipc": 18.4855,
+        "final_cycles": 32267459,
+        "expected_kernels": 2188,
+        "completed_kernels": 2188,
+        "l1_misses": 29019176,
+        "l1_pending_hits": 3992075,
+        "ima_total_reads": 35879632,
+        "ima_total_misses": 18285521,
+        "ima_idx_reads": 11573938,
+        "ima_idx_hits": 6278533,
+        "ima_idx_hit_reserved": 75525,
+        "ima_idx_misses": 5219880,
+        "ima_data_reads": 24305694,
+        "ima_data_hits": 8111378,
+        "ima_data_hit_reserved": 3128675,
+        "ima_data_misses": 13065641,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 1151701167,
+            "fraction": 0.73750869
+          },
+          "REG_WAIT": {
+            "events": 527086,
+            "fraction": 0.00033753
+          },
+          "IBUFFER_EMPTY": {
+            "events": 61617660,
+            "fraction": 0.03945777
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 8619952,
+            "fraction": 0.00551991
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 297247048,
+            "fraction": 0.1903465
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 41897389,
+            "fraction": 0.02682961
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "bc_road_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 19.3477,
+        "final_cycles": 30829551,
+        "expected_kernels": 2188,
+        "completed_kernels": 2188,
+        "l1_misses": 29979952,
+        "l1_pending_hits": 5384698,
+        "ima_total_reads": 35879632,
+        "ima_total_misses": 14795385,
+        "ima_idx_reads": 11573938,
+        "ima_idx_hits": 6808302,
+        "ima_idx_hit_reserved": 892216,
+        "ima_idx_misses": 3873420,
+        "ima_data_reads": 24305694,
+        "ima_data_hits": 10052713,
+        "ima_data_hit_reserved": 3331016,
+        "ima_data_misses": 10921965,
+        "ima_timeliness": {
+          "index_pct": 88.41,
+          "data_pct": 75.11
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 1036090840,
+            "fraction": 0.71632148
+          },
+          "REG_WAIT": {
+            "events": 526258,
+            "fraction": 0.00036384
+          },
+          "IBUFFER_EMPTY": {
+            "events": 61790163,
+            "fraction": 0.04271983
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 9329259,
+            "fraction": 0.00644996
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 296681226,
+            "fraction": 0.20511631
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 41987082,
+            "fraction": 0.02902858
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 8866858,
+          "idx_rfail": 1721817,
+          "idx_rfail_pct": 19.4,
+          "idx_got_data": 7145041,
+          "data_enqueued": 2664992,
+          "data_throttled": 191,
+          "data_attempted": 2660464,
+          "data_rfail": 140105,
+          "data_rfail_pct": 5.3,
+          "data_got_data": 2520359,
+          "end_to_end_conv_pct": 28.424488133225996
+        },
+        "grasp_storage": {
+          "prb_peak": 8,
+          "prb_max": 1024,
+          "prb_pct": 0.8,
+          "ct_peak": 6,
+          "ct_max": 32,
+          "ct_pct": 18.8,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 53
+        },
+        "grasp_effect": {
+          "pf_useful": 3527149,
+          "pf_useless": 36160,
+          "pf_late": 1046339,
+          "accuracy_pct": 98.99
+        },
+        "grasp_rfail": {
+          "total": 1861922,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 100.0,
+          "mshr_entry_pct": 0.0,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 4.664196261935039,
+        "cycle_reduction_pct": 4.456217020373374,
+        "ima_idx_reduction_pct": 25.794845858525484,
+        "ima_data_reduction_pct": 16.406971537026006,
+        "ima_total_reduction_pct": 19.086883004318008,
+        "l1_miss_reduction_pct": -3.3108314309131313,
+        "memwait_reduction_pct": 10.038222614738395,
+        "ct_reuse_per_entry": 587858.1666666666
+      }
+    },
+    "cc_cit_sym": {
+      "short_name": "CC-cp",
+      "baseline": {
+        "log_file": "cc_cit_sym_baseline",
+        "status": "COMPLETE",
+        "ipc": 426.54,
+        "final_cycles": 11080009,
+        "expected_kernels": 18,
+        "completed_kernels": 18,
+        "l1_misses": 407893309,
+        "l1_pending_hits": 10795947,
+        "ima_total_reads": 588105128,
+        "ima_total_misses": 360556380,
+        "ima_idx_reads": 281443725,
+        "ima_idx_hits": 217002827,
+        "ima_idx_hit_reserved": 294497,
+        "ima_idx_misses": 64146401,
+        "ima_data_reads": 306661403,
+        "ima_data_hits": 9705660,
+        "ima_data_hit_reserved": 545764,
+        "ima_data_misses": 296409979,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 32062614946,
+            "fraction": 0.97821586
+          },
+          "REG_WAIT": {
+            "events": 269892,
+            "fraction": 8.23e-06
+          },
+          "IBUFFER_EMPTY": {
+            "events": 200638623,
+            "fraction": 0.00612139
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 513102236,
+            "fraction": 0.01565452
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "cc_cit_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 410.5897,
+        "final_cycles": 11510437,
+        "expected_kernels": 18,
+        "completed_kernels": 18,
+        "l1_misses": 467011584,
+        "l1_pending_hits": 28226991,
+        "ima_total_reads": 588105128,
+        "ima_total_misses": 339146916,
+        "ima_idx_reads": 281443725,
+        "ima_idx_hits": 207329122,
+        "ima_idx_hit_reserved": 8770807,
+        "ima_idx_misses": 65343796,
+        "ima_data_reads": 306661403,
+        "ima_data_hits": 30127198,
+        "ima_data_hit_reserved": 2731085,
+        "ima_data_misses": 273803120,
+        "ima_timeliness": {
+          "index_pct": 95.94,
+          "data_pct": 91.69
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 34418010748,
+            "fraction": 0.97785204
+          },
+          "REG_WAIT": {
+            "events": 269892,
+            "fraction": 7.67e-06
+          },
+          "IBUFFER_EMPTY": {
+            "events": 226167346,
+            "fraction": 0.00642565
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 553117088,
+            "fraction": 0.01571464
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 174139310,
+          "idx_rfail": 37967296,
+          "idx_rfail_pct": 21.8,
+          "idx_got_data": 136172014,
+          "data_enqueued": 144413829,
+          "data_throttled": 61991739,
+          "data_attempted": 82243984,
+          "data_rfail": 18359102,
+          "data_rfail_pct": 22.3,
+          "data_got_data": 63884882,
+          "end_to_end_conv_pct": 36.68607737104276
+        },
+        "grasp_storage": {
+          "prb_peak": 72,
+          "prb_max": 1024,
+          "prb_pct": 7.0,
+          "ct_peak": 5,
+          "ct_max": 32,
+          "ct_pct": 15.6,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 91
+        },
+        "grasp_effect": {
+          "pf_useful": 37978592,
+          "pf_useless": 41255605,
+          "pf_late": 10748110,
+          "accuracy_pct": 47.93
+        },
+        "grasp_rfail": {
+          "total": 56326398,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 92.5,
+          "mshr_entry_pct": 7.5,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": -3.7394617151967053,
+        "cycle_reduction_pct": -3.884726086413829,
+        "ima_idx_reduction_pct": -1.8666596743284165,
+        "ima_data_reduction_pct": 7.626888634542227,
+        "ima_total_reduction_pct": 5.9378963145791515,
+        "l1_miss_reduction_pct": -14.493563315597315,
+        "memwait_reduction_pct": -7.346237373236613,
+        "ct_reuse_per_entry": 7595718.4
+      }
+    },
+    "cc_web_sym": {
+      "short_name": "CC-wg",
+      "baseline": {
+        "log_file": "cc_web_sym_baseline",
+        "status": "COMPLETE",
+        "ipc": 50.7358,
+        "final_cycles": 24810279,
+        "expected_kernels": 20,
+        "completed_kernels": 20,
+        "l1_misses": 107367215,
+        "l1_pending_hits": 3252743,
+        "ima_total_reads": 171682372,
+        "ima_total_misses": 100528771,
+        "ima_idx_reads": 82511640,
+        "ima_idx_hits": 65936242,
+        "ima_idx_hit_reserved": 80756,
+        "ima_idx_misses": 16494642,
+        "ima_data_reads": 89170732,
+        "ima_data_hits": 4635044,
+        "ima_data_hit_reserved": 501559,
+        "ima_data_misses": 84034129,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 10295108446,
+            "fraction": 0.97153168
+          },
+          "REG_WAIT": {
+            "events": 269892,
+            "fraction": 2.547e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 26009033,
+            "fraction": 0.00245443
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 275393621,
+            "fraction": 0.02598842
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "cc_web_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 86.7824,
+        "final_cycles": 14504890,
+        "expected_kernels": 20,
+        "completed_kernels": 20,
+        "l1_misses": 128424286,
+        "l1_pending_hits": 15300283,
+        "ima_total_reads": 171682372,
+        "ima_total_misses": 67081121,
+        "ima_idx_reads": 82511640,
+        "ima_idx_hits": 69403476,
+        "ima_idx_hit_reserved": 2724738,
+        "ima_idx_misses": 10383426,
+        "ima_data_reads": 89170732,
+        "ima_data_hits": 29633595,
+        "ima_data_hit_reserved": 2839442,
+        "ima_data_misses": 56697695,
+        "ima_timeliness": {
+          "index_pct": 96.22,
+          "data_pct": 91.26
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 7689315598,
+            "fraction": 0.95951191
+          },
+          "REG_WAIT": {
+            "events": 269892,
+            "fraction": 3.368e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 30535316,
+            "fraction": 0.00381035
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 293657330,
+            "fraction": 0.03664406
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 79060891,
+          "idx_rfail": 7830177,
+          "idx_rfail_pct": 9.9,
+          "idx_got_data": 71230714,
+          "data_enqueued": 73159968,
+          "data_throttled": 14654148,
+          "data_attempted": 58474226,
+          "data_rfail": 6749342,
+          "data_rfail_pct": 11.5,
+          "data_got_data": 51724884,
+          "end_to_end_conv_pct": 65.42410962709742
+        },
+        "grasp_storage": {
+          "prb_peak": 70,
+          "prb_max": 1024,
+          "prb_pct": 6.8,
+          "ct_peak": 5,
+          "ct_max": 32,
+          "ct_pct": 15.6,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 86
+        },
+        "grasp_effect": {
+          "pf_useful": 32318554,
+          "pf_useless": 21505232,
+          "pf_late": 4991293,
+          "accuracy_pct": 60.05
+        },
+        "grasp_rfail": {
+          "total": 14579519,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 85.3,
+          "mshr_entry_pct": 14.7,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 71.04766259721931,
+        "cycle_reduction_pct": 41.53677191618845,
+        "ima_idx_reduction_pct": 37.04970377653544,
+        "ima_data_reduction_pct": 32.5301568842345,
+        "ima_total_reduction_pct": 33.27171879978519,
+        "l1_miss_reduction_pct": -19.612198192902742,
+        "memwait_reduction_pct": 25.310980080180105,
+        "ct_reuse_per_entry": 6463710.8
+      }
+    },
+    "cc_flickr_sym": {
+      "short_name": "CC-fl",
+      "baseline": {
+        "log_file": "cc_flickr_baseline",
+        "status": "COMPLETE",
+        "ipc": 46.8674,
+        "final_cycles": 8095277,
+        "expected_kernels": 4,
+        "completed_kernels": 4,
+        "l1_misses": 20360809,
+        "l1_pending_hits": 793105,
+        "ima_total_reads": 50809597,
+        "ima_total_misses": 19248088,
+        "ima_idx_reads": 25539304,
+        "ima_idx_hits": 20544700,
+        "ima_idx_hit_reserved": 25908,
+        "ima_idx_misses": 4968696,
+        "ima_data_reads": 25270293,
+        "ima_data_hits": 10687287,
+        "ima_data_hit_reserved": 303614,
+        "ima_data_misses": 14279392,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 4012696251,
+            "fraction": 0.97228681
+          },
+          "REG_WAIT": {
+            "events": 269892,
+            "fraction": 6.54e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 36562180,
+            "fraction": 0.00885911
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 77542231,
+            "fraction": 0.01878869
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "cc_flickr_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 104.0304,
+        "final_cycles": 3647056,
+        "expected_kernels": 4,
+        "completed_kernels": 4,
+        "l1_misses": 23883096,
+        "l1_pending_hits": 8526610,
+        "ima_total_reads": 50809597,
+        "ima_total_misses": 8696703,
+        "ima_idx_reads": 25539304,
+        "ima_idx_hits": 21784217,
+        "ima_idx_hit_reserved": 1016913,
+        "ima_idx_misses": 2738174,
+        "ima_data_reads": 25270293,
+        "ima_data_hits": 18082787,
+        "ima_data_hit_reserved": 1228977,
+        "ima_data_misses": 5958529,
+        "ima_timeliness": {
+          "index_pct": 95.54,
+          "data_pct": 93.64
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 3164423315,
+            "fraction": 0.95545568
+          },
+          "REG_WAIT": {
+            "events": 269892,
+            "fraction": 8.149e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 49230925,
+            "fraction": 0.01486463
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 98027820,
+            "fraction": 0.0295982
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 24860311,
+          "idx_rfail": 1894956,
+          "idx_rfail_pct": 7.6,
+          "idx_got_data": 22965355,
+          "data_enqueued": 23350901,
+          "data_throttled": 3358810,
+          "data_attempted": 19409772,
+          "data_rfail": 234920,
+          "data_rfail_pct": 1.2,
+          "data_got_data": 19174852,
+          "end_to_end_conv_pct": 77.13037861835276
+        },
+        "grasp_storage": {
+          "prb_peak": 130,
+          "prb_max": 1024,
+          "prb_pct": 12.7,
+          "ct_peak": 5,
+          "ct_max": 32,
+          "ct_pct": 15.6,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 69
+        },
+        "grasp_effect": {
+          "pf_useful": 11113270,
+          "pf_useless": 2856604,
+          "pf_late": 1967850,
+          "accuracy_pct": 79.55
+        },
+        "grasp_rfail": {
+          "total": 2129876,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 76.3,
+          "mshr_entry_pct": 23.7,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 121.96750833201754,
+        "cycle_reduction_pct": 54.948348277643866,
+        "ima_idx_reduction_pct": 44.891496682429356,
+        "ima_data_reduction_pct": 58.27182978098787,
+        "ima_total_reduction_pct": 54.817834373990806,
+        "l1_miss_reduction_pct": -17.29934699549512,
+        "memwait_reduction_pct": 21.13972458764111,
+        "ct_reuse_per_entry": 2222654.0
+      }
+    },
+    "cc_road_sym": {
+      "short_name": "CC-rd",
+      "baseline": {
+        "log_file": "cc_road_baseline",
+        "status": "COMPLETE",
+        "ipc": 1490.0549,
+        "final_cycles": 799570,
+        "expected_kernels": 14,
+        "completed_kernels": 14,
+        "l1_misses": 18250741,
+        "l1_pending_hits": 5352109,
+        "ima_total_reads": 48481940,
+        "ima_total_misses": 12464732,
+        "ima_idx_reads": 25172693,
+        "ima_idx_hits": 18373906,
+        "ima_idx_hit_reserved": 185361,
+        "ima_idx_misses": 6613426,
+        "ima_data_reads": 23309247,
+        "ima_data_hits": 16398888,
+        "ima_data_hit_reserved": 1059053,
+        "ima_data_misses": 5851306,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 2689958975,
+            "fraction": 0.91355891
+          },
+          "REG_WAIT": {
+            "events": 269892,
+            "fraction": 9.166e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 177977477,
+            "fraction": 0.06044438
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 76276965,
+            "fraction": 0.02590504
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "cc_road_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 1491.3196,
+        "final_cycles": 798892,
+        "expected_kernels": 14,
+        "completed_kernels": 14,
+        "l1_misses": 18235007,
+        "l1_pending_hits": 9745867,
+        "ima_total_reads": 48481940,
+        "ima_total_misses": 8727197,
+        "ima_idx_reads": 25172693,
+        "ima_idx_hits": 18459692,
+        "ima_idx_hit_reserved": 1314540,
+        "ima_idx_misses": 5398461,
+        "ima_data_reads": 23309247,
+        "ima_data_hits": 17897391,
+        "ima_data_hit_reserved": 2083120,
+        "ima_data_misses": 3328736,
+        "ima_timeliness": {
+          "index_pct": 93.35,
+          "data_pct": 89.57
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 2630483805,
+            "fraction": 0.89621105
+          },
+          "REG_WAIT": {
+            "events": 269892,
+            "fraction": 9.195e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 212644307,
+            "fraction": 0.07244834
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 91718450,
+            "fraction": 0.03124866
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 22491241,
+          "idx_rfail": 1977814,
+          "idx_rfail_pct": 8.8,
+          "idx_got_data": 20513427,
+          "data_enqueued": 28070711,
+          "data_throttled": 1111633,
+          "data_attempted": 19796633,
+          "data_rfail": 220276,
+          "data_rfail_pct": 1.1,
+          "data_got_data": 19576357,
+          "end_to_end_conv_pct": 87.0399147828259
+        },
+        "grasp_storage": {
+          "prb_peak": 54,
+          "prb_max": 1024,
+          "prb_pct": 5.3,
+          "ct_peak": 5,
+          "ct_max": 32,
+          "ct_pct": 15.6,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 89
+        },
+        "grasp_effect": {
+          "pf_useful": 3215934,
+          "pf_useless": 399087,
+          "pf_late": 2476600,
+          "accuracy_pct": 88.96
+        },
+        "grasp_rfail": {
+          "total": 2198090,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 78.7,
+          "mshr_entry_pct": 21.3,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 0.08487606731805304,
+        "cycle_reduction_pct": 0.08479557762297235,
+        "ima_idx_reduction_pct": 18.371189153700364,
+        "ima_data_reduction_pct": 43.11123021082815,
+        "ima_total_reduction_pct": 29.9848805413546,
+        "l1_miss_reduction_pct": 0.08621019825989532,
+        "memwait_reduction_pct": 2.2110065823587512,
+        "ct_reuse_per_entry": 643186.8
+      }
+    },
+    "spmv_cit_sym": {
+      "short_name": "SpM-cp",
+      "baseline": {
+        "log_file": "spmv_cit_sym_baseline",
+        "status": "COMPLETE",
+        "ipc": 374.5683,
+        "final_cycles": 1067411,
+        "expected_kernels": 1,
+        "completed_kernels": 1,
+        "l1_misses": 52314914,
+        "l1_pending_hits": 26487836,
+        "ima_total_reads": 64090736,
+        "ima_total_misses": 41570904,
+        "ima_idx_reads": 31130424,
+        "ima_idx_hits": 5122219,
+        "ima_idx_hit_reserved": 16758831,
+        "ima_idx_misses": 9249374,
+        "ima_data_reads": 32960312,
+        "ima_data_hits": 320068,
+        "ima_data_hit_reserved": 318714,
+        "ima_data_misses": 32321530,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 2566061936,
+            "fraction": 0.57439515
+          },
+          "REG_WAIT": {
+            "events": 210384,
+            "fraction": 4.709e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 69552313,
+            "fraction": 0.0155688
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 1831591129,
+            "fraction": 0.40998896
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "spmv_cit_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 367.6747,
+        "final_cycles": 1087424,
+        "expected_kernels": 1,
+        "completed_kernels": 1,
+        "l1_misses": 52994000,
+        "l1_pending_hits": 33581312,
+        "ima_total_reads": 64090736,
+        "ima_total_misses": 40415076,
+        "ima_idx_reads": 31130424,
+        "ima_idx_hits": 5586400,
+        "ima_idx_hit_reserved": 17306012,
+        "ima_idx_misses": 8238012,
+        "ima_data_reads": 32960312,
+        "ima_data_hits": 432445,
+        "ima_data_hit_reserved": 350803,
+        "ima_data_misses": 32177064,
+        "ima_timeliness": {
+          "index_pct": 24.4,
+          "data_pct": 55.21
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 2376385889,
+            "fraction": 0.52166271
+          },
+          "REG_WAIT": {
+            "events": 210384,
+            "fraction": 4.618e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 67227330,
+            "fraction": 0.0147577
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 2111583281,
+            "fraction": 0.46353341
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 15378716,
+          "idx_rfail": 5058781,
+          "idx_rfail_pct": 32.9,
+          "idx_got_data": 10319935,
+          "data_enqueued": 10907103,
+          "data_throttled": 9222988,
+          "data_attempted": 506285,
+          "data_rfail": 55384,
+          "data_rfail_pct": 10.9,
+          "data_got_data": 450901,
+          "end_to_end_conv_pct": 2.9319807973565544
+        },
+        "grasp_storage": {
+          "prb_peak": 41985,
+          "prb_max": 1024,
+          "prb_pct": 4100.1,
+          "ct_peak": 13,
+          "ct_max": 32,
+          "ct_pct": 40.6,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 79
+        },
+        "grasp_effect": {
+          "pf_useful": 359563,
+          "pf_useless": 1588304,
+          "pf_late": 1659978,
+          "accuracy_pct": 18.46
+        },
+        "grasp_rfail": {
+          "total": 5114165,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 19.1,
+          "mshr_entry_pct": 79.4,
+          "mshr_merge_pct": 1.5,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": -1.8404120156457575,
+        "cycle_reduction_pct": -1.8749104140766772,
+        "ima_idx_reduction_pct": 10.934383235016771,
+        "ima_data_reduction_pct": 0.44696522720304394,
+        "ima_total_reduction_pct": 2.7803773523905084,
+        "l1_miss_reduction_pct": -1.2980734327499803,
+        "memwait_reduction_pct": 7.3917174148831615,
+        "ct_reuse_per_entry": 27658.69230769231
+      }
+    },
+    "spmv_web_sym": {
+      "short_name": "SpM-wg",
+      "baseline": {
+        "log_file": "spmv_web_sym_baseline",
+        "status": "COMPLETE",
+        "ipc": 129.6846,
+        "final_cycles": 760487,
+        "expected_kernels": 1,
+        "completed_kernels": 1,
+        "l1_misses": 12348064,
+        "l1_pending_hits": 5906151,
+        "ima_total_reads": 16843123,
+        "ima_total_misses": 10150577,
+        "ima_idx_reads": 8205018,
+        "ima_idx_hits": 2698905,
+        "ima_idx_hit_reserved": 3692969,
+        "ima_idx_misses": 1813144,
+        "ima_data_reads": 8638105,
+        "ima_data_hits": 256934,
+        "ima_data_hit_reserved": 43738,
+        "ima_data_misses": 8337433,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 556927271,
+            "fraction": 0.71275027
+          },
+          "REG_WAIT": {
+            "events": 210384,
+            "fraction": 0.00026925
+          },
+          "IBUFFER_EMPTY": {
+            "events": 9000215,
+            "fraction": 0.01151839
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 215239971,
+            "fraction": 0.27546209
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "spmv_web_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 177.2448,
+        "final_cycles": 556425,
+        "expected_kernels": 1,
+        "completed_kernels": 1,
+        "l1_misses": 13239913,
+        "l1_pending_hits": 7347316,
+        "ima_total_reads": 16843123,
+        "ima_total_misses": 9042660,
+        "ima_idx_reads": 8205018,
+        "ima_idx_hits": 3918073,
+        "ima_idx_hit_reserved": 2945373,
+        "ima_idx_misses": 1341572,
+        "ima_data_reads": 8638105,
+        "ima_data_hits": 858686,
+        "ima_data_hit_reserved": 78331,
+        "ima_data_misses": 7701088,
+        "ima_timeliness": {
+          "index_pct": 57.09,
+          "data_pct": 91.64
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 531391699,
+            "fraction": 0.64877107
+          },
+          "REG_WAIT": {
+            "events": 210384,
+            "fraction": 0.00025686
+          },
+          "IBUFFER_EMPTY": {
+            "events": 9270309,
+            "fraction": 0.01131803
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 278201890,
+            "fraction": 0.33965404
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 5914224,
+          "idx_rfail": 929470,
+          "idx_rfail_pct": 15.7,
+          "idx_got_data": 4984754,
+          "data_enqueued": 5005725,
+          "data_throttled": 3488715,
+          "data_attempted": 1407367,
+          "data_rfail": 122593,
+          "data_rfail_pct": 8.7,
+          "data_got_data": 1284774,
+          "end_to_end_conv_pct": 21.72345856362559
+        },
+        "grasp_storage": {
+          "prb_peak": 4763,
+          "prb_max": 1024,
+          "prb_pct": 465.1,
+          "ct_peak": 24,
+          "ct_max": 32,
+          "ct_pct": 75.0,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 55
+        },
+        "grasp_effect": {
+          "pf_useful": 1108362,
+          "pf_useless": 820014,
+          "pf_late": 508861,
+          "accuracy_pct": 57.48
+        },
+        "grasp_rfail": {
+          "total": 1052063,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 49.0,
+          "mshr_entry_pct": 51.0,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 36.67374537917379,
+        "cycle_reduction_pct": 26.833068809854737,
+        "ima_idx_reduction_pct": 26.008524419461445,
+        "ima_data_reduction_pct": 7.632385171790886,
+        "ima_total_reduction_pct": 10.914817945817267,
+        "l1_miss_reduction_pct": -7.222581612793714,
+        "memwait_reduction_pct": 4.5850819899965,
+        "ct_reuse_per_entry": 46181.75
+      }
+    },
+    "spmv_flickr_sym": {
+      "short_name": "SpM-fl",
+      "baseline": {
+        "log_file": "spmv_flickr_baseline",
+        "status": "COMPLETE",
+        "ipc": 79.2566,
+        "final_cycles": 1445146,
+        "expected_kernels": 1,
+        "completed_kernels": 1,
+        "l1_misses": 12968412,
+        "l1_pending_hits": 10289324,
+        "ima_total_reads": 25192292,
+        "ima_total_misses": 10106581,
+        "ima_idx_reads": 12688486,
+        "ima_idx_hits": 3973008,
+        "ima_idx_hit_reserved": 6161264,
+        "ima_idx_misses": 2554214,
+        "ima_data_reads": 12503806,
+        "ima_data_hits": 4105511,
+        "ima_data_hit_reserved": 845928,
+        "ima_data_misses": 7552367,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 1261499943,
+            "fraction": 0.63928978
+          },
+          "REG_WAIT": {
+            "events": 210384,
+            "fraction": 0.00010662
+          },
+          "IBUFFER_EMPTY": {
+            "events": 10508306,
+            "fraction": 0.00532529
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 701064822,
+            "fraction": 0.35527832
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "spmv_flickr_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 108.7362,
+        "final_cycles": 1053351,
+        "expected_kernels": 1,
+        "completed_kernels": 1,
+        "l1_misses": 14622638,
+        "l1_pending_hits": 16540512,
+        "ima_total_reads": 25192292,
+        "ima_total_misses": 7550625,
+        "ima_idx_reads": 12688486,
+        "ima_idx_hits": 6760195,
+        "ima_idx_hit_reserved": 4114487,
+        "ima_idx_misses": 1813804,
+        "ima_data_reads": 12503806,
+        "ima_data_hits": 6048338,
+        "ima_data_hit_reserved": 718647,
+        "ima_data_misses": 5736821,
+        "ima_timeliness": {
+          "index_pct": 62.16,
+          "data_pct": 89.38
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 988272605,
+            "fraction": 0.49816944
+          },
+          "REG_WAIT": {
+            "events": 210384,
+            "fraction": 0.00010605
+          },
+          "IBUFFER_EMPTY": {
+            "events": 13741529,
+            "fraction": 0.00692684
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 981583633,
+            "fraction": 0.49479766
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 15069448,
+          "idx_rfail": 2983859,
+          "idx_rfail_pct": 19.8,
+          "idx_got_data": 12085589,
+          "data_enqueued": 12232558,
+          "data_throttled": 6283248,
+          "data_attempted": 4422741,
+          "data_rfail": 35707,
+          "data_rfail_pct": 0.8,
+          "data_got_data": 4387034,
+          "end_to_end_conv_pct": 29.112108154193837
+        },
+        "grasp_storage": {
+          "prb_peak": 41552,
+          "prb_max": 1024,
+          "prb_pct": 4057.8,
+          "ct_peak": 25,
+          "ct_max": 32,
+          "ct_pct": 78.1,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 88
+        },
+        "grasp_effect": {
+          "pf_useful": 2858619,
+          "pf_useless": 1294564,
+          "pf_late": 285695,
+          "accuracy_pct": 68.83
+        },
+        "grasp_rfail": {
+          "total": 3019566,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 6.0,
+          "mshr_entry_pct": 93.0,
+          "mshr_merge_pct": 1.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 37.19513579941606,
+        "cycle_reduction_pct": 27.111101577280085,
+        "ima_idx_reduction_pct": 28.987782542887945,
+        "ima_data_reduction_pct": 24.039430287219886,
+        "ima_total_reduction_pct": 25.290016475403505,
+        "l1_miss_reduction_pct": -12.755810040581682,
+        "memwait_reduction_pct": 21.65892590928163,
+        "ct_reuse_per_entry": 114344.76
+      }
+    },
+    "spmv_road_sym": {
+      "short_name": "SpM-rd",
+      "baseline": {
+        "log_file": "spmv_road_baseline",
+        "status": "COMPLETE",
+        "ipc": 1262.7443,
+        "final_cycles": 109526,
+        "expected_kernels": 1,
+        "completed_kernels": 1,
+        "l1_misses": 3142315,
+        "l1_pending_hits": 1139144,
+        "ima_total_reads": 6408448,
+        "ima_total_misses": 1690412,
+        "ima_idx_reads": 3349731,
+        "ima_idx_hits": 2474052,
+        "ima_idx_hit_reserved": 177316,
+        "ima_idx_misses": 698363,
+        "ima_data_reads": 3058717,
+        "ima_data_hits": 1828901,
+        "ima_data_hit_reserved": 237767,
+        "ima_data_misses": 992049,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 403707709,
+            "fraction": 0.83228006
+          },
+          "REG_WAIT": {
+            "events": 210384,
+            "fraction": 0.00043373
+          },
+          "IBUFFER_EMPTY": {
+            "events": 27242396,
+            "fraction": 0.05616267
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 53901846,
+            "fraction": 0.11112354
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "spmv_road_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 1249.567,
+        "final_cycles": 110681,
+        "expected_kernels": 1,
+        "completed_kernels": 1,
+        "l1_misses": 3146705,
+        "l1_pending_hits": 1880352,
+        "ima_total_reads": 6408448,
+        "ima_total_misses": 1206281,
+        "ima_idx_reads": 3349731,
+        "ima_idx_hits": 2500363,
+        "ima_idx_hit_reserved": 305270,
+        "ima_idx_misses": 544098,
+        "ima_data_reads": 3058717,
+        "ima_data_hits": 2016868,
+        "ima_data_hit_reserved": 379666,
+        "ima_data_misses": 662183,
+        "ima_timeliness": {
+          "index_pct": 89.12,
+          "data_pct": 84.16
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 401797219,
+            "fraction": 0.80770662
+          },
+          "REG_WAIT": {
+            "events": 210384,
+            "fraction": 0.00042292
+          },
+          "IBUFFER_EMPTY": {
+            "events": 30045661,
+            "fraction": 0.06039882
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 65401143,
+            "fraction": 0.13147163
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 3141875,
+          "idx_rfail": 310314,
+          "idx_rfail_pct": 9.9,
+          "idx_got_data": 2831561,
+          "data_enqueued": 3705346,
+          "data_throttled": 770022,
+          "data_attempted": 2057235,
+          "data_rfail": 26415,
+          "data_rfail_pct": 1.3,
+          "data_got_data": 2030820,
+          "end_to_end_conv_pct": 64.63719912472648
+        },
+        "grasp_storage": {
+          "prb_peak": 615,
+          "prb_max": 1024,
+          "prb_pct": 60.1,
+          "ct_peak": 8,
+          "ct_max": 32,
+          "ct_pct": 25.0,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 64
+        },
+        "grasp_effect": {
+          "pf_useful": 415208,
+          "pf_useless": 59745,
+          "pf_late": 408887,
+          "accuracy_pct": 87.42
+        },
+        "grasp_rfail": {
+          "total": 336729,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 35.4,
+          "mshr_entry_pct": 64.6,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": -1.0435446036066098,
+        "cycle_reduction_pct": -1.0545441265087743,
+        "ima_idx_reduction_pct": 22.089515051627878,
+        "ima_data_reduction_pct": 33.250978530294375,
+        "ima_total_reduction_pct": 28.63982271777531,
+        "l1_miss_reduction_pct": -0.13970591745257874,
+        "memwait_reduction_pct": 0.47323594704999805,
+        "ct_reuse_per_entry": 51901.0
+      }
+    },
+    "spmv_socLJ_sym": {
+      "short_name": "SpM-sl",
+      "baseline": {
+        "log_file": "spmv_socLJ_baseline",
+        "status": "COMPLETE",
+        "ipc": 138.3245,
+        "final_cycles": 5401143,
+        "expected_kernels": 1,
+        "completed_kernels": 1,
+        "l1_misses": 96195028,
+        "l1_pending_hits": 70652772,
+        "ima_total_reads": 158840149,
+        "ima_total_misses": 74035526,
+        "ima_idx_reads": 83253332,
+        "ima_idx_hits": 21576686,
+        "ima_idx_hit_reserved": 42489224,
+        "ima_idx_misses": 19187422,
+        "ima_data_reads": 75586817,
+        "ima_data_hits": 13972548,
+        "ima_data_hit_reserved": 6766165,
+        "ima_data_misses": 54848104,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 8694159307,
+            "fraction": 0.55235858
+          },
+          "REG_WAIT": {
+            "events": 210384,
+            "fraction": 1.337e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 136972528,
+            "fraction": 0.00870216
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 6908721600,
+            "fraction": 0.4389259
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "spmv_socLJ_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 152.3991,
+        "final_cycles": 4902326,
+        "expected_kernels": 1,
+        "completed_kernels": 1,
+        "l1_misses": 96705185,
+        "l1_pending_hits": 70849486,
+        "ima_total_reads": 158840149,
+        "ima_total_misses": 73666866,
+        "ima_idx_reads": 83253332,
+        "ima_idx_hits": 22148932,
+        "ima_idx_hit_reserved": 42121481,
+        "ima_idx_misses": 18982919,
+        "ima_data_reads": 75586817,
+        "ima_data_hits": 14130777,
+        "ima_data_hit_reserved": 6772093,
+        "ima_data_misses": 54683947,
+        "ima_timeliness": {
+          "index_pct": 34.46,
+          "data_pct": 67.6
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 8608776135,
+            "fraction": 0.54524461
+          },
+          "REG_WAIT": {
+            "events": 210384,
+            "fraction": 1.332e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 135716356,
+            "fraction": 0.00859572
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 7044130142,
+            "fraction": 0.44614634
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 3458340,
+          "idx_rfail": 2040975,
+          "idx_rfail_pct": 59.0,
+          "idx_got_data": 1417365,
+          "data_enqueued": 1464669,
+          "data_throttled": 882020,
+          "data_attempted": 447376,
+          "data_rfail": 12081,
+          "data_rfail_pct": 2.7,
+          "data_got_data": 435295,
+          "end_to_end_conv_pct": 12.586819109746294
+        },
+        "grasp_storage": {
+          "prb_peak": 1024,
+          "prb_max": 1024,
+          "prb_pct": 100.0,
+          "ct_peak": 27,
+          "ct_max": 32,
+          "ct_pct": 84.4,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 106
+        },
+        "grasp_effect": {
+          "pf_useful": 349776,
+          "pf_useless": 500708,
+          "pf_late": 235860,
+          "accuracy_pct": 41.13
+        },
+        "grasp_rfail": {
+          "total": 2053056,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 5.4,
+          "mshr_entry_pct": 94.6,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 10.17505937126106,
+        "cycle_reduction_pct": 9.235397026147984,
+        "ima_idx_reduction_pct": 1.0658180134882111,
+        "ima_data_reduction_pct": 0.2992938461464411,
+        "ima_total_reduction_pct": 0.4979501327511336,
+        "l1_miss_reduction_pct": -0.530336141697469,
+        "memwait_reduction_pct": 0.9820750803502617,
+        "ct_reuse_per_entry": 12954.666666666666
+      }
+    },
+    "vc_cit_sym": {
+      "short_name": "VC-cp",
+      "baseline": {
+        "log_file": "vc_ima_high_baseline",
+        "status": "COMPLETE",
+        "ipc": 341.7518,
+        "final_cycles": 4042784,
+        "expected_kernels": 14,
+        "completed_kernels": 14,
+        "l1_misses": 105351316,
+        "l1_pending_hits": 23682340,
+        "ima_total_reads": 138361102,
+        "ima_total_misses": 86286743,
+        "ima_idx_reads": 65324088,
+        "ima_idx_hits": 27462160,
+        "ima_idx_hit_reserved": 20920867,
+        "ima_idx_misses": 16941061,
+        "ima_data_reads": 73037014,
+        "ima_data_hits": 1097110,
+        "ima_data_hit_reserved": 2594222,
+        "ima_data_misses": 69345682,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 5584361441,
+            "fraction": 0.50421793
+          },
+          "REG_WAIT": {
+            "events": 1080,
+            "fraction": 1e-07
+          },
+          "IBUFFER_EMPTY": {
+            "events": 92778077,
+            "fraction": 0.00837703
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 43720870,
+            "fraction": 0.0039476
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 5354431882,
+            "fraction": 0.48345734
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "vc_cit_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 348.2836,
+        "final_cycles": 3966964,
+        "expected_kernels": 14,
+        "completed_kernels": 14,
+        "l1_misses": 105889075,
+        "l1_pending_hits": 29427111,
+        "ima_total_reads": 138361102,
+        "ima_total_misses": 85102192,
+        "ima_idx_reads": 65324088,
+        "ima_idx_hits": 27997209,
+        "ima_idx_hit_reserved": 21246089,
+        "ima_idx_misses": 16080790,
+        "ima_data_reads": 73037014,
+        "ima_data_hits": 1367810,
+        "ima_data_hit_reserved": 2647802,
+        "ima_data_misses": 69021402,
+        "ima_timeliness": {
+          "index_pct": 56.85,
+          "data_pct": 34.06
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 5516521917,
+            "fraction": 0.49768135
+          },
+          "REG_WAIT": {
+            "events": 1080,
+            "fraction": 1e-07
+          },
+          "IBUFFER_EMPTY": {
+            "events": 88531441,
+            "fraction": 0.007987
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 40497862,
+            "fraction": 0.00365358
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 5438893479,
+            "fraction": 0.49067798
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 15917429,
+          "idx_rfail": 7576142,
+          "idx_rfail_pct": 47.6,
+          "idx_got_data": 8341287,
+          "data_enqueued": 8714273,
+          "data_throttled": 6474067,
+          "data_attempted": 1575796,
+          "data_rfail": 646733,
+          "data_rfail_pct": 41.0,
+          "data_got_data": 929063,
+          "end_to_end_conv_pct": 5.836765472614956
+        },
+        "grasp_storage": {
+          "prb_peak": 62745,
+          "prb_max": 1024,
+          "prb_pct": 6127.4,
+          "ct_peak": 28,
+          "ct_max": 32,
+          "ct_pct": 87.5,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 138
+        },
+        "grasp_effect": {
+          "pf_useful": 401855,
+          "pf_useless": 1293636,
+          "pf_late": 1544396,
+          "accuracy_pct": 23.7
+        },
+        "grasp_rfail": {
+          "total": 8222875,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 74.2,
+          "mshr_entry_pct": 25.5,
+          "mshr_merge_pct": 0.3,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 1.9112701088918846,
+        "cycle_reduction_pct": 1.8754402906511949,
+        "ima_idx_reduction_pct": 5.078023153331424,
+        "ima_data_reduction_pct": 0.46762825117214935,
+        "ima_total_reduction_pct": 1.372807639755275,
+        "l1_miss_reduction_pct": -0.510443552503891,
+        "memwait_reduction_pct": 1.214812556757642,
+        "ct_reuse_per_entry": 14351.964285714286
+      }
+    },
+    "vc_web_sym": {
+      "short_name": "VC-wg",
+      "baseline": {
+        "log_file": "vc_ima_med_baseline",
+        "status": "COMPLETE",
+        "ipc": 52.3822,
+        "final_cycles": 8910249,
+        "expected_kernels": 62,
+        "completed_kernels": 62,
+        "l1_misses": 38339251,
+        "l1_pending_hits": 9915052,
+        "ima_total_reads": 53989679,
+        "ima_total_misses": 32195614,
+        "ima_idx_reads": 25745400,
+        "ima_idx_hits": 10991679,
+        "ima_idx_hit_reserved": 8886790,
+        "ima_idx_misses": 5866931,
+        "ima_data_reads": 28244279,
+        "ima_data_hits": 946229,
+        "ima_data_hit_reserved": 969367,
+        "ima_data_misses": 26328683,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 1924694049,
+            "fraction": 0.5851502
+          },
+          "REG_WAIT": {
+            "events": 1080,
+            "fraction": 3.3e-07
+          },
+          "IBUFFER_EMPTY": {
+            "events": 23433826,
+            "fraction": 0.00712441
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 10420190,
+            "fraction": 0.00316797
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 1330681647,
+            "fraction": 0.40455709
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "vc_web_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 53.377,
+        "final_cycles": 8744180,
+        "expected_kernels": 62,
+        "completed_kernels": 62,
+        "l1_misses": 39463609,
+        "l1_pending_hits": 13538108,
+        "ima_total_reads": 53989679,
+        "ima_total_misses": 30661889,
+        "ima_idx_reads": 25745400,
+        "ima_idx_hits": 12744886,
+        "ima_idx_hit_reserved": 7854995,
+        "ima_idx_misses": 5145519,
+        "ima_data_reads": 28244279,
+        "ima_data_hits": 1578311,
+        "ima_data_hit_reserved": 1149598,
+        "ima_data_misses": 25516370,
+        "ima_timeliness": {
+          "index_pct": 61.87,
+          "data_pct": 57.86
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 1939348221,
+            "fraction": 0.57144927
+          },
+          "REG_WAIT": {
+            "events": 1080,
+            "fraction": 3.2e-07
+          },
+          "IBUFFER_EMPTY": {
+            "events": 23630884,
+            "fraction": 0.00696309
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 10616085,
+            "fraction": 0.00312814
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 1420140208,
+            "fraction": 0.41845919
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 12846388,
+          "idx_rfail": 4709598,
+          "idx_rfail_pct": 36.7,
+          "idx_got_data": 8136790,
+          "data_enqueued": 6808914,
+          "data_throttled": 4595325,
+          "data_attempted": 1918176,
+          "data_rfail": 529699,
+          "data_rfail_pct": 27.6,
+          "data_got_data": 1388477,
+          "end_to_end_conv_pct": 10.808306583920709
+        },
+        "grasp_storage": {
+          "prb_peak": 23322,
+          "prb_max": 1024,
+          "prb_pct": 2277.5,
+          "ct_peak": 30,
+          "ct_max": 32,
+          "ct_pct": 93.8,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 172
+        },
+        "grasp_effect": {
+          "pf_useful": 1238698,
+          "pf_useless": 1249622,
+          "pf_late": 1626000,
+          "accuracy_pct": 49.78
+        },
+        "grasp_rfail": {
+          "total": 5239297,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 80.9,
+          "mshr_entry_pct": 19.0,
+          "mshr_merge_pct": 0.1,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 1.8991184028162336,
+        "cycle_reduction_pct": 1.8637975212589457,
+        "ima_idx_reduction_pct": 12.296241425031248,
+        "ima_data_reduction_pct": 3.085277755822424,
+        "ima_total_reduction_pct": 4.763769996745519,
+        "l1_miss_reduction_pct": -2.9326551006434634,
+        "memwait_reduction_pct": -0.7613766981621711,
+        "ct_reuse_per_entry": 41289.933333333334
+      }
+    },
+    "vc_road_sym": {
+      "short_name": "VC-rd",
+      "baseline": {
+        "log_file": "vc_road_sym_baseline_v2",
+        "status": "COMPLETE",
+        "ipc": 564.1312,
+        "final_cycles": 1912907,
+        "expected_kernels": 24,
+        "completed_kernels": 24,
+        "l1_misses": 32191475,
+        "l1_pending_hits": 4598809,
+        "ima_total_reads": 35275895,
+        "ima_total_misses": 14130496,
+        "ima_idx_reads": 15871987,
+        "ima_idx_hits": 9537166,
+        "ima_idx_hit_reserved": 960717,
+        "ima_idx_misses": 5374104,
+        "ima_data_reads": 19403908,
+        "ima_data_hits": 7124506,
+        "ima_data_hit_reserved": 3523010,
+        "ima_data_misses": 8756392,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 3839483398,
+            "fraction": 0.41489017
+          },
+          "REG_WAIT": {
+            "events": 1080,
+            "fraction": 1.2e-07
+          },
+          "IBUFFER_EMPTY": {
+            "events": 235856357,
+            "fraction": 0.02548637
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 203413609,
+            "fraction": 0.02198064
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 4975461977,
+            "fraction": 0.53764271
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "vc_road_sym_g_D5b",
+        "status": "COMPLETE",
+        "ipc": 566.0939,
+        "final_cycles": 1906275,
+        "expected_kernels": 24,
+        "completed_kernels": 24,
+        "l1_misses": 32458287,
+        "l1_pending_hits": 5946847,
+        "ima_total_reads": 35275895,
+        "ima_total_misses": 13235347,
+        "ima_idx_reads": 15871987,
+        "ima_idx_hits": 9542810,
+        "ima_idx_hit_reserved": 1160798,
+        "ima_idx_misses": 5168379,
+        "ima_data_reads": 19403908,
+        "ima_data_hits": 7687484,
+        "ima_data_hit_reserved": 3649456,
+        "ima_data_misses": 8066968,
+        "ima_timeliness": {
+          "index_pct": 89.16,
+          "data_pct": 67.81
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 3709693782,
+            "fraction": 0.40185877
+          },
+          "REG_WAIT": {
+            "events": 1080,
+            "fraction": 1.2e-07
+          },
+          "IBUFFER_EMPTY": {
+            "events": 211286847,
+            "fraction": 0.022888
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 179279968,
+            "fraction": 0.0194208
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 5131075463,
+            "fraction": 0.55583231
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 8530441,
+          "idx_rfail": 1842037,
+          "idx_rfail_pct": 21.6,
+          "idx_got_data": 6688404,
+          "data_enqueued": 6936869,
+          "data_throttled": 420241,
+          "data_attempted": 4957344,
+          "data_rfail": 435052,
+          "data_rfail_pct": 8.8,
+          "data_got_data": 4522292,
+          "end_to_end_conv_pct": 53.01357807878866
+        },
+        "grasp_storage": {
+          "prb_peak": 8510,
+          "prb_max": 1024,
+          "prb_pct": 831.1,
+          "ct_peak": 6,
+          "ct_max": 32,
+          "ct_pct": 18.8,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 150
+        },
+        "grasp_effect": {
+          "pf_useful": 685305,
+          "pf_useless": 308174,
+          "pf_late": 795441,
+          "accuracy_pct": 68.98
+        },
+        "grasp_rfail": {
+          "total": 2277089,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 91.0,
+          "mshr_entry_pct": 8.8,
+          "mshr_merge_pct": 0.3,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 0.347915520361208,
+        "cycle_reduction_pct": 0.34669746098477344,
+        "ima_idx_reduction_pct": 3.828079992497354,
+        "ima_data_reduction_pct": 7.873379812141805,
+        "ima_total_reduction_pct": 6.334873170764848,
+        "l1_miss_reduction_pct": -0.8288281291863762,
+        "memwait_reduction_pct": 3.3803926868809446,
+        "ct_reuse_per_entry": 114217.5
+      }
+    },
+    "pann_mis_flickr": {
+      "short_name": "MIS-fl",
+      "baseline": {
+        "log_file": "pann_mis_flickr_baseline_v2",
+        "status": "COMPLETE",
+        "ipc": 121.9414,
+        "final_cycles": 3687065,
+        "expected_kernels": 19,
+        "completed_kernels": 19,
+        "l1_misses": 29146395,
+        "l1_pending_hits": 8115097,
+        "ima_total_reads": 31519399,
+        "ima_total_misses": 14968208,
+        "ima_idx_reads": 15917943,
+        "ima_idx_hits": 6413487,
+        "ima_idx_hit_reserved": 5586203,
+        "ima_idx_misses": 3918253,
+        "ima_data_reads": 15601456,
+        "ima_data_hits": 3515827,
+        "ima_data_hit_reserved": 1035674,
+        "ima_data_misses": 11049955,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 1810189052,
+            "fraction": 0.80894396
+          },
+          "REG_WAIT": {
+            "events": 407079,
+            "fraction": 0.00018192
+          },
+          "IBUFFER_EMPTY": {
+            "events": 77974374,
+            "fraction": 0.03484548
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 349148225,
+            "fraction": 0.15602865
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "pann_mis_flickr_grasp2",
+        "status": "COMPLETE",
+        "ipc": 156.1436,
+        "final_cycles": 2879437,
+        "expected_kernels": 19,
+        "completed_kernels": 19,
+        "l1_misses": 29945750,
+        "l1_pending_hits": 21282976,
+        "ima_total_reads": 31519399,
+        "ima_total_misses": 10520329,
+        "ima_idx_reads": 15917943,
+        "ima_idx_hits": 7989009,
+        "ima_idx_hit_reserved": 5627664,
+        "ima_idx_misses": 2301270,
+        "ima_data_reads": 15601456,
+        "ima_data_hits": 6126543,
+        "ima_data_hit_reserved": 1255854,
+        "ima_data_misses": 8219059,
+        "ima_timeliness": {
+          "index_pct": 58.67,
+          "data_pct": 82.99
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 1424549323,
+            "fraction": 0.56225768
+          },
+          "REG_WAIT": {
+            "events": 407079,
+            "fraction": 0.00016067
+          },
+          "IBUFFER_EMPTY": {
+            "events": 76919414,
+            "fraction": 0.03035945
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 1031747792,
+            "fraction": 0.4072222
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 24849188,
+          "idx_rfail": 4781905,
+          "idx_rfail_pct": 19.2,
+          "idx_got_data": 20067283,
+          "data_enqueued": 19930329,
+          "data_throttled": 13290771,
+          "data_attempted": 4506763,
+          "data_rfail": 45592,
+          "data_rfail_pct": 1.0,
+          "data_got_data": 4461171,
+          "end_to_end_conv_pct": 17.9529850230921
+        },
+        "grasp_storage": {
+          "prb_peak": 46231,
+          "prb_max": 1024,
+          "prb_pct": 4514.7,
+          "ct_peak": 5,
+          "ct_max": 32,
+          "ct_pct": 15.6,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 118
+        },
+        "grasp_effect": {
+          "pf_useful": 3493468,
+          "pf_useless": 1650564,
+          "pf_late": 3522144,
+          "accuracy_pct": 67.91
+        },
+        "grasp_rfail": {
+          "total": 4827497,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 11.1,
+          "mshr_entry_pct": 83.1,
+          "mshr_merge_pct": 5.8,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": 28.048062429986853,
+        "cycle_reduction_pct": 21.904360243174448,
+        "ima_idx_reduction_pct": 41.26795793941841,
+        "ima_data_reduction_pct": 25.61907265685697,
+        "ima_total_reduction_pct": 29.715507694708677,
+        "l1_miss_reduction_pct": -2.742551866191342,
+        "memwait_reduction_pct": 21.30383721931824,
+        "ct_reuse_per_entry": 698693.6
+      }
+    },
+    "pann_color_eco": {
+      "short_name": "CLR-ec",
+      "baseline": {
+        "log_file": "pann_color_eco_baseline",
+        "status": "COMPLETE",
+        "ipc": 544.6149,
+        "final_cycles": 1095646,
+        "expected_kernels": 28,
+        "completed_kernels": 28,
+        "l1_misses": 12094555,
+        "l1_pending_hits": 1390801,
+        "ima_total_reads": 20468415,
+        "ima_total_misses": 5528681,
+        "ima_idx_reads": 14813784,
+        "ima_idx_hits": 12331565,
+        "ima_idx_hit_reserved": 30837,
+        "ima_idx_misses": 2451382,
+        "ima_data_reads": 5654631,
+        "ima_data_hits": 2047074,
+        "ima_data_hit_reserved": 530258,
+        "ima_data_misses": 3077299,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 4023954577,
+            "fraction": 0.82418233
+          },
+          "REG_WAIT": {
+            "events": 194345,
+            "fraction": 3.981e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 757785583,
+            "fraction": 0.15520888
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 100425202,
+            "fraction": 0.02056899
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "pann_color_eco_grasp",
+        "status": "COMPLETE",
+        "ipc": 544.52,
+        "final_cycles": 1095837,
+        "expected_kernels": 28,
+        "completed_kernels": 28,
+        "l1_misses": 12074476,
+        "l1_pending_hits": 2554202,
+        "ima_total_reads": 20468415,
+        "ima_total_misses": 4547881,
+        "ima_idx_reads": 14813784,
+        "ima_idx_hits": 12349731,
+        "ima_idx_hit_reserved": 226908,
+        "ima_idx_misses": 2237145,
+        "ima_data_reads": 5654631,
+        "ima_data_hits": 2327171,
+        "ima_data_hit_reserved": 1016724,
+        "ima_data_misses": 2310736,
+        "ima_timeliness": {
+          "index_pct": 98.2,
+          "data_pct": 69.59
+        },
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 3878866569,
+            "fraction": 0.80172081
+          },
+          "REG_WAIT": {
+            "events": 194345,
+            "fraction": 4.017e-05
+          },
+          "IBUFFER_EMPTY": {
+            "events": 839540237,
+            "fraction": 0.17352411
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_MEMBAR": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_ATOMIC": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 119575064,
+            "fraction": 0.0247149
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_funnel": {
+          "idx_attempted": 10900951,
+          "idx_rfail": 366704,
+          "idx_rfail_pct": 3.4,
+          "idx_got_data": 10534247,
+          "data_enqueued": 8943691,
+          "data_throttled": 1354328,
+          "data_attempted": 2143818,
+          "data_rfail": 142469,
+          "data_rfail_pct": 6.6,
+          "data_got_data": 2001349,
+          "end_to_end_conv_pct": 18.359398184617103
+        },
+        "grasp_storage": {
+          "prb_peak": 2742,
+          "prb_max": 1024,
+          "prb_pct": 267.8,
+          "ct_peak": 8,
+          "ct_max": 32,
+          "ct_pct": 25.0,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 90
+        },
+        "grasp_effect": {
+          "pf_useful": 473928,
+          "pf_useless": 237946,
+          "pf_late": 897350,
+          "accuracy_pct": 66.57
+        },
+        "grasp_rfail": {
+          "total": 509173,
+          "line_alloc_pct": 0.0,
+          "missq_pct": 94.3,
+          "mshr_entry_pct": 5.7,
+          "mshr_merge_pct": 0.0,
+          "rw_pending_pct": 0.0
+        }
+      },
+      "derived": {
+        "speedup_pct": -0.01742515674838356,
+        "cycle_reduction_pct": -0.017432637914070785,
+        "ima_idx_reduction_pct": 8.739437590714136,
+        "ima_data_reduction_pct": 24.91025408970659,
+        "ima_total_reduction_pct": 17.740216879939354,
+        "l1_miss_reduction_pct": 0.16601685634568614,
+        "memwait_reduction_pct": 3.605607499381075,
+        "ct_reuse_per_entry": 59241.0
+      }
+    },
+    "ls_mst_rmat12": {
+      "short_name": "MST-rm",
+      "baseline": {
+        "log_file": "ls_mst_rmat12_baseline",
+        "status": "COMPLETE",
+        "ipc": 134.2416,
+        "final_cycles": 1928680,
+        "expected_kernels": 37,
+        "completed_kernels": 37,
+        "l1_misses": 1138684,
+        "l1_pending_hits": 9724,
+        "ima_total_reads": null,
+        "ima_total_misses": null,
+        "ima_idx_reads": null,
+        "ima_idx_hits": null,
+        "ima_idx_hit_reserved": null,
+        "ima_idx_misses": null,
+        "ima_data_reads": null,
+        "ima_data_hits": null,
+        "ima_data_hit_reserved": null,
+        "ima_data_misses": null,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 238674128,
+            "fraction": 0.08378945
+          },
+          "REG_WAIT": {
+            "events": 7893474,
+            "fraction": 0.0027711
+          },
+          "IBUFFER_EMPTY": {
+            "events": 1462622,
+            "fraction": 0.00051347
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 2518234919,
+            "fraction": 0.88405694
+          },
+          "WAIT_MEMBAR": {
+            "events": 238797,
+            "fraction": 8.383e-05
+          },
+          "WAIT_ATOMIC": {
+            "events": 13841885,
+            "fraction": 0.00485936
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 68152725,
+            "fraction": 0.02392584
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        }
+      },
+      "grasp": {
+        "log_file": "ls_mst_rmat12_grasp",
+        "status": "COMPLETE",
+        "ipc": 134.2416,
+        "final_cycles": 1928680,
+        "expected_kernels": 37,
+        "completed_kernels": 37,
+        "l1_misses": 1138684,
+        "l1_pending_hits": 9724,
+        "ima_total_reads": null,
+        "ima_total_misses": null,
+        "ima_idx_reads": null,
+        "ima_idx_hits": null,
+        "ima_idx_hit_reserved": null,
+        "ima_idx_misses": null,
+        "ima_data_reads": null,
+        "ima_data_hits": null,
+        "ima_data_hit_reserved": null,
+        "ima_data_misses": null,
+        "ima_timeliness": null,
+        "stall_breakdown": {
+          "MEM_WAIT": {
+            "events": 238674128,
+            "fraction": 0.08378945
+          },
+          "REG_WAIT": {
+            "events": 7893474,
+            "fraction": 0.0027711
+          },
+          "IBUFFER_EMPTY": {
+            "events": 1462622,
+            "fraction": 0.00051347
+          },
+          "WAIT_CTA_BARRIER": {
+            "events": 2518234919,
+            "fraction": 0.88405694
+          },
+          "WAIT_MEMBAR": {
+            "events": 238797,
+            "fraction": 8.383e-05
+          },
+          "WAIT_ATOMIC": {
+            "events": 13841885,
+            "fraction": 0.00485936
+          },
+          "WAIT_LDGSTS": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "WAIT_DONE": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "CONTROL_HAZARD": {
+            "events": 0,
+            "fraction": 0.0
+          },
+          "PIPE_BUSY": {
+            "events": 68152725,
+            "fraction": 0.02392584
+          },
+          "DUAL_ISSUE_RESTRICT": {
+            "events": 0,
+            "fraction": 0.0
+          }
+        },
+        "grasp_storage": {
+          "prb_peak": 0,
+          "prb_max": 0,
+          "prb_pct": 0.0,
+          "ct_peak": 0,
+          "ct_max": 0,
+          "ct_pct": 0.0,
+          "cd_peak": 20,
+          "cd_max": 20,
+          "cd_pct": 100.0,
+          "pf_queue_peak": 0
+        },
+        "grasp_effect": {
+          "pf_useful": 0,
+          "pf_useless": 0,
+          "pf_late": 0,
+          "accuracy_pct": null
+        },
+        "grasp_rfail": {
+          "total": 0,
+          "line_alloc_pct": null,
+          "missq_pct": null,
+          "mshr_entry_pct": null,
+          "mshr_merge_pct": null,
+          "rw_pending_pct": null
+        }
+      },
+      "derived": {
+        "speedup_pct": 0.0,
+        "cycle_reduction_pct": 0.0,
+        "ima_idx_reduction_pct": null,
+        "ima_data_reduction_pct": null,
+        "ima_total_reduction_pct": null,
+        "l1_miss_reduction_pct": 0.0,
+        "memwait_reduction_pct": 0.0,
+        "ct_reuse_per_entry": null
+      }
+    }
+  },
+  "missing": [],
+  "summary": {
+    "n_workloads_with_data": 28,
+    "geomean_speedup_pct": 17.946659410127495,
+    "mean_cycle_reduction_pct": 13.76523703544637,
+    "mean_memwait_reduction_pct": 10.306371168400938,
+    "mean_ima_idx_reduction_pct": 21.23513863731132,
+    "mean_ima_data_reduction_pct": 20.258029315662675
+  }
+}

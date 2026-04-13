@@ -1,0 +1,118 @@
+Here is the enhanced, rendering-ready specification. It has been optimized as a complete, self-contained prompt for a programmatic rendering engine (like TikZ, Python/Matplotlib, or an SVG generator) or an AI image generation model, with all top-tier academic constraints (MICRO/ISCA/HPCA) explicitly merged into every component.
+
+***
+
+**System Prompt / Global Rendering Directives:**
+Generate a precise, 2D academic computer architecture diagram. 
+**STRICT CONSTRAINTS:** 
+- NO shadows, NO gradients, NO 3D effects. Flat, high-saturation vector style only.
+- All bounding boxes MUST have 4-6pt rounded corners.
+- All arrowheads MUST be small, solid, triangular.
+- Font MUST be a clean, legible sans-serif (e.g., Helvetica, Arial).
+- Text on dark colored backgrounds (Blue, Purple, Green) MUST be pure White (#FFFFFF).
+- Background MUST be pure White (#FFFFFF).
+
+---
+
+### 1. Global Canvas & Timeline Setup
+*   **Canvas Size**: 1920x1080 pixels, White background (#FFFFFF).
+*   **Main Timeline**: 
+    *   Thick solid black line (#2C3E50, 4px stroke), starting at `(100, 540)` to `(1850, 540)`.
+    *   End with a small triangular right-pointing arrowhead at `(1850, 540)`.
+    *   Label "Time" at `(1860, 540)` (20pt sans-serif, #2C3E50, left-aligned, middle-vertical alignment).
+*   **Timeline Nodes** (Filled black circles #2C3E50, 12px diameter, centered exactly on Y=540):
+    *   **Node 1**: `(200, 540)` | Label below: "Demand Load\n(cycle T)" (16pt, black, centered at `(200, 575)`).
+    *   **Node 2**: `(500, 540)` | Label below: "IPU Triggers\n(cycle T)" (16pt, black, centered at `(500, 575)`).
+    *   **Node 3**: `(800, 540)` | Label below: "PRB Alloc\n(cycle T+1)" (16pt, black, centered at `(800, 575)`).
+    *   **Node 4**: `(1100, 540)` | Label above: "Index Fill\n(cycle T+560)" (16pt, black, centered at `(1100, 505)`).
+    *   **Node 5**: `(1450, 540)` | Label above: "ACU+DPU\n(cycle T+561)" (16pt, black, centered at `(1450, 505)`).
+    *   **Node 6**: `(1750, 540)` | Label above: "Data PF Fill\n(cycle T+1120)" (16pt, black, centered at `(1750, 505)`).
+*   **Latency Annotation Bars**:
+    *   **Index PF Bar**: Green dashed line (#27AE60, 3px stroke) from `(200, 470)` to `(1100, 470)`. Label above: "~560 cycles (index PF in-flight)" (18pt, #27AE60, centered at `(650, 450)`).
+    *   **Data PF Bar**: Red dashed line (#C0392B, 3px stroke) from `(1450, 470)` to `(1750, 470)`. Label above: "~560 cycles (data PF in-flight)" (18pt, #C0392B, centered at `(1600, 450)`).
+
+### 2. STAGE 1: Index Prefetch (Above Timeline)
+
+**Panel A: CT (Chain Table) [Storage]**
+*   **Bounding Box**: `(50, 100)` to `(350, 380)` (White fill, 1.5pt #2C3E50 outline, 6pt rounded corners).
+*   **Header**: `(50, 100)` to `(350, 140)` (Blue #2B5EA7 fill, top corners rounded). Text: "CT (Chain Table)" (22pt bold, White, centered).
+*   **Annotation**: "PC 0x03d0 → match Row 1" (16pt, gray #7F8C8D, centered at `(200, 160)`).
+*   **Table Content**: Y-start 180. Columns: `index_pc | tt_idx | K | stride | valid` (16pt bold, black).
+    *   Row 1 Box: `(55, 200)` to `(345, 240)` (Amber #D4A843 fill, 4pt rounded). Text: `0x03d0 | [0] | 1 | 64 | Y` (16pt, black).
+    *   Row 2 Box: `(55, 250)` to `(345, 290)` (White fill). Text: `0xA120 | [0,1] | 2 | 16 | Y` (16pt, black).
+    *   Row 3 Box: `(55, 300)` to `(345, 340)` (White fill). Text: `0xB340 | [0,1,2] | 3 | 4 | N` (16pt, black).
+*   **Connector**: Solid black line (#2C3E50, 1.5pt) from `(200, 380)` down to Node 1 `(200, 540)`.
+
+**Panel B: IPU (Index Prefetch Unit) [Logic]**
+*   **Bounding Box**: `(380, 100)` to `(620, 380)` (Purple #6C3483 fill, 1.5pt #2C3E50 outline, 6pt rounded corners).
+*   **Header**: "IPU" (24pt bold, White, centered at `(500, 130)`), "(Index Prefetch Unit)" (16pt, White, centered at `(500, 155)`).
+*   **Content** (White text, 18pt):
+    *   "8 threads' addrs + stride 64B" at `(500, 200)`.
+    *   "Coalesce by 32B sector:" at `(500, 235)`.
+    *   Mini-table: `S0: 0x48A0 | 3 lanes` (270), `S1: 0x48C0 | 5 lanes` (300).
+    *   Annotation: "Track S0 only →" (16pt bold, White, centered at `(500, 350)`).
+*   **Connectors**: 
+    *   Solid black line (#2C3E50, 1.5pt) from `(500, 380)` down to Node 2 `(500, 540)`.
+    *   Green dashed arrow (#27AE60, 3px, triangular head) from `(620, 285)` to `(670, 285)`.
+
+**Panel C: PRB (Prefetch Request Buffer) [Storage]**
+*   **Bounding Box**: `(670, 100)` to `(930, 380)` (White fill, 1.5pt #2C3E50 outline, 6pt rounded corners).
+*   **Header**: `(670, 100)` to `(930, 140)` (Blue #2B5EA7 fill, top corners rounded). Text: "PRB (Prefetch Request Buffer)" (18pt bold, White, centered).
+*   **Annotation**: "(inflight idx sectors)" (14pt, gray #7F8C8D, right-aligned at `(920, 165)`).
+*   **Table Content**: Columns: `# | tt_idx | remaining` (16pt bold, black, Y=185).
+    *   Entry 0 Box: `(675, 200)` to `(925, 240)` (Amber #D4A843 fill, 4pt rounded). Text: `0 | [0] | 1` (16pt, black).
+    *   Entry 1 Box: `(675, 250)` to `(925, 290)` (White). Text: `1 | [0,1] | 0` (16pt, gray #7F8C8D).
+    *   Entry 2 Box: `(675, 300)` to `(925, 340)` (White). Text: `2 | — | —` (16pt, gray #7F8C8D).
+*   **Connector**: Solid black line (#2C3E50, 1.5pt) from `(800, 380)` down to Node 3 `(800, 540)`.
+
+**L1 Packets & Cache (Right of PRB)**
+*   **Packet Box**: `(1020, 200)` to `(1180, 260)` (White fill, Green #27AE60 2pt outline, 4pt rounded). Text: "sector: 0x48A0\nmask: 00101010" (16pt, black).
+*   **L1 D-Cache Box**: `(1300, 180)` to `(1420, 280)` (White fill, 1.5pt #2C3E50 outline, 6pt rounded). Text: "L1 D-Cache" (20pt bold, black, centered).
+*   **Connectors**: 
+    *   Green dashed arrow (#27AE60, 3px, triangular head) from PRB `(930, 230)` to Packet `(1020, 230)`. Label: "index prefetch request" (14pt, #27AE60, above arrow).
+    *   Green dashed arrow (#27AE60, 3px, triangular head) from Packet `(1180, 230)` to L1 D-Cache `(1300, 230)`.
+
+### 3. STAGE 2: Data Prefetch (Below Timeline)
+
+**Panel D: Index Fill Returns**
+*   **Bounding Box**: `(950, 630)` to `(1250, 930)` (White fill, 1.5pt #2C3E50 outline, 6pt rounded).
+*   **Header**: "Index Fill Returns" (22pt bold, black, centered at `(1100, 660)`).
+*   **Content** (18pt, black):
+    *   "L2/DRAM → L1: sector 0x48A0 fills" at `(1100, 700)`.
+    *   Mini-table: `Pos | Index Value` (740), `1 | 181,064` (770), `3 | 269,280` (800), `5 | 16,176` (830).
+    *   **Key Annotation Box**: `(970, 860)` to `(1230, 890)` (Amber #D4A843 fill, 2pt #2C3E50 outline, 4pt rounded). Text: "Fill carries PRB entry ID → lookup TT via tt_idx" (16pt bold, black).
+    *   "PRB[0].remaining-- → 0 → release" at `(1100, 915)`.
+*   **Connector**: Solid black line (#2C3E50, 1.5pt) from Node 4 `(1100, 540)` down to `(1100, 630)`.
+
+**Panel E: ACU + DPU [Logic]**
+*   **Bounding Box**: `(1300, 630)` to `(1600, 930)` (Purple #6C3483 fill, 1.5pt #2C3E50 outline, 6pt rounded).
+*   **Header**: "ACU + DPU" (24pt bold, White, centered at `(1450, 660)`), "(Address Computation + Data Prefetch)" (14pt, White, centered at `(1450, 685)`).
+*   **ACU Section** (White text):
+    *   "ACU reads TT[0]:" (18pt, `(1450, 720)`).
+    *   Mini-TT Table: `TT[0] | x[] base | scale 4` (Amber #D4A843 background, black text, 4pt rounded, `(1320, 740)` to `(1580, 765)`). `TT[1] | y[] base | scale 4` (790). `TT[2] | z[] base | scale 8` (815).
+    *   "data_addr = x_base + 181,064 × 4 → 0xCD0D20" (16pt bold, White, `(1450, 850)`).
+*   **DPU Section**: "DPU: 3 data addrs → coalesce by sector" (16pt, White, `(1450, 890)`).
+*   **Connector**: Solid black line (#2C3E50, 1.5pt) from Node 5 `(1450, 540)` down to `(1450, 630)`.
+
+**Prefetch Queue (PQ) [Storage]**
+*   **Bounding Box**: `(1680, 870)` to `(1780, 930)` (Blue #2B5EA7 fill, 1.5pt #2C3E50 outline, 4pt rounded). Text: "PQ\n(Prefetch Queue)" (16pt bold, White, centered).
+*   **Connector**: Red dashed arrow (#C0392B, 3px, triangular head) from DPU `(1600, 900)` to PQ `(1680, 900)`.
+
+**Panel F: Result [Success]**
+*   **Bounding Box**: `(1650, 630)` to `(1850, 800)` (Green #5AA469 fill, 1.5pt #2C3E50 outline, 6pt rounded).
+*   **Header**: "Result" (24pt bold, White, centered at `(1750, 660)`).
+*   **Content** (White text, 18pt):
+    *   "Data fills L1" (710).
+    *   "Later: demand LDG x[181064]" (745).
+    *   "→ L1 HIT!" (22pt bold, Yellow #F4D03F, 780).
+*   **Connector**: Solid black line (#2C3E50, 1.5pt) from Node 6 `(1750, 540)` down to `(1750, 630)`.
+
+### 4. Bottom Legend Bar
+*   **Bounding Box**: `(200, 1000)` to `(1720, 1040)` (No outline, purely layout bounds).
+*   **Items** (Spaced evenly, 18pt sans-serif text aligned middle, black text):
+    *   `[250, 1010]` 20x20 Blue square (#2B5EA7, 2pt rounded) + "Storage" at `(280, 1020)`.
+    *   `[450, 1010]` 20x20 Purple square (#6C3483, 2pt rounded) + "Logic" at `(480, 1020)`.
+    *   `[650, 1010]` 20x20 Amber square (#D4A843, 2pt rounded) + "Key data" at `(680, 1020)`.
+    *   `[850, 1010]` 20x20 Green square (#5AA469, 2pt rounded) + "Result" at `(880, 1020)`.
+    *   `[1050, 1020]` Green dashed line (#27AE60, 3px, 40px long, triangular head) + "Index PF path" at `(1100, 1020)`.
+    *   `[1350, 1020]` Red dashed line (#C0392B, 3px, 40px long, triangular head) + "Data PF path" at `(1400, 1020)`.

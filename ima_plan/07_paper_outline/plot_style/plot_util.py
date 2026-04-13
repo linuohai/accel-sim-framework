@@ -96,6 +96,92 @@ HATCHES = [
     "--",    # horizontal lines
 ]
 
+# Denser hatching — for information-rich figures where sparse patterns look empty.
+# Triple/quadruple characters produce denser fills visible at small bar widths.
+HATCHES_DENSE = [
+    "",          # solid (our work — no hatch)
+    "/////",     # very dense diagonal
+    "\\\\\\\\\\",# very dense reverse diagonal
+    "xxxxx",     # dense crosshatch
+    ".....",     # dense dots
+    "+++++",     # dense plus
+    "|||||",     # dense vertical
+    "-----",     # dense horizontal
+    "///...",    # mixed diagonal + dots
+    "xxx...",    # mixed cross + dots
+]
+
+
+# ── Evaluation-Section Color Palettes (avoid blue/orange used in §2–§4) ───────
+# Each palette is a 5-color list. Index 0 is reserved for GRASP (our work).
+
+PALETTE_JEWEL = [
+    "#4B1E7F",  # deep violet (GRASP)
+    "#A31E26",  # crimson
+    "#2E6E2C",  # forest green
+    "#8C5E1C",  # bronze
+    "#3F3F46",  # graphite
+]
+
+PALETTE_TOL_BRIGHT = [
+    "#228833",  # green (GRASP)
+    "#EE6677",  # red
+    "#AA3377",  # purple
+    "#CCBB44",  # yellow
+    "#7F7F7F",  # gray
+]
+
+PALETTE_EARTH = [
+    "#701A75",  # plum (GRASP)
+    "#7C2D12",  # rust
+    "#365314",  # olive
+    "#78350F",  # cocoa
+    "#52525B",  # slate
+]
+
+PALETTE_MONO_CONTRAST = [
+    "#0B0B0B",  # near-black (GRASP)
+    "#8B0000",  # dark red
+    "#2E7D32",  # mid green
+    "#6B6B6B",  # mid gray
+    "#BFBFBF",  # light gray
+]
+
+PALETTE_OKABE_ITO = [  # colorblind-safe, excluding pure blue/orange
+    "#009E73",  # bluish green (GRASP)
+    "#CC79A7",  # reddish purple
+    "#D55E00",  # vermillion (reddish)
+    "#F0E442",  # yellow
+    "#000000",  # black
+]
+
+PALETTES = {
+    "jewel":        PALETTE_JEWEL,
+    "tol_bright":   PALETTE_TOL_BRIGHT,
+    "earth":        PALETTE_EARTH,
+    "mono_contrast":PALETTE_MONO_CONTRAST,
+    "okabe_ito":    PALETTE_OKABE_ITO,
+    "current":      CB10[:5],  # for reference comparison
+}
+
+
+# ── Subplot Label Helper (title-below convention for paper figures) ───────────
+
+
+def subplot_label(ax, label, y=-0.28, **kwargs):
+    """Place a subplot label (e.g. '(a) Coverage') BELOW the axis.
+
+    Paper convention: subplot labels go under each subplot, not above.
+    Call AFTER setting x-axis labels/ticks so the label sits below them.
+
+    Args:
+        ax: matplotlib Axes
+        label: subplot label string
+        y: vertical position in axes fraction (negative = below)
+        **kwargs: forwarded to ax.set_title
+    """
+    ax.set_title(label, y=y, fontsize=plt.rcParams['axes.titlesize'], **kwargs)
+
 
 # ── Legend Helpers (anti-overlap) ──────────────────────────────────────────────
 

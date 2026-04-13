@@ -155,20 +155,39 @@
 
 % --- ¶3: GPU stride prefetching 进展 + 其他 GPU prefetching ---
 
-@inproceedings{viitanen2018treelet,
-  author    = {Timo Viitanen and Matias Koskela and Pekka J\"{a}\"{a}skel\"{a}inen and Heikki Kultala and Jarmo Takala},
-  title     = {{PLOCTree}: A Fast, High-Quality Hardware {BVH} Builder},
-  booktitle = {Proc. ACM on Computer Graphics and Interactive Techniques (Proc. HPG)},
-  year      = {2018},
-  note      = {⚠️ 请验证：用户提到 "Treelet Prefetching For Ray Tracing"，需确认具体论文。此条目为占位，可能需替换}
+@inproceedings{chou2023treelet,
+  author    = {Yuan-Hsi Chou and Tyler Nowicki and Tor M. Aamodt},
+  title     = {Treelet Prefetching For Ray Tracing},
+  booktitle = {Proc. 56th Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)},
+  year      = {2023},
+  doi       = {10.1145/3613424.3623773}
 }
 
-@inproceedings{yoon2023latpc,
-  author    = {Hyeran Yoon and Hanhwi Jang and Jaewon Lee and Jaewoong Sim},
+@inproceedings{ha2025latpc,
+  author    = {Yeonan Ha and Hanhwi Jang and Jaewoong Sim},
   title     = {{LATPC}: Accelerating {GPU} Address Translation Using Locality-Aware {TLB} Prefetching and {MSHR} Compression},
-  booktitle = {Proc. IEEE International Symposium on High-Performance Computer Architecture (HPCA)},
-  year      = {2023},
-  note      = {⚠️ 请验证作者列表和年份}
+  booktitle = {Proc. 58th IEEE/ACM International Symposium on Microarchitecture (MICRO)},
+  year      = {2025}
+}
+
+% --- Foundational prefetching (classical references) ---
+
+@inproceedings{jouppi1990stream,
+  author    = {Norman P. Jouppi},
+  title     = {Improving Direct-Mapped Cache Performance by the Addition of a Small Fully-Associative Cache and Prefetch Buffers},
+  booktitle = {Proc. 17th Annual International Symposium on Computer Architecture (ISCA)},
+  year      = {1990},
+  pages     = {364--373},
+  doi       = {10.1145/325164.325162}
+}
+
+@inproceedings{mowry1992software,
+  author    = {Todd C. Mowry and Monica S. Lam and Anoop Gupta},
+  title     = {Design and Evaluation of a Compiler Algorithm for Prefetching},
+  booktitle = {Proc. 5th International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS)},
+  year      = {1992},
+  pages     = {62--73},
+  doi       = {10.1145/143365.143488}
 }
 
 % --- GPU stride prefetching 进展 ---
@@ -257,6 +276,16 @@
 
 % --- ¶5: Spare Register + GPU SW Prefetch ---
 
+% [VERIFY] NVIDIA A100 whitepaper — official version may differ; cited for
+% per-SM warp count (64), 192 KB unified L1+Shared, and HBM2e memory.
+@misc{nvidia2020a100,
+  title        = {{NVIDIA A100 Tensor Core GPU Architecture}},
+  author       = {{NVIDIA Corporation}},
+  year         = {2020},
+  howpublished = {Whitepaper},
+  note         = {Version 1.0}
+}
+
 @inproceedings{lakshminarayana2014spare,
   author    = {Nagesh B. Lakshminarayana and Hyesoon Kim},
   title     = {Spare Register Aware Prefetching for Graph Algorithms on {GPUs}},
@@ -273,6 +302,267 @@
   year      = {2024},
   doi       = {10.1145/3662010.3663441}
 }
+
+% =============================================================================
+% §6 Related Work — additional citations (added 2026-04-08)
+% =============================================================================
+
+% --- §6.1 CPU Hardware Prefetchers for Indirect Access ---
+
+@inproceedings{naithani2023dvr,
+  author    = {Ajeya Naithani and Jaime Roelandts and Sam Ainsworth and Timothy M. Jones and Lieven Eeckhout},
+  title     = {Decoupled Vector Runahead},
+  booktitle = {Proc. 56th Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)},
+  year      = {2023},
+  pages     = {195--208},
+  doi       = {10.1145/3613424.3623776}
+}
+
+@inproceedings{naithani2021vectorrunahead,
+  author    = {Ajeya Naithani and Sam Ainsworth and Timothy M. Jones and Lieven Eeckhout},
+  title     = {Vector Runahead},
+  booktitle = {Proc. 48th Annual International Symposium on Computer Architecture (ISCA)},
+  year      = {2021},
+  pages     = {195--208},
+  doi       = {10.1109/ISCA52012.2021.00024}
+}
+
+@inproceedings{naithani2020precise,
+  author    = {Ajeya Naithani and Josu\'{e} Feliu and Almutaz Adileh and Lieven Eeckhout},
+  title     = {Precise Runahead Execution},
+  booktitle = {Proc. IEEE International Symposium on High Performance Computer Architecture (HPCA)},
+  year      = {2020},
+  pages     = {397--410},
+  doi       = {10.1109/HPCA47549.2020.00040}
+}
+
+@inproceedings{ainsworth2018event,
+  author    = {Sam Ainsworth and Timothy M. Jones},
+  title     = {An Event-Triggered Programmable Prefetcher for Irregular Workloads},
+  booktitle = {Proc. 23rd International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS)},
+  year      = {2018},
+  pages     = {578--592},
+  doi       = {10.1145/3173162.3173189}
+}
+
+@inproceedings{bakhshalipour2018domino,
+  author    = {Mohammad Bakhshalipour and Pejman Lotfi-Kamran and Hamid Sarbazi-Azad},
+  title     = {Domino Temporal Data Prefetcher},
+  booktitle = {Proc. IEEE International Symposium on High Performance Computer Architecture (HPCA)},
+  year      = {2018},
+  pages     = {131--142},
+  doi       = {10.1109/HPCA.2018.00021}
+}
+
+@inproceedings{litz2022crisp,
+  author    = {Heiner Litz and Grant Ayers and Parthasarathy Ranganathan},
+  title     = {{CRISP}: Critical Slice Prefetching},
+  booktitle = {Proc. 27th ACM International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS)},
+  year      = {2022},
+  pages     = {300--313},
+  doi       = {10.1145/3503222.3507745}
+}
+
+@inproceedings{fu2025magellan,
+  author    = {Gelin Fu and Tian Xia and Zhongpei Luo and Ruiyang Chen and Wenzhe Zhao and Pengju Ren},
+  title     = {Magellan: A High-Performance Loop-Guided Prefetcher for Indirect Memory Access},
+  booktitle = {Proc. 52nd Annual International Symposium on Computer Architecture (ISCA)},
+  year      = {2025}
+}
+
+% --- §6.2 GPU Stride and Stream Prefetchers ---
+
+@article{neves2018stream,
+  author    = {Nuno Neves and Pedro Tom\'{a}s and Nuno Roma},
+  title     = {Stream Data Prefetcher for the {GPU} Memory Interface},
+  journal   = {Journal of Supercomputing},
+  volume    = {74},
+  number    = {6},
+  pages     = {2314--2328},
+  year      = {2018},
+  doi       = {10.1007/s11227-017-2192-6}
+}
+
+@inproceedings{sethia2013apogee,
+  author    = {Ankit Sethia and Ganesh Dasika and Mehrzad Samadi and Scott Mahlke},
+  title     = {{APOGEE}: Adaptive Prefetching on {GPUs} for Energy Efficiency},
+  booktitle = {Proc. 22nd International Conference on Parallel Architectures and Compilation Techniques (PACT)},
+  year      = {2013},
+  pages     = {73--82},
+  doi       = {10.1109/PACT.2013.6618805}
+}
+
+@inproceedings{woo2010compass,
+  author    = {Dong Hyuk Woo and Hsien-Hsin S. Lee},
+  title     = {{COMPASS}: A Programmable Data Prefetcher Using Idle {GPU} Shaders},
+  booktitle = {Proc. 15th International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS)},
+  year      = {2010},
+  pages     = {297--310},
+  doi       = {10.1145/1736020.1736054}
+}
+
+@inproceedings{ganguly2019interplay,
+  author    = {Debashis Ganguly and Ziyu Zhang and Jun Yang and Rami Melhem},
+  title     = {Interplay between Hardware Prefetcher and Page Eviction Policy in {CPU}-{GPU} Unified Virtual Memory},
+  booktitle = {Proc. ACM/IEEE 46th Annual International Symposium on Computer Architecture (ISCA)},
+  year      = {2019},
+  pages     = {224--235},
+  doi       = {10.1145/3307650.3322224}
+}
+
+@article{guo2018dsap,
+  author    = {Cheng Guo and Liangliang Chang and Jinrui Yang and Chunhua Xiao},
+  title     = {Accelerating {BFS} via Data Structure-Aware Prefetching on {GPU}},
+  journal   = {IEEE Access},
+  volume    = {6},
+  pages     = {60234--60248},
+  year      = {2018},
+  doi       = {10.1109/ACCESS.2018.2875430}
+}
+
+@inproceedings{panda2017gmap,
+  author    = {Reena Panda and Xinnian Zheng and Andreas Gerstlauer and Lizy K. John},
+  title     = {{G}-{MAP}: Statistical Pattern-Based Modeling of {GPU} Memory Access Streams},
+  booktitle = {Proc. 54th Annual Design Automation Conference (DAC)},
+  year      = {2017},
+  articleno = {68},
+  doi       = {10.1145/3061639.3062223}
+}
+
+% --- §6.4(a) Software prefetching on GPUs and CPUs ---
+
+@inproceedings{jain2013linearize,
+  author    = {Aamer Jain and Calvin Lin},
+  title     = {Linearizing Irregular Memory Accesses for Improved Correlated Prefetching},
+  booktitle = {Proc. 46th Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)},
+  year      = {2013},
+  pages     = {247--259},
+  doi       = {10.1145/2540708.2540730}
+}
+
+@inproceedings{jain2024dlrm,
+  author    = {Rishabh Jain and Scott Cheng and Vishwas Kalagi and Vrushabh Sanghavi and Samvit Kaul and Meena Arunachalam and Kiwan Maeng and Adwait Jog and Anand Sivasubramaniam and Mahmut T. Kandemir and Chita R. Das},
+  title     = {Pushing the Performance Envelope of {DNN}-based Recommendation Systems Inference on {GPUs}},
+  booktitle = {Proc. 57th IEEE/ACM International Symposium on Microarchitecture (MICRO)},
+  year      = {2024},
+  doi       = {10.1109/MICRO61859.2024.00084}
+}
+
+@inproceedings{sotiropoulos2025asap,
+  author    = {Konstantinos Sotiropoulos and Fabian Mora and Aviral Goel and Christopher Lattner},
+  title     = {{ASaP}: Automatic Software Prefetching for Sparse Tensor Computations in {MLIR}},
+  booktitle = {Proc. SC '25 Workshops of the International Conference for High Performance Computing, Networking, Storage and Analysis},
+  year      = {2025}
+}
+
+% --- §6.4(b) Specialised GPU prefetchers ---
+
+@inproceedings{posluns2025tsp,
+  author    = {Mark Jeffrey Posluns and Mark C. Jeffrey},
+  title     = {Symbiotic Task Scheduling and Data Prefetching},
+  booktitle = {Proc. 58th IEEE/ACM International Symposium on Microarchitecture (MICRO)},
+  year      = {2025}
+}
+
+% --- §6.4(c) Graph and irregular-workload accelerators ---
+
+@inproceedings{ham2016graphicionado,
+  author    = {Tae Jun Ham and Lisa Wu and Narayanan Sundaram and Nadathur Satish and Margaret Martonosi},
+  title     = {Graphicionado: A High-Performance and Energy-Efficient Accelerator for Graph Analytics},
+  booktitle = {Proc. 49th Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)},
+  year      = {2016},
+  pages     = {1--13},
+  doi       = {10.1109/MICRO.2016.7783759}
+}
+
+@inproceedings{mukkara2018hats,
+  author    = {Anurag Mukkara and Nathan Beckmann and Maleen Abeydeera and Xiaosong Ma and Daniel Sanchez},
+  title     = {Exploiting Locality in Graph Analytics through Hardware-Accelerated Traversal Scheduling},
+  booktitle = {Proc. 51st Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)},
+  year      = {2018},
+  pages     = {1--14},
+  doi       = {10.1109/MICRO.2018.00010}
+}
+
+@inproceedings{ahn2015tesseract,
+  author    = {Junwhan Ahn and Sungpack Hong and Sungjoo Yoo and Onur Mutlu and Kiyoung Choi},
+  title     = {A Scalable Processing-in-Memory Accelerator for Parallel Graph Processing},
+  booktitle = {Proc. 42nd Annual International Symposium on Computer Architecture (ISCA)},
+  year      = {2015},
+  pages     = {105--117},
+  doi       = {10.1145/2749469.2750386}
+}
+
+@inproceedings{rahman2020graphpulse,
+  author    = {Shafiur Rahman and Nael Abu-Ghazaleh and Rajiv Gupta},
+  title     = {{GraphPulse}: An Event-Driven Hardware Accelerator for Asynchronous Graph Processing},
+  booktitle = {Proc. 53rd Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)},
+  year      = {2020},
+  pages     = {908--921},
+  doi       = {10.1109/MICRO50266.2020.00078}
+}
+
+@inproceedings{geng2021igcn,
+  author    = {Tong Geng and Chunshu Wu and Yongan Zhang and Cheng Tan and Chenhao Xie and Haoran You and Martin C. Herbordt and Yingyan Lin and Ang Li},
+  title     = {{I}-{GCN}: A Graph Convolutional Network Accelerator with Runtime Locality Enhancement through Islandization},
+  booktitle = {Proc. 54th Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)},
+  year      = {2021},
+  pages     = {1051--1063},
+  doi       = {10.1145/3466752.3480113}
+}
+
+@inproceedings{orenes2022maple,
+  author    = {Marcelo Orenes-Vera and Esin Tureci and David Wentzlaff and Margaret Martonosi},
+  title     = {Tiny but Mighty: Designing and Realizing Scalable Latency Tolerance for Manycore {SoCs}},
+  booktitle = {Proc. 49th Annual International Symposium on Computer Architecture (ISCA)},
+  year      = {2022},
+  pages     = {817--830},
+  doi       = {10.1145/3470496.3527400}
+}
+
+% =============================================================================
+% §4 Methodology — citations (added 2026-04-08)
+% =============================================================================
+
+@inproceedings{khairy2020accelsim,
+  author    = {Mahmoud Khairy and Zhesheng Shen and Tor M. Aamodt and Timothy G. Rogers},
+  title     = {{Accel-Sim}: An Extensible Simulation Framework for Validated {GPU} Modeling},
+  booktitle = {Proc. ACM/IEEE 47th Annual International Symposium on Computer Architecture (ISCA)},
+  year      = {2020},
+  pages     = {473--486},
+  doi       = {10.1109/ISCA45697.2020.00047}
+}
+
+@inproceedings{che2013pannotia,
+  author    = {Shuai Che and Bradford M. Beckmann and Steven K. Reinhardt and Kevin Skadron},
+  title     = {{Pannotia}: Understanding Irregular {GPGPU} Graph Applications},
+  booktitle = {Proc. IEEE International Symposium on Workload Characterization (IISWC)},
+  year      = {2013},
+  pages     = {185--195},
+  doi       = {10.1109/IISWC.2013.6704684}
+}
+
+% --- Dataset / source citations ---
+
+@misc{leskovec2014snap,
+  author       = {Jure Leskovec and Andrej Krevl},
+  title        = {{SNAP Datasets}: {Stanford} Large Network Dataset Collection},
+  howpublished = {\url{http://snap.stanford.edu/data}},
+  month        = jun,
+  year         = {2014}
+}
+
+@article{davis2011suitesparse,
+  author    = {Timothy A. Davis and Yifan Hu},
+  title     = {The {University of Florida} Sparse Matrix Collection},
+  journal   = {ACM Transactions on Mathematical Software},
+  volume    = {38},
+  number    = {1},
+  pages     = {1--25},
+  year      = {2011},
+  doi       = {10.1145/2049662.2049663}
+}
+
 
 % =============================================================================
 % §2-§7 引文（待补充）

@@ -1,0 +1,49 @@
+**OPTIMIZED LAYOUT DESCRIPTION**
+
+**GRID AND SPACING STRUCTURE**
+*   **Aspect Ratio & Dimensions:** 16:9, optimized for 7.0-inch IEEE double-column width.
+*   **Vertical Division:** 
+    *   Upper section: Top two-thirds of the canvas.
+    *   Middle section: A narrow horizontal band for the formula.
+    *   Lower section: Bottom one-third of the canvas.
+*   **Horizontal Division (Upper Section):** 
+    *   Left column: Contains SpMV CUDA Source (top) and Target Table (TT) (bottom).
+    *   Right column: Contains SASS Assembly (spanning the full height of the upper section).
+*   **Alignment:** Left and right upper blocks share exact top and bottom alignment. The lower section spans the full width of the canvas, aligned with the outer left and right edges of the upper blocks.
+
+**COMPONENT PLACEMENT & TYPOGRAPHY**
+*   **SpMV CUDA Source (Upper Left Top):** 
+    *   Background: #F5F5F5 with 1pt black outline, rounded corners.
+    *   Font: Courier for code, Times New Roman for the italicized gray label "SpMV CUDA Kernel".
+    *   Styling: "Aj[offset]" underlined in #2B5EA7 with "Index Load" text below; "x[...]" underlined in #D4A843 with "Data Load" text below.
+*   **Target Table (TT) (Upper Left Bottom):**
+    *   Header: #6C3483 background, white bold Times New Roman text.
+    *   Structure: Two grouped column sets separated by a thin vertical gap. Group 1: Valid (with #5AA469 square). Group 2: Base Address | Scale.
+    *   Font: Courier for hex values, Times New Roman for labels.
+*   **SASS Assembly (Upper Right):**
+    *   Background: #F5F5F5 with 1pt black outline, rounded corners.
+    *   Font: Courier for code.
+    *   Styling: Lines explicitly colored #2B5EA7 (bold), #6C3483 (bold), #D4A843 (bold), or gray as specified.
+    *   Brackets: Right-aligned colored brackets grouping the instructions, labeled "IMA Index Load" (#2B5EA7), "Addr Generation" (#6C3483), and "IMA Data Load" (#D4A843).
+*   **Formula (Middle Center):**
+    *   Placement: Centered horizontally between the upper blocks and the lower table.
+    *   Formatting: LaTeX math style (e.g., $Addr_{data} = base + scale \times index$). "base" and "scale" in #6C3483, "index" in #2B5EA7.
+*   **Chain Table (CT) (Lower):**
+    *   Header: #2B5EA7 background, white bold Times New Roman text.
+    *   Structure: Three grouped column sets (Identification, Target Mapping, Stride Learning) separated by thin vertical gaps.
+    *   Font: Courier for hex/data, Times New Roman for headers.
+
+**ARROW ROUTING AND ANNOTATIONS**
+*   **CUDA to SASS:** Gray dashed arrow pointing right from the SpMV box to the SASS box, labeled "compiles to" in gray italic Times New Roman.
+*   **SASS to TT:** Gray dashed arrows originating from "c[0x180]" and "R16" in the SASS IMAD.WIDE instructions, routing cleanly to the left into the TT Base Address and Scale cells.
+*   **SASS to CT:** Solid black arrows originating from the SASS LDG.E index load lines (/*03d0*/ and /*03e0*/), routing straight down to the corresponding rows in the CT. Label these arrows (1) and (2).
+*   **CT to TT (Convergence):** Solid black arrows originating from the "tt_idx[0]" column in the CT, routing diagonally up and left, converging into a single arrowhead pointing at TT Entry 0. 
+*   **Formula to TT:** Short, direct upward arrows connecting the "base" and "scale" terms in the formula to their respective columns in the TT.
+*   **Annotations:** 
+    *   Place "16 CT entries -> 1 TT entry" (bold, dark text) near the converging CT-to-TT arrows.
+    *   Place "Stride = 64B (x16 unroll x 4B/element)" near the Stride column of the CT using a thin pointing line.
+
+**VISUAL HIERARCHY & STYLING**
+*   Strict adherence to the requested color palette: #2B5EA7 (Blue), #6C3483 (Purple), #D4A843 (Amber), #5AA469 (Green), #F5F5F5 (Gray).
+*   Ensure distinct header colors for CT and TT to visually separate the structures.
+*   Maintain 1-1.5pt black outlines for all structural borders. No shadows, no gradients.

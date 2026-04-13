@@ -1,0 +1,59 @@
+Here is the finalized, highly-specific prompt optimized for the nano-banana-pro image generator. It strictly enforces the MICRO/ISCA/HPCA academic style guidelines, ensuring perfect color application, high contrast, and precise text rendering.
+
+***
+
+**Prompt for nano-banana-pro:**
+
+**Global Settings:**
+*   **Canvas:** 16:9 aspect ratio, 1K resolution.
+*   **Style:** Flat 2D vector graphic, pure white background (#FFFFFF). 4-6pt rounded corners on all bounding boxes. Strictly NO shadows, NO gradients, and NO 3D effects. Clean, professional academic computer architecture style (MICRO/ISCA/HPCA).
+
+**Layout Structure:**
+
+**Level 1: SASS Code (Top 15%, Y: 5-20%)**
+*   **Label:** Exact text "SpMV SASS Code (x16 Unrolled)" (Dark gray #333333, bold, 15pt, aligned top-left).
+*   **Code Box:** Light gray (#F0F0F0) fill, 5% left/right margins. Dark gray text.
+*   **Content:** 4 lines of exact text, 10pt monospace font, left-aligned:
+    *   `PC 0x0480: IMAD.WIDE R8, R9, R16, c[0x0][0x180]  // unroll copy 1`
+    *   `PC 0x0490: IMAD.WIDE R26, R27, R16, c[0x0][0x180] // unroll copy 2`
+    *   `PC 0x04b0: IMAD.WIDE R12, R13, R16, c[0x0][0x180] // unroll copy 3`
+    *   `... x16 total copies ...`
+*   **Transition:** A single downward-pointing arrow (Solid #7B68AE color) centered below the box. Label next to arrow: "CD detects 16 IMA chains" (11pt, #7B68AE).
+
+**Level 2: Chain Table (Next 30%, Y: 25-55%)**
+*   **Label:** Exact text "Chain Table (CT) - 16 entries from SpMV" (#4472C4 color, bold, 14pt, top-left of table).
+*   **Table:** Full width layout. 3px pure white (#FFFFFF) grid lines separating cells.
+    *   **Header Row:** Solid #4472C4 fill. Exact text in pure WHITE (#FFFFFF), bold, 11pt: `index_PC | data_PC | tt_idx[] | num_targets | stride | stride_valid`
+    *   **Data Rows 1-4:** Pure white (#FFFFFF) fill, dark gray monospace text (10pt). The last column (`stride_valid`) must contain a bold check mark icon in success green (#5AA469).
+        *   Row 1: `0x0460 | 0x04a0 | [0] | 1 | 64 |` [Green Check Mark #5AA469]
+        *   Row 2: `0x0470 | 0x04c0 | [0] | 1 | 64 |` [Green Check Mark #5AA469]
+        *   Row 3: `0x0490 | 0x04d0 | [0] | 1 | 64 |` [Green Check Mark #5AA469]
+        *   Row 4: `0x04b0 | 0x04f0 | [0] | 1 | 64 |` [Green Check Mark #5AA469]
+*   **Footer:** Centered below table, italic dark gray text (10pt): "... all 16 entries have tt_idx = [0] ...".
+*   **Transition:** Multiple downward arrows converging from the `tt_idx[]` column into a single point below. Arrow color: #7B68AE. Label next to arrows: "16 to 1 convergence" (11pt, #7B68AE).
+
+**Level 3: Target Table & Logic (Next 30%, Y: 60-90%)**
+*   **LEFT HALF (X: 5-48%):**
+    *   **Label:** Exact text "Target Table (TT) - 1 shared entry" (#4472C4 color, bold, 13pt).
+    *   **Table:** 3px white grid lines. 
+        *   Header Row: Solid #4472C4 fill, pure WHITE (#FFFFFF) text: `base_addr | scale | valid`
+        *   Data Row 1: White fill, dark gray text: `c[0x0][0x180] | 4 |` [Green Check Mark #5AA469]
+    *   **Text Below Table:** 
+        *   Line 1: "ONE entry for ALL 16 PCs" (bold, #D4A843 color). 
+        *   Line 2: "Shared across entire SM (all warps)" (italic, #4472C4 color).
+*   **RIGHT HALF (X: 52-95%):**
+    *   **Formula Box:** Solid #D4A843 fill. Exact text in pure WHITE (#FFFFFF), centered: 
+        *   Line 1: "data_addr = base_addr + index_value x scale" (14pt bold). 
+        *   Line 2: "= c[0x180] + col_idx x 4" (12pt regular).
+    *   **Example Boxes:** 3 vertically stacked boxes below the formula. Pure white (#FFFFFF) fill, 2px solid #D4A843 borders. Exact text in dark gray monospace (10pt):
+        *   Box 1: `col_idx=0x1A3F -> addr=base+0x68FC`
+        *   Box 2: `col_idx=0x2B10 -> addr=base+0xAC40`
+        *   Box 3: `col_idx=0x0C44 -> addr=base+0x3110`
+
+**Bottom Legend (Bottom 5%, Y: 95%)**
+*   **Layout:** Centered horizontally at the bottom of the canvas. Items spaced evenly. 10pt dark gray text.
+*   **Items:** 
+    *   Solid #4472C4 square icon + text "Storage"
+    *   Solid #7B68AE square icon + text "Logic"
+    *   Solid #D4A843 square icon + text "Key Formula"
+    *   Solid #5AA469 square icon + text "Validation"

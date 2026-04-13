@@ -1,0 +1,63 @@
+Here is the OPTIMIZED LAYOUT DESCRIPTION for the SpMV IMA figure, designed specifically for a 3:4 aspect ratio (single-column MICRO/ISCA/HPCA paper format) using a 0-100 normalized coordinate grid (X: 0=left, 100=right; Y: 0=top, 100=bottom).
+
+### 1. Optimized Component Positions (0-100 Grid)
+
+**Component 1: Code Snippet Box (Y: 5 to 20)**
+- **Code Box:** X: 15, Y: 5, W: 70, H: 15 (Fill: #ECF0F1, Border: 1pt solid black)
+- **Code Box Title ("SpMV inner loop"):** X: 15, Y: 2, W: 30, H: 3 (Align: Left)
+
+**Component 2: A_col[] Array Region (Y: 30 to 45)**
+- **Main Label ("A_col[]"):** X: 5, Y: 32, W: 15, H: 4
+- **Sub-label ("column indices (stride-1)"):** X: 5, Y: 36, W: 15, H: 6 (Text wrap enabled)
+- **Annotation ("① index load: B[j]"):** X: 25, Y: 27, W: 30, H: 3 (Color: #C0392B)
+- **A_col[] Array Cells:** X: 22, Y: 32, W: 60, H: 8. (Consists of 10 cells, each W: 6, H: 8. Fill: #AED6F1). 
+  - Cell centers at X = 25, 31, 37, 43, 49, 55, 61, 67, 73, 79.
+- **Iteration Arrow ("j →"):** X: 22, Y: 42, W: 60, H: 2 (Color: #27AE60)
+
+**Component 3: x[] Array Region (Y: 75 to 90)**
+- **Main Label ("x[]"):** X: 5, Y: 77, W: 15, H: 4
+- **Sub-label ("dense input vector (scattered)"):** X: 5, Y: 81, W: 15, H: 6
+- **Annotation ("② data load: A[B[j]]"):** X: 25, Y: 87, W: 30, H: 3 (Color: #C0392B)
+- **x[] Array Cells:** X: 22, Y: 77, W: 60, H: 8. (10 cells, W: 6, H: 8. Base Fill: #D7BDE2, Accessed Fill: #A569BD).
+  - Cell centers at exactly the same X coordinates as A_col[].
+
+**Component 4: IMA Chain Bracket (X: 85 to 98)**
+- **Curly Bracket:** X: 84, Y: 32, W: 3, H: 53 (Spans from top of A_col to bottom of x)
+- **Bracket Label ("IMA chain: serial dependency"):** X: 88, Y: 45, W: 10, H: 20 (Rotated 90 degrees clockwise, or text wrapped vertically)
+
+**Component 5: Bottom Legend (Y: 94 to 98)**
+- **Legend Bounding Box:** X: 10, Y: 94, W: 80, H: 4 (No border, horizontal layout)
+- **Items (spaced evenly):** [Green Arrow] stride-1, [Red Arrow] scattered, [Dark Purple] accessed, [Light Purple] not accessed.
+
+### 2. Spacing Recommendations
+- **Vertical Padding:** Maintain exactly 32 grid units (Y: 45 to 77) between the bottom of A_col[] and the top of x[]. This massive vertical whitespace is strictly reserved for the red indirection arrows to prevent visual clutter.
+- **Cell Padding:** Text inside array cells must have 10% padding from the cell borders to ensure the 9pt bold monospace text does not touch the 1.0pt black borders.
+
+### 3. Grouping Strategy
+- **Group 1 (Logical Control):** The code box at the top.
+- **Group 2 (Memory Access 1):** A_col[] array, its labels, the green "j" arrow, and the "① index load" annotation.
+- **Group 3 (Memory Access 2):** x[] array, its labels, and the "② data load" annotation.
+- **Group 4 (Dependency):** The red arrows and the right-side curly bracket.
+
+### 4. Arrow Routing (The Critical Visual)
+To make the scattered nature obvious without crossing lines becoming an unreadable mess, route the 5 red arrows (#C0392B, 1.5pt) with specific Bezier curves:
+1. **A_col[0]=1 → x[1]:** Start (25, 40), End (31, 77). Slight S-curve.
+2. **A_col[1]=4 → x[4]:** Start (31, 40), End (49, 77). Arch downward, apex at Y=55.
+3. **A_col[2]=7 → x[7]:** Start (37, 40), End (67, 77). Wide arch downward, apex at Y=60.
+4. **A_col[3]=2 → x[2]:** Start (43, 40), End (37, 77). Arch *leftward*, apex at Y=50 (crosses under arrow 1 and 2).
+5. **A_col[4]=5 → x[5]:** Start (49, 40), End (55, 77). Direct S-curve.
+
+*Rule:* Arrowheads must strictly terminate at the top border of the x[] cells. Do not let arrows overlap the text inside the cells.
+
+### 5. Visual Hierarchy
+1. **Primary (Highest Contrast):** The red curved arrows and the dark purple (#A569BD) "accessed" cells in x[]. This immediately draws the reviewer's eye to the "scattered" access pattern.
+2. **Secondary:** The arrays themselves (light blue and light purple blocks) and the C code snippet.
+3. **Tertiary:** The structural labels, annotations, and legend.
+
+### 6. Aspect Ratio
+- **3:4 (Width:Height).** The vertical layout (Code -> A_col -> Arrows -> x -> Legend) naturally fills a taller-than-wide bounding box, perfectly suited for a single column in a two-column IEEE/ACM paper format (approx 3.5 inches wide by 4.6 inches tall).
+
+### 7. Critical Visual Design Decisions
+- **Highlighting the Scatter Pattern:** By coloring the unaccessed x[] cells light purple (#D7BDE2) and the accessed ones dark purple (#A569BD), the non-linear, scattered footprint on the dense vector becomes instantly recognizable even before reading the text.
+- **Arrow Clarity:** Limiting the red arrows to the first 5 iterations prevents a "spaghetti" effect while still proving the accesses are non-sequential.
+- **Print Readability:** Using 9pt bold text for all array values and 1.0pt thick borders ensures that when the figure is scaled down to 3.5 inches wide, the numbers (1, 4, 7, etc.) remain perfectly legible.

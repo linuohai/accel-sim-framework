@@ -1,0 +1,1203 @@
+	.headerflags	@"EF_CUDA_TEXMODE_UNIFIED EF_CUDA_64BIT_ADDRESS EF_CUDA_SM86 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM86)"
+	.elftype	@"ET_EXEC"
+
+
+//--------------------- .text._ZN3cub17CUB_200500_860_NS11EmptyKernelIvEEvv --------------------------
+	.section	.text._ZN3cub17CUB_200500_860_NS11EmptyKernelIvEEvv,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=4"
+	.align	128
+
+
+
+
+        .global         _ZN3cub17CUB_200500_860_NS11EmptyKernelIvEEvv
+        .type           _ZN3cub17CUB_200500_860_NS11EmptyKernelIvEEvv,@function
+        .size           _ZN3cub17CUB_200500_860_NS11EmptyKernelIvEEvv,(.L_x_18 - _ZN3cub17CUB_200500_860_NS11EmptyKernelIvEEvv)
+        .other          _ZN3cub17CUB_200500_860_NS11EmptyKernelIvEEvv,@"STO_CUDA_ENTRY STV_DEFAULT"
+_ZN3cub17CUB_200500_860_NS11EmptyKernelIvEEvv:
+.text._ZN3cub17CUB_200500_860_NS11EmptyKernelIvEEvv:
+	//## File "/usr/local/cuda/include/cub/util_device.cuh", line 88
+        /*0000*/                   MOV R1, c[0x0][0x28] ;
+	//## File "/usr/local/cuda/include/cub/util_device.cuh", line 89
+        /*0010*/                   EXIT ;
+.L_x_0:
+        /*0020*/                   BRA `(.L_x_0);
+        /*0030*/                   NOP;
+        /*0040*/                   NOP;
+        /*0050*/                   NOP;
+        /*0060*/                   NOP;
+        /*0070*/                   NOP;
+        /*0080*/                   NOP;
+        /*0090*/                   NOP;
+        /*00a0*/                   NOP;
+        /*00b0*/                   NOP;
+        /*00c0*/                   NOP;
+        /*00d0*/                   NOP;
+        /*00e0*/                   NOP;
+        /*00f0*/                   NOP;
+.L_x_18:
+
+
+//--------------------- .text._Z16conflict_resolveiPmPi9Worklist2S1_S0_ --------------------------
+	.section	.text._Z16conflict_resolveiPmPi9Worklist2S1_S0_,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=20"
+	.align	128
+
+
+
+
+        .global         _Z16conflict_resolveiPmPi9Worklist2S1_S0_
+        .type           _Z16conflict_resolveiPmPi9Worklist2S1_S0_,@function
+        .size           _Z16conflict_resolveiPmPi9Worklist2S1_S0_,(.L_x_19 - _Z16conflict_resolveiPmPi9Worklist2S1_S0_)
+        .other          _Z16conflict_resolveiPmPi9Worklist2S1_S0_,@"STO_CUDA_ENTRY STV_DEFAULT"
+_Z16conflict_resolveiPmPi9Worklist2S1_S0_:
+.text._Z16conflict_resolveiPmPi9Worklist2S1_S0_:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 38
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 116
+        /*0010*/                   IMAD.MOV.U32 R3, RZ, RZ, c[0x0][0x194] ;
+        /*0020*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0030*/                   IMAD.MOV.U32 R2, RZ, RZ, c[0x0][0x190] ;
+        /*0040*/                   LDG.E R3, [R2.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 44
+        /*0050*/                   S2R R0, SR_CTAID.X ;
+        /*0060*/                   S2R R5, SR_TID.X ;
+        /*0070*/                   IMAD R0, R0, c[0x0][0x0], R5 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 116
+        /*0080*/                   ISETP.GT.AND P0, PT, R3, R0, PT ;
+        /*0090*/              @!P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 118
+        /*00a0*/                   MOV R3, 0x4 ;
+        /*00b0*/                   IMAD.WIDE R2, R0, R3, c[0x0][0x178] ;
+        /*00c0*/                   LDG.E R9, [R2.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 48
+        /*00d0*/                   IMAD.MOV.U32 R4, RZ, RZ, 0x8 ;
+        /*00e0*/                   IMAD.WIDE R4, R9, R4, c[0x0][0x168] ;
+        /*00f0*/                   LDG.E R0, [R4.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 49
+        /*0100*/                   LDG.E R11, [R4.64+0x8] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 50
+        /*0110*/                   ISETP.GE.AND P0, PT, R0, R11, PT ;
+        /*0120*/               @P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 48
+        /*0130*/                   SHF.R.S32.HI R4, RZ, 0x1f, R9 ;
+        /*0140*/                   LEA R2, P0, R9, c[0x0][0x1b8], 0x2 ;
+        /*0150*/                   LEA.HI.X R3, R9, c[0x0][0x1bc], R4, 0x2, P0 ;
+        /*0160*/                   LDG.E R8, [R2.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 50
+        /*0170*/                   BSSY B0, `(.L_x_1) ;
+.L_x_3:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 51
+        /*0180*/                   IMAD.MOV.U32 R17, RZ, RZ, 0x4 ;
+        /*0190*/                   IMAD.WIDE R4, R0, R17, c[0x0][0x170] ;
+        /*01a0*/                   LDG.E R4, [R4.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 52
+        /*01b0*/                   IMAD.WIDE R6, R4, R17, c[0x0][0x1b8] ;
+        /*01c0*/                   LDG.E R7, [R6.64] ;
+        /*01d0*/                   ISETP.LT.AND P1, PT, R9, R4, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 50
+        /*01e0*/                   IADD3 R0, R0, 0x1, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 52
+        /*01f0*/                   ISETP.NE.AND P0, PT, R8, R7, PT ;
+        /*0200*/              @!P0 BRA P1, `(.L_x_2) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 50
+        /*0210*/                   ISETP.GE.AND P0, PT, R0, R11, PT ;
+        /*0220*/              @!P0 BRA `(.L_x_3) ;
+        /*0230*/                   EXIT ;
+.L_x_2:
+        /*0240*/                   BSYNC B0 ;
+.L_x_1:
+	//## File "/usr/local/cuda/include/device_atomic_functions.hpp", line 107
+        /*0250*/                   S2R R5, SR_LANEID ;
+        /*0260*/                   VOTEU.ANY UR6, UPT, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 54
+        /*0270*/                   MOV R15, 0x80 ;
+	//## File "/usr/local/cuda/include/device_atomic_functions.hpp", line 107
+        /*0280*/                   FLO.U32 R8, UR6 ;
+        /*0290*/                   IMAD.MOV.U32 R4, RZ, RZ, c[0x0][0x1b0] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 54
+        /*02a0*/                   STG.E [R2.64], R15 ;
+	//## File "/usr/local/cuda/include/device_atomic_functions.hpp", line 107
+        /*02b0*/                   POPC R11, UR6 ;
+        /*02c0*/                   ISETP.EQ.U32.AND P0, PT, R8, R5, PT ;
+        /*02d0*/                   IMAD.MOV.U32 R5, RZ, RZ, c[0x0][0x1b4] ;
+        /*02e0*/               @P0 ATOMG.E.ADD.STRONG.GPU PT, R5, [R4.64], R11 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 46
+        /*02f0*/                   IMAD.MOV.U32 R7, RZ, RZ, c[0x0][0x1ac] ;
+        /*0300*/                   MOV R6, c[0x0][0x1a8] ;
+        /*0310*/                   LDG.E R7, [R6.64] ;
+	//## File "/usr/local/cuda/include/device_atomic_functions.hpp", line 107
+        /*0320*/                   S2R R10, SR_LTMASK ;
+        /*0330*/                   LOP3.LUT R10, R10, UR6, RZ, 0xc0, !PT ;
+        /*0340*/                   POPC R13, R10 ;
+        /*0350*/                   SHFL.IDX PT, R0, R5, R8, 0x1f ;
+        /*0360*/                   IADD3 R0, R0, R13, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 46
+        /*0370*/                   ISETP.GE.AND P0, PT, R0, R7, PT ;
+        /*0380*/               @P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 48
+        /*0390*/                   IMAD.WIDE R2, R0, R17, c[0x0][0x198] ;
+        /*03a0*/                   STG.E [R2.64], R9 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 61
+        /*03b0*/                   EXIT ;
+.L_x_4:
+        /*03c0*/                   BRA `(.L_x_4);
+        /*03d0*/                   NOP;
+        /*03e0*/                   NOP;
+        /*03f0*/                   NOP;
+        /*0400*/                   NOP;
+        /*0410*/                   NOP;
+        /*0420*/                   NOP;
+        /*0430*/                   NOP;
+        /*0440*/                   NOP;
+        /*0450*/                   NOP;
+        /*0460*/                   NOP;
+        /*0470*/                   NOP;
+.L_x_19:
+
+
+//--------------------- .text._Z9first_fitiPmPi9Worklist2S0_ --------------------------
+	.section	.text._Z9first_fitiPmPi9Worklist2S0_,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=40"
+	.align	128
+
+
+
+
+        .global         _Z9first_fitiPmPi9Worklist2S0_
+        .type           _Z9first_fitiPmPi9Worklist2S0_,@function
+        .size           _Z9first_fitiPmPi9Worklist2S0_,(.L_x_20 - _Z9first_fitiPmPi9Worklist2S0_)
+        .other          _Z9first_fitiPmPi9Worklist2S0_,@"STO_CUDA_ENTRY STV_DEFAULT"
+_Z9first_fitiPmPi9Worklist2S0_:
+.text._Z9first_fitiPmPi9Worklist2S0_:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 10
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 116
+        /*0010*/                   IMAD.MOV.U32 R3, RZ, RZ, c[0x0][0x194] ;
+        /*0020*/                   ULDC.64 UR36, c[0x0][0x118] ;
+        /*0030*/                   IMAD.MOV.U32 R2, RZ, RZ, c[0x0][0x190] ;
+        /*0040*/                   IADD3 R1, R1, -0x88, RZ ;
+        /*0050*/                   LDG.E R3, [R2.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 13
+        /*0060*/                   S2R R0, SR_CTAID.X ;
+        /*0070*/                   S2R R5, SR_TID.X ;
+        /*0080*/                   IMAD R0, R0, c[0x0][0x0], R5 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 116
+        /*0090*/                   ISETP.GT.AND P0, PT, R3, R0, PT ;
+        /*00a0*/              @!P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/include/worklistc.h", line 118
+        /*00b0*/                   IMAD.MOV.U32 R7, RZ, RZ, 0x4 ;
+        /*00c0*/                   IMAD.WIDE R2, R0, R7, c[0x0][0x178] ;
+        /*00d0*/                   LDG.E R3, [R2.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 17
+        /*00e0*/                   IMAD.MOV.U32 R8, RZ, RZ, 0x8 ;
+        /*00f0*/                   IMAD.WIDE R8, R3, R8, c[0x0][0x168] ;
+        /*0100*/                   LDG.E R34, [R8.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 18
+        /*0110*/                   LDG.E R5, [R8.64+0x8] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 17
+        /*0120*/                   BSSY B0, `(.L_x_5) ;
+        /*0130*/                   SHF.R.S32.HI R0, RZ, 0x1f, R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 20
+        /*0140*/                   STL.U8 [R1], RZ ;
+        /*0150*/                   STL.U8 [R1+0x1], RZ ;
+        /*0160*/                   STL.U8 [R1+0x2], RZ ;
+        /*0170*/                   STL.U8 [R1+0x3], RZ ;
+        /*0180*/                   STL.U8 [R1+0x4], RZ ;
+        /*0190*/                   STL.U8 [R1+0x5], RZ ;
+        /*01a0*/                   STL.U8 [R1+0x6], RZ ;
+        /*01b0*/                   STL.U8 [R1+0x7], RZ ;
+        /*01c0*/                   STL.U8 [R1+0x8], RZ ;
+        /*01d0*/                   STL.U8 [R1+0x9], RZ ;
+        /*01e0*/                   STL.U8 [R1+0xa], RZ ;
+        /*01f0*/                   STL.U8 [R1+0xb], RZ ;
+        /*0200*/                   STL.U8 [R1+0xc], RZ ;
+        /*0210*/                   STL.U8 [R1+0xd], RZ ;
+        /*0220*/                   STL.U8 [R1+0xe], RZ ;
+        /*0230*/                   STL.U8 [R1+0xf], RZ ;
+        /*0240*/                   STL.U8 [R1+0x10], RZ ;
+        /*0250*/                   STL.U8 [R1+0x11], RZ ;
+        /*0260*/                   STL.U8 [R1+0x12], RZ ;
+        /*0270*/                   STL.U8 [R1+0x13], RZ ;
+        /*0280*/                   STL.U8 [R1+0x14], RZ ;
+        /*0290*/                   STL.U8 [R1+0x15], RZ ;
+        /*02a0*/                   STL.U8 [R1+0x16], RZ ;
+        /*02b0*/                   STL.U8 [R1+0x17], RZ ;
+        /*02c0*/                   STL.U8 [R1+0x18], RZ ;
+        /*02d0*/                   STL.U8 [R1+0x19], RZ ;
+        /*02e0*/                   STL.U8 [R1+0x1a], RZ ;
+        /*02f0*/                   STL.U8 [R1+0x1b], RZ ;
+        /*0300*/                   STL.U8 [R1+0x1c], RZ ;
+        /*0310*/                   STL.U8 [R1+0x1d], RZ ;
+        /*0320*/                   STL.U8 [R1+0x1e], RZ ;
+        /*0330*/                   STL.U8 [R1+0x1f], RZ ;
+        /*0340*/                   STL.U8 [R1+0x20], RZ ;
+        /*0350*/                   STL.U8 [R1+0x21], RZ ;
+        /*0360*/                   STL.U8 [R1+0x22], RZ ;
+        /*0370*/                   STL.U8 [R1+0x23], RZ ;
+        /*0380*/                   STL.U8 [R1+0x24], RZ ;
+        /*0390*/                   STL.U8 [R1+0x25], RZ ;
+        /*03a0*/                   STL.U8 [R1+0x26], RZ ;
+        /*03b0*/                   STL.U8 [R1+0x27], RZ ;
+        /*03c0*/                   STL.U8 [R1+0x28], RZ ;
+        /*03d0*/                   STL.U8 [R1+0x29], RZ ;
+        /*03e0*/                   STL.U8 [R1+0x2a], RZ ;
+        /*03f0*/                   STL.U8 [R1+0x2b], RZ ;
+        /*0400*/                   STL.U8 [R1+0x2c], RZ ;
+        /*0410*/                   STL.U8 [R1+0x2d], RZ ;
+        /*0420*/                   STL.U8 [R1+0x2e], RZ ;
+        /*0430*/                   STL.U8 [R1+0x2f], RZ ;
+        /*0440*/                   STL.U8 [R1+0x30], RZ ;
+        /*0450*/                   STL.U8 [R1+0x31], RZ ;
+        /*0460*/                   STL.U8 [R1+0x32], RZ ;
+        /*0470*/                   STL.U8 [R1+0x33], RZ ;
+        /*0480*/                   STL.U8 [R1+0x34], RZ ;
+        /*0490*/                   STL.U8 [R1+0x35], RZ ;
+        /*04a0*/                   STL.U8 [R1+0x36], RZ ;
+        /*04b0*/                   STL.U8 [R1+0x37], RZ ;
+        /*04c0*/                   STL.U8 [R1+0x38], RZ ;
+        /*04d0*/                   STL.U8 [R1+0x39], RZ ;
+        /*04e0*/                   STL.U8 [R1+0x3a], RZ ;
+        /*04f0*/                   STL.U8 [R1+0x3b], RZ ;
+        /*0500*/                   STL.U8 [R1+0x3c], RZ ;
+        /*0510*/                   STL.U8 [R1+0x3d], RZ ;
+        /*0520*/                   STL.U8 [R1+0x3e], RZ ;
+        /*0530*/                   STL.U8 [R1+0x3f], RZ ;
+        /*0540*/                   STL.U8 [R1+0x40], RZ ;
+        /*0550*/                   STL.U8 [R1+0x41], RZ ;
+        /*0560*/                   STL.U8 [R1+0x42], RZ ;
+        /*0570*/                   STL.U8 [R1+0x43], RZ ;
+        /*0580*/                   STL.U8 [R1+0x44], RZ ;
+        /*0590*/                   STL.U8 [R1+0x45], RZ ;
+        /*05a0*/                   STL.U8 [R1+0x46], RZ ;
+        /*05b0*/                   STL.U8 [R1+0x47], RZ ;
+        /*05c0*/                   STL.U8 [R1+0x48], RZ ;
+        /*05d0*/                   STL.U8 [R1+0x49], RZ ;
+        /*05e0*/                   STL.U8 [R1+0x4a], RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 21
+        /*05f0*/                   ISETP.GT.AND P0, PT, R5, R34, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 20
+        /*0600*/                   STL.U8 [R1+0x4b], RZ ;
+        /*0610*/                   STL.U8 [R1+0x4c], RZ ;
+        /*0620*/                   STL.U8 [R1+0x4d], RZ ;
+        /*0630*/                   STL.U8 [R1+0x4e], RZ ;
+        /*0640*/                   STL.U8 [R1+0x4f], RZ ;
+        /*0650*/                   STL.U8 [R1+0x50], RZ ;
+        /*0660*/                   STL.U8 [R1+0x51], RZ ;
+        /*0670*/                   STL.U8 [R1+0x52], RZ ;
+        /*0680*/                   STL.U8 [R1+0x53], RZ ;
+        /*0690*/                   STL.U8 [R1+0x54], RZ ;
+        /*06a0*/                   STL.U8 [R1+0x55], RZ ;
+        /*06b0*/                   STL.U8 [R1+0x56], RZ ;
+        /*06c0*/                   STL.U8 [R1+0x57], RZ ;
+        /*06d0*/                   STL.U8 [R1+0x58], RZ ;
+        /*06e0*/                   STL.U8 [R1+0x59], RZ ;
+        /*06f0*/                   STL.U8 [R1+0x5a], RZ ;
+        /*0700*/                   STL.U8 [R1+0x5b], RZ ;
+        /*0710*/                   STL.U8 [R1+0x5c], RZ ;
+        /*0720*/                   STL.U8 [R1+0x5d], RZ ;
+        /*0730*/                   STL.U8 [R1+0x5e], RZ ;
+        /*0740*/                   STL.U8 [R1+0x5f], RZ ;
+        /*0750*/                   STL.U8 [R1+0x60], RZ ;
+        /*0760*/                   STL.U8 [R1+0x61], RZ ;
+        /*0770*/                   STL.U8 [R1+0x62], RZ ;
+        /*0780*/                   STL.U8 [R1+0x63], RZ ;
+        /*0790*/                   STL.U8 [R1+0x64], RZ ;
+        /*07a0*/                   STL.U8 [R1+0x65], RZ ;
+        /*07b0*/                   STL.U8 [R1+0x66], RZ ;
+        /*07c0*/                   STL.U8 [R1+0x67], RZ ;
+        /*07d0*/                   STL.U8 [R1+0x68], RZ ;
+        /*07e0*/                   STL.U8 [R1+0x69], RZ ;
+        /*07f0*/                   STL.U8 [R1+0x6a], RZ ;
+        /*0800*/                   STL.U8 [R1+0x6b], RZ ;
+        /*0810*/                   STL.U8 [R1+0x6c], RZ ;
+        /*0820*/                   STL.U8 [R1+0x6d], RZ ;
+        /*0830*/                   STL.U8 [R1+0x6e], RZ ;
+        /*0840*/                   STL.U8 [R1+0x6f], RZ ;
+        /*0850*/                   STL.U8 [R1+0x70], RZ ;
+        /*0860*/                   STL.U8 [R1+0x71], RZ ;
+        /*0870*/                   STL.U8 [R1+0x72], RZ ;
+        /*0880*/                   STL.U8 [R1+0x73], RZ ;
+        /*0890*/                   STL.U8 [R1+0x74], RZ ;
+        /*08a0*/                   STL.U8 [R1+0x75], RZ ;
+        /*08b0*/                   STL.U8 [R1+0x76], RZ ;
+        /*08c0*/                   STL.U8 [R1+0x77], RZ ;
+        /*08d0*/                   STL.U8 [R1+0x78], RZ ;
+        /*08e0*/                   STL.U8 [R1+0x79], RZ ;
+        /*08f0*/                   STL.U8 [R1+0x7a], RZ ;
+        /*0900*/                   STL.U8 [R1+0x7b], RZ ;
+        /*0910*/                   STL.U8 [R1+0x7c], RZ ;
+        /*0920*/                   STL.U8 [R1+0x7d], RZ ;
+        /*0930*/                   STL.U8 [R1+0x7e], RZ ;
+        /*0940*/                   STL.U8 [R1+0x7f], RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 21
+        /*0950*/              @!P0 BRA `(.L_x_6) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*0960*/                   IMAD.IADD R2, R5.reuse, 0x1, -R34 ;
+        /*0970*/                   LOP3.LUT R4, RZ, R34, RZ, 0x33, !PT ;
+        /*0980*/                   BSSY B1, `(.L_x_7) ;
+        /*0990*/                   LOP3.LUT P0, R2, R2, 0x3, RZ, 0xc0, !PT ;
+        /*09a0*/                   IMAD.IADD R4, R5, 0x1, R4 ;
+        /*09b0*/                   ISETP.GE.U32.AND P1, PT, R4, 0x3, PT ;
+        /*09c0*/              @!P0 BRA `(.L_x_8) ;
+        /*09d0*/                   IMAD.MOV.U32 R4, RZ, RZ, R2 ;
+.L_x_9:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 22
+        /*09e0*/                   IMAD.WIDE R8, R34, R7, c[0x0][0x170] ;
+        /*09f0*/                   LDG.E R8, [R8.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 23
+        /*0a00*/                   IMAD.WIDE R10, R8, R7, c[0x0][0x198] ;
+        /*0a10*/                   LDG.E R2, [R10.64] ;
+        /*0a20*/                   MOV R6, 0x1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 21
+        /*0a30*/                   IADD3 R4, R4, -0x1, RZ ;
+        /*0a40*/                   IADD3 R34, R34, 0x1, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*0a50*/                   ISETP.NE.AND P0, PT, R2, 0x80, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 25
+        /*0a60*/               @P0 IMAD.IADD R2, R1, 0x1, R2 ;
+        /*0a70*/               @P0 STL.U8 [R2], R6 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 21
+        /*0a80*/                   ISETP.NE.AND P0, PT, R4, RZ, PT ;
+        /*0a90*/               @P0 BRA `(.L_x_9) ;
+.L_x_8:
+        /*0aa0*/                   BSYNC B1 ;
+.L_x_7:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*0ab0*/              @!P1 BRA `(.L_x_6) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 21
+        /*0ac0*/                   IMAD.IADD R2, R5, 0x1, -R34 ;
+        /*0ad0*/                   BSSY B1, `(.L_x_10) ;
+        /*0ae0*/                   PLOP3.LUT P0, PT, PT, PT, PT, 0x80, 0x0 ;
+        /*0af0*/                   ISETP.GT.AND P1, PT, R2, 0xc, PT ;
+        /*0b00*/              @!P1 BRA `(.L_x_11) ;
+        /*0b10*/                   PLOP3.LUT P0, PT, PT, PT, PT, 0x8, 0x0 ;
+        /*0b20*/                   IADD3 R9, R5, -0xc, RZ ;
+.L_x_12:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 22
+        /*0b30*/                   IMAD.WIDE R10, R34, R7, c[0x0][0x170] ;
+        /*0b40*/                   LDG.E R2, [R10.64+0x8] ;
+        /*0b50*/                   LDG.E R24, [R10.64] ;
+        /*0b60*/                   LDG.E R25, [R10.64+0x4] ;
+        /*0b70*/                   LDG.E R13, [R10.64+0xc] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 21
+        /*0b80*/                   IADD3 R16, R34, 0x4, RZ ;
+        /*0b90*/                   IADD3 R14, R34, 0x8, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 22
+        /*0ba0*/                   IMAD.WIDE R16, R16, R7, c[0x0][0x170] ;
+        /*0bb0*/                   IMAD.WIDE R14, R14, R7, c[0x0][0x170] ;
+        /*0bc0*/                   LDG.E R8, [R16.64] ;
+        /*0bd0*/                   LDG.E R6, [R16.64+0x4] ;
+        /*0be0*/                   LDG.E R12, [R16.64+0x8] ;
+        /*0bf0*/                   LDG.E R4, [R16.64+0xc] ;
+        /*0c00*/                   LDG.E R18, [R14.64] ;
+        /*0c10*/                   LDG.E R20, [R14.64+0x4] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 21
+        /*0c20*/                   IADD3 R36, R34, 0xc, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 22
+        /*0c30*/                   LDG.E R22, [R14.64+0x8] ;
+        /*0c40*/                   IMAD.WIDE R36, R36, R7.reuse, c[0x0][0x170] ;
+        /*0c50*/                   LDG.E R11, [R14.64+0xc] ;
+        /*0c60*/                   LDG.E R26, [R36.64] ;
+        /*0c70*/                   LDG.E R28, [R36.64+0x4] ;
+        /*0c80*/                   LDG.E R30, [R36.64+0x8] ;
+        /*0c90*/                   LDG.E R32, [R36.64+0xc] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 23
+        /*0ca0*/                   IMAD.WIDE R14, R2, R7, c[0x0][0x198] ;
+        /*0cb0*/                   IMAD.WIDE R16, R24, R7.reuse, c[0x0][0x198] ;
+        /*0cc0*/                   LDG.E R10, [R14.64] ;
+        /*0cd0*/                   IMAD.WIDE R24, R25, R7.reuse, c[0x0][0x198] ;
+        /*0ce0*/                   LDG.E R16, [R16.64] ;
+        /*0cf0*/                   LDG.E R2, [R24.64] ;
+        /*0d00*/                   IMAD.WIDE R14, R13, R7, c[0x0][0x198] ;
+        /*0d10*/                   LDG.E R14, [R14.64] ;
+        /*0d20*/                   IMAD.WIDE R36, R8, R7, c[0x0][0x198] ;
+        /*0d30*/                   IMAD.WIDE R24, R6, R7.reuse, c[0x0][0x198] ;
+        /*0d40*/                   LDG.E R6, [R36.64] ;
+        /*0d50*/                   IMAD.WIDE R12, R12, R7.reuse, c[0x0][0x198] ;
+        /*0d60*/                   LDG.E R8, [R24.64] ;
+        /*0d70*/                   LDG.E R12, [R12.64] ;
+        /*0d80*/                   IMAD.WIDE R36, R4, R7, c[0x0][0x198] ;
+        /*0d90*/                   IMAD.WIDE R18, R18, R7.reuse, c[0x0][0x198] ;
+        /*0da0*/                   LDG.E R4, [R36.64] ;
+        /*0db0*/                   IMAD.WIDE R20, R20, R7.reuse, c[0x0][0x198] ;
+        /*0dc0*/                   LDG.E R18, [R18.64] ;
+        /*0dd0*/                   LDG.E R20, [R20.64] ;
+        /*0de0*/                   IMAD.WIDE R22, R22, R7, c[0x0][0x198] ;
+        /*0df0*/                   IMAD.WIDE R24, R11, R7.reuse, c[0x0][0x198] ;
+        /*0e00*/                   LDG.E R22, [R22.64] ;
+        /*0e10*/                   IMAD.WIDE R26, R26, R7.reuse, c[0x0][0x198] ;
+        /*0e20*/                   LDG.E R24, [R24.64] ;
+        /*0e30*/                   IMAD.WIDE R28, R28, R7.reuse, c[0x0][0x198] ;
+        /*0e40*/                   LDG.E R26, [R26.64] ;
+        /*0e50*/                   IMAD.WIDE R30, R30, R7, c[0x0][0x198] ;
+        /*0e60*/                   LDG.E R28, [R28.64] ;
+        /*0e70*/                   IMAD.WIDE R32, R32, R7, c[0x0][0x198] ;
+        /*0e80*/                   LDG.E R30, [R30.64] ;
+        /*0e90*/                   LDG.E R32, [R32.64] ;
+        /*0ea0*/                   IMAD.MOV.U32 R11, RZ, RZ, 0x1 ;
+        /*0eb0*/                   IMAD.MOV.U32 R13, RZ, RZ, 0x1 ;
+        /*0ec0*/                   IMAD.MOV.U32 R15, RZ, RZ, 0x1 ;
+        /*0ed0*/                   IMAD.MOV.U32 R17, RZ, RZ, 0x1 ;
+        /*0ee0*/                   IMAD.MOV.U32 R19, RZ, RZ, 0x1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 21
+        /*0ef0*/                   IADD3 R34, R34, 0x10, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*0f00*/                   ISETP.NE.AND P5, PT, R10, 0x80, PT ;
+        /*0f10*/                   ISETP.NE.AND P1, PT, R16, 0x80, PT ;
+        /*0f20*/                   ISETP.NE.AND P4, PT, R2, 0x80, PT ;
+        /*0f30*/                   ISETP.NE.AND P6, PT, R14, 0x80, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 25
+        /*0f40*/               @P1 IMAD.IADD R16, R1.reuse, 0x1, R16 ;
+        /*0f50*/               @P5 IADD3 R10, R1.reuse, R10, RZ ;
+        /*0f60*/               @P4 IMAD.IADD R2, R1, 0x1, R2 ;
+        /*0f70*/               @P1 STL.U8 [R16], R11 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*0f80*/                   ISETP.NE.AND P1, PT, R6, 0x80, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 25
+        /*0f90*/               @P6 IMAD.IADD R14, R1, 0x1, R14 ;
+        /*0fa0*/               @P4 STL.U8 [R2], R13 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*0fb0*/                   ISETP.NE.AND P2, PT, R8, 0x80, PT ;
+        /*0fc0*/                   ISETP.NE.AND P3, PT, R12, 0x80, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 25
+        /*0fd0*/               @P5 STL.U8 [R10], R15 ;
+        /*0fe0*/               @P6 STL.U8 [R14], R17 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*0ff0*/                   ISETP.NE.AND P6, PT, R4, 0x80, PT ;
+        /*1000*/                   ISETP.NE.AND P4, PT, R18, 0x80, PT ;
+        /*1010*/                   ISETP.NE.AND P5, PT, R20, 0x80, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 25
+        /*1020*/               @P1 IMAD.IADD R6, R1.reuse, 0x1, R6 ;
+        /*1030*/                   IMAD.MOV.U32 R16, RZ, RZ, 0x1 ;
+        /*1040*/               @P2 IMAD.IADD R8, R1, 0x1, R8 ;
+        /*1050*/               @P6 IADD3 R4, R1.reuse, R4, RZ ;
+        /*1060*/               @P3 IMAD.IADD R12, R1.reuse, 0x1, R12 ;
+        /*1070*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x1 ;
+        /*1080*/               @P1 STL.U8 [R6], R11 ;
+        /*1090*/                   IMAD.MOV.U32 R10, RZ, RZ, 0x1 ;
+        /*10a0*/               @P4 IMAD.IADD R18, R1.reuse, 0x1, R18 ;
+        /*10b0*/               @P2 STL.U8 [R8], R16 ;
+        /*10c0*/               @P5 IMAD.IADD R20, R1, 0x1, R20 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*10d0*/                   ISETP.NE.AND P1, PT, R22, 0x80, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 25
+        /*10e0*/               @P3 STL.U8 [R12], R19 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*10f0*/                   ISETP.NE.AND P2, PT, R24, 0x80, PT ;
+        /*1100*/                   ISETP.NE.AND P3, PT, R26, 0x80, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 25
+        /*1110*/               @P6 STL.U8 [R4], R2 ;
+        /*1120*/               @P4 STL.U8 [R18], R10 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*1130*/                   ISETP.NE.AND P4, PT, R28, 0x80, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 25
+        /*1140*/               @P5 STL.U8 [R20], R13 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*1150*/                   ISETP.NE.AND P5, PT, R30, 0x80, PT ;
+        /*1160*/                   ISETP.NE.AND P6, PT, R32, 0x80, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 25
+        /*1170*/               @P1 IMAD.IADD R22, R1.reuse, 0x1, R22 ;
+        /*1180*/                   IMAD.MOV.U32 R12, RZ, RZ, 0x1 ;
+        /*1190*/               @P2 IMAD.IADD R24, R1.reuse, 0x1, R24 ;
+        /*11a0*/               @P3 PRMT R13, R2, 0x7610, R13 ;
+        /*11b0*/               @P3 IMAD.IADD R26, R1, 0x1, R26 ;
+        /*11c0*/                   IMAD.MOV.U32 R14, RZ, RZ, 0x1 ;
+        /*11d0*/               @P5 IADD3 R30, R1.reuse, R30, RZ ;
+        /*11e0*/               @P4 IMAD.IADD R28, R1.reuse, 0x1, R28 ;
+        /*11f0*/               @P1 STL.U8 [R22], R11 ;
+        /*1200*/               @P6 IMAD.IADD R32, R1, 0x1, R32 ;
+        /*1210*/               @P2 STL.U8 [R24], R12 ;
+        /*1220*/               @P3 STL.U8 [R26], R13 ;
+        /*1230*/               @P4 STL.U8 [R28], R14 ;
+        /*1240*/               @P5 STL.U8 [R30], R15 ;
+        /*1250*/               @P6 STL.U8 [R32], R16 ;
+        /*1260*/                   ISETP.GE.AND P1, PT, R34, R9, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 21
+        /*1270*/              @!P1 BRA `(.L_x_12) ;
+.L_x_11:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*1280*/                   BSYNC B1 ;
+.L_x_10:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 21
+        /*1290*/                   IMAD.IADD R2, R5, 0x1, -R34 ;
+        /*12a0*/                   BSSY B1, `(.L_x_13) ;
+        /*12b0*/                   ISETP.GT.AND P1, PT, R2, 0x4, PT ;
+        /*12c0*/              @!P1 BRA `(.L_x_14) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 22
+        /*12d0*/                   IMAD.WIDE R14, R34, R7, c[0x0][0x170] ;
+        /*12e0*/                   LDG.E R8, [R14.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 21
+        /*12f0*/                   IADD3 R34, R34, 0x4, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 22
+        /*1300*/                   LDG.E R10, [R14.64+0x4] ;
+        /*1310*/                   IMAD.WIDE R16, R34, R7.reuse, c[0x0][0x170] ;
+        /*1320*/                   LDG.E R12, [R14.64+0x8] ;
+        /*1330*/                   LDG.E R18, [R14.64+0xc] ;
+        /*1340*/                   LDG.E R20, [R16.64] ;
+        /*1350*/                   LDG.E R22, [R16.64+0x4] ;
+        /*1360*/                   LDG.E R4, [R16.64+0x8] ;
+        /*1370*/                   LDG.E R6, [R16.64+0xc] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 23
+        /*1380*/                   IMAD.WIDE R8, R8, R7, c[0x0][0x198] ;
+        /*1390*/                   LDG.E R8, [R8.64] ;
+        /*13a0*/                   IMAD.WIDE R10, R10, R7, c[0x0][0x198] ;
+        /*13b0*/                   IMAD.WIDE R12, R12, R7.reuse, c[0x0][0x198] ;
+        /*13c0*/                   LDG.E R10, [R10.64] ;
+        /*13d0*/                   IMAD.WIDE R18, R18, R7.reuse, c[0x0][0x198] ;
+        /*13e0*/                   LDG.E R12, [R12.64] ;
+        /*13f0*/                   IMAD.WIDE R20, R20, R7.reuse, c[0x0][0x198] ;
+        /*1400*/                   LDG.E R2, [R18.64] ;
+        /*1410*/                   IMAD.WIDE R22, R22, R7, c[0x0][0x198] ;
+        /*1420*/                   IMAD.WIDE R14, R4, R7.reuse, c[0x0][0x198] ;
+        /*1430*/                   LDG.E R4, [R20.64] ;
+        /*1440*/                   IMAD.WIDE R16, R6, R7, c[0x0][0x198] ;
+        /*1450*/                   LDG.E R6, [R22.64] ;
+        /*1460*/                   LDG.E R14, [R14.64] ;
+        /*1470*/                   LDG.E R16, [R16.64] ;
+        /*1480*/                   IMAD.MOV.U32 R9, RZ, RZ, 0x1 ;
+        /*1490*/                   IMAD.MOV.U32 R11, RZ, RZ, 0x1 ;
+        /*14a0*/                   MOV R15, 0x1 ;
+        /*14b0*/                   IMAD.MOV.U32 R13, RZ, RZ, 0x1 ;
+        /*14c0*/                   IMAD.MOV.U32 R18, RZ, RZ, 0x1 ;
+        /*14d0*/                   IMAD.MOV.U32 R17, RZ, RZ, 0x1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 21
+        /*14e0*/                   IADD3 R34, R34, 0x4, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*14f0*/                   ISETP.NE.AND P2, PT, R8, 0x80, PT ;
+        /*1500*/                   ISETP.NE.AND P1, PT, R10, 0x80, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 25
+        /*1510*/               @P2 IMAD.IADD R8, R1, 0x1, R8 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*1520*/                   ISETP.NE.AND P0, PT, R12, 0x80, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 25
+        /*1530*/               @P2 STL.U8 [R8], R9 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*1540*/                   ISETP.NE.AND P2, PT, R2, 0x80, PT ;
+        /*1550*/                   ISETP.NE.AND P3, PT, R4, 0x80, PT ;
+        /*1560*/                   ISETP.NE.AND P4, PT, R6, 0x80, PT ;
+        /*1570*/                   ISETP.NE.AND P5, PT, R14, 0x80, PT ;
+        /*1580*/                   ISETP.NE.AND P6, PT, R16, 0x80, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 25
+        /*1590*/               @P1 IMAD.IADD R10, R1, 0x1, R10 ;
+        /*15a0*/               @P2 PRMT R8, R15, 0x7610, R8 ;
+        /*15b0*/               @P0 IMAD.IADD R12, R1.reuse, 0x1, R12 ;
+        /*15c0*/               @P2 IMAD.IADD R2, R1.reuse, 0x1, R2 ;
+        /*15d0*/               @P3 IMAD.IADD R4, R1.reuse, 0x1, R4 ;
+        /*15e0*/               @P1 STL.U8 [R10], R11 ;
+        /*15f0*/               @P4 IMAD.IADD R6, R1.reuse, 0x1, R6 ;
+        /*1600*/               @P5 IMAD.IADD R14, R1.reuse, 0x1, R14 ;
+        /*1610*/               @P0 STL.U8 [R12], R13 ;
+        /*1620*/               @P6 IMAD.IADD R16, R1, 0x1, R16 ;
+        /*1630*/               @P2 STL.U8 [R2], R8 ;
+        /*1640*/               @P3 STL.U8 [R4], R9 ;
+        /*1650*/               @P4 STL.U8 [R6], R15 ;
+        /*1660*/               @P5 STL.U8 [R14], R17 ;
+        /*1670*/               @P6 STL.U8 [R16], R18 ;
+        /*1680*/                   PLOP3.LUT P0, PT, PT, PT, PT, 0x8, 0x0 ;
+.L_x_14:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 21
+        /*1690*/                   BSYNC B1 ;
+.L_x_13:
+        /*16a0*/                   ISETP.LT.OR P0, PT, R34, R5, P0 ;
+        /*16b0*/              @!P0 BRA `(.L_x_6) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 22
+        /*16c0*/                   IMAD.WIDE R34, R34, R7, c[0x0][0x170] ;
+        /*16d0*/                   LDG.E R10, [R34.64] ;
+        /*16e0*/                   LDG.E R4, [R34.64+0x4] ;
+        /*16f0*/                   LDG.E R12, [R34.64+0x8] ;
+        /*1700*/                   LDG.E R8, [R34.64+0xc] ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 23
+        /*1710*/                   IMAD.WIDE R10, R10, R7, c[0x0][0x198] ;
+        /*1720*/                   IMAD.WIDE R4, R4, R7.reuse, c[0x0][0x198] ;
+        /*1730*/                   LDG.E R2, [R10.64] ;
+        /*1740*/                   IMAD.WIDE R12, R12, R7.reuse, c[0x0][0x198] ;
+        /*1750*/                   LDG.E R4, [R4.64] ;
+        /*1760*/                   IMAD.WIDE R8, R8, R7, c[0x0][0x198] ;
+        /*1770*/                   LDG.E R6, [R12.64] ;
+        /*1780*/                   LDG.E R8, [R8.64] ;
+        /*1790*/                   IMAD.MOV.U32 R7, RZ, RZ, 0x1 ;
+        /*17a0*/                   MOV R14, 0x1 ;
+        /*17b0*/                   IMAD.MOV.U32 R15, RZ, RZ, 0x1 ;
+        /*17c0*/                   IMAD.MOV.U32 R10, RZ, RZ, 0x1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 24
+        /*17d0*/                   ISETP.NE.AND P0, PT, R2, 0x80, PT ;
+        /*17e0*/                   ISETP.NE.AND P1, PT, R4, 0x80, PT ;
+        /*17f0*/                   ISETP.NE.AND P2, PT, R6, 0x80, PT ;
+        /*1800*/                   ISETP.NE.AND P3, PT, R8, 0x80, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 25
+        /*1810*/               @P0 IMAD.IADD R2, R1, 0x1, R2 ;
+        /*1820*/               @P0 PRMT R5, R7, 0x7610, R5 ;
+        /*1830*/               @P1 PRMT R7, R14, 0x7610, R7 ;
+        /*1840*/               @P1 IMAD.IADD R4, R1, 0x1, R4 ;
+        /*1850*/               @P2 PRMT R9, R15, 0x7610, R9 ;
+        /*1860*/               @P2 IMAD.IADD R6, R1.reuse, 0x1, R6 ;
+        /*1870*/               @P0 STL.U8 [R2], R5 ;
+        /*1880*/               @P3 IMAD.IADD R8, R1, 0x1, R8 ;
+        /*1890*/               @P1 STL.U8 [R4], R7 ;
+        /*18a0*/               @P2 STL.U8 [R6], R9 ;
+        /*18b0*/               @P3 STL.U8 [R8], R10 ;
+.L_x_6:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 21
+        /*18c0*/                   BSYNC B0 ;
+.L_x_5:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 29
+        /*18d0*/                   LDL.U8 R2, [R1] ;
+        /*18e0*/                   BSSY B6, `(.L_x_15) ;
+        /*18f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1900*/                   IMAD.MOV.U32 R2, RZ, RZ, RZ ;
+        /*1910*/              @!P0 BRA `(.L_x_16) ;
+        /*1920*/                   LDL.U8 R2, [R1+0x1] ;
+        /*1930*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1940*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x1 ;
+        /*1950*/              @!P0 BRA `(.L_x_16) ;
+        /*1960*/                   LDL.U8 R2, [R1+0x2] ;
+        /*1970*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1980*/                   MOV R2, 0x2 ;
+        /*1990*/              @!P0 BRA `(.L_x_16) ;
+        /*19a0*/                   LDL.U8 R2, [R1+0x3] ;
+        /*19b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*19c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x3 ;
+        /*19d0*/              @!P0 BRA `(.L_x_16) ;
+        /*19e0*/                   LDL.U8 R2, [R1+0x4] ;
+        /*19f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1a00*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x4 ;
+        /*1a10*/              @!P0 BRA `(.L_x_16) ;
+        /*1a20*/                   LDL.U8 R2, [R1+0x5] ;
+        /*1a30*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1a40*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x5 ;
+        /*1a50*/              @!P0 BRA `(.L_x_16) ;
+        /*1a60*/                   LDL.U8 R2, [R1+0x6] ;
+        /*1a70*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1a80*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x6 ;
+        /*1a90*/              @!P0 BRA `(.L_x_16) ;
+        /*1aa0*/                   LDL.U8 R2, [R1+0x7] ;
+        /*1ab0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1ac0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x7 ;
+        /*1ad0*/              @!P0 BRA `(.L_x_16) ;
+        /*1ae0*/                   LDL.U8 R2, [R1+0x8] ;
+        /*1af0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1b00*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x8 ;
+        /*1b10*/              @!P0 BRA `(.L_x_16) ;
+        /*1b20*/                   LDL.U8 R2, [R1+0x9] ;
+        /*1b30*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1b40*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x9 ;
+        /*1b50*/              @!P0 BRA `(.L_x_16) ;
+        /*1b60*/                   LDL.U8 R2, [R1+0xa] ;
+        /*1b70*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1b80*/                   IMAD.MOV.U32 R2, RZ, RZ, 0xa ;
+        /*1b90*/              @!P0 BRA `(.L_x_16) ;
+        /*1ba0*/                   LDL.U8 R2, [R1+0xb] ;
+        /*1bb0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1bc0*/                   MOV R2, 0xb ;
+        /*1bd0*/              @!P0 BRA `(.L_x_16) ;
+        /*1be0*/                   LDL.U8 R2, [R1+0xc] ;
+        /*1bf0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1c00*/                   IMAD.MOV.U32 R2, RZ, RZ, 0xc ;
+        /*1c10*/              @!P0 BRA `(.L_x_16) ;
+        /*1c20*/                   LDL.U8 R2, [R1+0xd] ;
+        /*1c30*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1c40*/                   IMAD.MOV.U32 R2, RZ, RZ, 0xd ;
+        /*1c50*/              @!P0 BRA `(.L_x_16) ;
+        /*1c60*/                   LDL.U8 R2, [R1+0xe] ;
+        /*1c70*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1c80*/                   IMAD.MOV.U32 R2, RZ, RZ, 0xe ;
+        /*1c90*/              @!P0 BRA `(.L_x_16) ;
+        /*1ca0*/                   LDL.U8 R2, [R1+0xf] ;
+        /*1cb0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1cc0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0xf ;
+        /*1cd0*/              @!P0 BRA `(.L_x_16) ;
+        /*1ce0*/                   LDL.U8 R2, [R1+0x10] ;
+        /*1cf0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1d00*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x10 ;
+        /*1d10*/              @!P0 BRA `(.L_x_16) ;
+        /*1d20*/                   LDL.U8 R2, [R1+0x11] ;
+        /*1d30*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1d40*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x11 ;
+        /*1d50*/              @!P0 BRA `(.L_x_16) ;
+        /*1d60*/                   LDL.U8 R2, [R1+0x12] ;
+        /*1d70*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1d80*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x12 ;
+        /*1d90*/              @!P0 BRA `(.L_x_16) ;
+        /*1da0*/                   LDL.U8 R2, [R1+0x13] ;
+        /*1db0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1dc0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x13 ;
+        /*1dd0*/              @!P0 BRA `(.L_x_16) ;
+        /*1de0*/                   LDL.U8 R2, [R1+0x14] ;
+        /*1df0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1e00*/                   MOV R2, 0x14 ;
+        /*1e10*/              @!P0 BRA `(.L_x_16) ;
+        /*1e20*/                   LDL.U8 R2, [R1+0x15] ;
+        /*1e30*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1e40*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x15 ;
+        /*1e50*/              @!P0 BRA `(.L_x_16) ;
+        /*1e60*/                   LDL.U8 R2, [R1+0x16] ;
+        /*1e70*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1e80*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x16 ;
+        /*1e90*/              @!P0 BRA `(.L_x_16) ;
+        /*1ea0*/                   LDL.U8 R2, [R1+0x17] ;
+        /*1eb0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1ec0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x17 ;
+        /*1ed0*/              @!P0 BRA `(.L_x_16) ;
+        /*1ee0*/                   LDL.U8 R2, [R1+0x18] ;
+        /*1ef0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1f00*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x18 ;
+        /*1f10*/              @!P0 BRA `(.L_x_16) ;
+        /*1f20*/                   LDL.U8 R2, [R1+0x19] ;
+        /*1f30*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1f40*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x19 ;
+        /*1f50*/              @!P0 BRA `(.L_x_16) ;
+        /*1f60*/                   LDL.U8 R2, [R1+0x1a] ;
+        /*1f70*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1f80*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x1a ;
+        /*1f90*/              @!P0 BRA `(.L_x_16) ;
+        /*1fa0*/                   LDL.U8 R2, [R1+0x1b] ;
+        /*1fb0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*1fc0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x1b ;
+        /*1fd0*/              @!P0 BRA `(.L_x_16) ;
+        /*1fe0*/                   LDL.U8 R2, [R1+0x1c] ;
+        /*1ff0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2000*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x1c ;
+        /*2010*/              @!P0 BRA `(.L_x_16) ;
+        /*2020*/                   LDL.U8 R2, [R1+0x1d] ;
+        /*2030*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2040*/                   MOV R2, 0x1d ;
+        /*2050*/              @!P0 BRA `(.L_x_16) ;
+        /*2060*/                   LDL.U8 R2, [R1+0x1e] ;
+        /*2070*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2080*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x1e ;
+        /*2090*/              @!P0 BRA `(.L_x_16) ;
+        /*20a0*/                   LDL.U8 R2, [R1+0x1f] ;
+        /*20b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*20c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x1f ;
+        /*20d0*/              @!P0 BRA `(.L_x_16) ;
+        /*20e0*/                   LDL.U8 R2, [R1+0x20] ;
+        /*20f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2100*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x20 ;
+        /*2110*/              @!P0 BRA `(.L_x_16) ;
+        /*2120*/                   LDL.U8 R2, [R1+0x21] ;
+        /*2130*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2140*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x21 ;
+        /*2150*/              @!P0 BRA `(.L_x_16) ;
+        /*2160*/                   LDL.U8 R2, [R1+0x22] ;
+        /*2170*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2180*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x22 ;
+        /*2190*/              @!P0 BRA `(.L_x_16) ;
+        /*21a0*/                   LDL.U8 R2, [R1+0x23] ;
+        /*21b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*21c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x23 ;
+        /*21d0*/              @!P0 BRA `(.L_x_16) ;
+        /*21e0*/                   LDL.U8 R2, [R1+0x24] ;
+        /*21f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2200*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x24 ;
+        /*2210*/              @!P0 BRA `(.L_x_16) ;
+        /*2220*/                   LDL.U8 R2, [R1+0x25] ;
+        /*2230*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2240*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x25 ;
+        /*2250*/              @!P0 BRA `(.L_x_16) ;
+        /*2260*/                   LDL.U8 R2, [R1+0x26] ;
+        /*2270*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2280*/                   MOV R2, 0x26 ;
+        /*2290*/              @!P0 BRA `(.L_x_16) ;
+        /*22a0*/                   LDL.U8 R2, [R1+0x27] ;
+        /*22b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*22c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x27 ;
+        /*22d0*/              @!P0 BRA `(.L_x_16) ;
+        /*22e0*/                   LDL.U8 R2, [R1+0x28] ;
+        /*22f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2300*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x28 ;
+        /*2310*/              @!P0 BRA `(.L_x_16) ;
+        /*2320*/                   LDL.U8 R2, [R1+0x29] ;
+        /*2330*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2340*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x29 ;
+        /*2350*/              @!P0 BRA `(.L_x_16) ;
+        /*2360*/                   LDL.U8 R2, [R1+0x2a] ;
+        /*2370*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2380*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x2a ;
+        /*2390*/              @!P0 BRA `(.L_x_16) ;
+        /*23a0*/                   LDL.U8 R2, [R1+0x2b] ;
+        /*23b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*23c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x2b ;
+        /*23d0*/              @!P0 BRA `(.L_x_16) ;
+        /*23e0*/                   LDL.U8 R2, [R1+0x2c] ;
+        /*23f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2400*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x2c ;
+        /*2410*/              @!P0 BRA `(.L_x_16) ;
+        /*2420*/                   LDL.U8 R2, [R1+0x2d] ;
+        /*2430*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2440*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x2d ;
+        /*2450*/              @!P0 BRA `(.L_x_16) ;
+        /*2460*/                   LDL.U8 R2, [R1+0x2e] ;
+        /*2470*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2480*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x2e ;
+        /*2490*/              @!P0 BRA `(.L_x_16) ;
+        /*24a0*/                   LDL.U8 R2, [R1+0x2f] ;
+        /*24b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*24c0*/                   MOV R2, 0x2f ;
+        /*24d0*/              @!P0 BRA `(.L_x_16) ;
+        /*24e0*/                   LDL.U8 R2, [R1+0x30] ;
+        /*24f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2500*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x30 ;
+        /*2510*/              @!P0 BRA `(.L_x_16) ;
+        /*2520*/                   LDL.U8 R2, [R1+0x31] ;
+        /*2530*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2540*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x31 ;
+        /*2550*/              @!P0 BRA `(.L_x_16) ;
+        /*2560*/                   LDL.U8 R2, [R1+0x32] ;
+        /*2570*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2580*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x32 ;
+        /*2590*/              @!P0 BRA `(.L_x_16) ;
+        /*25a0*/                   LDL.U8 R2, [R1+0x33] ;
+        /*25b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*25c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x33 ;
+        /*25d0*/              @!P0 BRA `(.L_x_16) ;
+        /*25e0*/                   LDL.U8 R2, [R1+0x34] ;
+        /*25f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2600*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x34 ;
+        /*2610*/              @!P0 BRA `(.L_x_16) ;
+        /*2620*/                   LDL.U8 R2, [R1+0x35] ;
+        /*2630*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2640*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x35 ;
+        /*2650*/              @!P0 BRA `(.L_x_16) ;
+        /*2660*/                   LDL.U8 R2, [R1+0x36] ;
+        /*2670*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2680*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x36 ;
+        /*2690*/              @!P0 BRA `(.L_x_16) ;
+        /*26a0*/                   LDL.U8 R2, [R1+0x37] ;
+        /*26b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*26c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x37 ;
+        /*26d0*/              @!P0 BRA `(.L_x_16) ;
+        /*26e0*/                   LDL.U8 R2, [R1+0x38] ;
+        /*26f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2700*/                   MOV R2, 0x38 ;
+        /*2710*/              @!P0 BRA `(.L_x_16) ;
+        /*2720*/                   LDL.U8 R2, [R1+0x39] ;
+        /*2730*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2740*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x39 ;
+        /*2750*/              @!P0 BRA `(.L_x_16) ;
+        /*2760*/                   LDL.U8 R2, [R1+0x3a] ;
+        /*2770*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2780*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x3a ;
+        /*2790*/              @!P0 BRA `(.L_x_16) ;
+        /*27a0*/                   LDL.U8 R2, [R1+0x3b] ;
+        /*27b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*27c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x3b ;
+        /*27d0*/              @!P0 BRA `(.L_x_16) ;
+        /*27e0*/                   LDL.U8 R2, [R1+0x3c] ;
+        /*27f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2800*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x3c ;
+        /*2810*/              @!P0 BRA `(.L_x_16) ;
+        /*2820*/                   LDL.U8 R2, [R1+0x3d] ;
+        /*2830*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2840*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x3d ;
+        /*2850*/              @!P0 BRA `(.L_x_16) ;
+        /*2860*/                   LDL.U8 R2, [R1+0x3e] ;
+        /*2870*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2880*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x3e ;
+        /*2890*/              @!P0 BRA `(.L_x_16) ;
+        /*28a0*/                   LDL.U8 R2, [R1+0x3f] ;
+        /*28b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*28c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x3f ;
+        /*28d0*/              @!P0 BRA `(.L_x_16) ;
+        /*28e0*/                   LDL.U8 R2, [R1+0x40] ;
+        /*28f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2900*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x40 ;
+        /*2910*/              @!P0 BRA `(.L_x_16) ;
+        /*2920*/                   LDL.U8 R2, [R1+0x41] ;
+        /*2930*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2940*/                   MOV R2, 0x41 ;
+        /*2950*/              @!P0 BRA `(.L_x_16) ;
+        /*2960*/                   LDL.U8 R2, [R1+0x42] ;
+        /*2970*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2980*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x42 ;
+        /*2990*/              @!P0 BRA `(.L_x_16) ;
+        /*29a0*/                   LDL.U8 R2, [R1+0x43] ;
+        /*29b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*29c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x43 ;
+        /*29d0*/              @!P0 BRA `(.L_x_16) ;
+        /*29e0*/                   LDL.U8 R2, [R1+0x44] ;
+        /*29f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2a00*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x44 ;
+        /*2a10*/              @!P0 BRA `(.L_x_16) ;
+        /*2a20*/                   LDL.U8 R2, [R1+0x45] ;
+        /*2a30*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2a40*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x45 ;
+        /*2a50*/              @!P0 BRA `(.L_x_16) ;
+        /*2a60*/                   LDL.U8 R2, [R1+0x46] ;
+        /*2a70*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2a80*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x46 ;
+        /*2a90*/              @!P0 BRA `(.L_x_16) ;
+        /*2aa0*/                   LDL.U8 R2, [R1+0x47] ;
+        /*2ab0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2ac0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x47 ;
+        /*2ad0*/              @!P0 BRA `(.L_x_16) ;
+        /*2ae0*/                   LDL.U8 R2, [R1+0x48] ;
+        /*2af0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2b00*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x48 ;
+        /*2b10*/              @!P0 BRA `(.L_x_16) ;
+        /*2b20*/                   LDL.U8 R2, [R1+0x49] ;
+        /*2b30*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2b40*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x49 ;
+        /*2b50*/              @!P0 BRA `(.L_x_16) ;
+        /*2b60*/                   LDL.U8 R2, [R1+0x4a] ;
+        /*2b70*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2b80*/                   MOV R2, 0x4a ;
+        /*2b90*/              @!P0 BRA `(.L_x_16) ;
+        /*2ba0*/                   LDL.U8 R2, [R1+0x4b] ;
+        /*2bb0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2bc0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x4b ;
+        /*2bd0*/              @!P0 BRA `(.L_x_16) ;
+        /*2be0*/                   LDL.U8 R2, [R1+0x4c] ;
+        /*2bf0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2c00*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x4c ;
+        /*2c10*/              @!P0 BRA `(.L_x_16) ;
+        /*2c20*/                   LDL.U8 R2, [R1+0x4d] ;
+        /*2c30*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2c40*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x4d ;
+        /*2c50*/              @!P0 BRA `(.L_x_16) ;
+        /*2c60*/                   LDL.U8 R2, [R1+0x4e] ;
+        /*2c70*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2c80*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x4e ;
+        /*2c90*/              @!P0 BRA `(.L_x_16) ;
+        /*2ca0*/                   LDL.U8 R2, [R1+0x4f] ;
+        /*2cb0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2cc0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x4f ;
+        /*2cd0*/              @!P0 BRA `(.L_x_16) ;
+        /*2ce0*/                   LDL.U8 R2, [R1+0x50] ;
+        /*2cf0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2d00*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x50 ;
+        /*2d10*/              @!P0 BRA `(.L_x_16) ;
+        /*2d20*/                   LDL.U8 R2, [R1+0x51] ;
+        /*2d30*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2d40*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x51 ;
+        /*2d50*/              @!P0 BRA `(.L_x_16) ;
+        /*2d60*/                   LDL.U8 R2, [R1+0x52] ;
+        /*2d70*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2d80*/                   MOV R2, 0x52 ;
+        /*2d90*/              @!P0 BRA `(.L_x_16) ;
+        /*2da0*/                   LDL.U8 R2, [R1+0x53] ;
+        /*2db0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2dc0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x53 ;
+        /*2dd0*/              @!P0 BRA `(.L_x_16) ;
+        /*2de0*/                   LDL.U8 R2, [R1+0x54] ;
+        /*2df0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2e00*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x54 ;
+        /*2e10*/              @!P0 BRA `(.L_x_16) ;
+        /*2e20*/                   LDL.U8 R2, [R1+0x55] ;
+        /*2e30*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2e40*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x55 ;
+        /*2e50*/              @!P0 BRA `(.L_x_16) ;
+        /*2e60*/                   LDL.U8 R2, [R1+0x56] ;
+        /*2e70*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2e80*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x56 ;
+        /*2e90*/              @!P0 BRA `(.L_x_16) ;
+        /*2ea0*/                   LDL.U8 R2, [R1+0x57] ;
+        /*2eb0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2ec0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x57 ;
+        /*2ed0*/              @!P0 BRA `(.L_x_16) ;
+        /*2ee0*/                   LDL.U8 R2, [R1+0x58] ;
+        /*2ef0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2f00*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x58 ;
+        /*2f10*/              @!P0 BRA `(.L_x_16) ;
+        /*2f20*/                   LDL.U8 R2, [R1+0x59] ;
+        /*2f30*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2f40*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x59 ;
+        /*2f50*/              @!P0 BRA `(.L_x_16) ;
+        /*2f60*/                   LDL.U8 R2, [R1+0x5a] ;
+        /*2f70*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2f80*/                   MOV R2, 0x5a ;
+        /*2f90*/              @!P0 BRA `(.L_x_16) ;
+        /*2fa0*/                   LDL.U8 R2, [R1+0x5b] ;
+        /*2fb0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*2fc0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x5b ;
+        /*2fd0*/              @!P0 BRA `(.L_x_16) ;
+        /*2fe0*/                   LDL.U8 R2, [R1+0x5c] ;
+        /*2ff0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3000*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x5c ;
+        /*3010*/              @!P0 BRA `(.L_x_16) ;
+        /*3020*/                   LDL.U8 R2, [R1+0x5d] ;
+        /*3030*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3040*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x5d ;
+        /*3050*/              @!P0 BRA `(.L_x_16) ;
+        /*3060*/                   LDL.U8 R2, [R1+0x5e] ;
+        /*3070*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3080*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x5e ;
+        /*3090*/              @!P0 BRA `(.L_x_16) ;
+        /*30a0*/                   LDL.U8 R2, [R1+0x5f] ;
+        /*30b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*30c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x5f ;
+        /*30d0*/              @!P0 BRA `(.L_x_16) ;
+        /*30e0*/                   LDL.U8 R2, [R1+0x60] ;
+        /*30f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3100*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x60 ;
+        /*3110*/              @!P0 BRA `(.L_x_16) ;
+        /*3120*/                   LDL.U8 R2, [R1+0x61] ;
+        /*3130*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3140*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x61 ;
+        /*3150*/              @!P0 BRA `(.L_x_16) ;
+        /*3160*/                   LDL.U8 R2, [R1+0x62] ;
+        /*3170*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3180*/                   MOV R2, 0x62 ;
+        /*3190*/              @!P0 BRA `(.L_x_16) ;
+        /*31a0*/                   LDL.U8 R2, [R1+0x63] ;
+        /*31b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*31c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x63 ;
+        /*31d0*/              @!P0 BRA `(.L_x_16) ;
+        /*31e0*/                   LDL.U8 R2, [R1+0x64] ;
+        /*31f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3200*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x64 ;
+        /*3210*/              @!P0 BRA `(.L_x_16) ;
+        /*3220*/                   LDL.U8 R2, [R1+0x65] ;
+        /*3230*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3240*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x65 ;
+        /*3250*/              @!P0 BRA `(.L_x_16) ;
+        /*3260*/                   LDL.U8 R2, [R1+0x66] ;
+        /*3270*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3280*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x66 ;
+        /*3290*/              @!P0 BRA `(.L_x_16) ;
+        /*32a0*/                   LDL.U8 R2, [R1+0x67] ;
+        /*32b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*32c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x67 ;
+        /*32d0*/              @!P0 BRA `(.L_x_16) ;
+        /*32e0*/                   LDL.U8 R2, [R1+0x68] ;
+        /*32f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3300*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x68 ;
+        /*3310*/              @!P0 BRA `(.L_x_16) ;
+        /*3320*/                   LDL.U8 R2, [R1+0x69] ;
+        /*3330*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3340*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x69 ;
+        /*3350*/              @!P0 BRA `(.L_x_16) ;
+        /*3360*/                   LDL.U8 R2, [R1+0x6a] ;
+        /*3370*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3380*/                   MOV R2, 0x6a ;
+        /*3390*/              @!P0 BRA `(.L_x_16) ;
+        /*33a0*/                   LDL.U8 R2, [R1+0x6b] ;
+        /*33b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*33c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x6b ;
+        /*33d0*/              @!P0 BRA `(.L_x_16) ;
+        /*33e0*/                   LDL.U8 R2, [R1+0x6c] ;
+        /*33f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3400*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x6c ;
+        /*3410*/              @!P0 BRA `(.L_x_16) ;
+        /*3420*/                   LDL.U8 R2, [R1+0x6d] ;
+        /*3430*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3440*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x6d ;
+        /*3450*/              @!P0 BRA `(.L_x_16) ;
+        /*3460*/                   LDL.U8 R2, [R1+0x6e] ;
+        /*3470*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3480*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x6e ;
+        /*3490*/              @!P0 BRA `(.L_x_16) ;
+        /*34a0*/                   LDL.U8 R2, [R1+0x6f] ;
+        /*34b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*34c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x6f ;
+        /*34d0*/              @!P0 BRA `(.L_x_16) ;
+        /*34e0*/                   LDL.U8 R2, [R1+0x70] ;
+        /*34f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3500*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x70 ;
+        /*3510*/              @!P0 BRA `(.L_x_16) ;
+        /*3520*/                   LDL.U8 R2, [R1+0x71] ;
+        /*3530*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3540*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x71 ;
+        /*3550*/              @!P0 BRA `(.L_x_16) ;
+        /*3560*/                   LDL.U8 R2, [R1+0x72] ;
+        /*3570*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3580*/                   MOV R2, 0x72 ;
+        /*3590*/              @!P0 BRA `(.L_x_16) ;
+        /*35a0*/                   LDL.U8 R2, [R1+0x73] ;
+        /*35b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*35c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x73 ;
+        /*35d0*/              @!P0 BRA `(.L_x_16) ;
+        /*35e0*/                   LDL.U8 R2, [R1+0x74] ;
+        /*35f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3600*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x74 ;
+        /*3610*/              @!P0 BRA `(.L_x_16) ;
+        /*3620*/                   LDL.U8 R2, [R1+0x75] ;
+        /*3630*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3640*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x75 ;
+        /*3650*/              @!P0 BRA `(.L_x_16) ;
+        /*3660*/                   LDL.U8 R2, [R1+0x76] ;
+        /*3670*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3680*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x76 ;
+        /*3690*/              @!P0 BRA `(.L_x_16) ;
+        /*36a0*/                   LDL.U8 R2, [R1+0x77] ;
+        /*36b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*36c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x77 ;
+        /*36d0*/              @!P0 BRA `(.L_x_16) ;
+        /*36e0*/                   LDL.U8 R2, [R1+0x78] ;
+        /*36f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3700*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x78 ;
+        /*3710*/              @!P0 BRA `(.L_x_16) ;
+        /*3720*/                   LDL.U8 R2, [R1+0x79] ;
+        /*3730*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3740*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x79 ;
+        /*3750*/              @!P0 BRA `(.L_x_16) ;
+        /*3760*/                   LDL.U8 R2, [R1+0x7a] ;
+        /*3770*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3780*/                   MOV R2, 0x7a ;
+        /*3790*/              @!P0 BRA `(.L_x_16) ;
+        /*37a0*/                   LDL.U8 R2, [R1+0x7b] ;
+        /*37b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*37c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x7b ;
+        /*37d0*/              @!P0 BRA `(.L_x_16) ;
+        /*37e0*/                   LDL.U8 R2, [R1+0x7c] ;
+        /*37f0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3800*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x7c ;
+        /*3810*/              @!P0 BRA `(.L_x_16) ;
+        /*3820*/                   LDL.U8 R2, [R1+0x7d] ;
+        /*3830*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3840*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x7d ;
+        /*3850*/              @!P0 BRA `(.L_x_16) ;
+        /*3860*/                   LDL.U8 R2, [R1+0x7e] ;
+        /*3870*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*3880*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x7e ;
+        /*3890*/              @!P0 BRA `(.L_x_16) ;
+        /*38a0*/                   LDL.U8 R2, [R1+0x7f] ;
+        /*38b0*/                   ISETP.NE.AND P0, PT, R2, RZ, PT ;
+        /*38c0*/                   IMAD.MOV.U32 R2, RZ, RZ, 0x7f ;
+        /*38d0*/              @!P0 BRA `(.L_x_16) ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 34
+        /*38e0*/                   MOV R0, 0x88 ;
+        /*38f0*/                   IMAD.MOV.U32 R4, RZ, RZ, c[0x4][0x78] ;
+        /*3900*/                   MOV R6, c[0x4][0x80] ;
+        /*3910*/                   IMAD.MOV.U32 R5, RZ, RZ, c[0x4][0x7c] ;
+        /*3920*/                   LDC.64 R2, c[0x4][R0] ;
+        /*3930*/                   IMAD.MOV.U32 R7, RZ, RZ, c[0x4][0x84] ;
+        /*3940*/                   IMAD.MOV.U32 R8, RZ, RZ, 0x22 ;
+        /*3950*/                   IMAD.MOV.U32 R10, RZ, RZ, c[0x4][0x0] ;
+        /*3960*/                   IMAD.MOV.U32 R11, RZ, RZ, c[0x4][0x4] ;
+        /*3970*/                   IMAD.MOV.U32 R12, RZ, RZ, 0x1 ;
+        /*3980*/                   IMAD.MOV.U32 R13, RZ, RZ, RZ ;
+        /*3990*/                   LEPC R14 ;
+        /*39a0*/                   MOV R9, 0x3a10 ;
+        /*39b0*/                   MOV R20, 0x3990 ;
+        /*39c0*/                   MOV R21, 0x0 ;
+        /*39d0*/                   MOV R0, 0x0 ;
+        /*39e0*/                   IADD3 R20, P0, P1, -R20, R9, R14 ;
+        /*39f0*/                   IADD3.X R21, ~R0, R21, R15, P0, P1 ;
+        /*3a00*/                   CALL.ABS.NOINC R2 ;
+        /*3a10*/                   EXIT ;
+.L_x_16:
+        /*3a20*/                   BSYNC B6 ;
+.L_x_15:
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 30
+        /*3a30*/                   LEA R4, P0, R3, c[0x0][0x198], 0x2 ;
+        /*3a40*/                   LEA.HI.X R5, R3, c[0x0][0x19c], R0, 0x2, P0 ;
+        /*3a50*/                   STG.E [R4.64], R2 ;
+	//## File "/workspace/prefetch/gpu-app-collection/gardenia/src/vc/linear_base.cu", line 36
+        /*3a60*/                   EXIT ;
+.L_x_17:
+        /*3a70*/                   BRA `(.L_x_17);
+        /*3a80*/                   NOP;
+        /*3a90*/                   NOP;
+        /*3aa0*/                   NOP;
+        /*3ab0*/                   NOP;
+        /*3ac0*/                   NOP;
+        /*3ad0*/                   NOP;
+        /*3ae0*/                   NOP;
+        /*3af0*/                   NOP;
+.L_x_20:
+
+
+//--------------------- SYMBOLS --------------------------
+
+	.type		__assertfail,@function

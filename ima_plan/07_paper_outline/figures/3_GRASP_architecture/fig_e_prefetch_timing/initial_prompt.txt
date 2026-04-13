@@ -1,0 +1,175 @@
+CRITICAL EXACT SPELLING — use ONLY these names, do NOT invent alternatives:
+- "Chain Table (CT)" — NOT "Context Table", NOT "Confidence Table"
+- "Target Table (TT)" — NOT "Translation Table", NOT "Training Table"
+- "Index Prefetch Unit (IPU)" — NOT "Index Prediction Unit"
+- "Data Prefetch Unit (DPU)" — NOT "Data Protection Unit"
+- "Prefetch Request Buffer (PRB)" — NOT "Prefetch Buffer"
+- "Address Computation Unit (ACU)"
+- "Prefetch Queue (PQ)"
+- "L1 D-Cache" — NOT "L1 Cashe"
+- "Prefetch" — NOT "Preffech", NOT "Preftech"
+- "GRASP" — always uppercase
+
+Style constraints (MUST follow):
+- Academic paper figure style, clean and professional
+- White background, no decorative elements or shadows
+- Black outlines (1-1.5pt) on all boxes and arrows
+- Font: sans-serif bold for labels inside colored blocks, serif for captions
+- Color palette: use only blue (#2B5EA7), red/dark-red (#C0392B), purple (#6C3483),
+  orange (#E67E22), yellow (#F4D03F), green (#27AE60), and grays (#BDC3C7, #ECF0F1)
+- Dashed gray rectangles for grouping/regions, with module name at top-right corner
+- All text must be crisp and readable at print size (minimum 8pt equivalent)
+- IEEE/ACM double-column paper format, figure width ~7.0in (full width)
+- Caption below figure in format "Fig. X. Description." (do NOT include caption in the image)
+- NO title at the top of the figure
+- NO shadows, NO gradients, NO 3D effects
+
+Create a PROFESSIONAL publication-quality academic diagram showing GRASP's two-step prefetch pipeline timing. This is a detailed worked example showing how an Index Prefetch flows through the pipeline, followed by a Data Prefetch.
+
+## Overall Layout
+
+A horizontal timeline running left-to-right across the center. 6 nodes on the timeline.
+- ABOVE the timeline: Stage 1 panels (Index Prefetch) — CT, IPU, PRB + L1 packets
+- BELOW the timeline: Stage 2 panels (Data Prefetch) — Index Fill, ACU+DPU, Result
+- Bottom: Legend bar
+
+The figure should be VERY information-dense with minimal whitespace. Every panel is packed with data.
+
+## Central Timeline
+
+Thick black horizontal line (4px stroke) with right-pointing arrowhead, labeled "Time" at the right end.
+
+6 timeline nodes as filled black circles (12px diameter):
+
+Node 1 (leftmost): Label below: "Demand Load" / "(cycle T)"
+Node 2: Label below: "IPU Triggers" / "(cycle T)"
+Node 3: Label below: "PRB Alloc" / "(cycle T+1)"
+Node 4: Label above: "Index Fill" / "(cycle T+560)"
+Node 5: Label above: "ACU+DPU" / "(cycle T+561)"
+Node 6 (rightmost): Label above: "Data PF Fill" / "(cycle T+1120)"
+
+Latency annotation bars (above timeline):
+- Green dashed bar (#27AE60) spanning Node1 to Node4: "~560 cycles (index PF in-flight)"
+- Red dashed bar (#C0392B) spanning Node5 to Node6: "~560 cycles (data PF in-flight)"
+
+## STAGE 1: Index Prefetch (ABOVE timeline)
+
+### Panel A — CT (Chain Table) [above Node 1]
+Box with blue (#2B5EA7) header bar labeled "CT (Chain Table)" in white bold text.
+Below the header: a table with 3 data rows on white background.
+
+Table columns: index_pc | tt_idx | K | stride | valid
+- Row 1 (HIGHLIGHTED with amber #D4A843 background): 0x03d0 | [0] | 1 | 64 | Y
+- Row 2 (white background): 0xA120 | [0,1] | 2 | 16 | Y
+- Row 3 (white background): 0xB340 | [0,1,2] | 3 | 4 | N
+
+Small gray annotation above the table: "PC 0x03d0 → match Row 1"
+Black solid arrow from this panel down to Node 1 on timeline.
+
+### Panel B — IPU (Index Prefetch Unit) [above Node 2]
+Entire box filled with purple (#6C3483). White text inside.
+Header: "IPU" bold + "(Index Prefetch Unit)" smaller text below.
+
+Content shows the coalescing process:
+Line 1: "8 threads' addrs + stride 64B"
+Line 2: "Coalesce by 32B sector:"
+Mini table (white text on purple):
+  S0: 0x48A0 | 3 lanes
+  S1: 0x48C0 | 5 lanes
+Bottom annotation: "Track S0 only →" with arrow pointing right toward PRB
+
+Black solid arrow from this panel down to Node 2 on timeline.
+Green dashed arrow (#27AE60) from IPU rightward to PRB panel.
+
+### Panel C — PRB (Prefetch Request Buffer) [above Node 3]
+Box with blue (#2B5EA7) header bar labeled "PRB (Prefetch Request Buffer)" in white bold text.
+Below the header: a table with 3 data rows on white background.
+
+Table columns: # | tt_idx | remaining
+- Entry 0 (HIGHLIGHTED with amber #D4A843 background): 0 | [0] | 1
+- Entry 1 (white, dimmed): 1 | [0,1] | 0
+- Entry 2 (white, dimmed): 2 | — | —
+
+Small annotation to the right of "remaining" column header: "(inflight idx sectors)"
+
+### PRB → L1 Packet (to the RIGHT of PRB panel, connected by green dashed arrow)
+A small packet box with green (#27AE60) outline:
+  "sector: 0x48A0"
+  "mask: 00101010"
+Green dashed arrow (#27AE60) from packet box rightward to a small "L1 D-Cache" white box.
+Label on the arrow: "index prefetch request"
+
+## STAGE 2: Data Prefetch (BELOW timeline)
+
+### Panel D — Index Fill Returns [below Node 4]
+White box with thin black border.
+Header: "Index Fill Returns" bold.
+
+Content:
+Line 1: "L2/DRAM → L1: sector 0x48A0 fills"
+Mini table showing returned index values:
+  Pos | Index Value
+  1   | 181,064
+  3   | 269,280
+  5   | 16,176
+
+KEY ANNOTATION (emphasized, perhaps in a small amber-outlined box):
+"Fill carries PRB entry ID → lookup TT via tt_idx"
+
+Line: "PRB[0].remaining-- → 0 → release"
+
+Black line connector from Node 4 down to this panel.
+
+### Panel E — ACU + DPU [below Node 5]
+Entire box filled with purple (#6C3483). White text inside.
+Header: "ACU + DPU" bold, "(Address Computation + Data Prefetch)" smaller.
+
+Sub-section 1 — ACU:
+"ACU reads TT[0]:"
+Mini TT table (3 rows, entry 0 highlighted in amber #D4A843):
+  TT[0] | x[] base | scale 4     ← highlighted
+  TT[1] | y[] base | scale 4
+  TT[2] | z[] base | scale 8
+
+Computation line: "data_addr = x_base + 181,064 × 4 → 0xCD0D20"
+
+Sub-section 2 — DPU:
+"DPU: 3 data addrs → coalesce by sector"
+Red dashed arrow (#C0392B) going right from DPU toward a "PQ" label.
+
+Black line connector from Node 5 down to this panel.
+
+### Panel F — Result [below Node 6]
+Entire box filled with green (#5AA469). White text inside.
+Header: "Result" bold.
+
+Content:
+"Data fills L1"
+"Later: demand LDG x[181064]"
+"→ L1 HIT!" (bold)
+
+Black line connector from Node 6 down to this panel.
+
+## Bottom Legend Bar
+
+Horizontal bar at the very bottom of the figure. Left-to-right:
+- Blue square (#2B5EA7) + "Storage" label
+- Purple square (#6C3483) + "Logic" label
+- Amber square (#D4A843) + "Key data" label
+- Green square (#5AA469) + "Result" label
+- Green dashed line sample (#27AE60) + "Index PF path" label
+- Red dashed line sample (#C0392B) + "Data PF path" label
+
+## Arrow Summary (VERIFY ALL DIRECTIONS)
+
+1. Panel A (CT) → Node 1: vertical black solid line DOWN
+2. Panel B (IPU) → Node 2: vertical black solid line DOWN
+3. Panel C (PRB) → Node 3: vertical black solid line DOWN
+4. IPU → PRB: horizontal green dashed arrow RIGHT
+5. PRB → Packet → L1: green dashed arrows RIGHT
+6. Node 4 → Panel D: vertical black line DOWN
+7. Node 5 → Panel E: vertical black line DOWN
+8. Node 6 → Panel F: vertical black line DOWN
+9. Panel E DPU → PQ: red dashed arrow RIGHT
+10. Green dashed bar: Node1 to Node4 above timeline (latency annotation)
+11. Red dashed bar: Node5 to Node6 above timeline (latency annotation)

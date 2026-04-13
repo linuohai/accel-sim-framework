@@ -1,0 +1,206 @@
+CRITICAL EXACT SPELLING — use ONLY these exact terms:
+- "SpMV", "CSR", "IMA"
+- "row_off[]", "A_col[]", "A_val[]", "x[]", "y[]"
+- "Sparse matrix M"
+- "CSR encoding"
+- "non-zero", "zero"
+- "index load", "data load"
+- "IMA chain"
+- "scattered", "stride-1", "accessed"
+
+============================================================
+Create a PROFESSIONAL publication-quality academic diagram for a
+computer architecture paper targeting MICRO/ISCA/HPCA conferences.
+============================================================
+
+## Figure Type
+Worked Example: "How the IMA Pattern Arises from CSR Sparse Storage in SpMV"
+Reference style: DMP Fig. 4 (HPCA'24) "BFS Code Analysis"
+
+## Aspect Ratio
+16:9 DOUBLE-COLUMN (full width ~7 inches in IEEE/ACM paper)
+
+## Overall Layout (4 panels arranged in a 2x2 grid)
+Top-left: Panel (a) Sparse Matrix M
+Top-right: Panel (b) CSR Encoding (the three arrays)
+Bottom-left: Panel (c) SpMV Kernel Code
+Bottom-right: Panel (d) Runtime IMA Access Pattern
+
+Curved arrow connecting (a) → (b) labeled "CSR encoding"
+Curved arrow connecting (b) + (c) → (d) labeled "runtime access"
+
+## Visual Style: Neutral High-Contrast Academic
+
+- White background, NO title anywhere
+- Black 1pt borders on all boxes and arrays
+- Monospace font for all numbers, code, array values
+- Sans-serif for labels and annotations
+- NO shadows, gradients, 3D effects
+- NO Chinese text, all English
+- Minimal, clean, vector-style rendering
+
+## Color Palette (use EXACTLY these colors)
+- Matrix non-zero cells: Light Blue #AED6F1 with dark #2C3E50 text
+- Matrix zero cells (shown as "·"): White #FFFFFF with light gray #BDC3C7 "·"
+- A_col[] cells: Light Blue #AED6F1 with dark text
+- row_off[] cells: Light Gray #D5DBDB with dark text
+- A_val[] cells: Light Yellow #F9E79F with dark text
+- x[] cells (accessed): Dark Purple #A569BD with WHITE text
+- x[] cells (not accessed): Light Purple #D7BDE2 with dark text
+- Code box: Light Gray #ECF0F1 background, dark text, black border
+- Panel labels "(a)", "(b)", "(c)", "(d)": Sans-serif bold 10pt dark
+- Red highlight box around `x[A_col[j]]`: red #C0392B border 1.5pt, NO fill
+- Indirection arrows: Red #C0392B, 1.5pt solid, triangular heads
+- Flow arrows between panels: Black #2C3E50, 1.5pt solid
+
+============================================================
+## Panel (a) — Sparse Matrix M (top-left, ~20% of total area)
+============================================================
+
+Show a 4x8 sparse matrix with the following content (rows × columns = 4 × 8):
+
+```
+Row 0: [  ·    5    ·    ·    ·    2    ·    ·  ]
+Row 1: [  ·    ·    ·    4    ·    ·    ·    ·  ]
+Row 2: [  7    ·    ·    ·    ·    ·    ·    ·  ]
+Row 3: [  ·    ·    ·    ·    ·    ·    8    3  ]
+```
+
+- Label above matrix: "(a) Sparse matrix M" (9pt bold)
+- Column indices 0-7 labeled above the columns (7pt, light gray)
+- Row indices 0-3 labeled to the left of the rows (7pt, light gray)
+- Non-zero cells (5, 2, 4, 7, 8, 3) filled Light Blue #AED6F1
+- Zero cells shown with "·" character on white background
+- Total 6 non-zero elements
+- Small annotation below matrix: "6 non-zeros in 32 cells" (7pt italic, gray)
+
+============================================================
+## Panel (b) — CSR Encoding (top-right, ~30% of total area)
+============================================================
+
+Show the three CSR arrays derived from matrix M:
+
+**row_off[]** (5 cells, Light Gray #D5DBDB):
+values: [0, 2, 3, 4, 6]
+label: "row_off[]" (bold 9pt)
+sub-label: "row start indices" (7pt italic, gray)
+
+**A_col[]** (6 cells, Light Blue #AED6F1):
+values: [1, 5, 3, 0, 6, 7]
+label: "A_col[]" (bold 9pt)
+sub-label: "column indices" (7pt italic, gray)
+
+**A_val[]** (6 cells, Light Yellow #F9E79F):
+values: [5, 2, 4, 7, 8, 3]
+label: "A_val[]" (bold 9pt)
+sub-label: "non-zero values" (7pt italic, gray)
+
+Arrangement: Three arrays stacked vertically, left-aligned with each other.
+Label above arrays: "(b) CSR encoding" (9pt bold)
+
+A curved black arrow from the bottom-right of panel (a) to the top-left of
+panel (b), labeled "CSR encoding" (8pt italic)
+
+============================================================
+## Panel (c) — SpMV Kernel Code (bottom-left, ~25% of total area)
+============================================================
+
+Show a code box with a COMPLETE SpMV kernel, with LINE NUMBERS (1-8):
+
+```
+1:  for (i = 0; i < M; i++) {
+2:    y[i] = 0;
+3:    for (j = row_off[i];
+4:         j < row_off[i+1]; j++) {
+5:      y[i] += A_val[j] *
+6:                 x[ A_col[j] ];
+7:    }
+8:  }
+```
+
+- Light Gray #ECF0F1 background, 1pt black border, 4pt rounded corners
+- Line numbers "1:" through "8:" in light gray #7F8C8D, monospace 8pt
+- Code text in dark #2C3E50, monospace 9pt
+- CRITICAL: Draw a RED RECTANGULAR BOX (red #C0392B, 1.5pt border, NO fill)
+  tightly around the expression `x[ A_col[j] ]` on line 6
+- Draw a red arrow from the red box pointing to the right, labeled
+  "IMA chain: x[A_col[j]]" (9pt bold red italic)
+
+Label above code: "(c) SpMV kernel" (9pt bold)
+
+============================================================
+## Panel (d) — Runtime IMA Access Pattern (bottom-right, ~25% of total area)
+============================================================
+
+Show the indirection from A_col[] values to x[] positions at runtime:
+
+**A_col[] strip** (top of panel):
+- 8 cells plus "..." ellipsis at both ends
+- Content: "..." | 1 | 5 | 3 | 0 | 6 | 7 | "..."
+- Light Blue #AED6F1 fill, dark text
+- Label above: "A_col[]" + "① index load (stride-1)" (red 8pt italic)
+- Green arrow below spanning full width, labeled "j →" (green #27AE60, 1.5pt)
+
+**Vertical gap** (~30pt) for indirection arrows
+
+**x[] strip** (bottom of panel):
+- 10 cells plus "..." ellipsis at both ends
+- Content: "..." | x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | "..."
+- Cells x1, x3, x5, x6, x7 filled DARK PURPLE #A569BD with WHITE text (these are accessed)
+- Cells x0, x2, x4 filled LIGHT PURPLE #D7BDE2 with dark text (not accessed)
+- Label above: "x[]"
+- Label below: "② data load: x[A_col[j]] (scattered)" (red 8pt italic)
+
+**Indirection arrows** (the critical visual):
+Draw 5 RED curved arrows from A_col[] cells to x[] cells based on A_col values:
+- Arrow A: A_col value "1" → x1 (slight downward curve)
+- Arrow B: A_col value "5" → x5 (arch down to the right)
+- Arrow C: A_col value "3" → x3 (downward curve)
+- Arrow D: A_col value "0" → x0 — WAIT: x0 should be unaccessed; fix:
+  Instead use: A_col value "6" → x6 (arch down to the right)
+- Arrow E: A_col value "7" → x7 (direct diagonal down)
+
+Only draw 5 arrows (not 6). Ensure they DO NOT cross each other — route them
+smoothly with gentle curves. Arrow color: Red #C0392B, 1.5pt solid, small
+triangular heads landing exactly on the top border of the x[] cells.
+
+Label above the 5 arrows region: "IMA indirection" (red 8pt bold)
+
+Label above the whole panel: "(d) Runtime access pattern" (9pt bold)
+
+============================================================
+## Bottom Legend (bottom edge of figure, thin horizontal strip)
+============================================================
+
+One horizontal line at the very bottom with 5 items, evenly spaced:
+1. Light Blue square + "non-zero / A_col"
+2. Light Gray square + "row_off"
+3. Light Yellow square + "A_val"
+4. Dark Purple square + "accessed"
+5. Red arrow + "IMA indirection"
+
+Font: sans-serif 7pt, dark #2C3E50
+
+============================================================
+## Flow arrows between panels
+============================================================
+
+1. Thick curved black arrow from Panel (a) to Panel (b), labeled
+   "CSR encoding" (italic 8pt)
+2. Thin dashed black arrows from Panel (b) (the A_col[] array) and
+   Panel (c) (the red box) both converging into Panel (d) (the A_col[] strip),
+   suggesting "runtime execution"
+
+============================================================
+## Critical Requirements
+============================================================
+
+- Information density must be HIGH — all 4 panels must be clearly populated
+- The matrix in (a) must visibly have the values at correct positions
+- The CSR arrays in (b) must match the matrix in (a)
+- The red box in (c) must tightly enclose `x[ A_col[j] ]`
+- The 5 red arrows in (d) must correctly map A_col value → x cell
+- Use ellipses "..." to suggest continuation in (d)
+- Line numbers in the code (c) are REQUIRED
+- NO title text anywhere
+- 16:9 aspect ratio, double-column paper width

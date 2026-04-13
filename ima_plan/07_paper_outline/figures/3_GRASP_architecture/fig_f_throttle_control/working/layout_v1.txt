@@ -1,0 +1,52 @@
+Here is the optimized layout description for your MICRO/ISCA/HPCA paper figure, adhering strictly to your exact terminology, color codes, and academic styling requirements.
+
+### 1. Optimized Component Positions (Percentage-based X, Y)
+*Coordinate system: (0%, 0%) is top-left, (100%, 100%) is bottom-right.*
+
+**Global Layout:**
+*   **Left Panel ("Without Throttle"):** Bounding box X: 2% to 30%, Y: 5% to 85%
+*   **Right Panel ("Dynamic Throttle (Mode 5)"):** Bounding box X: 32% to 98%, Y: 5% to 85%
+*   **Legend:** Bounding box X: 10% to 90%, Y: 92% to 98%
+
+**Left Panel Components (Vertical Flow at X: 16%):**
+*   **GRASP:** X: 16%, Y: 15% (Purple #7B68AE)
+*   **L1 D-Cache:** X: 16%, Y: 40% (White, dark border). *Inside:* **MSHR** (Amber/Red fill to show congestion).
+*   **Cache Pollution:** X: 16%, Y: 62% (Amber #D4A843, with red X marks)
+*   **Demand Miss Latency ↑:** X: 16%, Y: 78% (White box, dark text)
+
+**Right Panel Components (Feedback Loop):**
+*   *Top Row (Data Entry & Control):*
+    *   **GRASP:** X: 38%, Y: 25% (Purple #7B68AE)
+    *   **Cooldown Timer:** X: 45%, Y: 12% (Blue #4472C4, label: "Cooldown Duration")
+    *   **Throttle Controller (TC):** X: 55%, Y: 12% (Purple #7B68AE)
+    *   **Suppress Gate:** X: 55%, Y: 25% (Amber #D4A843)
+    *   **Prefetch Queue (PQ):** X: 75%, Y: 25% (Blue #4472C4)
+*   *Middle Row (Storage & Tracking):*
+    *   **L1 D-Cache:** X: 75%, Y: 45% (White, large box). *Inside:* **MSHR** (White), **Useful Count**, **Useless Count**.
+*   *Bottom Row (Feedback Path):*
+    *   **Sliding Window Sampler:** X: 75%, Y: 70% (Amber #D4A843)
+    *   **Window Accuracy:** X: 55%, Y: 70% (Green #5AA469, equation: ΔUseful / (ΔUseful + ΔUseless))
+    *   **Threshold Mapper:** X: 38%, Y: 70% (Purple #7B68AE, text: "Accuracy Low → Threshold Low (tight)\nAccuracy High → Threshold High (loose)")
+
+### 2. Arrow Routing & Numbered Steps
+*All lines 1.0-1.5pt with small triangular arrowheads. Numbered circles (①-⑥) placed directly on or adjacent to the arrows.*
+
+*   **Left Panel Routing:**
+    *   GRASP → L1 D-Cache: Multiple chaotic, overlapping black arrows labeled "DATA_PF (excessive)".
+    *   L1 D-Cache → Cache Pollution → Demand Miss Latency: Straight vertical black arrows.
+*   **Right Panel Routing:**
+    *   **① GRASP → Suppress Gate:** Solid gray arrow rightward. Label: "DATA_PF".
+    *   **② Suppress Gate → PQ:** Solid black arrow rightward.
+    *   **③ PQ → L1 D-Cache:** Solid black arrow downward.
+    *   **④ L1 D-Cache → Sliding Window Sampler:** Dashed gray arrow downward. Label: "Useful/Useless Deltas".
+    *   **⑤ Sliding Window Sampler → Window Accuracy → Threshold Mapper:** Solid black arrows leftward along the bottom row.
+    *   **⑥ Threshold Mapper → TC:** Solid black arrow upward (X: 38% up to Y: 12%, then right to X: 48%). Label: "Effective Threshold".
+    *   **TC → Suppress Gate:** Dashed gray arrow downward. Label: "Allow/Suppress".
+    *   **GRASP → PQ (Bypass):** Dashed green arrow routing *above* the Suppress Gate (Y: 18%). Label: "INDEX_PF (always exempt)".
+    *   **TC ↔ Cooldown Timer:** Short bidirectional black arrow.
+
+### 3. Visual Hierarchy & Styling Notes
+*   **Color Coding:** Medium Purple (#7B68AE) for logic (GRASP, TC, Threshold Mapper); Medium Blue (#4472C4) for storage/queues (PQ, Cooldown Timer); Amber Gold (#D4A843) for actions (Suppress Gate, Sliding Window Sampler); Green (#5AA469) for success/metrics (Window Accuracy).
+*   **Contrast:** The left panel uses chaotic, multiple arrows and red/amber congestion highlights in the MSHR to visually contrast with the clean, orthogonal, single-line feedback loop in the right panel.
+*   **Typography:** All text must be white inside colored boxes, sans-serif (e.g., Arial or Helvetica), minimum 8pt. Exact Title Case used for parameters ("Window Size", "Accuracy Low").
+*   **Legend (Bottom):** Horizontal layout containing: [Black solid arrow] = Data flow; [Green dashed arrow] = Index prefetch (exempt from throttle); [Gray dashed arrow] = Control/feedback signal; [Red X] = Suppressed DATA_PF.

@@ -1,0 +1,102 @@
+**FIGURE DIMENSIONS & CANVAS**
+- Aspect Ratio: 16:9
+- Resolution: 1920 x 1080 pixels
+- Background: White (Paper-ready)
+
+**TOP LANE: (a) Baseline: Without Prefetch**
+*Bounding Box: [x=0, y=0, w=1920, h=370]*
+- **Lane Label:** 
+  - Position: (20, 180)
+  - Text: "(a) Baseline"
+  - Style: Bold, Dark Gray, 24pt, Left-aligned
+- **Block 1 (Demand Idx Load):** 
+  - Box: [x=150, y=140, w=200, h=80]
+  - Style: Gray fill, rounded corners
+  - Text: "Demand Idx Load\n@ 0xA000" (Center-aligned)
+- **Arrow 1:** (350, 180) → (370, 180), Solid Black
+- **Block 2 (L1 Miss Wait):** 
+  - Box: [x=370, y=160, w=480, h=40]
+  - Style: Gray hatched pattern
+  - Text: "L1 MISS ~560 cy wait" (Center-aligned)
+  - Floating Label: [x=610, y=140], Text: "MISS", Style: Red, Bold
+- **Arrow 2:** (850, 180) → (870, 180), Solid Black
+- **Block 3 (Idx Fill):** 
+  - Box: [x=870, y=140, w=150, h=80]
+  - Style: Gray fill, rounded corners
+  - Text: "Idx Fill\nval=42857" (Center-aligned)
+- **Arrow 3:** (1020, 180) → (1040, 180), Solid Black
+- **Block 4 (Compute Addr):** 
+  - Box: [x=1040, y=140, w=150, h=80]
+  - Style: Gray fill, rounded corners
+  - Text: "IMAD.WIDE\ncompute addr" (Center-aligned)
+- **Arrow 4:** (1190, 180) → (1210, 180), Solid Black
+- **Block 5 (Demand Data Load):** 
+  - Box: [x=1210, y=140, w=220, h=80]
+  - Style: Gray fill, rounded corners
+  - Text: "Demand Data Load\n@ dists+0x29FA4" (Center-aligned)
+- **Arrow 5:** (1430, 180) → (1450, 180), Solid Black
+- **Block 6 (L1 Miss Wait):** 
+  - Box: [x=1450, y=160, w=300, h=40]
+  - Style: Gray hatched pattern
+  - Text: "L1 MISS ~560 cy" (Center-aligned)
+  - Floating Label: [x=1600, y=140], Text: "MISS", Style: Red, Bold
+- **Arrow 6:** (1750, 180) → (1770, 180), Solid Black
+- **Block 7 (Data Fill):** 
+  - Box: [x=1770, y=140, w=110, h=80]
+  - Style: Gray fill, rounded corners
+  - Text: "Data Fill" (Center-aligned)
+- **Lane Annotation:** 
+  - Position: [x=1450, y=260]
+  - Text: "Total: ~1120 cycles serialized"
+  - Style: Italic, Dark Gray, 20pt
+
+**BOTTOM LANE: (b) GRASP Prefetch**
+*Bounding Box: [x=0, y=400, w=1920, h=600]*
+- **Lane Label:** 
+  - Position: (20, 700)
+  - Text: "(b) GRASP"
+  - Style: Bold, Black, 24pt, Left-aligned
+
+*Sub-lane 1: Previous Iteration (y=420 to 650)*
+- **Block A (Demand Idx):** [x=150, y=480, w=170, h=80], Faded gray fill, Text: "① Demand Idx\n@ 0xA000"
+- **Arrow A-B:** (320, 520) → (340, 520), Solid Black
+- **Block B (IPU):** [x=340, y=480, w=220, h=80], LOGIC color (e.g., Light Blue), Text: "IPU\npf_addr = 0xA000\n+ 1×16 = 0xA010"
+- **Arrow B-C:** (560, 520) → (580, 520), Green Dashed
+- **Block C (PRB Alloc):** [x=580, y=480, w=200, h=80], STORAGE color (e.g., Light Orange), Text: "PRB Alloc\ntt_idx=[0]\n1 sector"
+- **Arrow C-D:** (780, 520) → (800, 520), Green Dashed
+- **Block D (Index PF Bar):** [x=800, y=500, w=400, h=40], Green hatched pattern, Text: "Index PF → L1/L2 (~560 cy)"
+- **Arrow D-E:** (1200, 520) → (1220, 520), Green Dashed
+- **Block E (Fill):** [x=1220, y=480, w=160, h=80], Faded gray fill, Text: "Fill: val=42857"
+- **Arrow E-F:** (1380, 520) → (1400, 520), Solid Black
+- **Block F (ACU):** [x=1400, y=480, w=180, h=80], LOGIC color, Text: "ACU\ndists_base\n+42857×4"
+- **Arrow F-G:** (1580, 520) → (1600, 520), Red Dashed
+- **Block G (DPU):** [x=1600, y=480, w=150, h=80], LOGIC color, Text: "DPU\nData PF"
+- **Arrow G-H:** (1750, 520) → (1760, 520), Red Dashed
+- **Block H (Data Fill Bar):** [x=1760, y=500, w=120, h=40], Red hatched pattern, Text: "Data Fill"
+
+*Sub-lane 2: Current Iteration (y=700 to 900)*
+- **Block I (Demand Idx Hit):** 
+  - Box: [x=800, y=760, w=250, h=80]
+  - Style: SUCCESS color (e.g., Light Green), bold border
+  - Text: "Demand Idx\n@ 0xA010\n→ L1 HIT!"
+  - Floating Label: [x=925, y=740], Text: "HIT!", Style: Green, Bold
+- **Block J (Demand Data Hit):** 
+  - Box: [x=1600, y=760, w=280, h=80]
+  - Style: SUCCESS color, bold border
+  - Text: "Demand Data\n@ dists+0x29FA4\n→ L1 HIT!"
+  - Floating Label: [x=1740, y=740], Text: "HIT!", Style: Green, Bold
+- **Vertical Sync Lines:** 
+  - Line 1: (1200, 540) → (1200, 760), Gray Dashed (Connects end of Index PF to Block I)
+  - Line 2: (1880, 540) → (1880, 760), Gray Dashed (Connects end of Data PF to Block J)
+- **Lane Annotation:** 
+  - Position: [x=1250, y=880]
+  - Text: "Zero stall — prefetch covers both loads"
+  - Style: Bold, Black, 22pt, Center-aligned
+
+**LEGEND**
+*Bounding Box: [x=150, y=1010, w=1600, h=50]*
+- **Item 1:** [x=300, y=1020, w=30, h=30] STORAGE color swatch. Text at (340, 1040): "Storage (PRB)"
+- **Item 2:** [x=550, y=1020, w=30, h=30] LOGIC color swatch. Text at (590, 1040): "Logic (IPU/ACU/DPU)"
+- **Item 3:** [x=850, y=1035, w=40, h=0] Green dashed line. Text at (900, 1040): "Index Prefetch"
+- **Item 4:** [x=1100, y=1035, w=40, h=0] Red dashed line. Text at (1150, 1040): "Data Prefetch"
+- **Item 5:** [x=1350, y=1020, w=30, h=30] SUCCESS color swatch. Text at (1390, 1040): "L1 HIT"

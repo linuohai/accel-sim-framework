@@ -1,0 +1,248 @@
+	.headerflags	@"EF_CUDA_TEXMODE_UNIFIED EF_CUDA_64BIT_ADDRESS EF_CUDA_SM75 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM75)"
+	.elftype	@"ET_EXEC"
+
+
+//--------------------- .text._Z6color2PiS_S_iii  --------------------------
+	.section	.text._Z6color2PiS_S_iii,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=10"
+	.align	128
+
+
+
+
+        .global         _Z6color2PiS_S_iii
+        .type           _Z6color2PiS_S_iii,@function
+        .size           _Z6color2PiS_S_iii,(.L_x_8 - _Z6color2PiS_S_iii)
+        .other          _Z6color2PiS_S_iii,@"STO_CUDA_ENTRY STV_DEFAULT"
+_Z6color2PiS_S_iii:
+.text._Z6color2PiS_S_iii:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 116
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 121
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   S2R R3, SR_TID.X ;
+        /*0030*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 123
+        /*0040*/                   ISETP.GE.AND P0, PT, R0, c[0x0][0x17c], PT ;
+        /*0050*/               @P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 125
+        /*0060*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x4 ;
+        /*0070*/                   IMAD.WIDE R2, R0, R3, c[0x0][0x168] ;
+        /*0080*/                   LDG.E.SYS R4, [R2] ;
+        /*0090*/                   ISETP.NE.AND P0, PT, R4, -0x1, PT ;
+        /*00a0*/               @P0 EXIT ;
+        /*00b0*/                   SHF.R.S32.HI R5, RZ, 0x1f, R0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 126
+        /*00c0*/                   ULDC.64 UR4, c[0x0][0x170] ;
+        /*00d0*/                   SHF.L.U32 R4, R0.reuse, 0x2, RZ ;
+        /*00e0*/                   ULDC.64 UR6, c[0x0][0x160] ;
+        /*00f0*/                   SHF.L.U64.HI R5, R0, 0x2, R5 ;
+        /*0100*/                   LDG.E.SYS R0, [R4.64+UR4] ;
+        /*0110*/                   LDG.E.SYS R7, [R4.64+UR6] ;
+        /*0120*/                   ISETP.GE.AND P0, PT, R7, R0, PT ;
+        /*0130*/              @!P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 128
+        /*0140*/                   IMAD.MOV.U32 R5, RZ, RZ, c[0x0][0x178] ;
+        /*0150*/                   STG.E.SYS [R2], R5 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 132
+        /*0160*/                   EXIT ;
+.L_x_0:
+        /*0170*/                   BRA `(.L_x_0);
+.L_x_8:
+
+
+//--------------------- .text._Z6color1PiS_S_S_S_S_iii --------------------------
+	.section	.text._Z6color1PiS_S_S_S_S_iii,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=28"
+	.align	128
+
+
+
+
+        .global         _Z6color1PiS_S_S_S_S_iii
+        .type           _Z6color1PiS_S_S_S_S_iii,@function
+        .size           _Z6color1PiS_S_S_S_S_iii,(.L_x_9 - _Z6color1PiS_S_S_S_S_iii)
+        .other          _Z6color1PiS_S_S_S_S_iii,@"STO_CUDA_ENTRY STV_DEFAULT"
+_Z6color1PiS_S_S_S_S_iii:
+.text._Z6color1PiS_S_S_S_S_iii:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 71
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 76
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   S2R R3, SR_TID.X ;
+        /*0030*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 78
+        /*0040*/                   ISETP.GE.AND P0, PT, R0, c[0x0][0x194], PT ;
+        /*0050*/               @P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 80
+        /*0060*/                   IMAD.MOV.U32 R21, RZ, RZ, 0x4 ;
+        /*0070*/                   IMAD.WIDE R2, R0, R21, c[0x0][0x178] ;
+        /*0080*/                   LDG.E.SYS R2, [R2] ;
+        /*0090*/                   ISETP.NE.AND P0, PT, R2, -0x1, PT ;
+        /*00a0*/               @P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 85
+        /*00b0*/                   IADD3 R2, R0, 0x1, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 78
+        /*00c0*/                   IMAD.MOV.U32 R11, RZ, RZ, c[0x0][0x198] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 80
+        /*00d0*/                   SHF.R.S32.HI R3, RZ, 0x1f, R0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 83
+        /*00e0*/                   ULDC.64 UR4, c[0x0][0x160] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 85
+        /*00f0*/                   ISETP.GE.AND P0, PT, R2, c[0x0][0x194], PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 83
+        /*0100*/                   IMAD.SHL.U32 R2, R0.reuse, 0x4, RZ ;
+        /*0110*/                   SHF.L.U64.HI R3, R0, 0x2, R3 ;
+        /*0120*/                   LDG.E.SYS R0, [R2.64+UR4] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 86
+        /*0130*/              @!P0 LDG.E.SYS R11, [R2.64+UR4+0x4] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 92
+        /*0140*/                   BMOV.32.CLEAR RZ, B0 ;
+        /*0150*/                   BSSY B0, `(.L_x_1) ;
+        /*0160*/                   MOV R9, 0xffffffff ;
+        /*0170*/                   ISETP.GT.AND P0, PT, R11, R0, PT ;
+        /*0180*/              @!P0 BRA `(.L_x_2) ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 94
+        /*0190*/                   LOP3.LUT R4, RZ, R0.reuse, RZ, 0x33, !PT ;
+        /*01a0*/                   IMAD.IADD R13, R11, 0x1, -R0 ;
+        /*01b0*/                   BMOV.32.CLEAR RZ, B1 ;
+        /*01c0*/                   BSSY B1, `(.L_x_3) ;
+        /*01d0*/                   IMAD.MOV.U32 R9, RZ, RZ, -0x1 ;
+        /*01e0*/                   MOV R10, R0 ;
+        /*01f0*/                   IMAD.IADD R4, R4, 0x1, R11 ;
+        /*0200*/                   LOP3.LUT R8, R13, 0x3, RZ, 0xc0, !PT ;
+        /*0210*/                   IADD3 R11, R11, -0x1, RZ ;
+        /*0220*/                   ISETP.GE.U32.AND P1, PT, R4, 0x3, PT ;
+        /*0230*/                   ISETP.NE.AND P0, PT, R8, RZ, PT ;
+        /*0240*/              @!P1 BRA `(.L_x_4) ;
+        /*0250*/                   IMAD.WIDE R4, R0.reuse, R21, c[0x0][0x168] ;
+        /*0260*/                   ISETP.NE.AND P1, PT, R0, R11, PT ;
+        /*0270*/                   MOV R9, 0xffffffff ;
+        /*0280*/                   IMAD.MOV.U32 R6, RZ, RZ, R4 ;
+        /*0290*/                   IMAD.MOV.U32 R7, RZ, RZ, R5 ;
+        /*02a0*/                   IMAD.IADD R20, R13, 0x1, -R8 ;
+        /*02b0*/                   IMAD.MOV.U32 R10, RZ, RZ, R0 ;
+        /*02c0*/                   IMAD.MOV.U32 R4, RZ, RZ, c[0x0][0x180] ;
+        /*02d0*/                   IMAD.MOV.U32 R5, RZ, RZ, c[0x0][0x184] ;
+.L_x_5:
+        /*02e0*/                   LDG.E.SYS R12, [R6] ;
+        /*02f0*/                   MOV R21, 0x4 ;
+        /*0300*/                   IMAD.WIDE R12, R12, R21, c[0x0][0x178] ;
+        /*0310*/                   LDG.E.SYS R12, [R12] ;
+        /*0320*/                   ISETP.NE.OR P4, PT, R12, -0x1, !P1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 95
+        /*0330*/              @!P4 IMAD.MOV.U32 R19, RZ, RZ, 0x1 ;
+        /*0340*/              @!P4 STG.E.SYS [R4], R19 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 94
+        /*0350*/                   LDG.E.SYS R16, [R6+0x4] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 96
+        /*0360*/              @!P4 LDG.E.SYS R14, [R6] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 94
+        /*0370*/                   IMAD.WIDE R16, R16, R21, c[0x0][0x178] ;
+        /*0380*/                   LDG.E.SYS R16, [R16] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 96
+        /*0390*/              @!P4 IMAD.WIDE R14, R14, R21, c[0x0][0x170] ;
+        /*03a0*/              @!P4 LDG.E.SYS R22, [R14] ;
+        /*03b0*/                   ISETP.NE.OR P5, PT, R16, -0x1, !P1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 95
+        /*03c0*/              @!P5 IMAD.MOV.U32 R23, RZ, RZ, 0x1 ;
+        /*03d0*/              @!P5 STG.E.SYS [R4], R23 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 94
+        /*03e0*/                   LDG.E.SYS R18, [R6+0x8] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 96
+        /*03f0*/              @!P5 LDG.E.SYS R12, [R6+0x4] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 94
+        /*0400*/                   IMAD.WIDE R18, R18, R21, c[0x0][0x178] ;
+        /*0410*/                   LDG.E.SYS R18, [R18] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 96
+        /*0420*/              @!P5 IMAD.WIDE R12, R12, R21, c[0x0][0x170] ;
+        /*0430*/              @!P5 LDG.E.SYS R24, [R12] ;
+        /*0440*/                   ISETP.NE.OR P3, PT, R18, -0x1, !P1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 95
+        /*0450*/              @!P3 IMAD.MOV.U32 R25, RZ, RZ, 0x1 ;
+        /*0460*/              @!P3 STG.E.SYS [R4], R25 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 94
+        /*0470*/                   LDG.E.SYS R16, [R6+0xc] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 96
+        /*0480*/              @!P3 LDG.E.SYS R14, [R6+0x8] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 94
+        /*0490*/                   IMAD.WIDE R16, R16, R21, c[0x0][0x178] ;
+        /*04a0*/                   LDG.E.SYS R16, [R16] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 96
+        /*04b0*/              @!P3 IMAD.WIDE R14, R14, R21, c[0x0][0x170] ;
+        /*04c0*/              @!P3 LDG.E.SYS R14, [R14] ;
+        /*04d0*/                   ISETP.NE.OR P2, PT, R16, -0x1, !P1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 95
+        /*04e0*/              @!P2 MOV R19, 0x1 ;
+        /*04f0*/              @!P2 STG.E.SYS [R4], R19 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 96
+        /*0500*/              @!P2 LDG.E.SYS R12, [R6+0xc] ;
+        /*0510*/              @!P4 IMNMX R9, R9, R22, !PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 92
+        /*0520*/                   IADD3 R20, R20, -0x4, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 96
+        /*0530*/              @!P5 IMNMX R9, R9, R24, !PT ;
+        /*0540*/              @!P2 IMAD.WIDE R12, R12, R21, c[0x0][0x170] ;
+        /*0550*/              @!P2 LDG.E.SYS R12, [R12] ;
+        /*0560*/              @!P3 IMNMX R9, R9, R14, !PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 92
+        /*0570*/                   ISETP.NE.AND P3, PT, R20, RZ, PT ;
+        /*0580*/                   IADD3 R6, P4, R6, 0x10, RZ ;
+        /*0590*/                   IADD3 R10, R10, 0x4, RZ ;
+        /*05a0*/                   IMAD.X R7, RZ, RZ, R7, P4 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 96
+        /*05b0*/              @!P2 IMNMX R9, R9, R12, !PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 92
+        /*05c0*/               @P3 BRA `(.L_x_5) ;
+.L_x_4:
+        /*05d0*/                   BSYNC B1 ;
+.L_x_3:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 94
+        /*05e0*/              @!P0 BRA `(.L_x_2) ;
+        /*05f0*/                   IMAD.WIDE R4, R10, R21, c[0x0][0x168] ;
+        /*0600*/                   IMAD.MOV.U32 R12, RZ, RZ, R4 ;
+.L_x_6:
+        /*0610*/                   IMAD.MOV.U32 R13, RZ, RZ, R5 ;
+        /*0620*/                   LDG.E.SYS R4, [R12] ;
+        /*0630*/                   MOV R7, 0x4 ;
+        /*0640*/                   IMAD.WIDE R4, R4, R7, c[0x0][0x178] ;
+        /*0650*/                   LDG.E.SYS R4, [R4] ;
+        /*0660*/                   ISETP.NE.AND P0, PT, R4, -0x1, PT ;
+        /*0670*/                   ISETP.EQ.OR P0, PT, R0, R11, P0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 95
+        /*0680*/              @!P0 IMAD.MOV.U32 R17, RZ, RZ, 0x1 ;
+        /*0690*/              @!P0 MOV R15, c[0x0][0x184] ;
+        /*06a0*/              @!P0 IMAD.MOV.U32 R14, RZ, RZ, c[0x0][0x180] ;
+        /*06b0*/              @!P0 STG.E.SYS [R14], R17 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 96
+        /*06c0*/              @!P0 LDG.E.SYS R6, [R12] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 92
+        /*06d0*/                   IADD3 R8, R8, -0x1, RZ ;
+        /*06e0*/                   ISETP.NE.AND P1, PT, R8, RZ, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 96
+        /*06f0*/              @!P0 IMAD.WIDE R6, R6, R7, c[0x0][0x170] ;
+        /*0700*/              @!P0 LDG.E.SYS R6, [R6] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 92
+        /*0710*/                   IADD3 R12, P2, R12, 0x4, RZ ;
+        /*0720*/                   IMAD.X R5, RZ, RZ, R13, P2 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 96
+        /*0730*/              @!P0 IMNMX R9, R9, R6, !PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 92
+        /*0740*/               @P1 BRA `(.L_x_6) ;
+.L_x_2:
+        /*0750*/                   BSYNC B0 ;
+.L_x_1:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 101
+        /*0760*/                   ULDC.64 UR4, c[0x0][0x188] ;
+        /*0770*/                   STG.E.SYS [R2.64+UR4], R9 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/color/kernel_max.cu", line 104
+        /*0780*/                   EXIT ;
+.L_x_7:
+        /*0790*/                   BRA `(.L_x_7);
+        /*07a0*/                   NOP;
+        /*07b0*/                   NOP;
+        /*07c0*/                   NOP;
+        /*07d0*/                   NOP;
+        /*07e0*/                   NOP;
+        /*07f0*/                   NOP;
+.L_x_9:

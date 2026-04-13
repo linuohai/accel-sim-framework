@@ -1,0 +1,61 @@
+Here is the finalized, highly-specific prompt ready for the nano-banana-pro image generator. It strictly enforces MICRO/ISCA/HPCA architectural diagram conventions, ensuring high contrast, clean flat design, and exact data representation.
+
+***
+
+**Prompt for nano-banana-pro:**
+
+**Global Settings:**
+*   **Canvas:** 16:9 aspect ratio, 1K resolution (1920x1080).
+*   **Style:** Flat 2D vector graphic, pure white background (#FFFFFF). Absolutely NO shadows, NO gradients, NO 3D effects, NO glowing edges. Clean, professional academic computer architecture style (MICRO/ISCA/HPCA).
+*   **Shapes:** All bounding boxes and tables must have 4-6pt slightly rounded corners.
+*   **Typography:** Use a clean sans-serif font (e.g., Arial or Helvetica) for labels, and a clear monospace font (e.g., Courier or Consolas) for code and hex values. 
+
+**Layout Structure:**
+
+**Level 1: SASS Code (Top 15%, Y-axis: 5% to 20%)**
+*   **Label:** "SpMV SASS Code (x16 Unrolled)" (Color: Dark Gray #333333, Bold, 15pt, aligned top-left of the section).
+*   **Code Box:** Light gray (#F0F0F0) fill, no border, 5% left/right margins.
+*   **Content:** 4 lines, 10pt monospace font, Dark Gray (#333333) text, left-aligned:
+    *   `PC 0x0480: IMAD.WIDE R8, R9, R16, c[0x0][0x180]  // unroll copy 1`
+    *   `PC 0x0490: IMAD.WIDE R26, R27, R16, c[0x0][0x180] // unroll copy 2`
+    *   `PC 0x04b0: IMAD.WIDE R12, R13, R16, c[0x0][0x180] // unroll copy 3`
+    *   `... x16 total copies ...`
+*   **Transition:** A crisp, flat downward-pointing arrow (Fill: #5B9BD5) centered below the box. Arrow label: "CD detects 16 IMA chains" (12pt, #5B9BD5, placed next to the arrow).
+
+**Level 2: Chain Table (Next 30%, Y-axis: 25% to 55%)**
+*   **Label:** "Chain Table (CT) - 16 entries from SpMV" (Color: #1B4F72, Bold, 14pt, aligned top-left of the section).
+*   **Table:** Full width (5% to 95% X-axis). Flat design with 3px solid white (#FFFFFF) grid lines separating cells.
+    *   **Header Row:** Fill: #1B4F72. Text: Pure White (#FFFFFF), Bold, 12pt sans-serif. Columns: `index_PC | data_PC | tt_idx[] | num_targets | stride | stride_valid`
+    *   **Data Rows 1-4:** Fill: Pure White (#FFFFFF) with a 1px #E0E0E0 border. Text: Dark Gray (#333333), 11pt monospace.
+        *   Row 1: `0x0460 | 0x04a0 | [0] | 1 | 64 | [Check Mark Icon in #27AE60]`
+        *   Row 2: `0x0470 | 0x04c0 | [0] | 1 | 64 | [Check Mark Icon in #27AE60]`
+        *   Row 3: `0x0490 | 0x04d0 | [0] | 1 | 64 | [Check Mark Icon in #27AE60]`
+        *   Row 4: `0x04b0 | 0x04f0 | [0] | 1 | 64 | [Check Mark Icon in #27AE60]`
+*   **Footer:** "... all 16 entries have tt_idx = [0] ..." (Color: #666666, Italic, 11pt, centered below the table).
+*   **Transition:** Multiple flat downward arrows converging from the `tt_idx[]` column into a single point below. Arrow Fill: #5B9BD5. Label at convergence point: "16 to 1 convergence" (12pt, #5B9BD5, bold).
+
+**Level 3: Target Table & Logic (Next 30%, Y-axis: 60% to 90%)**
+*   **LEFT HALF (X-axis: 5% to 48%):**
+    *   **Label:** "Target Table (TT) - 1 shared entry" (Color: #1B4F72, Bold, 13pt).
+    *   **Table:** 3px white grid lines. 
+        *   **Header:** Fill: #1B4F72. Text: Pure White (#FFFFFF), Bold. Columns: `base_addr | scale | valid`
+        *   **Row 1:** Fill: White. Text: Dark Gray monospace. Data: `c[0x0][0x180] | 4 | [Check Mark Icon in #27AE60]`
+    *   **Text Below Table:** 
+        *   Line 1: "ONE entry for ALL 16 PCs" (Color: #F0B429, Bold, 12pt).
+        *   Line 2: "Shared across entire SM (all warps)" (Color: #1B4F72, Italic, 11pt).
+*   **RIGHT HALF (X-axis: 52% to 95%):**
+    *   **Formula Box:** Fill: #F0B429. Text: Pure White (#FFFFFF). Centered text.
+        *   Line 1: "data_addr = base_addr + index_value x scale" (14pt, Bold).
+        *   Line 2: "= c[0x180] + col_idx x 4" (12pt, Regular).
+    *   **Example Boxes:** 3 vertically stacked boxes below the formula. Fill: Pure White (#FFFFFF). Border: 2px solid #F0B429. Text: Dark Gray (#333333), 10pt monospace.
+        *   Box 1: `col_idx=0x1A3F -> addr=base+0x68FC`
+        *   Box 2: `col_idx=0x2B10 -> addr=base+0xAC40`
+        *   Box 3: `col_idx=0x0C44 -> addr=base+0x3110`
+
+**Bottom Legend (Bottom 5%, Y-axis: 95%)**
+*   **Layout:** Centered horizontally at the bottom of the canvas. Items spaced evenly.
+*   **Items (Format: [Color Square] Label):** 
+    *   [Square Fill: #1B4F72] "Storage" (Text: #333333, 11pt)
+    *   [Square Fill: #5B9BD5] "Logic" (Text: #333333, 11pt)
+    *   [Square Fill: #F0B429] "Key Formula" (Text: #333333, 11pt)
+    *   [Square Fill: #27AE60] "Validation" (Text: #333333, 11pt)

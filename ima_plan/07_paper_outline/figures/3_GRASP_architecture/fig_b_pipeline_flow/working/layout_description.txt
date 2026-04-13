@@ -1,0 +1,54 @@
+Generate a clean, professional academic algorithm flowchart for the "GRASP Prefetch Pipeline" suitable for an IEEE/ACM double-column paper (16:9 aspect ratio, white background, no decorative elements, no shadows). ALL text must be in Times New Roman font, crisp, and readable (minimum 8pt equivalent). Use black outlines (1-1.5pt) on all boxes. Keep layout COMPACT with minimal whitespace.
+
+CRITICAL EXACT SPELLING (Use exactly as written, no variations):
+"Chain Detector (CD)", "Chain Table (CT)", "Target Table (TT)", "Iteration Stride Tracker (IST)", "Index Prefetch Unit (IPU)", "Data Prefetch Unit (DPU)", "Prefetch Request Buffer (PRB)", "Address Computation Unit (ACU)", "Throttle Controller (TC)", "Prefetch", "GRASP", "IMAD.WIDE", "L1 D-Cache".
+
+LAYOUT STRUCTURE & EXACT POSITIONING:
+- Canvas: 16:9 aspect ratio.
+- Left Column (Left 5% to 45% width): Contains Phase 1 (Top, Y: 5% to 45%) and Phase 2 (Bottom, Y: 50% to 80%).
+- Right Column (Right 55% to 95% width): Contains Phase 3 (Y: 5% to 80%).
+- Phase Labels: Gray italic text at the top-right corner of each respective phase bounding area ("Phase 1: Chain Detection", "Phase 2: Stride Learning", "Phase 3: Two-Step Prefetch").
+- Legend Row: Bottom strip (Y: 85% to 95%), spanning X: 10% to 90%.
+
+═══ LEFT COLUMN — Phase 1: "Chain Detection" (Center at X: 25%, Y: 5% to 45%) ═══
+Vertical flow, top to bottom, connected by black solid arrows:
+1. Start node (rounded rectangle, blue #2B5EA7 fill, white text): "Instruction Issued"
+2. Decision diamond (light blue #AED6F1 fill, dark text): "Tracked Warp?". Right branch (No) goes to a small gray (#BDC3C7) rounded terminal "Skip". Down branch (Yes) continues.
+3. Process node (blue #2B5EA7 fill, white bold text): Line 1: "Monitor Issue Stream", Line 2: "(CD)"
+4. Decision diamond (light blue #AED6F1 fill, dark text): "Chain Detected?". Below diamond in small text: "LDG → IMAD.WIDE → LDG". Left branch (No) is a gray dashed arrow looping back up to node 3, labeled "Wait". Down branch (Yes) continues.
+5. Process node (amber gold #D4A843 fill, white bold text): Line 1: "Record Chain Info", Line 2: "(CT + TT)"
+6. Terminal (blue #2B5EA7 rounded rectangle, white text): "Chain Recorded"
+
+═══ LEFT COLUMN — Phase 2: "Stride Learning" (Center at X: 25%, Y: 50% to 80%) ═══
+Vertical flow, top to bottom, connected by black solid arrows:
+1. Start node (blue #2B5EA7 rounded rectangle, white text): "Index Load Observed"
+2. Process node (blue #2B5EA7 fill, white bold text): Line 1: "Track Address Differences", Line 2: "(IST)"
+3. Decision diamond (light blue #AED6F1 fill, dark text): "Stride Stable?". Left branch (No) is a gray dashed arrow looping back up to node 2, labeled "Update". Down branch (Yes) continues.
+4. Process node (amber gold #D4A843 fill, white bold text): Line 1: "Stride Converged", Line 2: "Store in CT"
+
+═══ RIGHT COLUMN — Phase 3: "Two-Step Prefetch" (Center at X: 75%, Y: 5% to 80%) ═══
+Vertical flow, top to bottom, connected by black solid arrows (unless specified):
+1. Start node (purple #6C3483 rounded rectangle, white text): "Demand Index Load"
+2. Decision diamond (light blue #AED6F1 fill, dark text): "CT Hit & Stride Valid?". Right branch (No) goes to a small gray (#BDC3C7) rounded terminal "No Prefetch". Down branch (Yes) continues.
+3. Process node (purple #6C3483 fill, white bold text): Line 1: "Compute Prefetch Address", Line 2: "(IPU)"
+4. Process node (blue #2B5EA7 fill, white bold text): Line 1: "Allocate Tracking Entry", Line 2: "(PRB)"
+5. Process node (purple #6C3483 fill, white bold text): Line 1: "Issue Index Prefetch", Line 2: "(→ L1 D-Cache)". Arrow going down from here is GREEN (#27AE60) DASHED, labeled "Index Prefetch".
+6. Gap: A dashed gap/dotted line segment labeled "Wait for Fill Response" in gray italic text.
+7. Process node (purple #6C3483 fill, white bold text): Line 1: "Compute Data Address", Line 2: "(ACU)"
+8. Decision diamond (light blue #AED6F1 fill, dark text): "Throttle Active?". Small text below: "(TC)". Right branch (Yes) goes to a small gray (#BDC3C7) rounded terminal "Suppress". Down branch (No) continues.
+9. Process node (purple #6C3483 fill, white bold text): Line 1: "Issue Data Prefetch", Line 2: "(DPU → PQ → L1)". Arrow going down from here is RED (#C0392B) DASHED, labeled "Data Prefetch".
+10. End node (green #27AE60 rounded rectangle, white bold text): "Demand Load → L1 HIT"
+
+═══ CROSS-COLUMN CONNECTION ═══
+Draw a horizontal dashed arrow (#808080 dark gray) starting from the right side of Phase 2 (X: 35%, Y: 75%) crossing cleanly over to the top left of Phase 3 (X: 65%, Y: 15%). Label it "Stride + Target Info" in italic text. Ensure it does not cross any vertical flow lines.
+
+═══ SIDE ANNOTATIONS (Light gray #F0F0F0 boxes, thin dotted connection lines) ═══
+1. At X: 45%, Y: 25% (Right of Phase 1): "IMAD.WIDE in GPU ISA explicitly encodes indirect access structure"
+2. At X: 45%, Y: 65% (Right of Phase 2): "Typically converges within 2-3 observations"
+3. At X: 90%, Y: 20% (Right of Phase 3 IPU): "Two-step: index value determines data address"
+4. At X: 90%, Y: 65% (Right of Phase 3 TC diamond): "MSHR > 40% triggers 200-cycle cooldown"
+
+═══ LEGEND ROW (Bottom, Y: 85% to 95%) ═══
+Single horizontal row.
+Left side (Arrow Styles): Black solid line → "Main Flow" | Green (#27AE60) dashed line → "Index Prefetch" | Red (#C0392B) dashed line → "Data Prefetch" | Gray (#BDC3C7) dashed line → "Loop / Skip".
+Right side (Node Colors): Blue (#2B5EA7) square → "Training Steps" | Purple (#6C3483) square → "Prefetch Steps" | Gold (#D4A843) square → "Key Output" | Green (#27AE60) square → "Success" | Light blue (#AED6F1) diamond → "Decision".

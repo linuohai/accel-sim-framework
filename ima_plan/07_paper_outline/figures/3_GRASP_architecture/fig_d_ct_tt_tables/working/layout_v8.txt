@@ -1,0 +1,38 @@
+Here is the OPTIMIZED LAYOUT DESCRIPTION for the GRASP architecture figure, tailored for a 16:9 IEEE double-column format.
+
+### 1. Optimized Component Positions (16:9 Relative Grid)
+*   **SpMV CUDA Source Box**: `X: 0% to 40%`, `Y: 0% to 32%`. Placed in the top-left corner.
+*   **SASS Assembly Box**: `X: 44% to 100%`, `Y: 0% to 32%`. Top-right corner, perfectly top-aligned with the CUDA box.
+*   **Formula Bar**: `X: 44% to 100%`, `Y: 34% to 42%`. Centered horizontally under the SASS Assembly box, acting as a bridge between the SASS and the TT below it.
+*   **Chain Table (CT)**: `X: 0% to 66%`, `Y: 45% to 92%`. Dominates the lower-left, providing ample width for its grouped columns.
+*   **Target Table (TT)**: `X: 72% to 100%`, `Y: 45% to 70%`. Positioned in the lower-right, directly adjacent to the right edge of the CT.
+*   **Iteration Stride Tracker (IST)**: `X: 72% to 100%`, `Y: 75% to 92%`. Directly below the TT, aligned to its left and right edges.
+*   **Legend**: `X: 0% to 100%`, `Y: 96% to 100%`. Centered at the very bottom.
+
+### 2. Spacing Recommendations
+*   **Horizontal Gap (CUDA to SASS)**: 4% width. Allows space for the "compiles to" dashed arrow.
+*   **Horizontal Gap (CT to TT/IST)**: 6% width. This is the critical "convergence zone." It must remain completely free of other elements to ensure the CT→TT arrows are highly visible.
+*   **Vertical Gap (Upper to Lower)**: 13% height. Houses the Formula Bar and allows SASS→CT arrows to route cleanly without overlapping text.
+*   **Vertical Gap (TT to IST)**: 5% height. Distinct separation between storage (TT) and logic (IST).
+
+### 3. Grouping Strategy
+*   **Software/Execution Plane (Top)**: CUDA and SASS boxes share identical light gray `#F5F5F5` backgrounds and 4-6pt corner radii, visually grouping them as the software layer.
+*   **Hardware/Tracking Plane (Bottom)**: CT, TT, and IST use white backgrounds with strict 1-1.5pt black outlines. CT and TT use distinct header colors (Blue `#2B5EA7` and Purple `#6C3483`) to denote separate hardware structures.
+*   **Column Tinting within CT**: Use extremely subtle background tints for column groups (Light Blue `#E8F0FE` for Identification, Light Purple `#F0E8F8` for Target Mapping, Light Gold `#FFF8E1` for Stride Learning) to organize the wide table without drawing focus away from the arrows.
+
+### 4. Arrow Routing (Zero-Crossing Design)
+*   **CT → TT Convergence (The Key Visual)**: Route BLACK solid arrows (1.5pt thick) from the `tt_idx[0]` column (right side of CT) straight across the 6% horizontal gap to TT Row 0. Draw three distinct arrows from CT rows 0, 1, and 2, converging into a single arrowhead pointing at TT Row 0. Place the bold text "16 CT entries → 1 TT entry (many-to-one)" directly above these converging lines.
+*   **SASS → CT (PC Mapping)**: Route BLACK solid arrows from the left edge of the SASS box (PCs `0x03d0`, `0x03e0`) down and left, terminating at the `Index PC` column of the CT. Add small numbered circles ① ② on these paths.
+*   **SASS → TT (Operands)**: Route GRAY dashed arrows from the `c[0x180]` and `R16` text in the SASS box straight down to the Formula Bar, and from the Formula Bar down to the TT `Base Address` and `Scale` columns.
+*   **IST → CT (Stride Feedback)**: Route a thin BLACK solid arrow from the left edge of the IST box straight left, terminating at the `Iter Stride` column of the CT.
+*   **CUDA → SASS**: A simple, short GRAY dashed arrow pointing right in the upper 4% gap.
+
+### 5. Visual Hierarchy
+1.  **Primary Focus**: The CT→TT convergence arrows. Achieved by using solid black lines in a dedicated whitespace corridor, contrasting with the gray/dashed secondary arrows.
+2.  **Secondary Focus**: The SASS Assembly color-coded brackets (Blue, Purple, Amber) linking instruction types to the hardware tables.
+3.  **Tertiary Focus**: Table contents and internal IST logic.
+
+### 6. Table Sizing & Internal Layout
+*   **Chain Table (CT)**: Requires ~66% width. Allocate 20% to Identification, 40% to Target Mapping (split into 4 sub-columns), and 40% to Stride Learning.
+*   **Target Table (TT)**: Requires ~28% width. Keep columns tight. Allocate 15% to Idx, 15% to V, and 70% to Target Descriptor (Base Address takes the most space).
+*   **Text Sizing**: Use 9pt sans-serif for table headers, 8pt monospace for hex/code, and 7pt sans-serif for annotations and valid bits to ensure perfect readability in a 7.0" IEEE print format.

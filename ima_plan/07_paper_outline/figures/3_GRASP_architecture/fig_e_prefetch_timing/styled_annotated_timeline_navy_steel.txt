@@ -1,0 +1,37 @@
+Generate a technical architecture diagram for an academic computer architecture paper (MICRO/ISCA/HPCA style). 
+
+**Canvas & Global Style:**
+Dimensions: 1024px (width) × 576px (height) [16:9 aspect ratio]. Background: Solid White (#FFFFFF). Style: Flat design, NO shadows, NO gradients, NO 3D effects, NO grid coordinates, NO meta-text like "Figure X", NO title. Fonts must be crisp, sans-serif (e.g., Arial, Helvetica), fully legible, with monospace font used for hex values. High information density filling the canvas with minimal whitespace. Tables must have colored headers matching their component background, white data cells, and white gaps between fields.
+
+**1. Central Timeline:**
+- Draw a thick black line (4px stroke) from (x: 40, y: 230) to (x: 980, y: 230) with a right-pointing arrowhead at x: 980.
+- Add label "Time →" at (x: 980, y: 210), right-aligned, 14pt, bold.
+- Draw 6 timeline nodes as filled black circles (16px diameter) centered at y=230:
+  - Node 1 at x=80. Text below (center-aligned, 12pt): "Demand Load" (y=250), "(cycle T)" (y=265).
+  - Node 2 at x=220. Text below (center-aligned, 12pt): "IPU Triggers" (y=250), "(cycle T)" (y=265).
+  - Node 3 at x=380. Text below (center-aligned, 12pt): "PRB Alloc + Index PF" (y=250), "(cycle T+1)" (y=265).
+  - Node 4 at x=580. Text above (center-aligned, 12pt): "Index Fill" (y=195), "(cycle T+560)" (y=180).
+  - Node 5 at x=720. Text above (center-aligned, 12pt): "ACU+DPU" (y=195), "(cycle T+561)" (y=180).
+  - Node 6 at x=900. Text above (center-aligned, 12pt): "Data PF Fill" (y=195), "(cycle T+1120)" (y=180).
+- Latency Bars (Above timeline):
+  - Bar 1: Dashed line (color #27AE60, 2px) from (80, 215) to (580, 215). Text "~560 cycles (index PF in-flight)" centered at (330, 205), 11pt, color #27AE60.
+  - Bar 2: Dashed line (color #E74C3C, 2px) from (720, 215) to (900, 215). Text "~560 cycles (data PF in-flight)" centered at (810, 205), 11pt, color #E74C3C.
+
+**2. Above Timeline Panels (1px solid black borders, clean vertical connector lines to timeline nodes):**
+- Panel A (Above Node 1): Bounding box (20, 90) to (140, 180). White background. Connector line from (80, 180) to (80, 222). Header: "CT Lookup" (bold, 12pt, top-center). Content: "PC 0x0650, addr = 0xA000" (10pt, y=115). Table centered at y=150 (3 cols, 2 rows): Headers [stride_valid | iter_stride | tt_idx], Data [true | 16 | [0]].
+- Panel B (Above Node 2): Bounding box (165, 120) to (275, 180). White background. Connector line from (220, 180) to (220, 222). Header: "IPU" (bold, 12pt, top-center). Content: "pf_addr = 0xA000 + 1×16" (10pt, y=150), "= 0xA010" (10pt, y=165).
+- Panel C (Above Node 3): Bounding box (290, 60) to (470, 180). Background fill: #1B4F72. Connector line from (380, 180) to (380, 222). Header: "PRB Entry [0]" (bold, 12pt, top-center, white text). Table 1 centered at y=95 (6 cols, 2 rows): Headers [valid | warp | tt_idx | targets | sector | remaining], Data [true | 10 | [0] | 1 | 0xA010 | 1]. Text: "sector_data[0]:" (10pt, left-aligned x=295, y=130). Table 2 centered at y=155 (3 cols, 2 rows): Headers [sector_addr | candidate.data_addr | dispatched], Data [0xA010 | (pending fill) | false].
+
+**3. Below Timeline Panels (1px solid black borders, clean vertical connector lines to timeline nodes):**
+- Panel D (Below Node 4): Bounding box (510, 280) to (650, 360). White background. Connector line from (580, 238) to (580, 280). Header: "Index Fill Returns" (bold, 12pt, top-center). Content (10pt, left-aligned x=515): y=310 "L2/DRAM → L1: sector 0xA010"; y=328 "column_indices[offset+4] = 42857" (Highlight "42857" with background #F0B429); y=346 "PRB[0].remaining-- → release".
+- Panel E (Below Node 5): Bounding box (620, 280) to (820, 410). Background fill: #5B9BD5. Connector line from (720, 238) to (720, 280). Header: "ACU + DPU" (bold, 12pt, top-center, white text). Content (10pt, left-aligned x=625): y=305 "ACU reads TT[0]:"; y=325 Table [base: dists_base (c[0x178]) | scale: 4]; y=345 "data_addr = dists_base + 42857 × 4"; y=360 "= dists_base + 0x29FA4" (Highlight "0x29FA4" with background #F0B429); y=375 "DPU: queue Data PF @ dists_base+0x29FA4"; y=395 Table [idx_addr: 0xA010 | data_addr: base+0x29FA4 | chain_id: 0].
+- Panel F (Below Node 6): Bounding box (840, 280) to (960, 350). Background fill: #27AE60. Connector line from (900, 238) to (900, 280). Header: "Result" (bold, 12pt, top-center, white text). Content (10pt, center-aligned): y=310 "Data fills L1"; y=325 "Later: PC 0x0680 LDG dists[42857]"; y=340 "→ L1 HIT!" (bold).
+
+**4. Bottom Legend:**
+- Bounding box from (100, 530) to (924, 560). Horizontal row layout, 11pt font, vertically centered at y=545.
+- x=150: Colored square (12x12px, fill #1B4F72) + text "Storage"
+- x=280: Colored square (12x12px, fill #5B9BD5) + text "Logic"
+- x=400: Colored square (12x12px, fill #F0B429) + text "Key data"
+- x=530: Colored square (12x12px, fill #27AE60) + text "Result"
+- x=660: Dashed line (20px wide, color #27AE60, 2px stroke) + text "Index PF path"
+- x=810: Dashed line (20px wide, color #E74C3C, 2px stroke) + text "Data PF path"

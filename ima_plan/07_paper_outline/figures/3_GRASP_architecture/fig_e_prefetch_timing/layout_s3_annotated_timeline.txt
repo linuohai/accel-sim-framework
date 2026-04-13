@@ -1,0 +1,103 @@
+# SPATIAL LAYOUT SPECIFICATION
+
+**Canvas Dimensions:** 1024px (width) × 576px (height) [16:9 aspect ratio]
+**Background:** White (#FFFFFF)
+**Global Style:** Flat design, no shadows, no gradients, no 3D effects. Fonts should be sans-serif (e.g., Arial, Helvetica).
+
+---
+
+## 1. CENTRAL TIMELINE
+**Main Arrow:**
+*   **Line:** Thick black line (stroke-width: 4px) from `(x: 40, y: 230)` to `(x: 980, y: 230)`.
+*   **Arrowhead:** At `(x: 980, y: 230)`, pointing right.
+*   **Label:** "Time →" at `(x: 980, y: 210)`, right-aligned, 14pt, bold.
+
+**Timeline Nodes (Filled circles, diameter 16px, centered on timeline at y=230):**
+*   **Node ①:** `(x: 80, y: 230)`. Labels (below): "Demand Load" at `(x: 80, y: 250)`, "(cycle T)" at `(x: 80, y: 265)`. Center-aligned, 12pt.
+*   **Node ②:** `(x: 220, y: 230)`. Labels (below): "IPU Triggers" at `(x: 220, y: 250)`, "(cycle T)" at `(x: 220, y: 265)`. Center-aligned, 12pt.
+*   **Node ③:** `(x: 380, y: 230)`. Labels (below): "PRB Alloc + Index PF" at `(x: 380, y: 250)`, "(cycle T+1)" at `(x: 380, y: 265)`. Center-aligned, 12pt.
+*   **Node ④:** `(x: 580, y: 230)`. Labels (above): "Index Fill" at `(x: 580, y: 195)`, "(cycle T+560)" at `(x: 580, y: 180)`. Center-aligned, 12pt.
+*   **Node ⑤:** `(x: 720, y: 230)`. Labels (above): "ACU+DPU" at `(x: 720, y: 195)`, "(cycle T+561)" at `(x: 720, y: 180)`. Center-aligned, 12pt.
+*   **Node ⑥:** `(x: 900, y: 230)`. Labels (above): "Data PF Fill" at `(x: 900, y: 195)`, "(cycle T+1120)" at `(x: 900, y: 180)`. Center-aligned, 12pt.
+
+**Latency Bars (Above timeline):**
+*   **Bar 1 (①→④):** Dashed line (stroke: {INDEX_PF_COLOR}, 2px) from `(x: 80, y: 215)` to `(x: 580, y: 215)`. Text: "~560 cycles (index PF in-flight)" centered at `(x: 330, y: 205)`, 11pt, color: {INDEX_PF_COLOR}.
+*   **Bar 2 (⑤→⑥):** Dashed line (stroke: {DATA_PF_COLOR}, 2px) from `(x: 720, y: 215)` to `(x: 900, y: 215)`. Text: "~560 cycles (data PF in-flight)" centered at `(x: 810, y: 205)`, 11pt, color: {DATA_PF_COLOR}.
+
+---
+
+## 2. ABOVE TIMELINE PANELS (Nodes 1-3)
+*All panels have a 1px solid black border and {LOGIC} or {STORAGE} background fill.*
+
+**Panel A (Above Node ①): "CT Lookup"**
+*   **Bounding Box:** `(x: 20, y: 90)` to `(x: 140, y: 180)` (120x90px).
+*   **Connector:** Vertical line from `(x: 80, y: 180)` to `(x: 80, y: 222)`.
+*   **Header:** "CT Lookup" (bold, 12pt, top-center).
+*   **Content:** "PC 0x0650, addr = 0xA000" (10pt, y=115).
+*   **Table:** Centered at y=150. 3 columns, 2 rows.
+    *   Row 1: `| stride_valid | iter_stride | tt_idx |`
+    *   Row 2: `| true | 16 | [0] |`
+
+**Panel B (Above Node ②): "IPU"**
+*   **Bounding Box:** `(x: 165, y: 120)` to `(x: 275, y: 180)` (110x60px).
+*   **Connector:** Vertical line from `(x: 220, y: 180)` to `(x: 220, y: 222)`.
+*   **Header:** "IPU" (bold, 12pt, top-center).
+*   **Content:** "pf_addr = 0xA000 + 1×16" (10pt, y=150), "= 0xA010" (10pt, y=165).
+
+**Panel C (Above Node ③): "PRB Entry [0]"**
+*   **Bounding Box:** `(x: 290, y: 60)` to `(x: 470, y: 180)` (180x120px). Background: {STORAGE}.
+*   **Connector:** Vertical line from `(x: 380, y: 180)` to `(x: 380, y: 222)`.
+*   **Header:** "PRB Entry [0]" (bold, 12pt, top-center).
+*   **Table 1 (PRB fields):** Centered at y=95. 6 columns, 2 rows.
+    *   Row 1: `| valid | warp | tt_idx | targets | sector | remaining |`
+    *   Row 2: `| true | 10 | [0] | 1 | 0xA010 | 1 |`
+*   **Text:** "sector_data[0]:" (10pt, left-aligned at x=295, y=130).
+*   **Table 2:** Centered at y=155. 3 columns, 2 rows.
+    *   Row 1: `| sector_addr | candidate.data_addr | dispatched |`
+    *   Row 2: `| 0xA010 | (pending fill) | false |`
+
+---
+
+## 3. BELOW TIMELINE PANELS (Nodes 4-6)
+
+**Panel D (Below Node ④): "Index Fill Returns"**
+*   **Bounding Box:** `(x: 510, y: 280)` to `(x: 650, y: 360)` (140x80px).
+*   **Connector:** Vertical line from `(x: 580, y: 238)` to `(x: 580, y: 280)`.
+*   **Header:** "Index Fill Returns" (bold, 12pt, top-center).
+*   **Content (10pt, left-aligned at x=515):**
+    *   y=310: "L2/DRAM → L1: sector 0xA010"
+    *   y=328: "column_indices[offset+4] = 42857" (Highlight "42857" in {KEY})
+    *   y=346: "PRB[0].remaining-- → release"
+
+**Panel E (Below Node ⑤): "ACU + DPU"**
+*   **Bounding Box:** `(x: 620, y: 280)` to `(x: 820, y: 410)` (200x130px). Background: {LOGIC}.
+*   **Connector:** Vertical line from `(x: 720, y: 238)` to `(x: 720, y: 280)`.
+*   **Header:** "ACU + DPU" (bold, 12pt, top-center).
+*   **Content:**
+    *   y=305: "ACU reads TT[0]:" (10pt, left-aligned x=625)
+    *   y=325: Table (2 cols): `| base: dists_base (c[0x178]) | scale: 4 |`
+    *   y=345: "data_addr = dists_base + 42857 × 4"
+    *   y=360: "= dists_base + 0x29FA4" (Highlight "0x29FA4" in {KEY})
+    *   y=375: "DPU: queue Data PF @ dists_base+0x29FA4"
+    *   y=395: Table (3 cols): `| idx_addr: 0xA010 | data_addr: base+0x29FA4 | chain_id: 0 |`
+
+**Panel F (Below Node ⑥): "Result"**
+*   **Bounding Box:** `(x: 840, y: 280)` to `(x: 960, y: 350)` (120x70px). Background: {SUCCESS}.
+*   **Connector:** Vertical line from `(x: 900, y: 238)` to `(x: 900, y: 280)`.
+*   **Header:** "Result" (bold, 12pt, top-center).
+*   **Content (10pt, center-aligned):**
+    *   y=310: "Data fills L1"
+    *   y=325: "Later: PC 0x0680 LDG dists[42857]"
+    *   y=340: "→ L1 HIT!" (bold)
+
+---
+
+## 4. BOTTOM LEGEND
+**Bounding Box:** `(x: 100, y: 530)` to `(x: 924, y: 560)`
+**Layout (Horizontal row, 11pt font, vertically centered at y=545):**
+*   `x=150`: Colored square (12x12px, fill: {STORAGE}) + text "Storage"
+*   `x=280`: Colored square (12x12px, fill: {LOGIC}) + text "Logic"
+*   `x=400`: Colored square (12x12px, fill: {KEY}) + text "Key data"
+*   `x=530`: Colored square (12x12px, fill: {SUCCESS}) + text "Result"
+*   `x=660`: Dashed line (20px wide, color: {INDEX_PF_COLOR}) + text "Index PF path"
+*   `x=810`: Dashed line (20px wide, color: {DATA_PF_COLOR}) + text "Data PF path"

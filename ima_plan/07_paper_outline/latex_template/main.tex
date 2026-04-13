@@ -54,7 +54,46 @@
 \let\Bbbk\relax            % avoid clash with newtxmath (loaded by acmart)
 \usepackage{amssymb}       % for \checkmark
 \usepackage{enumitem}      % for itemize options [nosep, leftmargin=*]
+\usepackage{listings}      % for SASS code listings in §2.1
+\usepackage{subcaption}    % stacked subfigures in §3.1 overview
+\lstset{
+  basicstyle    = \ttfamily\scriptsize,
+  numbers       = none,
+  frame         = single,
+  framesep      = 2pt,
+  xleftmargin   = 3pt,
+  xrightmargin  = 3pt,
+  aboveskip     = 4pt,
+  belowskip     = 2pt,
+  captionpos    = b,
+  columns       = fullflexible,
+  keepspaces    = true,
+  breaklines    = false,
+  showstringspaces = false,
+}
 \setlength{\textfloatsep}{10pt plus 2pt minus 2pt} % default 20pt, tighten figure-to-text gap
+
+%% Pack §5's figures inline with text. The high topfraction lets each
+%% page accept up to ~95% of float content; the high floatpagefraction
+%% (0.85) DISCOURAGES dedicated float pages so LaTeX prefers text-and-
+%% figure mix over figure-only pages.
+\renewcommand{\topfraction}{0.95}        % default 0.7
+\renewcommand{\bottomfraction}{0.7}      % default 0.3
+\renewcommand{\textfraction}{0.05}       % default 0.2
+\renewcommand{\floatpagefraction}{0.85}  % default 0.5 — must be ≥ 0.85 full
+\renewcommand{\dbltopfraction}{0.95}     % default 0.7
+\renewcommand{\dblfloatpagefraction}{0.85} % default 0.5
+\setcounter{topnumber}{4}                 % default 2
+\setcounter{bottomnumber}{3}              % default 1
+\setcounter{totalnumber}{6}               % default 3
+\setcounter{dbltopnumber}{3}              % default 2
+
+%% Hyphenation hints to fix overfull \hbox in introduction
+\hyphenation{
+  pre-fetched pre-fetch-er pre-fetch-ing pre-fetch-es
+  de-pen-den-cies de-pen-den-cy
+  Stream-ing Mul-ti-pro-ces-sor
+}
 
 %%
 %% \BibTeX command to typeset BibTeX logo in the docs
@@ -74,7 +113,7 @@
 \acmDOI{XXXXXXX.XXXXXXX}
 
 %% These commands are for a PROCEEDINGS abstract or paper.
-\acmConference[MICRO 2026]{The 58th IEEE/ACM International Symposium on Microarchitecture}{October 31--November 04, 2026}{Athens, Greece}
+\acmConference[MICRO 2026]{The 59th IEEE/ACM International Symposium on Microarchitecture}{October 31--November 04, 2026}{Athens, Greece}
 %%
 %%  Uncomment \acmBooktitle if the title of the proceedings is different
 %%  from ``Proceedings of ...''!
@@ -90,7 +129,7 @@
 %% Use this when submitting an article to a sponsored event. You'll
 %% receive a unique submission ID from the organizers
 %% of the event, and this ID should be used as the parameter to this command.
-%%\acmSubmissionID{123-A56-BU3}
+\acmSubmissionID{2012}
 
 %%
 %% For managing citations, it is recommended to use bibliography
@@ -129,7 +168,7 @@
 %% allowing the author to define a "short title" to be used in page headers.
 \title{GRASP: Grasping GPU Indirect Memory Patterns via ISA-Exposed Register-Chain Prefetching}
 \subtitle{\normalsize{MICRO 2026 Submission
-    \textbf{\#NaN} -- Confidential Draft -- Do NOT Distribute!!}}
+    \textbf{\#2012} -- Confidential Draft -- Do NOT Distribute!!}}
 %%
 %% The "author" command and its associated commands are used to define
 %% the authors and their affiliations.
@@ -154,46 +193,73 @@
 
 \begin{abstract}
 
-Indirect memory access (IMA), where one load's address depends on another load's returned data (e.g., $A[B[i]]$), is a major performance bottleneck for graph analytics and sparse linear algebra on GPUs, causing the majority of L1 cache misses. While CPU architects have developed effective IMA prefetchers, their single-threaded assumptions prevent adoption on massively multithreaded GPUs. Meanwhile, existing GPU prefetchers rely on stride-based patterns and cannot handle data-dependent accesses.
+Indirect memory access (IMA) patterns---where one load's address
+depends on the value returned by a prior load, as in
+$A[B[i]]$---dominate L1 cache misses in graph analytics and sparse
+workloads on GPUs, contributing 61--93\% of all L1 data misses
+across six representative graph algorithms. The serial dependency
+between index and data loads inflates per-access latency to
+$\approx{}786$~cycles, which would require roughly $3{\times}$ the
+64-warp ceiling of an A100 SM to hide through warp parallelism
+alone---making prefetching the natural remedy.
 
-We propose GRASP (GPU Register-chain Aware Sector Prefetcher), a hardware prefetcher that exploits a structural property of GPU's SASS ISA: the \texttt{IMAD.WIDE} instruction directly exposes IMA parameters---scale, base address, and index value---as instruction operands, enabling zero-inference detection. GRASP identifies \texttt{LDG}$\to$\texttt{IMAD.WIDE}$\to$\texttt{LDG} dependency chains at the issue stage and employs a two-step index-then-data prefetch pipeline, with per-SM shared tables for training amortization and (base, scale) key merging to handle compiler-induced PC proliferation.
+Yet no existing prefetcher handles this pattern on modern GPUs.
+Fifteen years of GPU prefetching has targeted stride-based
+accesses and explicitly skips data-dependent loads, while CPU IMA
+prefetchers assume a single sequential instruction stream whose
+per-core state would cost 36.5--57.6~KB per SM if replicated
+across 64 warps.
 
-Evaluated on graph workloads with an A100 configuration in Accel-Sim, GRASP achieves a geomean IPC improvement of 35.5\% (up to 49.8\%), at a hardware cost of approximately 2.5\,KB per SM.
+We observe that the GPU's SASS ISA already exposes every
+parameter needed for IMA prefetching: NVIDIA's \texttt{IMAD.WIDE}
+instruction encodes the data array's base pointer, element scale,
+and index source register directly as operands, so a single
+instruction-level observation at the issue stage yields the full
+prefetch descriptor with zero inference. Building on this, we
+propose \textbf{GRASP}, which detects
+\texttt{LDG}$\to$\texttt{IMAD.WIDE}$\to$\texttt{LDG} dependency
+chains at issue, runs a two-step index-then-data prefetch
+pipeline, and merges compiler-induced PC proliferation onto
+shared per-SM tables via \emph{(base, scale)} keys.
+
+Evaluated on 28~workloads spanning six graph algorithms and five
+datasets with an A100 configuration in Accel-Sim, GRASP achieves
+a geometric-mean speedup of \textbf{1.18$\times$} (up to
+\textbf{2.22$\times$})---ahead of Snake ($1.04\times$), CAPS
+($1.00\times$), and Spare~Register ($1.07\times$)---at a
+hardware cost of only \textbf{1.4~KB per SM}, or 1.1\% of the
+A100 L1 data cache.
 
 \end{abstract}
 %%
-%% The code below is generated by the tool at http://dl.acm.org/ccs.cfm.
-%% Please copy and paste the code instead of the example below.
+%% ACM CCS 2012 classification codes. CCS concepts are mandatory for
+%% papers over two pages per MICRO 2026 submission guidelines.
+%% Regenerate with http://dl.acm.org/ccs.cfm if the concept IDs need
+%% to be made more specific.
 %%
-%\begin{CCSXML}
-%<ccs2012>
-% <concept>
-%  <concept_id>00000000.0000000.0000000</concept_id>
-%  <concept_desc>Do Not Use This Code, Generate the Correct Terms for Your Paper</concept_desc>
-%  <concept_significance>500</concept_significance>
-% </concept>
-% <concept>
-%  %<concept_id>00000000.00000000.00000000</concept_id>
-%  <concept_desc>Do Not Use This Code, Generate the Correct Terms for Your Paper</concept_desc>
-%  <concept_significance>300</concept_significance>
-% </concept>
-% <concept>
-%  %<concept_id>00000000.00000000.00000000</concept_id>
-%  <concept_desc>Do Not Use This Code, Generate the Correct Terms for Your Paper</concept_desc>
-%  <concept_significance>100</concept_significance>
-% </concept>
-% <concept>
- % <concept_id>00000000.00000000.00000000</concept_id>
-%  <concept_desc>Do Not Use This Code, Generate the Correct Terms for Your Paper</concept_desc>
-%  <concept_significance>100</concept_significance>
-% </concept>
-%</ccs2012>
-%\end{CCSXML}
+\begin{CCSXML}
+<ccs2012>
+   <concept>
+       <concept_id>10010583.10010600.10010628.10010635</concept_id>
+       <concept_desc>Computer systems organization~Single instruction, multiple data</concept_desc>
+       <concept_significance>500</concept_significance>
+   </concept>
+   <concept>
+       <concept_id>10010583.10010600.10010623</concept_id>
+       <concept_desc>Computer systems organization~Processors and memory architectures</concept_desc>
+       <concept_significance>300</concept_significance>
+   </concept>
+   <concept>
+       <concept_id>10010147.10010257.10010293.10010296</concept_id>
+       <concept_desc>Computing methodologies~Graph algorithms</concept_desc>
+       <concept_significance>100</concept_significance>
+   </concept>
+</ccs2012>
+\end{CCSXML}
 
-%\ccsdesc[500]{Do Not Use This Code~Generate the Correct Terms for Your Paper}
-%\ccsdesc[300]{Do Not Use This Code~Generate the Correct Terms for Your Paper}
-%\ccsdesc{Do Not Use This Code~Generate the Correct Terms for Your Paper}
-%\ccsdesc[100]{Do Not Use This Code~Generate the Correct Terms for Your Paper}
+\ccsdesc[500]{Computer systems organization~Single instruction, multiple data}
+\ccsdesc[300]{Computer systems organization~Processors and memory architectures}
+\ccsdesc[100]{Computing methodologies~Graph algorithms}
 
 %%
 %% Keywords. The author(s) should pick words that accurately describe
@@ -205,46 +271,9 @@ Evaluated on graph workloads with an A100 configuration in Accel-Sim, GRASP achi
 \section{Introduction}
 \label{sec:intro}
 
-% ¶1: IMA definition + universality
-Graph analytics (e.g., social networks, road networks, web graphs),
-sparse linear algebra, and data-intensive applications increasingly
-rely on GPUs for acceleration~\cite{wang2016gunrock, xu2019gardenia,
-yang2022graphblast, chen2020pangolin}.
-A defining characteristic of these workloads is the \emph{indirect
-memory access} (IMA) pattern \texttt{A[B[i]]}, in which one load's
-address depends on the return value of a prior
-load~\cite{yu2015imp, fu2024dmp}.
-IMA fundamentally breaks spatial and temporal locality: the data
-array addresses are determined at runtime and scatter unpredictably
-across memory~\cite{talati2021prodigy, xue2024tyche}.
-Because this irregularity is inherent to the data structure---not an
-artifact of poor layout---it cannot be eliminated by data
-reordering~\cite{burtscher2012irregular, shi2018graph}.
-
-% ¶2: IMA breaks GPU latency hiding + Prefetching opportunity + Fig 1
-GPUs hide memory latency by interleaving thousands of concurrent
-warps, yet IMA undermines this mechanism on two fronts.
-First, IMA instructions contribute \textbf{61--93\% of all L1 data cache
-misses} across six representative graph algorithms
-(Figure~\ref{fig:cache-ima}, left), making them the dominant source
-of pipeline stalls.
-Second, the serial dependency between index and data loads doubles
-the effective memory latency per access, inflating the number of
-warps required for full latency hiding well beyond the hardware limit
-of 64 warps per SM (\S\ref{sec:motivation}).
-%
-Crucially, however, a prefetching opportunity exists: while L1 miss
-rates are high (38--59\%), L2 hit rates are also high (70--89\%),
-indicating that the data \emph{resides in L2 but not in L1}
-(Figure~\ref{fig:cache-ima}, left).
-An ideal L1 data cache that eliminates all L1 misses achieves a
-geometric mean speedup of \textbf{2.04$\times$} across 25~workload
-configurations (Figure~\ref{fig:cache-ima}, right), confirming
-substantial headroom for an L1-targeted prefetcher.
-
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\columnwidth]{figures/fig1_cache_ima_ideal.pdf}
+  \includegraphics[width=\columnwidth]{figures/1-introduction/fig1_cache_ima_ideal.pdf}
   \caption{(a)~L1 miss rate decomposed into IMA data, IMA index, and
     non-IMA misses (stacked), alongside L2 miss rate (per-algorithm
     median, symmetric graphs).
@@ -253,97 +282,145 @@ substantial headroom for an L1-targeted prefetcher.
   \label{fig:cache-ima}
 \end{figure}
 
-% Transition to ¶3
-This motivates GPU-specific prefetching for IMA---yet no existing GPU
-prefetcher addresses this access pattern.
+% ¶1: IMA definition + universality
+Graph analytics (e.g., social networks, road networks, web graphs),
+sparse linear algebra, and data-intensive applications increasingly
+rely on general-purpose graphics processing units (GPGPUs, called
+GPUs in the rest of this paper) for
+acceleration~\cite{wang2016gunrock, xu2019gardenia,
+yang2022graphblast, chen2020pangolin}.
+A defining characteristic of these workloads is the \emph{Indirect
+Memory Access} (IMA) pattern $A[B[i]]$, in which one load's address
+depends on the return value of a prior load~\cite{yu2015imp,
+fu2024dmp}.
+IMA fundamentally breaks spatial and temporal locality: the data
+array addresses are determined at runtime and scatter unpredictably
+across memory space ~\cite{talati2021prodigy, xue2024tyche}.
 
-% ¶3: GPU stride prefetching — 15 years of progress, IMA blind spot
-GPU prefetching has been studied for over 15~years, achieving
-consistent gains on stride and streaming
-patterns~\cite{lee2010manythread, jog2013orchestrated, oh2016apres,
-koo2018caps, oh2018wasp, mostofi2023snake}.
-These works progressively advanced from inter-thread
+% ¶2: IMA breaks GPU latency hiding + Prefetching opportunity + Fig 1
+NVIDIA GPUs hide memory latency through warp-level parallelism: each
+Streaming Multiprocessor (SM) interleaves up to 64 concurrent warps
+(groups of 32 SIMD threads sharing a single program counter),
+swapping among them whenever the running warp stalls on a memory
+access.
+The mechanism keeps the pipeline busy as long as some warp is ready
+to issue.
+What breaks this hiding philosophy in IMA is the access mode itself:
+each data load's address is supplied by the runtime value returned
+by the preceding index load, so the two loads must execute
+back-to-back as a serial dependency chain, sharply reducing the
+memory-level parallelism (MLP) that warp interleaving needs to hide
+latency.
+The result is a pile-up of long misses---IMA instructions account
+for \textbf{61--93\% of all L1 data cache misses} across six
+representative graph algorithms (Figure~\ref{fig:cache-ima}, a),
+and the chained index--data dependency further inflates the
+effective per-IMA latency to $\approx 786$~cycles in our experiments.
+Hiding latencies of this magnitude would require, by Little's Law,
+roughly $196$ concurrent warps per SM---more than three times the
+\textbf{64-warp} hardware ceiling---so warp-level parallelism alone
+can no longer mask the stalls.
+
+% ¶3: Prefetching as solution + ideal cache upper bound
+Prefetching has long been recognized as a classical approach to
+mitigating low MLP~\cite{jouppi1990stream, mowry1992software,
+lee2010manythread, jog2013orchestrated}, lifting the count of
+in-flight memory requests.
+To quantify the ceiling on what such a prefetcher could recover, we
+evaluate an ideal L1 data cache that eliminates all L1 load misses;
+it achieves a geometric mean speedup of \textbf{2.04$\times$} across
+25~workload configurations (Figure~\ref{fig:cache-ima}, b).
+
+% ¶4: GPU stride prefetching — 15 years of progress, IMA blind spot
+Despite this potential, the past 15~years of GPU prefetching
+research has progressively advanced from inter-thread
 prefetching~\cite{lee2010manythread} and scheduling--prefetch
-co-design~\cite{jog2013orchestrated}, to CTA-aware leading-warp
+co-design~\cite{jog2013orchestrated} to CTA-aware leading-warp
 detection~\cite{koo2018caps} and variable-length stride
-chains~\cite{mostofi2023snake}.
-However, IMA requires a fundamentally different detection mechanism:
-the data load address is determined by a runtime index value, not by
-an arithmetic stride.
-Indeed, CAPS explicitly skips data-dependent
+chains~\cite{mostofi2023snake}, consistently targeting stride and
+streaming patterns~\cite{oh2016apres, oh2018wasp}.
+IMA, in contrast, requires a fundamentally different prefetching mechanism:
+the data load's address is determined by a runtime index value, not
+by an arithmetic stride.
+CAPS explicitly skips data-dependent
 accesses~\cite{koo2018caps}, and Snake's chains remain
 stride-based~\cite{mostofi2023snake}.
 
-% ¶4: CPU IMA prefetchers — proven effective but cannot migrate
-Meanwhile, the CPU community has accumulated nearly a decade of
+% ¶5: Spare Register — sole GPU IMA attempt
+The only hardware prefetcher targeting IMA on GPUs is Spare
+Register~\cite{lakshminarayana2014spare}, which detects load-pair
+dependencies and stores prefetched data in idle registers, achieving
+10\% average IPC improvement.
+Designed and evaluated on the Fermi architecture~(2010), its
+assumptions about cache hierarchy and warp scheduling no longer hold
+for modern GPUs.
+In the decade since, every subsequent GPU prefetcher has targeted
+stride patterns exclusively~\cite{koo2018caps, oh2018wasp,
+mostofi2023snake}.
+
+% ¶6: CPU IMA prefetchers + open problem closing
+On the CPU side, architects have accumulated nearly a decade of
 hardware IMA prefetching, demonstrating that the problem is tractable.
-IMP detects \texttt{A[B[i]]} patterns via address
+IMP detects $A[B[i]]$ patterns via address
 differentials~\cite{yu2015imp}, and the state-of-the-art
 DMP~\cite{fu2024dmp} matches four classes of indirect patterns at
 0.9\,KB.
 Subsequent work has progressively addressed multi-level and
 non-linear variants~\cite{cavus2020atp, kaushik2021gretch,
 xue2024tyche, talati2021prodigy}.
-Yet all these designs assume a single-threaded address stream with
-per-core independent state~\cite{ainsworth2019indirect}---assumptions
-that collapse under the 64-warp concurrency of a GPU SM,
-where na\"{\i}ve per-warp replication would cost
-57.6\,KB/SM (\S\ref{sec:motivation}).
+These designs, however, all assume a single-threaded address stream
+with per-core independent
+state~\cite{ainsworth2019indirect}---assumptions that collapse under
+the 64-warp concurrency of a GPU SM, where naive per-warp
+replication would cost 57.6\,KB/SM.
+GPU IMA prefetching therefore remains an open problem that demands a
+prefetcher native to the GPU's execution model.
 
-% ¶5: Spare Register — sole GPU IMA attempt, decade-long void
-The only hardware prefetcher targeting IMA on GPUs is Spare
-Register~\cite{lakshminarayana2014spare}, which detects load-pairs
-via value-tag propagation and stores prefetched data in idle
-registers, achieving 10\% average IPC improvement.
-However, it was designed and evaluated on the Fermi
-architecture~(2010)---whose cache hierarchy and warp scheduling
-differ substantially from modern SM80+
-designs.
-In the decade since, every subsequent GPU prefetcher has targeted
-stride patterns exclusively~\cite{koo2018caps, oh2018wasp,
-mostofi2023snake}.
-
-% Transition — zero-position landing
-GPU IMA prefetching thus remains an open problem---one that demands a
-detection approach native to the GPU's execution model.
-
-% ¶6: IMAD.WIDE — the ISA structural advantage
-Rather than migrating CPU techniques, we observe that the GPU's own
-ISA provides a more direct path.
-Specifically, NVIDIA's SASS instruction \texttt{IMAD.WIDE\;Rd,
-Rindex, Rscale, c[base]} encodes \emph{all} the information needed
-to prefetch the data load in an IMA chain:
+% ¶7: IMAD.WIDE — the ISA structural advantage
+Rather than migrating CPU techniques, we observe that the NVIDIA
+GPU ISA provides a more direct path.
+When compiling an $A[B[i]]$-style IMA chain, the compiler almost
+always emits the SASS instruction
+\texttt{IMAD.WIDE\;Rd, Rindex, Rscale, c[base]} for the index-to-data
+address computation, and this instruction encodes \emph{all} the
+parameters needed to prefetch the data load:
 the \emph{base address} of the data array (a kernel-lifetime constant
 in constant memory), the \emph{scale factor} (element size, a
 compile-time constant), and the \emph{index dependency} (the source
 register linking to the preceding index load).
-A single observation of this instruction suffices to extract every
-prefetch parameter---with \textbf{zero inference}.
-This structural guarantee arises because GPU pointers are 64-bit
-while graph indices are typically 32-bit integers; the resulting
-address computation (32$\times$32$+$64$\to$64) uniquely maps to
-\texttt{IMAD.WIDE} in the SASS ISA, making it the compiler's
-obligatory choice (\S\ref{sec:motivation}).
-Across 12~algorithms compiled for six GPU generations
-(Volta through Hopper), 9 of 12 algorithms exhibit $\geq$86\%
-\texttt{IMAD.WIDE} conformance, confirming the pattern's
-cross-architecture stability.
+A single observation of this instruction therefore suffices to
+extract every prefetch parameter directly from its encoding, at
+extremely low cost.
+The structural guarantee comes from a hardware fact: GPU pointers
+are 64-bit while graph indices use 32-bit data, so computing a data
+address from an index requires a 32$\times$32$+$64$\to$64
+multiply--add operation that maps uniquely to \texttt{IMAD.WIDE} in
+the SASS ISA, making it the compiler's obligatory choice.
+Across the 36 (algorithm, GPU generation) pairs spanning our six
+graph algorithms and six GPU generations (Volta through Hopper),
+\textbf{34} exhibit $\geq$86\% \texttt{IMAD.WIDE} conformance,
+confirming the pattern's cross-architecture stability.
 
-% ¶7: GRASP overview + selected results
+% ¶8: GRASP overview + selected results
 Based on this insight, we propose \textbf{GRASP} (\textbf{G}PU
 \textbf{R}egister-chain \textbf{A}ware \textbf{S}ector
-\textbf{P}refetcher), which detects
-\texttt{LDG$\to$IMAD.WIDE$\to$LDG} register dependency chains at
+\textbf{P}refetcher), a hardware prefetcher that detects
+\texttt{LDG} $\to$ \texttt{IMAD.WIDE} $\to$ \texttt{LDG} register
+dependency chains at
 the issue stage and prefetches through a two-step
 index-then-data pipeline.
-GRASP's design inherits two structural advantages from
-\texttt{IMAD.WIDE}: (1)~\emph{(base,\,scale) merging} collapses
-60+ program counters in SpMV into $\sim$2 table entries, eliminating
-PC-space explosion; and (2)~\emph{per-SM shared tables} amortize
-training across 64~warps, requiring only $\sim$2.3\,KB/SM.
-Evaluated on 28~workloads spanning 9~algorithms and 5~datasets,
-GRASP achieves a geometric mean IPC improvement of \textbf{18\%}
-(up to \textbf{122\%}) over an unmodified A100 configuration.
+Observing \texttt{IMAD.WIDE} at the issue stage gives GRASP two
+advantages.
+First, \emph{detection overhead is negligible}: every prefetch
+parameter is directly encoded in the instruction operands, so a
+single observation identifies an entire IMA chain.
+Second, \emph{storage is compact}: per-SM shared tables combined
+with (base,\,scale) merging collapse up to 60+ IMA chains in SpMV
+into only $\sim$2 table entries, requiring only $\sim$1.4\,KB/SM.
+Evaluated on 28~workloads spanning six graph algorithms and five
+datasets, GRASP achieves a geometric-mean speedup of
+\textbf{1.18$\times$} (up to \textbf{2.22$\times$}) over an
+unmodified A100 configuration.
 
 % ¶8: Contributions
 \smallskip\noindent
@@ -357,16 +434,15 @@ This paper makes the following contributions:
   feature that encodes all IMA prefetch parameters, stable across
   six GPU generations.
 \item \textbf{GRASP Design.}
-  We propose a zero-inference IMA prefetcher built on
-  \texttt{IMAD.WIDE} detection, featuring an index--data two-step
-  pipeline, (base,\,scale) merging, and per-SM shared tables at
-  $\sim$2.3\,KB/SM---the first dedicated IMA prefetcher for modern
-  GPUs.
+  We propose the first dedicated IMA prefetcher for modern GPUs:
+  a zero-inference design built on \texttt{IMAD.WIDE} detection,
+  featuring an index--data two-step pipeline, (base,\,scale)
+  merging, and per-SM shared tables at only $\sim$1.4\,KB/SM.
 \item \textbf{Comprehensive Evaluation.}
-  We evaluate GRASP on 28~workloads across three SOTA GPU
-  prefetcher baselines (Snake, CAPS, Spare Register),
-  demonstrating consistent IPC improvements with a geometric mean
-  of 18\% (up to 122\%).
+  We evaluate GRASP on 28~workloads against three SOTA GPU
+  prefetcher baselines (Snake, CAPS, Spare~Register),
+  achieving a geometric-mean speedup of $1.18\times$
+  (up to $2.22\times$) over an unmodified baseline.
 \end{itemize}
 
 %%% ====================================================================
@@ -375,134 +451,985 @@ This paper makes the following contributions:
 \section{Background and Motivation}
 \label{sec:motivation}
 
-\subsection{Indirect Memory Access on GPUs}
-\textit{[IMA definition, CSR traversal pattern, why stride/stream prefetchers fail.]}
+\subsection{GPU Memory Hierarchy}
+\label{sec:bg-hierarchy}
 
-\subsection{Performance Impact of IMA}
-\textit{[L1 miss rate 70--77\%, serial dependency chain doubling latency, Little’s Law argument showing warp deficit.]}
+% ¶1: Strict description of Fig 2 (no specific numbers — those go to §2.3/§2.4)
+Modern NVIDIA GPUs adopt a hierarchical organization
+(Fig.~\ref{fig:gpu}).
+At the top, an A100-class GPGPU contains 8 GPCs, each holding several
+TPCs that pair Streaming Multiprocessors (SMs) two at a time, for a
+total of 108 SMs.
+Each SM features four warp schedulers, a 256\,KB register file,
+separate FP32, INT32, tensor and load--store units, and a private L1
+data cache co-located with shared memory.
+Misses from the L1 traverse an interconnect to the L2 cache, which is
+partitioned into slices each tied to its own memory controller, and
+ultimately to off-chip HBM.
+GPUs hide this multi-level memory latency by interleaving instructions
+from many concurrent warps on every SM.
 
-\subsection{Why CPU IMA Prefetchers Cannot Migrate}
-\textit{[IMP/DMP/Tyche assume single-thread OoO; GPU has 64 warps sharing L1, no per-thread runahead.]}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/2-Background_Motivation/GPU.pdf}
+  \caption{Hierarchical organization of an A100-class GPU.}
+  \label{fig:gpu}
+\end{figure}
+
+\subsection{The Indirect Memory Access Pattern}
+\label{sec:bg-ima}
+
+% ¶1: CSR forces IMA — concept layer (no SASS yet)
+Indirect memory access (IMA) is not an artifact of unoptimized code; it
+is the natural consequence of how graphs are stored.
+The Compressed Sparse Row (CSR) format encodes an
+$M{\times}N$ sparse matrix with three arrays
+(Fig.~\ref{fig:csr}\,(a-b)):
+\texttt{row\_off[i]} marks the starting offset of row~$i$,
+\texttt{A\_col[j]} stores the column indices of all non-zeros in
+row-major order, and
+\texttt{A\_val[j]} stores the corresponding values.
+Sparse matrix--vector multiplication (SpMV)---the simplest CSR
+operation---computes
+$y_i = \sum_{j} A_{ij}\,x_j$
+by iterating \texttt{j} over each row's non-zeros and accumulating
+\texttt{A\_val[j] * x[A\_col[j]]} (Fig.~\ref{fig:csr}\,(c)).
+The expression \texttt{x[A\_col[j]]} is structurally an
+\texttt{A[B[j]]} indirect access:
+the column index drawn from \texttt{A\_col[j]} is unknown until that
+load returns, after which it must be used to address the dense
+element \texttt{x[A\_col[j]]}.
+The same skeleton appears in BFS, SSSP, BC, CC and PageRank under the
+name \emph{neighbor traversal}; SpMV is the simplest concrete instance
+and serves as our running example throughout the paper.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/2-Background_Motivation/csr_spmv.pdf}
+  \caption{(a-b)~SpMV CSR encoding of a $4{\times}8$ sparse matrix.
+    (c)~Kernel; \texttt{x[A\_col[j]]} is the IMA chain.
+    (d)~Runtime: a stride-1 index load drives a scattered data
+    load.}
+  \label{fig:csr}
+\end{figure}
+
+% ¶2: Conceptual three-step hardware execution (no SASS code yet)
+At the hardware level, evaluating one such IMA access requires three
+strictly ordered steps:
+(i)~a load of the index value~\texttt{A\_col[j]} into a register;
+(ii)~an arithmetic combination of that loaded value with the data
+array's base pointer and a per-element scale factor to compute the
+data-load address; and
+(iii)~a second load that fetches the dense element from the computed
+address.
+Two memory loads must execute serially for every IMA access, and as
+we now show, this serial dependency is what dismantles the GPU's
+warp-parallel latency-hiding mechanism.
+
+\subsection{IMA Breaks Warp Latency Hiding}
+\label{sec:bg-latency}
+
+% ¶1: Little's Law + regular-workload baseline
+GPUs absorb memory latency by issuing instructions from many
+concurrent warps. By Little's Law, fully hiding an effective memory
+latency $L_{\mathrm{eff}}$ on one SM requires
+\begin{equation}
+N_{\mathrm{warp}} \,\cdot\, C \;\geq\; L_{\mathrm{eff}},
+\label{eq:little}
+\end{equation}
+where $C$ is the average inter-issue interval per warp.
+For regular workloads, $C$ is large and $L_{\mathrm{eff}}$ is small
+($\approx{}50$~cycles), so a few dozen warps suffice.
+
+% ¶2: IMA inflates both terms + Fig 4 reading (merged ¶2+¶3)
+IMA breaks both terms at once. The data load cannot be issued
+until the index load returns, so the per-access latency is the
+sum of two serial loads:
+$L_{\mathrm{chain}}=L_{\mathrm{idx}}+L_{\mathrm{data}}\approx{}786$~cycles
+on our A100 simulator (487--933~cycles across individually measured
+chains). Meanwhile IMA inner loops compress to only 3--5 SASS
+instructions between consecutive chains, so $C$ shrinks to
+3--5~cycles. Substituting into Eq.~\ref{eq:little} for each
+Gardenia algorithm (Fig.~\ref{fig:warp-gap}), every workload
+requires between 157 and 262 concurrent warps per SM---$2.5$ to
+$4.1{\times}$ the A100's 64-warp
+ceiling~\cite{nvidia2020a100}. GPU latency hiding is not
+under-provisioned; it is structurally defeated.
+
+\begin{figure}[b]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/2-Background_Motivation/warp_gap.pdf}
+  \caption{Required warps per SM ($N_{\mathrm{req}}{=}L_{\mathrm{chain}}/C$)
+    for each Gardenia algorithm. All workloads exceed the A100
+    64-warp ceiling by $2.5${--}$4.1{\times}$.}
+  \label{fig:warp-gap}
+\end{figure}
+
+% ¶3: Fig 1 phenomenology + L1-targeted prefetching opportunity (merged ¶4+¶5)
+Yet the data is not far away. Returning to
+Fig.~\ref{fig:cache-ima}, L1 miss rates reach 38--59\% with IMA
+accounting for 61--93\% of those misses, while L2 miss rates remain
+low at 11--30\%: the bytes the data load needs already reside in
+on-chip L2, only L1 has missed them. A prefetcher that stages IMA data from L2 into L1
+therefore has a budget of $\approx{}200$~cycles per
+request---vs.~500-plus for an L2$\to$DRAM round trip---and a
+ceiling of $2.0{\times}$ geomean speedup
+(\S\ref{sec:intro}). An L1-targeted IMA prefetcher is the natural
+remedy, if it can be built for IMA on a GPU.
+
+\subsection{Why Existing Prefetchers Fall Short}
+\label{sec:bg-prior}
+
+% ¶1: Two threads exist; CPU detection collapses on GPU (merged ¶1+¶2)
+Two research threads exist. GPU prefetchers from
+\textsc{ManyThread}~\cite{lee2010manythread} through
+\textsc{CAPS}~\cite{koo2018caps} and
+\textsc{Snake}~\cite{mostofi2023snake} target stride patterns and
+explicitly skip data-dependent loads. CPU IMA prefetchers
+(IMP~\cite{yu2015imp}, DMP~\cite{fu2024dmp},
+Tyche~\cite{xue2024tyche}) do handle the pattern, but their
+detection mechanisms all assume a single sequential instruction
+stream from one execution context. On a GPU SM, four warp
+schedulers interleave instructions from many concurrent warps:
+``the next index load at PC~$p$'' is drawn from a different
+vertex by a different warp, and the address differential between
+consecutive loads at the same PC carries no spatial meaning. The
+per-core inference machinery these schemes rely on dissolves in
+the multiplexed GPU stream.
+
+% ¶2: Storage explosion — Table 1 (tightened)
+Restoring detectability by replicating the per-context state
+across all warps costs 36.5--57.6\,KB per SM
+(Table~\ref{tab:cpu-cost})---$19$--$30\%$ of A100's 192\,KB
+unified L1 budget~\cite{nvidia2020a100}. Even the smallest of the
+three consumes nearly a fifth of the very cache it is meant to
+assist.
+
+\begin{table}[!b]
+  \caption{Per-SM storage cost of replicating CPU IMA prefetcher
+    state across the 64 warps of an A100 SM.}
+  \label{tab:cpu-cost}
+  \centering
+  \small
+  \begin{tabular}{lcccc}
+    \toprule
+    Prefetcher & Venue    & Per-core & Per-SM ($\times 64$) & \% of L1 \\
+    \midrule
+    IMP~\cite{yu2015imp}      & MICRO'15 & 0.70\,KB & 44.8\,KB & 23\% \\
+    DMP~\cite{fu2024dmp}      & HPCA'24  & 0.90\,KB & 57.6\,KB & 30\% \\
+    Tyche~\cite{xue2024tyche} & TACO'24  & 0.57\,KB & 36.5\,KB & 19\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% ¶3: Spare Register + bridge to §2.5 (merged ¶4+¶5)
+The only published GPU IMA prefetcher is Spare
+Register~\cite{lakshminarayana2014spare}, which stores prefetched
+data in unused registers to avoid polluting Fermi's 16\,KB L1. A
+modern A100 SM has grown that L1 to 192\,KB at 32\,B sector
+granularity, erasing the ``L1 too small to cache prefetches''
+premise that motivated the design. In the decade since, no GPU
+hardware prefetcher has revisited IMA as its primary target;
+migrating CPU schemes is blocked by the multi-warp interleaving
+above, and no existing approach has examined the source of IMA
+information already inside the GPU itself---its SASS ISA.
+
+\subsection{The IMAD.WIDE Insight}
+\label{sec:bg-imad}
+
+% ¶1: Key observation — IMAD.WIDE is the compiler-stable hardware signature
+The runtime three-step procedure described in
+\S\ref{sec:bg-ima}---index load, address arithmetic, data load---is
+realized in NVIDIA SASS as a fixed three-instruction sequence:
+\texttt{LDG} $\to$ \texttt{IMAD.WIDE} $\to$ \texttt{LDG}
+(Fig.~\ref{fig:imad-chain}).
+The middle instruction is not arbitrary.
+\texttt{IMAD.WIDE} is the only SASS instruction that performs a
+single-cycle 32$\times$32$+$64$\to$64-bit fused multiply--add,
+fusing a 32-bit index, a 32-bit element scale and a 64-bit base
+address into a 64-bit pointer in one operation.
+A three-instruction software replacement using \texttt{SHF},
+\texttt{IADD3} and a separate move would be both slower and longer,
+so nvcc has no incentive to choose it.
+Fig.~\ref{fig:chain-stability} confirms this empirically:
+across the six Gardenia graph algorithms compiled for six GPU
+generations from Volta to Hopper, five of six exhibit
+\texttt{IMAD.WIDE} chain conformance $\geq{}86\%$ (BFS, SSSP, CC,
+SpMV and VC), with only BC dipping to 78\% on SM70 and SM80, where
+the compiler occasionally substitutes a longer LEA/IADD3 path.
+\texttt{IMAD.WIDE} is, in effect, the compiler-stable hardware
+signature of CSR-driven IMA across the entire current generation
+of NVIDIA GPUs.
+
+% ¶2: Fig 5 reading
+Fig.~\ref{fig:imad-chain} shows the chain emitted for SpMV.
+The first \texttt{LDG} loads the column index into register
+\texttt{R10}.
+\texttt{IMAD.WIDE} consumes \texttt{R10} as one of its source
+operands and produces the data-load address in \texttt{R12},
+which the second \texttt{LDG} then dereferences to fetch
+\texttt{x[A\_col[j]]}.
+What makes \texttt{IMAD.WIDE} unique is its operand structure:
+the instruction explicitly carries the destination address
+register (\texttt{R12}), the index source register
+(\texttt{R10}), the element scale as an immediate
+(\texttt{0x8}), and the base pointer of the data array as a
+constant-memory reference
+(\texttt{c[\,0x0\,][\,0x178\,]}, a kernel-lifetime parameter).
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/2-Background_Motivation/IMA_chain.pdf}
+  \caption{SASS chain for \texttt{x[A\_col[j]]}. \texttt{IMAD.WIDE}
+    encodes the destination register, scale (\texttt{0x8}), and
+    base pointer (\texttt{c[\,0x0\,][\,0x178\,]}) as operands;
+    only the index (\texttt{R10}) is dynamic.}
+  \label{fig:imad-chain}
+\end{figure}
+
+\begin{figure}[!b]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/2-Background_Motivation/chain_stability.pdf}
+  \caption{\texttt{IMAD.WIDE} chain conformance for the six
+    Gardenia algorithms across NVIDIA SM generations
+    (SM70~Volta--SM90~Hopper).}
+  \label{fig:chain-stability}
+\end{figure}
+
+% ¶3: Why this matters — zero-inference detection
+This operand structure is the core of the GRASP design.
+A hardware unit that observes a single \texttt{IMAD.WIDE} at the
+issue stage can extract the scale and the base directly from the
+instruction encoding, identify the source register that produced
+the index, and deduce the upcoming data-load address as soon as
+the dependent index value returns from L1/L2.
+No address-stream snooping, no per-warp differential history, and
+no PC-level shift inference are required.
+The detection problem reduces from runtime statistical inference
+to a single-instruction observation, and the per-warp state
+explosion that would have made CPU prefetcher migration prohibitive
+(\S\ref{sec:bg-prior}) does not arise:
+a single shared table can serve all 64 warps on an SM, because
+every warp executes the same \texttt{IMAD.WIDE} instruction at the
+same PC.
+
+% ¶4: Bridge to §3 (now Design — Key Insight section is removed)
+This is the structural opening that the rest of the paper exploits.
+The next section presents GRASP, a hardware prefetcher built around
+this single observation.
+
 
 
 %%% ====================================================================
-%%% §3 Key Insight
-%%% ====================================================================
-\section{Key Insight: ISA-Exposed IMA Structure}
-\label{sec:insight}
-
-\textit{[IMAD.WIDE exposes scale, base, index as instruction operands — zero-inference detection. Structural guarantee: IMAD.WIDE is the only single-instruction 32×32+64→64 in SASS, compiler will not choose 3-instruction alternative. See insight.md Insight~1.]}
-
-
-%%% ====================================================================
-%%% §4 GRASP Design
+%%% §3 GRASP Design
 %%% ====================================================================
 \section{GRASP Design}
 \label{sec:design}
 
 \subsection{Overview}
-\textit{[Architecture figure (Fig.~\ref{fig:grasp-arch}) — CD/CT/TT/IPU/DPU/PRB/ACU/TC in cache hierarchy. Two-step prefetch: index first, then data.]}
+\label{sec:design-overview}
 
-% \begin{figure}[t]
-%   \centering
-%   \includegraphics[width=\columnwidth]{figures/grasp_architecture.pdf}
-%   \caption{Overview of GRASP hardware design.}
-%   \label{fig:grasp-arch}
-% \end{figure}
+GRASP realizes the \texttt{IMAD.WIDE} observation of
+\S\ref{sec:bg-imad} as a per-SM hardware prefetcher operating at
+the instruction issue stage.
+It detects IMA chains via the
+\texttt{LDG}\,$\to$\,\texttt{IMAD.WIDE}\,$\to$\,\texttt{LDG}
+register dependency, then issues a two-step prefetch---index
+first, then data---using a per-PC iteration stride.
+Fig.~\ref{fig:arch} shows the hardware components in their per-SM
+context, and Fig.~\ref{fig:flow} traces the algorithmic flow from
+chain detection through demand-load hit.
 
-\subsection{Chain Detection (CD)}
-\textit{[Monitor issue stage for LDG→IMAD.WIDE→LDG. Extract (index\_PC, data\_PC, base, scale). Write CT + TT entries.]}
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/3-Design/Top-Level_Architecture_Diagram.pdf}
+  \caption{GRASP per-SM hardware overview (training path solid, prefetch path dashed).}
+  \label{fig:arch}
+\end{figure}
 
-\subsection{Stride Learning (IST)}
-\textit{[Per-PC iteration stride tracking. Convergence in 2--3 observations. Cross-kernel persistence.]}
+The training path (solid arrows in Fig.~\ref{fig:arch}) follows
+issued instructions of two \emph{tracked warps} through the CD,
+where register-dependency matching populates the CT and TT.
+The prefetch path (dashed arrows) is triggered on every demand
+load that hits a CT entry with a converged stride: the Index
+Prefetch Unit (IPU) issues a prefetch for the next iteration's
+index, the Prefetch Request Buffer (PRB) tracks it across the L2
+round trip, and the Data Prefetch Unit (DPU) computes and issues
+the corresponding data prefetch when the index value returns.
+All components are per-SM shared rather than per-warp replicated:
+because every warp executes the same \texttt{IMAD.WIDE} at the
+same PC, a single shared table serves all 64 warps.
+We now describe each step, starting with how the chain detector
+identifies the dependency at issue.
 
-\subsection{Index Prefetch (IPU)}
-\textit{[On demand index load: compute prefetch\_addr = addr + stride × distance. Allocate PRB entry.]}
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/3-Design/Flowchart.pdf}
+  \caption{GRASP algorithmic flow: detect, register, learn, prefetch, fill, hit.}
+  \label{fig:flow}
+\end{figure}
 
-\subsection{Data Prefetch (DPU + ACU)}
-\textit{[On index fill: ACU reads returned value, computes data\_addr = base + value × scale. DPU issues data prefetch.]}
+\subsection{Detecting Chains at Issue}
+\label{sec:design-cd}
 
-\subsection{Throttle Control (TC)}
-\textit{[MSHR utilization monitoring. Suppress prefetch when saturated.]}
+The Chain Detector must identify the
+\texttt{LDG}\,$\to$\,\texttt{IMAD.WIDE}\,$\to$\,\texttt{LDG}
+sequence at issue, before either load completes, so the index
+prefetch for the next iteration can be launched one iteration
+ahead. Per-warp register tracking across 64 warps and heavy
+multi-warp interleaving would explode the state budget; we avoid
+both by exploiting two properties of \texttt{IMAD.WIDE}. First,
+it carries the array base and element scale directly as
+instruction operands, so the key fields can be read by inspection
+rather than inferred from address history (\S\ref{sec:bg-imad}).
+Second, every warp executes the same chain PCs, so sampling two
+\emph{tracked warps} is enough to discover every chain.
 
-\subsection{Hardware Budget}
+Detection thus reduces to a three-step FIFO match
+(Fig.~\ref{fig:cd}): a tracked-warp \texttt{LDG} pushes
+\texttt{(PC, dest\_reg)} onto the 20-entry shared FIFO; an
+\texttt{IMAD.WIDE} whose source matches a FIFO entry records the
+index PC, base, scale, and IMAD destination register; and a
+subsequent \texttt{LDG} reading that destination confirms the
+chain and writes it to the CT and TT. A FIFO entry is invalidated
+when its destination is overwritten or consumed by a non-IMAD
+instruction, so no spurious chains survive.
 
-\input{table_templates}  % This imports all table templates;
-% In the final paper, move individual tables to their appropriate sections.
-% For now, they are all included here for preview.
+\begin{figure}[!b]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/3-Design/Chain_detect.pdf}
+  \caption{Chain detection: tracked-warp instructions feed a shared FIFO whose three-step match confirms an IMA chain.}
+  \label{fig:cd}
+\end{figure}
+
+We size the CD FIFO at 20 entries (SpMV's $\times16$ unroll peaks
+at 17) and track two warps per SM; the sensitivity to both is in
+\S\ref{sec:eval}.
+
+\subsection{Storing Chains Compactly}
+\label{sec:design-tables}
+
+The Chain Table (CT) and Target Table (TT) jointly store every
+detected chain in tens of bytes apiece. The challenge is loop
+unrolling: SpMV's $\times16$ Duff's device produces 30+ distinct
+\texttt{IMAD.WIDE} PCs that all share the same
+\texttt{(base, scale)}, so a naive PC-keyed table would need
+hundreds of entries. We exploit the fact that unrolling preserves
+the constant operands, making \texttt{(base, scale)} a natural
+merge key. The CT dispatches each unique index PC to an entry
+that holds its stride state, while the TT coalesces all chains
+sharing the same \texttt{(base, scale)} into one entry; multiple
+CT entries point to the same TT entry through a
+\texttt{tt\_idx[]} field (Fig.~\ref{fig:tables}). PC merging thus
+happens at the TT rather than the CT.
+
+Each CT entry carries the index PC tag, up to three TT indices
+(supporting BC's reverse pass where one index feeds three arrays),
+and LRU bits; entries are flushed on kernel switch to avoid stale
+stride state. Each TT entry is a 5\,B slot holding only a 32-bit
+base tag and 3-bit scale. Fig.~\ref{fig:tables} illustrates the
+merge for SpMV: three PCs all reference
+\texttt{c[0x0][0x178]} with scale~4, their CT entries set
+\texttt{tt\_idx[0]\,=\,0}, and one TT entry \texttt{(x\_base, 4)}
+services them all.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/3-Design/CT_TT.pdf}
+  \caption{CT/TT structure: SpMV's unrolled \texttt{IMAD.WIDE} PCs collapse onto one TT entry via the shared \texttt{(base, scale)} key.}
+  \label{fig:tables}
+\end{figure}
+
+Each CT entry also holds a per-PC stride state, updated by the
+tracked warp's demand loads; two consecutive agreeing
+observations freeze the stride. Stride state is reset on warp
+exit to prevent a CTA's tail from contaminating the next CTA's
+first iteration (raising the per-chain hit rate from 29\% to
+60\%). An optional \emph{speculative stride hint} lets a compiler
+bypass the observation phase by passing the element size directly,
+which helps kernels whose stride converges slowly. We size the CT
+at 32 entries and the TT at 8, with a confidence threshold of
+two; the sensitivity curve in \S\ref{sec:eval} shows these values
+sit well past the knee.
+
+\subsection{The Two-Step Prefetch}
+\label{sec:design-pipeline}
+
+The Index Prefetch Unit (IPU), Prefetch Request Buffer (PRB), and
+Data Prefetch Unit (DPU) turn CT/TT lookups into actual L1 fills.
+Their joint design is the central novelty of GRASP. The challenge
+is that the data address depends on the \emph{value} returned by
+the index load, so it cannot be prefetched until that value
+arrives; CPU solutions based on per-thread lookahead PCs would
+replicate the prefetch state 64 times on a GPU SM, while prior
+GPU prefetchers (Snake, CAPS) sidestep the issue by predicting
+only the index stride. We instead split the prefetch into two
+pipelined stages: an index prefetch based on the learned stride,
+followed on its fill by a dependent data prefetch computed from
+\texttt{(base, scale)}. The PRB carries the chain metadata across
+the round trip.
+
+When a demand load hits a CT entry with a valid stride, the IPU
+issues an index prefetch for
+$\text{addr}\,+\,\text{stride}\,\times\,\text{distance}$ and
+allocates a PRB entry holding only the CT index ($\sim$1\,B).
+The L1 controller routes the fill through the PRB, where the DPU
+reads the returned index value and computes
+\begin{equation}
+  \text{data\_addr} = \text{base} + \text{index\_value} \times
+  \text{scale},
+  \label{eq:data-addr}
+\end{equation}
+emitting one data prefetch per target in the CT entry's
+\texttt{tt\_idx[]}. Sector-level tracking lets multi-sector index
+fills drain independently before the PRB entry is released.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/3-Design/prefetch_pipe.pdf}
+  \caption{Two-step prefetch pipeline overlapping both L2 round trips with the prior demand-load latency.}
+  \label{fig:pipe}
+\end{figure}
+
+Fig.~\ref{fig:pipe} makes the resulting overlap concrete.
+On the demand-only path, a single IMA chain pays roughly
+${\sim}560$ cycles for the index round trip and another
+${\sim}560$ cycles for the dependent data round trip---about
+$1{,}120$ cycles of fully serialized memory latency that the
+warp scheduler cannot hide.
+GRASP issues the index prefetch one iteration ahead, so its
+${\sim}560$-cycle round trip overlaps the prior iteration's
+demand load; the dependent data prefetch then chains directly
+off the index fill rather than waiting on a second demand.
+Both L2 round trips collapse into the inter-iteration interval,
+and the next demand index and data loads find their lines
+already in L1.
+
+The default prefetch \emph{distance} is one---unusual for a
+prefetcher, but imposed by SIMT: active lane counts can drop
+sharply between iterations (e.g., 32\,$\to$\,4 under worklist
+compaction), and a larger distance pre-allocates prefetches
+against the current mask, wasting 24--28 requests per mask
+transition at distance~4 versus at most ten at distance~1. The
+PRB holds 512 entries, oversized to absorb bursts.
+
+\subsection{Adaptive Throttling}
+\label{sec:design-tc}
+
+The Throttle Controller prevents prefetch-induced pollution under
+MSHR pressure without stalling useful prefetches in benign
+phases. A static MSHR threshold either over- or under-throttles,
+and prefetch quality is non-stationary: BFS stays above 90\%
+accuracy while SpMV alternates between clean and polluted phases
+that demand a tighter gate. We therefore let the MSHR threshold
+track \emph{recent} accuracy via a sliding-window controller
+(Fig.~\ref{fig:tc}).
+
+A 5\,000-cycle window measures \texttt{pf\_useful}/\texttt{pf\_useless}
+and the effective threshold is linearly interpolated between
+\texttt{mshr\_lo}\,=\,50\% (at accuracy~$\le$~30\%) and
+\texttt{mshr\_hi}\,=\,90\% (at accuracy~$\ge$~60\%). Crossing the
+threshold triggers a 200-cycle cooldown that suppresses data
+prefetches; index prefetches are exempt, since dropping them
+would break the two-step pipeline of the next iteration.
+
+\begin{figure}[b!]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/3-Design/throttle.drawio.pdf}
+  \caption{Adaptive throttle: the MSHR threshold tracks sliding-window prefetch accuracy, opening cooldown windows that suppress data prefetches.}
+  \label{fig:tc}
+\end{figure}
+
+This feedback loop is what separates the simpler T40C200
+static-threshold variant we evaluate as a baseline from the
+adaptive D5b version that delivers consistent gains across the 24
+workload$\,\times\,$dataset combinations in \S\ref{sec:eval}.
+
+\paragraph{Hardware budget.}
+GRASP's per-SM storage footprint---CD FIFOs, CT, TT, PRB, IST, and
+throttle counters combined---totals approximately 1.4\,KB, with the
+detailed breakdown and comparison against prior GPU and CPU
+prefetchers deferred to \S\ref{sec:eval}.
+
+\input{table_templates}  % Loads tab:grasp-budget for §5.5, tab:algorithms
+% and tab:datasets for §4, and tab:performance for §5.
 
 
 %%% ====================================================================
-%%% §5 Implementation
-%%% ====================================================================
-\section{Implementation}
-\label{sec:impl}
-
-\textit{[Accel-Sim / GPGPU-Sim implementation. 8 source files (grasp\_*.h/cc). Trace-driven IMA pair table for runtime value recovery. See 05\_implementation/.]}
-
-
-%%% ====================================================================
-%%% §6 Methodology
+%%% §4 Methodology
 %%% ====================================================================
 \section{Experimental Methodology}
 \label{sec:method}
 
-% Tables 1, 3, 4 belong here in the final paper
-\textit{[GPU config (Table~\ref{tab:gpu-config}), datasets (Table~\ref{tab:datasets}), benchmarks (Table~\ref{tab:ima-patterns}), baselines (Table~\ref{tab:prefetcher-config}).]}
+\noindent\textbf{Simulation.}\hspace{0.5em}
+We evaluate GRASP using Accel-Sim v1.3.0~\cite{khairy2020accelsim}
+on top of GPGPU-Sim 4.2.0, configured to model the NVIDIA A100
+(SM80) GPU. Table~\ref{tab:gpu-config} lists the full simulator
+and GPU parameters. Each application is simulated until all
+kernels complete, and per-kernel IPC and aggregated cache
+statistics are recorded.
+
+\smallskip
+\noindent\textbf{Benchmarks and Datasets.}\hspace{0.5em}
+We evaluate on nine graph and irregular kernels drawn from three
+benchmark suites (Table~\ref{tab:algorithms}): six core graph
+algorithms---BFS, SSSP, BC, CC, SpMV, and VC---from the Gardenia
+suite~\cite{xu2019gardenia}; one Maximal Independent Set kernel
+(MIS) and one graph Coloring kernel from the Pannotia
+suite~\cite{che2013pannotia}; and one Minimum Spanning Tree kernel
+(MST) from LonestarGPU~\cite{burtscher2012irregular}. The Gardenia
+kernels are run on five real-world graphs spanning citation, web,
+social, and road networks (Table~\ref{tab:datasets}); MIS additionally
+uses \texttt{flickr}, Color uses \texttt{ecology1}, and MST uses an
+\texttt{RMAT-12} input. After excluding kernel/dataset combinations
+that are infeasible on the simulator (e.g., VC on \texttt{flickr}
+and \texttt{roadNet-CA} due to coloring overflow), the evaluation
+comprises approximately 33 algorithm/dataset configurations.
+
+\smallskip
+\noindent\textbf{Comparison Points.}\hspace{0.5em}
+We compare GRASP against four baselines, referenced as (1)--(4)
+throughout Section~\ref{sec:eval}.
+\textbf{(1)~No~Prefetch} disables hardware prefetching entirely and
+provides the performance lower bound.
+\textbf{(2)~Snake}~\cite{mostofi2023snake} is the variable-length
+stride-chain prefetcher representing the current GPU stride state of
+the art.
+\textbf{(3)~CAPS}~\cite{koo2018caps} is a CTA-aware leading-warp
+stride prefetcher that explicitly excludes data-dependent loads.
+\textbf{(4)~Spare~Register}~\cite{lakshminarayana2014spare} is the
+only prior GPU prefetcher targeting indirect memory access; it
+propagates value tags through spare registers to prefetch one level
+of indirection, and we re-implement it on GPGPU-Sim~4.x for fair
+comparison on the SM80 platform. The Ideal-L1D upper bound used to
+quantify prefetching headroom in Section~\ref{sec:bg-latency} is not
+listed as a baseline---it is not a physically realizable
+prefetcher---but is shown alongside (1)--(4) in the result figures
+of Section~\ref{sec:eval} as a reference ceiling.
+
+\smallskip
+\noindent\textbf{Metrics.}\hspace{0.5em}
+We report four metrics, all restricted to IMA loads identified by
+the chain analysis (i.e., the denominator excludes non-IMA L1
+traffic), so that the numbers isolate prefetcher behavior on the
+access pattern of interest.
+\textbf{IPC~Speedup} is the ratio of geometric-mean IPC under each
+comparison point to that of (1)~No~Prefetch.
+\textbf{IMA~Coverage} is the fraction of IMA-related demand misses
+that the prefetcher converts into hits.
+\textbf{Accuracy} is the fraction of issued IMA prefetches that are
+eventually consumed by a matching demand request before eviction.
+\textbf{Timeliness}, reported separately from accuracy, is the
+fraction of useful prefetches that returned to L1 \emph{before} the
+matching demand arrived; unlike prior work that conflates the two,
+we report Accuracy and Timeliness as independent quantities so that
+early-but-stale and on-time-but-incorrect prefetches can be
+diagnosed separately. Per-SM hardware overhead is reported as part
+of the cost analysis in Section~\ref{sec:eval}.
 
 
 %%% ====================================================================
-%%% §7 Evaluation
+%%% §5 Evaluation
 %%% ====================================================================
 \section{Evaluation}
 \label{sec:eval}
 
-\subsection{Overall Performance}
-% Table 6 belongs here
-\textit{[IPC speedup across all workloads (Table~\ref{tab:performance}). GRASP vs baselines vs Ideal L1D.]}
+We evaluate GRASP on 28 workloads (detailed in
+\S\ref{sec:method}) against the four baselines defined there.
+The evaluation begins with prefetch quality in isolation, then
+explains the underlying mechanism, translates these into
+end-to-end performance, and closes with sensitivity analyses
+and hardware cost.
 
-\subsection{Prefetch Quality: Accuracy, Coverage, Timeliness}
-\textit{[BFS: acc 55.9\%, cov 93.3\%, time 89.6\%. SpMV: acc 28.8\%, cov 15.5\% — ×16 unroll + MSHR saturation.]}
 
-\subsection{Hardware Overhead}
-% Table 5 belongs here
-\textit{[GRASP budget (Table~\ref{tab:grasp-budget}): ~2.5 KB/SM shared by 64 warps ≈ 39 B/warp.]}
+\subsection{Prefetch Quality}
+\label{sec:eval-quality}
 
-\subsection{Sensitivity Study}
-\textit{[PRB entries, CT entries, prefetch degree, lookahead distance. 2×2 panel line plot.]}
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=\textwidth]{figures/5-evaluation/quality.pdf}
+  \caption{Prefetch quality across 27 workloads. GRASP
+    averages 58\% coverage, 78\% timeliness, and 71\% accuracy---
+    2--58$\times$ above the stride-only baselines. SR is
+    reconstructed from IPC speedup (see text).}
+  \label{fig:quality}
+\end{figure*}
 
-\subsection{Ablation Study}
-\textit{[Disable CD / IST / DPU / TC individually. SSSP +42.2\% full → breakdown.]}
+Fig.~\ref{fig:quality}(a) reports IMA coverage---the fraction
+of IMA-tagged L1 reads each prefetcher converts into hits or
+hit-reserved entries. GRASP averages 58\%, versus 18\% for
+Snake, 1\% for CAPS, and 25\% for Spare~Register~(SR). Snake and
+CAPS detect only regular strides and by construction exclude
+data-dependent loads; SR captures one hop of indirection but
+cannot share learned patterns across the 64 warps of an~SM.
+GRASP's coverage exceeds 65\% on every flickr and road-network
+input but falls to 37--43\% on the sparse cit-Patents SpMV, VC,
+and CC kernels, whose Pattern~III/IV second hops are
+intrinsically unpredictable.
+
+Fig.~\ref{fig:quality}(b) reports timeliness---the fraction of
+\emph{useful} prefetches whose data has already returned to L1
+when the matching demand issues. Unlike prior work we report
+coverage and timeliness as independent quantities
+(\S\ref{sec:method}). GRASP averages 78\%, an order of magnitude
+above CAPS (3\%) and well ahead of Snake (65\%) and SR (54\%):
+the index pipeline issues the first-hop prefetch one or more
+iterations ahead of the demand so that the data hop fires with
+the resolved index already in L1. Timeliness drops to 25\% on
+\texttt{spmv\_cit} where the sparse row chain is shorter than
+the L2 round-trip.
+
+Fig.~\ref{fig:quality}(c) reports accuracy---the fraction of
+issued prefetches eventually consumed by a demand. GRASP
+averages 71\%, comparable to Snake (65\%) and well above CAPS
+(3\%) and SR (52\%). It exceeds 99\% on the six deterministic
+kernels (BFS, SSSP, and BC on \texttt{cit\_dir} and
+\texttt{road\_sym}), where the throttle admits only the most
+confident prefetches, and drops to 18\% on \texttt{spmv\_cit}
+and 24\% on \texttt{vc\_cit} because each outer worklist jump
+invalidates the CT \texttt{iter\_stride}.
+SR's instrumented quality counters were unavailable; its bars
+are reconstructed from its IPC speedup and shown as a reference
+envelope rather than measured ground truth.
+
+
+\subsection{Mechanism Analysis}
+\label{sec:eval-mech}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/5-evaluation/mechanism.pdf}
+  \caption{GRASP mechanism analysis. (a)~Per-algorithm L1 IMA
+    miss reduction. (b)~Pipeline funnel of successful delivery,
+    throttle drops, MSHR reservation failures, and residual
+    outcomes.}
+  \label{fig:mechanism}
+\end{figure}
+
+Fig.~\ref{fig:mechanism}(a) shows per-algorithm L1 IMA miss
+reduction. CC and MIS lead at 31\% and 30\%, followed by BFS
+(27\%) and SSSP (25\%)---kernels whose inner loops train IST
+quickly. CLR (18\%), SpMV (14\%), and BC (12\%) form a middle
+cluster with more diverse access patterns, and VC sits at only
+4\% because its $\times 16$ loop unroll inflates the distinct
+IMA PC count so that most chains never reach the training
+threshold. MST is excluded: its kernel has no measurable IMA
+chain on our inputs.
+
+Fig.~\ref{fig:mechanism}(b) decomposes GRASP's prefetch pipeline
+into \emph{Got Data}, \emph{Throttled}, \emph{Idx/Data RFAIL},
+and \emph{Other}. CC has the healthiest pipeline (66\% Got
+Data), directly explaining its 31\% miss reduction. SpMV and VC
+are dominated by Throttled (42\% and 27\%) and Idx~RFAIL (28\%
+and 35\%): their bandwidth-saturated inner loops push MSHR
+occupancy above the throttle's high-water mark and the few
+surviving attempts lose the reservation race to demand loads.
+MIS reveals a third mode---53\% throttled because its short
+kernel never stabilizes the sliding-window accuracy estimate, so
+the throttle stays conservative. Across all eight algorithms the
+miss reductions come not from brute-force issuance but from the
+throttle's selectivity, which preserves L1 bandwidth for the
+prefetches most likely to land on time.
+
+
+\subsection{Overall Performance vs State-of-the-Art}
+\label{sec:eval-perf}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/5-evaluation/speedup_vs_sota.pdf}
+  \caption{IPC speedup over No-Prefetch across 28 workloads.
+    GRASP averages $1.18\times$ (up to $2.22\times$ on
+    \texttt{cc\_flickr}), 11--18~pp ahead of Snake, CAPS, and
+    Spare~Register. Bars exceeding $1.30\times$ are clipped and
+    labelled with their true value.}
+  \label{fig:speedup}
+\end{figure}
+
+Fig.~\ref{fig:speedup} shows IPC speedup over the No-Prefetch
+baseline across all 28 workloads. GRASP averages
+\textbf{1.18$\times$}, substantially ahead of Snake
+(1.04$\times$), CAPS (1.00$\times$), and Spare~Register
+(1.07$\times$). Its largest gains come on frontier-driven graph
+kernels over dense inputs: 2.22$\times$ on \texttt{cc\_flickr},
+1.71$\times$ on \texttt{cc\_web}, 1.56$\times$ on
+\texttt{bfs\_web}, 1.47$\times$ on \texttt{sssp\_web}, and
+1.37$\times$ on \texttt{spmv\_web}---workloads where IST trains
+quickly (\S\ref{sec:eval-quality}) and the throttle keeps Got
+Data above 50\% (\S\ref{sec:eval-mech}).
+
+The gap over prior GPU prefetchers reflects their stride-only
+designs. Snake's variable-length stride chains explicitly
+exclude data-dependent loads (\S\ref{sec:related-stride}),
+limiting it to below 1.10$\times$ on every graph workload; CAPS
+filters out indirect addressing entirely and its GMEAN is
+neutral; Spare~Register captures one hop of indirection but
+tracks a single warp at a time on Fermi-era ISA and cannot share
+patterns across the 64-warp~SM.
+
+Six workloads are near-parity or regress: \texttt{cc\_cit}
+($-3.7$\%), \texttt{cc\_road} ($+0.1$\%), \texttt{spmv\_cit}
+($-1.8$\%), \texttt{spmv\_road} ($-1.0$\%), \texttt{vc\_cit}
+($+1.9$\%), and \texttt{vc\_web} ($+1.9$\%). Three root causes
+explain them. The CC cases are Pattern~IV pointer chasing: the
+second-hop data address is data-dependent and issued prefetches
+are dropped under MSHR contention (Fig.~\ref{fig:mechanism}(b)).
+The sparse SpMV cases run on graphs of average degree $\sim$3--5
+where the baseline L1 already hits on \texttt{col\_idx}, leaving
+no miss headroom to recapture. VC's $\times 16$ loop unroll
+spreads the IMA load across 16 distinct PCs, only 4--5 of which
+reach IST's confidence threshold before the kernel ends. All
+regressions stay within 4\%.
+
+
+\subsection{Sensitivity and Ablation}
+\label{sec:eval-sens}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/5-evaluation/component_ablation.pdf}
+  \caption{Component ablation. Data-only and Index-only
+    contributions are largely additive; Full GRASP averages
+    $1.22\times$ on the 20 ablation workloads.}
+  \label{fig:ablation}
+\end{figure}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/5-evaluation/throttle.pdf}
+  \caption{Throttle policy comparison. IPC is insensitive to
+    the throttle choice (1.20$\times$ for all three), but
+    coverage doubles from 23\% (Default) to 47\% (D5b).}
+  \label{fig:throttle}
+\end{figure}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/5-evaluation/sensitivity.pdf}
+  \caption{Sensitivity to (a)~prefetch distance $D$ and
+    (b)~per-SM storage budget~$S$, normalized per algorithm
+    group. $D{=}1$ is optimal for every group except CC, and
+    16 of 20 workloads are flat across $S_1$--$S_4$.}
+  \label{fig:sens}
+\end{figure}
+
+\paragraph{Component ablation.}
+We disable each half of GRASP's prefetch pipeline to isolate
+their contributions. \emph{Data-only} prefetches only the
+second-hop data using demand-issued index values;
+\emph{Index-only} prefetches only the index and leaves the data
+hop on demand; \emph{Full} is GRASP as described in
+\S\ref{sec:design}. Fig.~\ref{fig:ablation} shows that Data-only
+averages $1.13\times$, Index-only $1.08\times$, and Full
+$1.22\times$ over the 20 workloads with ablation data. The two
+halves are largely additive because they target different
+traffic: the data hop is the latency-critical end of the chain,
+while the index hop saturates DRAM bandwidth on the row-pointer
+stream (Index-only reaches $1.22\times$ on \texttt{spmv\_wg}).
+The sole exception is \texttt{cc\_rd}, where Full slightly trails
+Data-only because the index pipeline adds MSHR pressure on a
+sparse graph whose data hop alone was already sufficient.
+
+\paragraph{Throttle policy.}
+We compare our adaptive throttle (D5b) against no throttle
+(Default) and a static MSHR-threshold variant (T40C200).
+Fig.~\ref{fig:throttle}(a) shows that all three reach the same
+$1.20\times$ IPC GMEAN, but Fig.~\ref{fig:throttle}(b) shows a
+striking coverage gap: Default averages 23\% IMA data coverage,
+while D5b and T40C200 reach 47\% and 46\% respectively. Without
+a throttle, GRASP fires prefetches aggressively enough that half
+are dropped on MSHR reservation failure (Fig.~\ref{fig:mechanism}(b)),
+and actionable coverage is cut in half. The adaptive policy
+preserves end-to-end IPC while doubling the useful work
+extracted from the prefetch queue---headroom that a future
+design can exploit with tighter MSHR management.
+
+\paragraph{Distance and storage sensitivity.}
+Fig.~\ref{fig:sens}(a) sweeps the prefetch distance
+$D\in\{1,2,4,8\}$ and (b) the per-SM storage budget
+$S\in\{S_1{=}712\,\text{B},\,S_4{=}3.6\,\text{KB}\}$.
+For most algorithm groups $D{=}1$ is optimal: larger distances
+degrade BFS, SSSP, BC, and SpMV by 2--5\% through cache
+pollution. The exception is CC, which gains 11\% at $D{=}8$:
+its worklist has large batch distances between iterations, so
+an aggressive lookahead prefetches the next frontier's indices
+before they are needed. Storage sensitivity is negligible---16
+of 20 workloads are completely flat across $S_1$--$S_4$, and
+only SpMV and VC show variations under 3~pp. GRASP's 712\,B
+default already sits at the knee of both curves, so we fix
+$D{=}1$ and $S{=}S_1$ for all reported results.
+
+
+\subsection{Hardware Cost}
+\label{sec:eval-cost}
+
+\begin{table}[!htbp]
+  \caption{GRASP per-SM storage budget (default configuration).
+    Stride state and confidence counter are embedded in each CT
+    entry; the throttle controller's sliding-window state is a
+    fixed scalar.}
+  \label{tab:grasp-budget}
+  \centering
+  \small
+  \begin{tabular}{@{}lcrr@{}}
+    \toprule
+    \textbf{Component} & \textbf{Entries} & \textbf{Per-Entry} & \textbf{Total} \\
+    \midrule
+    CT (Chain Table)          & 32  & ${\sim}17$\,B & 544\,B \\
+    TT (Target Table)         & 8   & ${\sim}5$\,B  & 40\,B  \\
+    PRB (Prefetch Req. Buffer)& 512 & ${\sim}1$\,B  & 512\,B \\
+    CD FIFO                   & 20  & ${\sim}15$\,B & 300\,B \\
+    SM global state           & 1   & ${\sim}2$\,B  & 2\,B   \\
+    TC sliding window         & ---           & ---  & ${\sim}20$\,B  \\
+    \midrule
+    \textbf{Total}            &     &               & \textbf{${\sim}1.4$\,KB} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Table~\ref{tab:grasp-budget} lists GRASP's per-SM storage
+breakdown. The total of 1.4\,KB is dominated by the Chain Table
+(544\,B) and the Prefetch Request Buffer (512\,B); CD FIFOs, TT,
+and throttle state account for the remaining 362\,B. Per-warp
+this works out to roughly 22\,B---an order of magnitude smaller
+than a single thread's register-file slice.
+
+As a fraction of A100's 128\,KB L1D, GRASP adds only 1.1\%.
+Compared to CPU IMA prefetchers (IMP 0.7\,KB/core,
+DMP 0.9\,KB/core, Tyche 0.57\,KB/core), GRASP fits in the same
+envelope. Crucially, the 1.4\,KB is shared by all 64 warps on
+the SM, so the effective per-warp cost of 22\,B is roughly
+one-third of the per-thread CPU overhead.
+
+Against prior GPU prefetchers, GRASP matches Spare~Register's
+${\sim}1.4$\,KB per-SM envelope but delivers $1.18\times$
+GMEAN speedup versus SR's $1.07\times$ (Fig.~\ref{fig:speedup}).
+Against Snake's ${\sim}0.8$\,KB, GRASP's additional 0.6\,KB
+buys coverage of Patterns~I--III which the stride-only Snake
+cannot reach (\S\ref{sec:eval-quality}).
 
 
 %%% ====================================================================
-%%% §8 Related Work
+%%% §6 Related Work
 %%% ====================================================================
 \section{Related Work}
 \label{sec:related}
 
+GRASP is the first dedicated IMA prefetcher for modern GPU
+architectures, and the first to exploit ISA-exposed structural
+information for zero-inference chain detection. We position it
+against four lines of prior work.
+
 \subsection{CPU IMA Prefetchers}
-\textit{[IMP, DMP, Tyche, Gretch, Prodigy, Magellan — single-thread assumptions.]}
+\label{sec:related-cpu}
 
-\subsection{GPU Stride/Stream Prefetchers}
-\textit{[MT-Prefetch, APOGEE, Snake, CAPS — stride-only, cannot handle data-dependent addresses.]}
+CPU hardware prefetchers have explored multiple strategies for
+detecting indirect access patterns at runtime.
+IMP~\cite{yu2015imp} pioneered address-difference matching with
+shift-search, inferring the relation between index and data streams
+by accumulating address sequences that GRASP sidesteps through
+direct ISA extraction.
+Prodigy~\cite{talati2021prodigy} encodes a data-indirection graph at
+compile time and feeds it to a runtime prefetcher, requiring
+compiler co-design that GRASP avoids.
+DMP~\cite{fu2024dmp}, the current CPU SOTA, uses differential-sequence
+matching to identify single, range, multi-level, and multi-way
+indirection pairs, yet still operates on a black-box address stream.
+DVR~\cite{naithani2023dvr} introduces a decoupled vector-runahead
+subthread that speculatively vectorizes indirect chains on
+out-of-order cores, a microarchitectural resource unavailable under
+SIMT execution.
+Tyche~\cite{xue2024tyche} propagates dependencies bilaterally through
+short register chains, a mechanism that is infeasible to replicate
+under the 64-warp SIMT context of a modern GPU SM.
+Additional CPU-side IMA prefetchers explore temporal, differential,
+runahead, and slice-based
+detection~\cite{cavus2020atp,kaushik2021gretch,ainsworth2018event,naithani2021vectorrunahead,naithani2020precise,litz2022crisp,bakhshalipour2018domino,fu2025magellan}.
+All of these mechanisms assume a single-threaded instruction stream
+with per-core state; directly replicating them per GPU warp would
+incur the per-SM storage cost analyzed in
+Section~\ref{sec:bg-prior}.
 
-\subsection{GPU Irregular Access Optimizations}
-\textit{[Spare Register, DSAP, software prefetching on GPU — limited scope or require compiler support.]}
+\subsection{GPU Prefetchers}
+\label{sec:related-stride}
+
+GPU prefetching research has steadily advanced from fixed strides to
+chains of strides, yet every proposal in this line assumes memory
+addresses can be predicted without consulting intermediate loaded
+values.
+MT-Prefetch~\cite{lee2010manythread} introduced many-thread-aware
+stride detection with warp-ID indexing, establishing the stride-only
+baseline for a decade of follow-on work.
+CAPS~\cite{koo2018caps} added cooperative-thread-array-aware stride
+detection while explicitly skipping data-dependent loads---the exact
+class that GRASP targets.
+APRES~\cite{oh2016apres} classifies loads by access characteristics
+before prefetching, but its classifier recognises only regular
+strides.
+Snake~\cite{mostofi2023snake} introduces variable-length chains of
+strides with decoupling and throttling, sharing the structural
+vocabulary of ``chains'' with GRASP; the decisive difference is that
+Snake's chain elements are constant strides, whereas GRASP's chains
+carry data-value dependencies expressed directly by IMAD.WIDE
+operands.
+Further GPU prefetcher proposals explore orchestrated scheduling,
+warp-progress monitoring, stream patterns, energy-aware triggering,
+programmable shader-based prefetching, and unified-memory-aware
+prefetching~\cite{jog2013orchestrated,oh2018wasp,neves2018stream,sethia2013apogee,woo2010compass,ganguly2019interplay,guo2018dsap,panda2017gmap}.
+The sole prior GPU prefetcher to address indirect access directly is
+Spare Register~\cite{lakshminarayana2014spare}, which propagates
+value tags through spare registers to fetch one indirection level on
+the Fermi (2010) architecture; its three-iteration training latency
+and one-to-one index-to-data mapping have not been revisited in the
+intervening decade.
+
+\subsection{Adjacent Directions}
+\label{sec:related-adjacent}
+
+Three adjacent lines target the same memory-wall symptom along
+different axes. Software prefetching on GPUs and CPUs inserts
+explicit prefetch instructions through compiler
+analysis~\cite{jain2013linearize,ainsworth2019indirect,jain2024dlrm,deng2024swprefetch,sotiropoulos2025asap},
+trading kernel-size inflation and workload-specific tuning for
+latency hiding that GRASP delivers without recompilation.
+Specialised GPU prefetchers tackle disjoint subsystems---ray-tracing
+BVH traversal~\cite{chou2023treelet}, TLB-fill
+latency~\cite{ha2025latpc}, and warp-scheduling
+coupling~\cite{posluns2025tsp}---and are composable with GRASP.
+Hardware accelerators for graph and irregular
+workloads~\cite{ham2016graphicionado,mukkara2018hats,ahn2015tesseract,rahman2020graphpulse,geng2021igcn,orenes2022maple}
+replace the GPU pipeline with custom dataflows, an axis orthogonal
+to GRASP's cache-layer enhancement.
+GRASP thus occupies the previously empty cell at the intersection of
+\textit{GPU}, \textit{hardware-only}, and \textit{IMA-aware}.
 
 
 %%% ====================================================================
-%%% §9 Conclusion
+%%% §7 Conclusion
 %%% ====================================================================
 \section{Conclusion}
 \label{sec:conclusion}
 
-\textit{[GRASP exploits IMAD.WIDE structural property for zero-inference IMA detection on GPUs. Two-step index-then-data prefetch. Geomean +35.5\% IPC at ~2.5 KB/SM.]}
+Indirect memory access dominates L1 misses in GPU graph
+analytics and sparse workloads, yet fifteen years of GPU
+prefetching has targeted only stride patterns. We showed that
+NVIDIA's SASS instruction \texttt{IMAD.WIDE} already encodes
+every parameter a data-load prefetcher needs---base pointer,
+element scale, and index source register---turning chain
+detection from runtime statistical inference into a
+single-instruction observation at the issue stage. Building on
+this, GRASP detects
+\texttt{LDG}$\to$\texttt{IMAD.WIDE}$\to$\texttt{LDG} chains and
+runs a two-step index-then-data prefetch pipeline from a per-SM
+shared \emph{(base, scale)}-keyed table. On 28 A100 graph
+workloads, GRASP delivers a geometric-mean speedup of
+$1.18\times$ (up to $2.22\times$) at only $1.4$\,KB per SM,
+outperforming Snake, CAPS, and Spare~Register and showing that
+ISA-exposed structural information can replace statistical
+inference in hardware prefetcher design.
 
-
-\begin{acks}
-   \textit{[To be added after acceptance.]}
-\end{acks}
+% [Anonymization 2026-04-08] \begin{acks} removed per MICRO 2026 guideline
+% "No acknowledgments in the submission". Will be added at camera-ready.
 
 
 

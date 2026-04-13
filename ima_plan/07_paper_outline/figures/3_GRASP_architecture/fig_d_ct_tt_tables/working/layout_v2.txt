@@ -1,0 +1,33 @@
+Here is the optimized layout description for the requested MICRO/ISCA/HPCA academic figure.
+
+**OVERALL FIGURE STRUCTURE**
+The figure is organized into a clean, two-band horizontal layout with a mathematical formula acting as a visual separator between the bands. The upper band is split into a left column (containing two stacked blocks) and a right column (containing one tall block). The lower band contains a single, full-width hardware register table. The aspect ratio is 16:9, designed for a 7.0" IEEE double-column width.
+
+**UPPER BAND (Left Column)**
+*   **SpMV CUDA Source (Top-Left):** A light gray rounded box with a 1pt black outline. The label "SpMV CUDA Kernel" is placed above it in gray italic Times New Roman. The code is in Courier/Monospace. The line `sum += Ax[offset] * x[Aj[offset]];` is black and bold. A blue underline marks `Aj[offset]` with a small blue "Index Load" annotation below it. An amber underline marks the outer `x[...]` access with a small amber "Data Load" annotation below it.
+*   **Target Table (TT) (Bottom-Left):** Positioned directly below the CUDA box. The combined height of the CUDA box and the TT exactly matches the SASS box on the right. The title "Target Table (TT)" (bold) and "Entry 0" (gray italic) sit above. The table uses a hardware register diagram style: amber colored header cells with white text placed directly above white value cells with black text. The fields are "Valid" (value: green filled square), "Base Address" (value: `c[0x0][0x180]` with gray italic annotation "(pointer to x[] array)" below), and "Scale" (value: `4` with gray italic annotation "(sizeof(float))" below). Small gaps separate the field groups.
+
+**UPPER BAND (Right Column)**
+*   **SASS Assembly (x16 Unrolled Loop):** A tall, light gray rounded box spanning the full height of the upper band. The label sits above in gray italic. The code uses monospace font. Lines are color-coded and bolded as specified: blue for the first two `LDG.E` index loads (with circled 1 and 2), purple for the first two `IMAD.WIDE` instructions (with circled 1 and 2), amber for the first two `LDG.E` data loads (with circled 1 and 2), and gray for all other lines and ellipses.
+*   **Brackets:** On the right exterior of the SASS box, three colored brackets group the instructions: a blue bracket for "IMA Index Load", a purple bracket for "Addr Generation", and an amber bracket for "IMA Data Load".
+
+**SEPARATOR**
+*   **Formula:** Centered horizontally between the upper blocks and the lower table. Typeset mathematically: *Addr* with an italic subscript *data*, followed by `= base + scale × index` (using a proper multiplication symbol). "base" and "scale" are colored amber, and "index" is colored blue.
+
+**LOWER BAND**
+*   **Chain Table (CT):** A full-width hardware register diagram. The title "Chain Table (CT)" (bold) and "32 entries" (gray italic) sit above. Blue colored header cells with white bold text are placed directly above white value cells. The fields are grouped with small gaps: Group 1 "Key" (`Index Load PC`), Group 2 "Target Mapping" (`tt_idx`, `num_targets`), and Group 3 "Stride Learning" (`iter_stride`, `stride_valid`).
+*   **Rows:** Displays two populated rows (chains 1 and 2) and a third ellipsis row. `tt_idx` is `[0]` for all rows. `stride_valid` uses green text.
+
+**ROUTING AND ARROWS (No Crossings)**
+*   **Compilation:** A gray dashed arrow points right from the SpMV CUDA box to the SASS box, labeled "compiles to" in gray italic.
+*   **SASS to CT (Training Path):** Solid black arrows with circled numbers (1 and 2) route from the left side of the blue SASS `LDG.E` lines down to the corresponding `Index Load PC` entries in the CT.
+*   **CT to TT (Convergence):** Solid black arrows route upward from the `tt_idx` column in the CT, converging to point to the single Target Table (TT) entry, visually demonstrating the PC consolidation (many-to-one mapping).
+*   **SASS to TT (Operand Extraction):** Gray dashed arrows route leftward from the `c[0x180]` and `R16` operands in the purple `IMAD.WIDE` SASS lines directly to the "Base Address" and "Scale" cells of the TT.
+*   **TT to Formula:** Short downward arrows connect the "Base Address" and "Scale" cells in the TT to the corresponding amber "base" and "scale" terms in the formula.
+
+**ANNOTATIONS**
+*   **PC Consolidation:** Positioned in the blank space between the CT and TT. Bold text "16 chains -> 1 TT entry" with smaller text "All unrolled copies share the same (base, scale)" below it. A thin pointer line connects this to the `tt_idx` column.
+*   **Stride:** Positioned near the right side of the CT. Bold text "Stride = 64 B" with smaller text "16 elements x 4 B/element (x16 unroll)" below it. A thin pointer line connects to the `iter_stride` column.
+
+**STYLE CONSTRAINTS APPLIED**
+Strict adherence to a white background, 1-1.5pt black outlines, no shadows, no gradients, and no 3D effects. Times New Roman is used for all standard text and labels; Courier/Monospace is used for all code, hex values, and register names. The layout is highly compact, utilizing natural whitespace for routing and annotations to maintain a clean, print-friendly academic appearance.

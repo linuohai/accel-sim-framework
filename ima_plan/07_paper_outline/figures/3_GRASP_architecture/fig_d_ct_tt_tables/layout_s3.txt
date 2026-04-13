@@ -1,0 +1,44 @@
+**[System Settings & Canvas]**
+Aspect Ratio: 16:9
+Resolution: 1K (1920x1080)
+Background: Solid White (#FFFFFF)
+Global Style: Clean academic computer architecture diagram (MICRO/ISCA/HPCA style). Flat 2D vector graphic. NO drop shadows, NO gradients, NO 3D effects. All bounding boxes have 4-6pt rounded corners. Line weights are crisp and uniform (1.5pt to 2pt).
+
+**[Top Strip: y=0% to 18%]**
+- Text Element: At x=5%, y=5%, left-aligned. Text: "SpMV SASS — x16 Unrolled IMAD.WIDE". Font: Dark gray (#333333), Bold, 16pt, Sans-serif.
+- Horizontal Box Array: Centered horizontally at y=10%. Four light gray (#F0F0F0) filled rectangles with 1.5pt dark gray borders, spaced evenly.
+  - Box 1 Text: "PC 0x0480: IMAD.WIDE R8, R9, R16, c[0x180]" (Monospace, 10pt, dark gray).
+  - Box 2 Text: "PC 0x0490: IMAD.WIDE R26, R27, R16, c[0x180]" (Monospace, 10pt, dark gray).
+  - Box 3 Text: "PC 0x04b0: ..." (Monospace, 10pt, dark gray).
+  - Box 4 Text: "... x16 total" (Italic, 10pt, dark gray).
+- Annotation: A thin black curly brace facing upwards, spanning the entire width of the 4 boxes directly below them at y=15%. Centered below the brace, text: "All share same base + scale" (Italic, 11pt, dark gray).
+
+**[Center Panel: x=30% to 70%, y=25% to 60%]**
+- Main Formula Box: Large rounded rectangle centered at y=30%. Fill color: {KEY}. Border: None. Text: "data_addr = base_addr + index_value x scale" (White, Bold, 20pt, Sans-serif, centered).
+- Sub-boxes: Three vertically stacked rounded rectangles directly below the main formula box (y=40% to 55%). Fill: White. Border: 2pt solid {KEY}.
+  - Sub-box 1 Text: "base=c[0x180], idx=0x1A3F, scale=4 -> addr=base+0x68FC" (Monospace, 10pt, black).
+  - Sub-box 2 Text: "base=c[0x180], idx=0x2B10, scale=4 -> addr=base+0xAC40" (Monospace, 10pt, black).
+  - Sub-box 3 Text: "base=c[0x180], idx=0x0C44, scale=4 -> addr=base+0x3110" (Monospace, 10pt, black).
+
+**[Left Panel: x=2.5% to 27.5%, y=25% to 60%]**
+- Title: Centered at top of panel (y=22%). Text: "Chain Table (CT)" (Color: {STORAGE}, Bold, 13pt, Sans-serif).
+- Table Structure: Stacked grid with 3px white gaps between cells. Fill: White. Border: 1.5pt solid {STORAGE}.
+  - Row 1 (Split horizontally): Left cell "index_PC: 0x0460" | Right cell "data_PC: 0x04a0".
+  - Row 2 (Split into thirds): "tt_idx: [0]" | "stride: 64" | "valid: ✓" (check-mark icon in {SUCCESS} color).
+- Arrow: A curved arrow (color: {LOGIC}, 2pt stroke) originating from the right edge of Row 1, pointing rightwards to the "index_value" part of the Center Main Formula Box. Arrow label above curve: "index_value from index load" (10pt, Sans-serif).
+- Footer Text: Centered below the table at y=55%. Text: "x16 entries, all tt_idx=[0]" (Italic, 10pt, dark gray).
+
+**[Right Panel: x=72.5% to 97.5%, y=25% to 60%]**
+- Title: Centered at top of panel (y=22%). Text: "Target Table (TT)" (Color: {STORAGE}, Bold, 13pt, Sans-serif).
+- Table Structure: Stacked grid with 3px white gaps between cells. Fill: White. Border: 1.5pt solid {STORAGE}.
+  - Row 1 (Full width): "base_addr: c[0x0][0x180]".
+  - Row 2 (Split horizontally): Left cell "scale: 4" | Right cell "valid: ✓" (check-mark icon in {SUCCESS} color).
+- Arrow: A curved arrow (color: {LOGIC}, 2pt stroke) originating from the left edge of the TT table, pointing leftwards to the "base_addr" and "scale" parts of the Center Main Formula Box. Arrow label above curve: "base_addr, scale from TT" (10pt, Sans-serif).
+- Footer Text: Centered below the table at y=55%. Line 1: "1 entry shared by all 16 CTs" (Regular, 10pt). Line 2: "Shared across entire SM (all warps)" (Bold, 10pt, dark gray).
+
+**[Bottom Legend: y=95%, Centered horizontally]**
+- Layout: Horizontal row of items spaced equally.
+- Item 1: Solid square filled with {STORAGE} + Text "Storage" (11pt, Sans-serif).
+- Item 2: Solid square filled with {LOGIC} + Text "Logic" (11pt, Sans-serif).
+- Item 3: Solid square filled with {KEY} + Text "Key Formula" (11pt, Sans-serif).
+- Item 4: Solid square filled with {SUCCESS} + Text "Validation" (11pt, Sans-serif).

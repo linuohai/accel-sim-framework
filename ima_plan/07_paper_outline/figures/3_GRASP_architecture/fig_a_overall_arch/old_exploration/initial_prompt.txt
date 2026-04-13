@@ -1,0 +1,98 @@
+CRITICAL EXACT SPELLING — use ONLY these names, do NOT invent alternatives:
+- "Streaming Multiprocessor (SM)" — NOT "Multiposster", NOT "Multiprocesser"
+- "Chain Detector (CD)" — NOT "Conflict Detector", NOT "Change Detector"
+- "Chain Table (CT)" — NOT "Confidence Table", NOT "Context Table"
+- "Target Table (TT)" — NOT "Translation Table", NOT "Training Table"
+- "Iteration Stride Tracker (IST)"
+- "Index Prefetch Unit (IPU)" — NOT "Index Prediction Unit"
+- "Data Prefetch Unit (DPU)" — NOT "Data Protection Unit"
+- "Prefetch Request Buffer (PRB)" — NOT "Prefetch Buffer"
+- "Address Computation Unit (ACU)"
+- "Throttle Controller (TC)" — NOT "Tag Checker"
+- "Prefetch Queue (PQ)"
+- "L1 D-Cache" with "MSHR" inside — NOT "L1 Cashe"
+- "L2 Cache" — NOT "L2 Cashe"
+- "Prefetch" — NOT "Preffech", NOT "Preftech", NOT "Prefetech"
+- "GRASP" — always uppercase
+
+Create a PROFESSIONAL publication-quality hardware architecture block diagram for a computer architecture paper targeting MICRO/ISCA/HPCA conferences.
+
+## Figure Type
+Architecture Diagram — GPU Prefetcher Hardware Overview (DMP HPCA'24 style)
+
+## Visual Style: 中性高对比学术风 (Neutral High-Contrast Academic Style)
+### MUST follow:
+- White background, clean and professional
+- NO title in the figure (title goes in LaTeX caption)
+- Component boxes: SOLID COLOR FILL with WHITE text inside, rounded corners (4-6pt)
+- Storage units (tables, buffers, queues): MEDIUM BLUE #4472C4 fill, WHITE text
+- Logic units (detectors, computation): MEDIUM PURPLE #7B68AE fill, WHITE text
+- External/existing hardware: WHITE fill, dark border #2C3E50, dark text
+- Arrow semantics: Black solid = Training path, Green dashed #2D8653 = Index prefetch, Red dashed #C0392B = Data prefetch, Gray dashed #95A5A6 = Control
+- Lines: 1.0-1.5pt, small triangular arrowheads
+- NO shadows, NO gradients, NO 3D effects
+- Component labels: abbreviation 10pt Bold + (full name) 8pt Regular below, all in WHITE on colored boxes
+- Bottom legend showing arrow color/style meanings + box color meanings
+- Numbered step circles ①②③④⑤ on key data flow arrows
+
+### MUST NOT have:
+- Any title text at the top of the figure
+- Shadows, gradients, 3D perspective
+- Rainbow or excessive colors (only blue, purple, white, green-dashed, red-dashed, gray-dashed)
+- Text paragraphs or explanations inside the figure
+
+## Components (EVERY component appears EXACTLY ONCE)
+
+### External/Existing SM Components (WHITE fill, #2C3E50 border):
+1. "Warp Scheduler" — white box, top-left of SM area
+2. "Issue Stage" — white box, below Warp Scheduler
+3. "L1 D-Cache" — white box, larger, below Issue Stage, contains small gray sub-box "MSHR" inside
+4. "L2 Cache" — white box, below the entire SM band
+
+### GRASP Components — "Chain Detection" sub-region:
+5. "CD (Chain Detector)" — PURPLE #7B68AE box, top of detection region
+6. "CT (Chain Table)" — BLUE #4472C4 box, below CD. Contains embedded smaller box "IST (Iteration Stride Tracker)" inside
+7. "TT (Target Table)" — BLUE #4472C4 box, beside or below CT
+
+### GRASP Components — "Prefetch Generation" sub-region:
+8. "IPU (Index Prefetch Unit)" — PURPLE #7B68AE box
+9. "PRB (Prefetch Request Buffer)" — BLUE #4472C4 box
+10. "ACU (Address Computation Unit)" — PURPLE #7B68AE box
+11. "DPU (Data Prefetch Unit)" — PURPLE #7B68AE box
+12. "TC (Throttle Controller)" — PURPLE #7B68AE box, smaller size
+13. "PQ (Prefetch Queue)" — BLUE #4472C4 narrow vertical box
+
+## Layout
+- Direction: Primarily left-to-right within the SM band
+- Overall: One large rectangle divided into two horizontal bands
+  - TOP BAND (~70% height): "Streaming Multiprocessor (SM)" label at top-left corner, light gray #F5F5F5 background
+    - LEFT SIDE (~30% width): SM core internals stacked vertically (Warp Scheduler → Issue Stage → L1 D-Cache)
+    - RIGHT SIDE (~65% width): GRASP prefetcher in a dashed gray #BFBFBF rectangle labeled "GRASP" at top-right
+      - Left sub-region: "Chain Detection" label, contains CD, CT (with IST), TT
+      - Right sub-region: "Prefetch Generation" label, contains IPU, PRB, ACU, DPU, TC, PQ
+  - BOTTOM BAND (~25% height): "L2 Cache" white box, centered
+  - Gap between bands for Req/Rsp arrows
+
+## Connections (BE EXPLICIT ABOUT DIRECTION)
+1. Issue Stage → CD: BLACK SOLID arrow going RIGHT, label "issued instructions (PC, dst_reg, src_regs)", numbered ①
+2. CD → CT: BLACK SOLID arrow, label "chain entry"
+3. CD → TT (or CT → TT): BLACK SOLID arrow, label "tt_idx"
+4. CT/IST → IPU: GRAY DASHED arrow crossing the vertical divider, label "chain + stride info"
+5. IPU → PRB: GREEN DASHED arrow, label "index prefetch", numbered ②
+6. PRB → L1 D-Cache: GREEN DASHED arrow, label "to L1/L2", numbered ③
+7. L1 D-Cache fill → ACU: GREEN DASHED arrow, label "fill completion (index value)", numbered ④
+8. ACU → DPU: arrow showing computation flow
+9. DPU → PQ: RED DASHED arrow, label "data prefetch request", numbered ⑤
+10. PQ → L1 D-Cache: RED DASHED arrow, label "data PF injection"
+11. TC → L1/MSHR: GRAY DASHED arrow, label "monitor MSHR / suppress prefetches"
+12. L1 D-Cache → L2 Cache: BLACK SOLID arrow going DOWN, label "Req"
+13. L2 Cache → L1 D-Cache: BLACK SOLID arrow going UP, label "Rsp"
+
+## Legend (bottom of figure, single horizontal row)
+■ #4472C4 Storage (CT, TT, PRB, IST, PQ)
+■ #7B68AE Logic (CD, IPU, DPU, ACU, TC)
+□ white External (SM, L1, L2)
+── black solid Training path
+-- green dashed Index prefetch path
+-- red dashed Data prefetch path
+-- gray dashed Control

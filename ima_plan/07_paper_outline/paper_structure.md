@@ -1,6 +1,6 @@
 # GRASP Paper Structure (Authoritative Outline)
 
-> 最近更新: 2026-04-06
+> 最近更新: 2026-04-08
 > 目标会议: MICRO 2026 (11 pages body + unlimited references, no appendix)
 > 本文件是论文结构的唯一权威定义。写作时以此为准。
 >
@@ -180,11 +180,23 @@ GPU ISA 中的 IMAD.WIDE 指令天然暴露了 IMA 的结构参数，GRASP 利�
 
 ---
 
-## §2 Background & Motivation (1.5 pages) `[占位符]`
+## §2 Background & Motivation (~2 pages) `[已完成 v2 — 2026-04-07]`
 
-> 目标: 为非 GPU 专家提供必要背景 + 定量建立 prefetching 动机 + 展开 IMAD.WIDE insight
-> 对应 Insight: #2(L1/L2不对称), #3(IMA占L1miss主体), #8(四类pattern), #9(Ideal天花板)
-> **细化条件**: 需提供 Fig 2(SM架构), Fig 3(四类Pattern), Fig 4(L1/L2), Fig 5(SASS链)
+> 目标: 建立 GPU + IMA 心智模型 → 量化 latency crisis → 论证现有方案无解 → 落地 IMAD.WIDE Insight。**§3 Key Insight 整章已下沉为 §2.5**，原 §3 整章移除，后续 sections 全部降级 1 位（原 §4 GRASP Design → §3 等）。
+> 对应 Insight: #1(零推断检测), #2(L1/L2不对称), #3(IMA占L1miss主体), #7(覆盖率), #9(Ideal天花板)
+> 状态: Fig 2 (GPU.pdf) ✓ Fig 3 (csr_spmv.pdf) ✓ Fig 4 (warp_gap.pdf) ✓ Fig 5 (IMA_chain.pdf) ✓ Table 1 (CPU 迁移代价) ✓
+>
+> **5-subsection 三幕叙事结构（locked v2，按 Snake 节奏）**:
+>
+> | Subsection | Act | 内容要点 | 视觉资产 |
+> |---|---|---|---|
+> | §2.1 GPU Memory Hierarchy | Setup | 严格按 Fig 2 白名单描述（无 64w/192KB 等数字，留到 §2.3/§2.4） | Fig 2 |
+> | §2.2 The Indirect Memory Access Pattern | Setup | CSR + SpMV running example + 概念三步硬件执行（**无 SASS 代码**，SASS 留到 §2.5） | Fig 3 |
+> | §2.3 IMA Breaks Warp Latency Hiding | Obstacle A | Little's Law 推导 + Fig 4 (warp gap, 6 Gardenia 全部 ≥2.5×) + 引用 Fig 1 (L1 miss + L2 hit) → 末句 "need a prefetcher" | Fig 4 + Eq 1 + Fig 1 引用 |
+> | §2.4 Why Existing Prefetchers Fall Short | Obstacle B | CPU 检测塌陷 + Table 1 per-warp 复制爆 19-30% L1 + Spare Register Fermi 假设过时 → 末句 "yet none has examined the SASS ISA itself" | Table 1 |
+> | §2.5 The IMAD.WIDE Insight | Opening | IMAD.WIDE 结构性论证 + Fig 5 (chain + operand 分解) + 跨架构稳定性 (5/6 Gardenia ≥86%, BC 78%) + zero-inference 论证 → 钩 §3 Design | Fig 5 |
+>
+> **数字搬家**: 64 warps/SM 在 §2.3 ¶3 首次引入；192 KB L1 在 §2.4 ¶3 首次引入；都引用 `nvidia2020a100`。Fermi 16 KB / 128 B line 在 §2.4 ¶4 出现。
 
 ### §2.1 GPU 执行模型与内存层次 (~0.3 page)
 
@@ -420,14 +432,14 @@ GPU ISA 中的 IMAD.WIDE 指令天然暴露了 IMA 的结构参数，GRASP 利�
 
 ---
 
-## §4 Methodology (0.5 pages) `[占位符]`
+## §4 Methodology (0.5 pages) `[已细化]`
 
-> **细化条件**: 需确认最终 benchmark + dataset 范围（Table 3）
+> **状态**: 2026-04-08 已写入 main.tex line 1106-1180（plan: `.claude_global/plans/replicated-chasing-pizza.md`）。4 个 block (Simulation / Benchmarks / Comparison Points / Metrics) 句子级填充完成，编译验证通过。
 
 ### §4.1 仿真框架
 
 - Accel-Sim / GPGPU-Sim (trace-driven mode)
-- GPU 配置: SM80_A100 (108 SMs, 64 warps/SM, 32KB L1D, 40MB L2)
+- GPU 配置: SM80_A100 (108 SMs, 64 warps/SM, 128KB L1D, 40MB L2)
 - 配置文件: `gpu-simulator/gpgpu-sim/configs/tested-cfgs/SM80_A100/`
 
 ### §4.2 Benchmarks & Datasets
@@ -568,41 +580,50 @@ GPU ISA 中的 IMAD.WIDE 指令天然暴露了 IMA 的结构参数，GRASP 利�
 
 ---
 
-## §6 Related Work (0.5 pages) `[占位符]`
+## §6 Related Work `[已完成 v2 — 2026-04-08]`
 
-> 组织: 三分法 (CPU IMA / GPU Prefetching / GPU IMA)
-> 参考: Snake §6, DMP §VI
-> **细化条件**: 无图表依赖，可直接细化
+> 组织: **三分法** (CPU IMA / GPU Prefetchers / Adjacent) — v2 合并 GPU stride + GPU IMA void
+> 参考: Snake §6 (terse), DMP §VI (comprehensive)
+> 写作策略: 混合 single-citation 精析 + batch 引用
+> 实装: `main.tex` §6 v1 (2026-04-08, 4-section) → v2 合并 §6.2+§6.3, 压缩 §6.4
+> 详细写作计划: `.claude_global/plans/tingly-cooking-snail.md`
 
-### §6.1 CPU IMA Prefetching (~0.15 page)
+### §6 Opening (R-2 uniqueness reassertion)
 
-**Hardware**: IMP[MICRO'15], ATP[TACO'20], Gretch[TACO'21], DMP[HPCA'24], Tyche[TACO'24]
-- 共性: 地址差分 / 依赖链方法, per-core 状态表
-- 差异: GRASP 利用 GPU ISA 暴露的参数, 避免 trial-and-error; per-SM shared 64× 分摊
+> "GRASP is the first dedicated IMA prefetcher for modern GPU architectures, and the first to exploit ISA-exposed structural information for zero-inference chain detection."
 
-**Software/Accelerator**: Prodigy[HPCA'21], Magellan[ISCA'25], DX100[ISCA'25], ASaP[SC'25]
-- 共性: 编译器分析 + 特殊硬件支持
-- 差异: GRASP 纯硬件, 无需编译器修改或特殊 API
+### §6.1 CPU IMA Prefetchers
 
-### §6.2 GPU Prefetching (~0.2 page)
+- **精析 (5)**: IMP [MICRO'15], Prodigy [HPCA'21], DMP [HPCA'24], DVR [MICRO'23], Tyche [TACO'24]
+- **Batch (8)**: ATP, Gretch, Event-Trigger [ASPLOS'18], Vector Runahead [ISCA'21], Precise Runahead [HPCA'20], CRISP [ASPLOS'22], Domino [HPCA'18], Magellan [ISCA'25]
+- **Closing**: "assume single-threaded instruction stream with per-core state; replicating per warp → 19-30% L1 storage (see §2.4)"
 
-**Stride-based**: Many-Thread[MICRO'10], APOGEE[PACT'13], WASP[TC'18], CAPS[IPDPS'18], Snake[MICRO'23]
-- 共性: 假设地址流存在 stride/stream pattern
-- 差异: GRASP 处理 data-dependent access, stride 仅用于 index 预测
+### §6.2 GPU Prefetchers (merged from old §6.2 + §6.3)
 
-**Scheduling-integrated**: Orchestrated[ISCA'13], APRES[ISCA'16]
-- 共性: prefetching + warp scheduling 协同
-- 差异: GRASP 与 scheduler 正交, 可叠加
+- **精析 (4) — stride**: MT-Prefetch [MICRO'10], CAPS [IPDPS'18], APRES [ISCA'16], Snake [MICRO'23]
+- **Batch (8) — stride family**: Orchestrated [ISCA'13], WASP [TC'18], Stream [JSupercomp'18], APOGEE [PACT'13], COMPASS [ASPLOS'10], Ganguly UVM [ISCA'19], DSAP [Access'18], G-MAP [DAC'17]
+- **Spare Register tail (1)**: 2-sentence trailing note instead of standalone subsection — "sole prior GPU prefetcher to address indirect access directly … three-iteration training latency and one-to-one mapping have not been revisited in the intervening decade"
 
-**Other**: Treelet[MICRO'23] (RT-specific), COMPASS[ASPLOS'10] (programmable shader prefetch)
+### §6.3 Adjacent Directions (compressed)
 
-### §6.3 GPU Irregular Memory Access (~0.15 page)
+Three batch-cite clusters in five sentences total (was three italic-labeled paragraphs in v1):
 
-**Spare Register** [HPCA'14]: 最直接的前驱
-- 差异化: tag-based vs ISA-structural; 3-iteration vs 1-instruction; single-layer vs multi-target; Fermi vs SM80
+**(a) Software prefetching**: jain2013linearize [MICRO'13], ainsworth2019indirect [ToCS'19], jain2024dlrm [MICRO'24], deng2024swprefetch [DaMoN'24], sotiropoulos2025asap [SC'25]
 
-**DSAP** [2018]: BFS-specific, 不具通用性
-**SW Prefetch GPU** [DaMoN'24]: 指令开销限制 compute-light IMA
+**(b) Specialised GPU prefetchers**: chou2023treelet [MICRO'23], ha2025latpc [MICRO'25], posluns2025tsp [MICRO'25]
+
+**(c) Graph & irregular accelerators**: ham2016graphicionado [MICRO'16], mukkara2018hats [MICRO'18], ahn2015tesseract [ISCA'15], rahman2020graphpulse [MICRO'20], geng2021igcn [MICRO'21], orenes2022maple [ISCA'22]
+
+**Closing (chapter-level, natural hand-off to §7)**:
+> "GRASP thus occupies the previously empty cell at the intersection of *GPU*, *hardware-only*, and *IMA-aware*."
+
+### Citation inventory (v2)
+
+- **Total**: 40 distinct cites (preserved through the merge)
+- **MICRO hits**: 13 (IMP, DVR, Snake, MT-Prefetch, Jain&Lin, DLRM, Treelet, LATPC, TSP, GraphPulse, HATS, I-GCN, Graphicionado)
+- **New bib entries added (v1)**: 24 (see `sample-base.bib` "§6 Related Work — additional citations")
+- **Dropped**: `chatterjee2014rethinking` / Lashgar&Baniasadi — venue unverified
+- **v2 changes vs v1**: §6.2 + §6.3 → merged §6.2 "GPU Prefetchers"; §6.4 → compressed §6.3 "Adjacent Directions"; Spare Register downgraded from solo subsection to 2-sentence trailing note in §6.2; cite count unchanged
 
 ---
 

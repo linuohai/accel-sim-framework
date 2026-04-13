@@ -1,0 +1,21 @@
+Create a computer architecture diagram with a 16:9 aspect ratio, a strict white background, no shadows, no gradients, no 3D effects, and no title. All structural boxes and table cells must use 1-1.5pt black outlines. Use Times New Roman for all standard text and labels, and Courier/Monospace exclusively for code and hexadecimal values. Ensure a minimum 8pt equivalent text size. 
+
+In the top-left area, place a gray #F5F5F5 rounded box (no border) containing SpMV CUDA source code in Courier. Underline the text `Aj[offset]` in blue #2B5EA7 with a label "Index Load". Underline the text `x[...]` in amber #D4A843 with a label "Data Load". 
+
+Below the CUDA code in the mid-left area, draw a Target Table (TT). The TT must have a purple #6C3483 header with white bold text "Target Table (TT)" and gray italic text "Entry 0". Format the table with grouped columns: "Valid" and "Base Address | Scale", separated by a thin vertical gap. Use a solid green #5AA469 square (no checkmark) to represent the valid bit.
+
+On the right side of the upper area, place a tall gray #F5F5F5 rounded box (no border) containing SASS Assembly code in Courier. Color-code specific lines: color `LDG.E` index loads marked (1) and (2) in blue #2B5EA7, `IMAD.WIDE` lines in purple #6C3483, and `LDG.E` data loads in amber #D4A843. All other code lines should be gray. On the right edge of this code box, add grouping brackets with corresponding text: a blue bracket labeled "IMA Index Load", a purple bracket labeled "Addr Generation", and an amber bracket labeled "IMA Data Load".
+
+In the middle of the figure, horizontally centered below the upper components, place a mathematical formula: Addr_{data} = base + scale \cdot index. Format this with a proper subscript and a multiplication dot. Color the words "base" and "scale" in purple #6C3483, and the word "index" in blue #2B5EA7.
+
+In the lower area on the left, spanning most of the width, draw exactly one Chain Table (CT). The CT must have a blue #2B5EA7 header with white bold text "Chain Table (CT)" and gray italic text "32 entries". Format the table with grouped columns and sub-headers: "Identification" (Valid | Index PC), "Target Mapping" (tt_idx[0] | Num Targets), and "Stride Learning" (Iter Stride | Stride Valid). Separate these three groups with thin vertical gaps. Use solid green #5AA469 squares for the valid bits. 
+
+On the far right of the lower area, draw an Iteration Stride Tracker (IST) inside a box with a 1.5pt blue #2B5EA7 outline and a white background. Inside, include text detailing a PC 0x03d0 stride calculation (A2 - A1 = 64 B).
+
+Add the following routing and annotations:
+Draw a gray dashed arrow from the CUDA Source box rightward to the SASS Assembly box, labeled "compiles to" in italic. 
+Draw gray dashed arrows from the `c[0x180]` and `R16` operands in the purple SASS `IMAD.WIDE` lines leftward to the Base Address and Scale cells of the TT. 
+Draw black solid arrows from the blue SASS index load lines downward to the corresponding first two rows of the CT, labeled (1) and (2). 
+Draw black solid arrows from the `tt_idx[0]` column of the CT upward and leftward, converging into a single point at TT Entry 0. Near this convergence, place bold text "16 CT entries -> 1 TT entry" using a thin pointing line. This text must have no background box and no borders.
+Draw short upward arrows from the "base" and "scale" terms in the formula directly to the corresponding TT cells. 
+Draw a solid black arrow from the left edge of the IST block leftward into the "Iter Stride" column of the CT. Near this column, place bold text "Stride = 64B (x16 unroll x 4B/element)" using a thin pointing line, with no background box and no borders.

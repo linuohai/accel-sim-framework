@@ -1,0 +1,74 @@
+% Round 4 §5.5 Layout A: Hardware Cost Table (LaTeX fragment).
+% Standalone fragment — use \input{proto_r4_55_A.tex} from main.tex.
+%
+% ============================================================================
+% Data sources & assumptions
+% ============================================================================
+%
+% Numbers below trace to paper_structure.md §3.7 Table 2 + §5.6 Table 4
+%   ima_plan/07_paper_outline/paper_structure.md  (lines 402-416, 565-579)
+%
+% GRASP storage breakdown (per-SM, SM80_A100 default config):
+%
+%   Component           Entries  Per-Entry  Total      Source
+%   --------------------------------------------------------------------
+%   CD FIFO             20       16 B       320 B      paper §3.7
+%   CT (Chain Table)    32       16 B       512 B      paper §3.7 + grasp_config_t
+%   TT (Target Table)   8        8 B        64 B       paper §3.7 + grasp_config_t
+%   IST (Stride Trk)    64       16 B       1024 B     paper §3.7 (ist_ipt_size=64)
+%   PRB (Req Buffer)    32       8 B        256 B      paper §3.7 (recommended sizing)
+%   Misc (TC, ctrs)     —        —          ~100 B     paper §3.7 lump
+%   --------------------------------------------------------------------
+%   TOTAL                                   ~2276 B   ≈ 2.3 KB / SM
+%
+% Implementation note: grasp_config_t in grasp_prefetcher.h matches the above
+% (cd_fifo_depth=20, ct_size=32, tt_size=8, ist_ipt_size=64). The default
+% prb_capacity=1024 in source is a "Phase 1 large probe" — the paper uses the
+% recommended PRB sizing of 32 entries (256 B).
+%
+% Per-warp equivalent: 2276 B / 64 warps ≈ 35.6 B/warp (paper rounds to ~36 B).
+% System-wide: 2276 B × 64 SMs = 145 664 B ≈ 142 KB on SM80_A100.
+% Fraction of L1 cache: 2276 B / (128 KB) ≈ 1.7 % per SM.
+%
+% Comparison baselines (paper §5.6 Table 4):
+%   IMP   [MICRO'15]  0.9  KB / core  (CPU)
+%   DMP   [HPCA'24]   0.9  KB / core  (CPU)
+%   Tyche [TACO'24]   0.57 KB / core  (CPU)
+%   Snake [MICRO'23]  ~0.8 KB / SM    (GPU, ~12 B/warp)
+%   GRASP (this work) 2.3  KB / SM    (GPU, ~36 B/warp)
+%
+% If updating numbers, please keep proto_r4_55_B.py in sync.
+% ============================================================================
+
+\begin{table}[t]
+  \centering
+  \caption{GRASP per-SM hardware storage overhead (SM80\_A100 config). The
+    total of 2.3~KB is roughly $1.7\%$ of one SM's 128~KB L1 data cache and
+    $\sim 36$~B per warp.}
+  \label{tab:grasp_cost}
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{lrrl}
+    \toprule
+    \textbf{Component} & \textbf{Entries} & \textbf{Bytes} & \textbf{Function} \\
+    \midrule
+    CD FIFO            &  20 &      320 & Reg.\ dependency tracking \\
+    CT (Chain Table)   &  32 &      512 & Indexed IMA chain storage \\
+    TT (Target Table)  &   8 &       64 & Data PC + offset (one-to-many) \\
+    IST (Stride Trk.)  &  64 &     1024 & Per-PC iteration stride \\
+    PRB (Req.\ Buffer) &  32 &      256 & Pending prefetch requests \\
+    Misc (TC, ctrs)    &  -- & $\sim$100 & Throttle ctrl + counters \\
+    \midrule
+    \textbf{Total}     &     & \textbf{$\sim$2276} & \textbf{$\approx 2.3$~KB / SM} \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5em}
+  \footnotesize
+  \textbf{Comparison vs prior prefetchers (per-thread equivalent).}
+  IMP~[MICRO'15] $0.9$~KB/core, DMP~[HPCA'24] $0.9$~KB/core,
+  Tyche~[TACO'24] $0.57$~KB/core (all CPU, per-core dedicated).
+  Snake~[MICRO'23] $\sim 0.8$~KB/SM ($\sim 12$~B/warp).
+  \textbf{GRASP} $2.3$~KB/SM ($\sim 36$~B/warp), shared across all 64 warps
+  through the per-SM aggregation insight (\S\ref{sec:share}).
+\end{table}

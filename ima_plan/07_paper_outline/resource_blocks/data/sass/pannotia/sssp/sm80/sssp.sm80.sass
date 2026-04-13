@@ -1,0 +1,947 @@
+	.headerflags	@"EF_CUDA_TEXMODE_UNIFIED EF_CUDA_64BIT_ADDRESS EF_CUDA_SM80 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM80)"
+	.elftype	@"ET_EXEC"
+
+
+//--------------------- .text._Z11vector_diffPiS_S_i --------------------------
+	.section	.text._Z11vector_diffPiS_S_i,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=8"
+	.align	128
+
+
+
+
+        .global         _Z11vector_diffPiS_S_i
+        .type           _Z11vector_diffPiS_S_i,@function
+        .size           _Z11vector_diffPiS_S_i,(.L_x_22 - _Z11vector_diffPiS_S_i)
+        .other          _Z11vector_diffPiS_S_i,@"STO_CUDA_ENTRY STV_DEFAULT"
+_Z11vector_diffPiS_S_i:
+.text._Z11vector_diffPiS_S_i:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 174
+        /*0000*/                   MOV R1, c[0x0][0x28] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 176
+        /*0010*/                   S2R R2, SR_CTAID.X ;
+        /*0020*/                   S2R R3, SR_TID.X ;
+        /*0030*/                   IMAD R2, R2, c[0x0][0x0], R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 178
+        /*0040*/                   ISETP.GE.AND P0, PT, R2, c[0x0][0x178], PT ;
+        /*0050*/               @P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 179
+        /*0060*/                   HFMA2.MMA R3, -RZ, RZ, 0, 2.384185791015625e-07 ;
+        /*0070*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0080*/                   IMAD.WIDE R4, R2, R3, c[0x0][0x160] ;
+        /*0090*/                   IMAD.WIDE R2, R2, R3, c[0x0][0x168] ;
+        /*00a0*/                   LDG.E R4, [R4.64] ;
+        /*00b0*/                   LDG.E R3, [R2.64] ;
+        /*00c0*/                   ISETP.NE.AND P0, PT, R3, R4, PT ;
+        /*00d0*/              @!P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 180
+        /*00e0*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x1 ;
+        /*00f0*/                   MOV R2, c[0x0][0x170] ;
+        /*0100*/                   IMAD.MOV.U32 R3, RZ, RZ, c[0x0][0x174] ;
+        /*0110*/                   STG.E [R2.64], R5 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 183
+        /*0120*/                   EXIT ;
+.L_x_0:
+        /*0130*/                   BRA `(.L_x_0);
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_22:
+
+
+//--------------------- .text._Z13vector_assignPiS_i --------------------------
+	.section	.text._Z13vector_assignPiS_i,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=8"
+	.align	128
+
+
+
+
+        .global         _Z13vector_assignPiS_i
+        .type           _Z13vector_assignPiS_i,@function
+        .size           _Z13vector_assignPiS_i,(.L_x_23 - _Z13vector_assignPiS_i)
+        .other          _Z13vector_assignPiS_i,@"STO_CUDA_ENTRY STV_DEFAULT"
+_Z13vector_assignPiS_i:
+.text._Z13vector_assignPiS_i:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 157
+        /*0000*/                   MOV R1, c[0x0][0x28] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 159
+        /*0010*/                   S2R R4, SR_CTAID.X ;
+        /*0020*/                   S2R R3, SR_TID.X ;
+        /*0030*/                   IMAD R4, R4, c[0x0][0x0], R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 161
+        /*0040*/                   ISETP.GE.AND P0, PT, R4, c[0x0][0x170], PT ;
+        /*0050*/               @P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 162
+        /*0060*/                   HFMA2.MMA R5, -RZ, RZ, 0, 2.384185791015625e-07 ;
+        /*0070*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0080*/                   IMAD.WIDE R2, R4, R5, c[0x0][0x168] ;
+        /*0090*/                   LDG.E R3, [R2.64] ;
+        /*00a0*/                   IMAD.WIDE R4, R4, R5, c[0x0][0x160] ;
+        /*00b0*/                   STG.E [R4.64], R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 164
+        /*00c0*/                   EXIT ;
+.L_x_1:
+        /*00d0*/                   BRA `(.L_x_1);
+        /*00e0*/                   NOP;
+        /*00f0*/                   NOP;
+        /*0100*/                   NOP;
+        /*0110*/                   NOP;
+        /*0120*/                   NOP;
+        /*0130*/                   NOP;
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+.L_x_23:
+
+
+//--------------------- .text._Z11vector_initPiS_ii --------------------------
+	.section	.text._Z11vector_initPiS_ii,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+
+
+
+
+        .global         _Z11vector_initPiS_ii
+        .type           _Z11vector_initPiS_ii,@function
+        .size           _Z11vector_initPiS_ii,(.L_x_24 - _Z11vector_initPiS_ii)
+        .other          _Z11vector_initPiS_ii,@"STO_CUDA_ENTRY STV_DEFAULT"
+_Z11vector_initPiS_ii:
+.text._Z11vector_initPiS_ii:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 133
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 135
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   S2R R3, SR_TID.X ;
+        /*0030*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 137
+        /*0040*/                   ISETP.GE.AND P0, PT, R0, c[0x0][0x174], PT ;
+        /*0050*/               @P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 138
+        /*0060*/                   ISETP.NE.AND P0, PT, R0.reuse, c[0x0][0x170], PT ;
+        /*0070*/                   IMAD.MOV.U32 R7, RZ, RZ, 0x4 ;
+        /*0080*/                   SHF.R.S32.HI R5, RZ, 0x1f, R0 ;
+        /*0090*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*00a0*/                   IMAD.WIDE R2, R0, R7, c[0x0][0x160] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 145
+        /*00b0*/               @P0 LEA R4, P1, R0.reuse, c[0x0][0x168], 0x2 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 144
+        /*00c0*/               @P0 MOV R9, 0x5f5e0ff ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 145
+        /*00d0*/               @P0 LEA.HI.X R5, R0, c[0x0][0x16c], R5, 0x2, P1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 144
+        /*00e0*/               @P0 STG.E [R2.64], R9 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 145
+        /*00f0*/               @P0 STG.E [R4.64], R9 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 148
+        /*0100*/               @P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 141
+        /*0110*/                   IMAD.MOV.U32 R4, RZ, RZ, c[0x0][0x170] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 140
+        /*0120*/                   STG.E [R2.64], RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 141
+        /*0130*/                   IMAD.WIDE R4, R7, R4, c[0x0][0x168] ;
+        /*0140*/                   STG.E [R4.64], RZ ;
+        /*0150*/                   EXIT ;
+.L_x_2:
+        /*0160*/                   BRA `(.L_x_2);
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_24:
+
+
+//--------------------- .text._Z23ell_min_dot_plus_kerneliiPiS_S_S_ --------------------------
+	.section	.text._Z23ell_min_dot_plus_kerneliiPiS_S_S_,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=32"
+	.align	128
+
+
+
+
+        .global         _Z23ell_min_dot_plus_kerneliiPiS_S_S_
+        .type           _Z23ell_min_dot_plus_kerneliiPiS_S_S_,@function
+        .size           _Z23ell_min_dot_plus_kerneliiPiS_S_S_,(.L_x_25 - _Z23ell_min_dot_plus_kerneliiPiS_S_S_)
+        .other          _Z23ell_min_dot_plus_kerneliiPiS_S_S_,@"STO_CUDA_ENTRY STV_DEFAULT"
+_Z23ell_min_dot_plus_kerneliiPiS_S_S_:
+.text._Z23ell_min_dot_plus_kerneliiPiS_S_S_:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 102
+        /*0000*/                   MOV R1, c[0x0][0x28] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 106
+        /*0010*/                   S2R R7, SR_CTAID.X ;
+        /*0020*/                   S2R R0, SR_TID.X ;
+        /*0030*/                   IMAD R7, R7, c[0x0][0x0], R0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 108
+        /*0040*/                   ISETP.GE.AND P0, PT, R7, c[0x0][0x160], PT ;
+        /*0050*/               @P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 110
+        /*0060*/                   HFMA2.MMA R2, -RZ, RZ, 0, 2.384185791015625e-07 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 113
+        /*0070*/                   MOV R6, c[0x0][0x164] ;
+        /*0080*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0090*/                   ISETP.GE.AND P0, PT, R6, 0x1, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 110
+        /*00a0*/                   IMAD.WIDE R14, R7, R2, c[0x0][0x178] ;
+        /*00b0*/                   SHF.R.S32.HI R4, RZ, 0x1f, R7 ;
+        /*00c0*/                   MOV R5, R7 ;
+        /*00d0*/                   LDG.E R14, [R14.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 113
+        /*00e0*/              @!P0 BRA `(.L_x_3) ;
+        /*00f0*/                   IADD3 R0, R6.reuse, -0x1, RZ ;
+        /*0100*/                   LOP3.LUT R6, R6, 0x3, RZ, 0xc0, !PT ;
+        /*0110*/                   ISETP.GE.U32.AND P0, PT, R0, 0x3, PT ;
+        /*0120*/              @!P0 BRA `(.L_x_4) ;
+        /*0130*/                   IADD3 R0, -R6, c[0x0][0x164], RZ ;
+        /*0140*/                   ISETP.GT.AND P0, PT, R0, RZ, PT ;
+        /*0150*/              @!P0 BRA `(.L_x_5) ;
+        /*0160*/                   ISETP.GT.AND P1, PT, R0, 0xc, PT ;
+        /*0170*/                   PLOP3.LUT P0, PT, PT, PT, PT, 0x80, 0x0 ;
+        /*0180*/              @!P1 BRA `(.L_x_6) ;
+        /*0190*/                   PLOP3.LUT P0, PT, PT, PT, PT, 0x8, 0x0 ;
+.L_x_7:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*01a0*/                   IMAD.WIDE R12, R7, R2, c[0x0][0x168] ;
+        /*01b0*/                   LDG.E R9, [R12.64] ;
+        /*01c0*/                   IMAD.WIDE R16, R2, c[0x0][0x160], R12 ;
+        /*01d0*/                   LDG.E R3, [R16.64] ;
+        /*01e0*/                   IMAD.WIDE R20, R2, c[0x0][0x160], R16 ;
+        /*01f0*/                   LDG.E R11, [R20.64] ;
+        /*0200*/                   IMAD.WIDE R22, R2, c[0x0][0x160], R20 ;
+        /*0210*/                   LDG.E R27, [R22.64] ;
+        /*0220*/                   MOV R10, c[0x0][0x160] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0230*/                   IMAD.WIDE R18, R7, R2, c[0x0][0x170] ;
+        /*0240*/                   MOV R12, c[0x0][0x160] ;
+        /*0250*/                   IMAD R25, R10, 0x2, R7 ;
+        /*0260*/                   LEA R25, R12, R25, 0x1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0270*/                   IMAD.WIDE R12, R25, R2, c[0x0][0x168] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0280*/                   IMAD.WIDE R20, R2.reuse, c[0x0][0x160], R18 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0290*/                   LDG.E R23, [R12.64] ;
+        /*02a0*/                   IMAD.WIDE R28, R2.reuse, c[0x0][0x160], R12 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*02b0*/                   LDG.E R7, [R20.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*02c0*/                   LDG.E R13, [R28.64] ;
+        /*02d0*/                   IMAD.WIDE R28, R2, c[0x0][0x160], R28 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*02e0*/                   IMAD.WIDE R20, R2, c[0x0][0x160], R20 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*02f0*/                   IMAD.WIDE R8, R9, R2, c[0x0][0x178] ;
+        /*0300*/                   LDG.E R10, [R8.64] ;
+        /*0310*/                   IMAD.WIDE R16, R3, R2, c[0x0][0x178] ;
+        /*0320*/                   LDG.E R3, [R28.64] ;
+        /*0330*/                   LDG.E R16, [R16.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0340*/                   LDG.E R9, [R18.64] ;
+        /*0350*/                   LDG.E R8, [R20.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0360*/                   IMAD.WIDE R18, R11, R2, c[0x0][0x178] ;
+        /*0370*/                   LDG.E R15, [R18.64] ;
+        /*0380*/                   IMAD.WIDE R28, R2, c[0x0][0x160], R28 ;
+        /*0390*/                   IMAD.WIDE R26, R27, R2, c[0x0][0x178] ;
+        /*03a0*/                   LDG.E R17, [R28.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*03b0*/                   IMAD.WIDE R18, R2, c[0x0][0x160], R20 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*03c0*/                   LDG.E R26, [R26.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*03d0*/                   LDG.E R11, [R18.64] ;
+        /*03e0*/                   MOV R12, c[0x0][0x160] ;
+        /*03f0*/                   IMAD.MOV.U32 R22, RZ, RZ, c[0x0][0x160] ;
+        /*0400*/                   LEA R12, R12, R25, 0x1 ;
+        /*0410*/                   IMAD.WIDE R18, R25, R2, c[0x0][0x170] ;
+        /*0420*/                   LEA R21, R22, R12, 0x1 ;
+        /*0430*/                   LDG.E R22, [R18.64] ;
+        /*0440*/                   IMAD.WIDE R24, R2, c[0x0][0x160], R18 ;
+        /*0450*/                   LDG.E R20, [R24.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0460*/                   IMAD.WIDE R18, R21, R2, c[0x0][0x168] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0470*/                   IMAD.WIDE R28, R2.reuse, c[0x0][0x160], R24 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0480*/                   LDG.E R25, [R18.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0490*/                   LDG.E R12, [R28.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*04a0*/                   IMAD.WIDE R18, R2, c[0x0][0x160], R18 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*04b0*/                   IMAD.WIDE R28, R2, c[0x0][0x160], R28 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*04c0*/                   IADD3 R9, R10, R9, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*04d0*/                   LDG.E R10, [R28.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*04e0*/                   IMNMX R14, R9, R14, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*04f0*/                   LDG.E R9, [R18.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*0500*/                   IADD3 R7, R16, R7, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0510*/                   IMAD.WIDE R28, R23, R2, c[0x0][0x178] ;
+        /*0520*/                   IMAD.WIDE R18, R2, c[0x0][0x160], R18 ;
+        /*0530*/                   MOV R16, c[0x0][0x160] ;
+        /*0540*/                   LDG.E R24, [R28.64] ;
+        /*0550*/                   LDG.E R27, [R18.64] ;
+        /*0560*/                   IMAD.WIDE R28, R13, R2, c[0x0][0x178] ;
+        /*0570*/                   IMAD.WIDE R18, R2, c[0x0][0x160], R18 ;
+        /*0580*/                   LDG.E R29, [R28.64] ;
+        /*0590*/                   LDG.E R23, [R18.64] ;
+        /*05a0*/                   IMAD.WIDE R18, R3, R2, c[0x0][0x178] ;
+        /*05b0*/                   IMAD R3, R16.reuse, 0x2, R21 ;
+        /*05c0*/                   LDG.E R13, [R18.64] ;
+        /*05d0*/                   LEA R3, R16, R3, 0x1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*05e0*/                   IMNMX R7, R14, R7, PT ;
+        /*05f0*/                   IADD3 R8, R15, R8, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0600*/                   IMAD.WIDE R14, R3, R2, c[0x0][0x168] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*0610*/                   IMNMX R8, R7, R8, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0620*/                   LDG.E R7, [R14.64] ;
+        /*0630*/                   IMAD.WIDE R16, R17, R2, c[0x0][0x178] ;
+        /*0640*/                   LDG.E R17, [R16.64] ;
+        /*0650*/                   IMAD.WIDE R14, R2, c[0x0][0x160], R14 ;
+        /*0660*/                   LDG.E R28, [R14.64] ;
+        /*0670*/                   IMAD.WIDE R18, R2, c[0x0][0x160], R14 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*0680*/                   IADD3 R16, R26, R11, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0690*/                   LDG.E R11, [R18.64] ;
+        /*06a0*/                   IMAD.WIDE R18, R2, c[0x0][0x160], R18 ;
+        /*06b0*/                   LDG.E R26, [R18.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*06c0*/                   IMNMX R8, R8, R16, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*06d0*/                   IMAD.WIDE R18, R21, R2, c[0x0][0x170] ;
+        /*06e0*/                   LDG.E R16, [R18.64] ;
+        /*06f0*/                   IMAD.WIDE R14, R2, c[0x0][0x160], R18 ;
+        /*0700*/                   IMAD.WIDE R18, R2, c[0x0][0x160], R14 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*0710*/                   IADD3 R22, R24, R22, RZ ;
+        /*0720*/                   IMNMX R8, R8, R22, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0730*/                   LDG.E R22, [R14.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*0740*/                   IADD3 R29, R29, R20, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0750*/                   IMAD.WIDE R20, R25, R2, c[0x0][0x178] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*0760*/                   IMNMX R24, R8, R29, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0770*/                   IMAD.WIDE R8, R9, R2.reuse, c[0x0][0x178] ;
+        /*0780*/                   LDG.E R21, [R20.64] ;
+        /*0790*/                   LDG.E R29, [R8.64] ;
+        /*07a0*/                   IMAD.WIDE R14, R23, R2, c[0x0][0x178] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*07b0*/                   IMAD.IADD R25, R13, 0x1, R12 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*07c0*/                   IMAD.WIDE R12, R2, c[0x0][0x160], R18 ;
+        /*07d0*/                   LDG.E R18, [R18.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*07e0*/                   IMAD.WIDE R8, R27, R2.reuse, c[0x0][0x178] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*07f0*/                   LDG.E R27, [R12.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0800*/                   LDG.E R20, [R8.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*0810*/                   IMNMX R19, R24, R25, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0820*/                   IMAD.WIDE R12, R3, R2, c[0x0][0x170] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0830*/                   IMAD.WIDE R24, R7, R2.reuse, c[0x0][0x178] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0840*/                   LDG.E R23, [R12.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0850*/                   LDG.E R7, [R14.64] ;
+        /*0860*/                   IMAD.WIDE R8, R28, R2, c[0x0][0x178] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*0870*/                   IADD3 R28, R17, R10, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0880*/                   LDG.E R24, [R24.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0890*/                   IMAD.WIDE R14, R2, c[0x0][0x160], R12 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*08a0*/                   LDG.E R12, [R8.64] ;
+        /*08b0*/                   IMAD.WIDE R10, R11, R2, c[0x0][0x178] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*08c0*/                   LDG.E R17, [R14.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*08d0*/                   LDG.E R13, [R10.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*08e0*/                   IMAD.WIDE R8, R2, c[0x0][0x160], R14 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*08f0*/                   IMAD.WIDE R14, R26, R2, c[0x0][0x178] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0900*/                   LDG.E R25, [R8.64] ;
+        /*0910*/                   IMAD.WIDE R10, R2, c[0x0][0x160], R8 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0920*/                   LDG.E R15, [R14.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0930*/                   LDG.E R26, [R10.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*0940*/                   IMNMX R19, R19, R28, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 113
+        /*0950*/                   IADD3 R0, R0, -0x10, RZ ;
+        /*0960*/                   ISETP.GT.AND P1, PT, R0, 0xc, PT ;
+        /*0970*/                   MOV R10, c[0x0][0x160] ;
+        /*0980*/                   LEA R3, R10, R3, 0x1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*0990*/                   IADD3 R16, R21, R16, RZ ;
+        /*09a0*/                   IMNMX R16, R19, R16, PT ;
+        /*09b0*/                   IADD3 R29, R29, R22, RZ ;
+        /*09c0*/                   IMNMX R16, R16, R29, PT ;
+        /*09d0*/                   IADD3 R19, R20, R18, RZ ;
+        /*09e0*/                   IMNMX R16, R16, R19, PT ;
+        /*09f0*/                   IADD3 R7, R7, R27, RZ ;
+        /*0a00*/                   IMAD.IADD R24, R24, 0x1, R23 ;
+        /*0a10*/                   IMNMX R7, R16, R7, PT ;
+        /*0a20*/                   IMNMX R7, R7, R24, PT ;
+        /*0a30*/                   IADD3 R12, R12, R17, RZ ;
+        /*0a40*/                   IMNMX R7, R7, R12, PT ;
+        /*0a50*/                   IADD3 R8, R13, R25, RZ ;
+        /*0a60*/                   IMNMX R8, R7, R8, PT ;
+        /*0a70*/                   IMAD R7, R10, 0x2, R3 ;
+        /*0a80*/                   IADD3 R15, R15, R26, RZ ;
+        /*0a90*/                   IMNMX R14, R8, R15, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 113
+        /*0aa0*/               @P1 BRA `(.L_x_7) ;
+.L_x_6:
+        /*0ab0*/                   ISETP.GT.AND P1, PT, R0, 0x4, PT ;
+        /*0ac0*/              @!P1 BRA `(.L_x_8) ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0ad0*/                   IMAD.WIDE R8, R7, R2, c[0x0][0x168] ;
+        /*0ae0*/                   MOV R10, c[0x0][0x160] ;
+        /*0af0*/                   MOV R20, c[0x0][0x160] ;
+        /*0b00*/                   LEA R3, R10, R7, 0x1 ;
+        /*0b10*/                   IMAD.WIDE R16, R2, c[0x0][0x160], R8 ;
+        /*0b20*/                   LDG.E R9, [R8.64] ;
+        /*0b30*/                   LEA R3, R20, R3, 0x1 ;
+        /*0b40*/                   IMAD.WIDE R12, R2.reuse, c[0x0][0x160], R16 ;
+        /*0b50*/                   LDG.E R18, [R16.64] ;
+        /*0b60*/                   IMAD.WIDE R28, R3, R2, c[0x0][0x168] ;
+        /*0b70*/                   LDG.E R25, [R12.64] ;
+        /*0b80*/                   IMAD.WIDE R10, R2, c[0x0][0x160], R12 ;
+        /*0b90*/                   IMAD.WIDE R20, R2.reuse, c[0x0][0x160], R28 ;
+        /*0ba0*/                   LDG.E R15, [R10.64] ;
+        /*0bb0*/                   LDG.E R29, [R28.64] ;
+        /*0bc0*/                   LDG.E R27, [R20.64] ;
+        /*0bd0*/                   IMAD.WIDE R10, R2, c[0x0][0x160], R20 ;
+        /*0be0*/                   LDG.E R19, [R10.64] ;
+        /*0bf0*/                   IMAD.WIDE R22, R2, c[0x0][0x160], R10 ;
+        /*0c00*/                   LDG.E R23, [R22.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0c10*/                   IMAD.WIDE R16, R7, R2, c[0x0][0x170] ;
+        /*0c20*/                   LDG.E R7, [R16.64] ;
+        /*0c30*/                   IMAD.WIDE R12, R2, c[0x0][0x160], R16 ;
+        /*0c40*/                   IMAD.WIDE R20, R2, c[0x0][0x160], R12 ;
+        /*0c50*/                   IMAD.WIDE R16, R3, R2, c[0x0][0x170] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0c60*/                   IMAD.WIDE R8, R9, R2, c[0x0][0x178] ;
+        /*0c70*/                   IMAD.WIDE R10, R18, R2.reuse, c[0x0][0x178] ;
+        /*0c80*/                   LDG.E R8, [R8.64] ;
+        /*0c90*/                   IMAD.WIDE R24, R25, R2.reuse, c[0x0][0x178] ;
+        /*0ca0*/                   LDG.E R10, [R10.64] ;
+        /*0cb0*/                   LDG.E R24, [R24.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0cc0*/                   LDG.E R9, [R12.64] ;
+        /*0cd0*/                   LDG.E R11, [R20.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0ce0*/                   IMAD.WIDE R28, R29, R2, c[0x0][0x178] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0cf0*/                   LDG.E R25, [R16.64] ;
+        /*0d00*/                   IMAD.WIDE R12, R2, c[0x0][0x160], R20 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0d10*/                   LDG.E R28, [R28.64] ;
+        /*0d20*/                   IMAD.WIDE R20, R15, R2, c[0x0][0x178] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0d30*/                   LDG.E R15, [R12.64] ;
+        /*0d40*/                   IMAD.WIDE R16, R2, c[0x0][0x160], R16 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0d50*/                   LDG.E R26, [R20.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0d60*/                   LDG.E R29, [R16.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0d70*/                   IMAD.WIDE R12, R27, R2, c[0x0][0x178] ;
+        /*0d80*/                   LDG.E R27, [R12.64] ;
+        /*0d90*/                   IMAD.WIDE R22, R23, R2, c[0x0][0x178] ;
+        /*0da0*/                   LDG.E R23, [R22.64] ;
+        /*0db0*/                   IMAD.WIDE R12, R19, R2, c[0x0][0x178] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0dc0*/                   IMAD.WIDE R18, R2.reuse, c[0x0][0x160], R16 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0dd0*/                   LDG.E R12, [R12.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*0de0*/                   IMAD.WIDE R20, R2, c[0x0][0x160], R18 ;
+        /*0df0*/                   LDG.E R13, [R18.64] ;
+        /*0e00*/                   LDG.E R20, [R20.64] ;
+        /*0e10*/                   PLOP3.LUT P0, PT, PT, PT, PT, 0x8, 0x0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 113
+        /*0e20*/                   IADD3 R0, R0, -0x8, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*0e30*/                   IADD3 R7, R8, R7, RZ ;
+        /*0e40*/                   IMNMX R7, R14, R7, PT ;
+        /*0e50*/                   IMAD.IADD R10, R10, 0x1, R9 ;
+        /*0e60*/                   IADD3 R24, R24, R11, RZ ;
+        /*0e70*/                   IMNMX R7, R7, R10, PT ;
+        /*0e80*/                   IMNMX R7, R7, R24, PT ;
+        /*0e90*/                   IADD3 R28, R28, R25, RZ ;
+        /*0ea0*/                   IADD3 R26, R26, R15, RZ ;
+        /*0eb0*/                   IMNMX R7, R7, R26, PT ;
+        /*0ec0*/                   IMNMX R7, R7, R28, PT ;
+        /*0ed0*/                   IADD3 R8, R27, R29, RZ ;
+        /*0ee0*/                   IMNMX R7, R7, R8, PT ;
+        /*0ef0*/                   MOV R8, c[0x0][0x160] ;
+        /*0f00*/                   LEA R3, R8, R3, 0x1 ;
+        /*0f10*/                   IMAD.IADD R12, R12, 0x1, R13 ;
+        /*0f20*/                   IADD3 R23, R23, R20, RZ ;
+        /*0f30*/                   IMNMX R12, R7, R12, PT ;
+        /*0f40*/                   LEA R7, R8, R3, 0x1 ;
+        /*0f50*/                   IMNMX R14, R12, R23, PT ;
+.L_x_8:
+        /*0f60*/                   ISETP.NE.OR P0, PT, R0, RZ, P0 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 113
+        /*0f70*/              @!P0 BRA `(.L_x_4) ;
+.L_x_5:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*0f80*/                   IMAD.WIDE R10, R7, R2, c[0x0][0x168] ;
+        /*0f90*/                   LDG.E R17, [R10.64] ;
+        /*0fa0*/                   IMAD.WIDE R20, R2, c[0x0][0x160], R10 ;
+        /*0fb0*/                   LDG.E R19, [R20.64] ;
+        /*0fc0*/                   IMAD.WIDE R22, R2, c[0x0][0x160], R20 ;
+        /*0fd0*/                   LDG.E R29, [R22.64] ;
+        /*0fe0*/                   IMAD.WIDE R24, R2, c[0x0][0x160], R22 ;
+        /*0ff0*/                   LDG.E R15, [R24.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*1000*/                   IMAD.WIDE R12, R7, R2, c[0x0][0x170] ;
+        /*1010*/                   LDG.E R3, [R12.64] ;
+        /*1020*/                   IMAD.WIDE R8, R2, c[0x0][0x160], R12 ;
+        /*1030*/                   LDG.E R27, [R8.64] ;
+        /*1040*/                   IMAD.WIDE R20, R2, c[0x0][0x160], R8 ;
+        /*1050*/                   LDG.E R25, [R20.64] ;
+        /*1060*/                   IMAD.WIDE R22, R2, c[0x0][0x160], R20 ;
+        /*1070*/                   LDG.E R23, [R22.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*1080*/                   IMAD.WIDE R16, R17, R2, c[0x0][0x178] ;
+        /*1090*/                   IMAD.WIDE R18, R19, R2.reuse, c[0x0][0x178] ;
+        /*10a0*/                   LDG.E R16, [R16.64] ;
+        /*10b0*/                   IMAD.WIDE R10, R29, R2.reuse, c[0x0][0x178] ;
+        /*10c0*/                   LDG.E R18, [R18.64] ;
+        /*10d0*/                   IMAD.WIDE R12, R15, R2, c[0x0][0x178] ;
+        /*10e0*/                   LDG.E R10, [R10.64] ;
+        /*10f0*/                   LDG.E R12, [R12.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 113
+        /*1100*/                   IADD3 R0, R0, -0x4, RZ ;
+        /*1110*/                   ISETP.NE.AND P0, PT, R0, RZ, PT ;
+        /*1120*/                   IMAD.MOV.U32 R8, RZ, RZ, c[0x0][0x160] ;
+        /*1130*/                   LEA R7, R8, R7, 0x1 ;
+        /*1140*/                   LEA R7, R8, R7, 0x1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*1150*/                   IADD3 R3, R16, R3, RZ ;
+        /*1160*/                   IMNMX R3, R3, R14, PT ;
+        /*1170*/                   IADD3 R18, R18, R27, RZ ;
+        /*1180*/                   IMNMX R3, R3, R18, PT ;
+        /*1190*/                   IADD3 R10, R10, R25, RZ ;
+        /*11a0*/                   IMNMX R3, R3, R10, PT ;
+        /*11b0*/                   IADD3 R12, R12, R23, RZ ;
+        /*11c0*/                   IMNMX R14, R3, R12, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 113
+        /*11d0*/               @P0 BRA `(.L_x_5) ;
+.L_x_4:
+        /*11e0*/                   ISETP.NE.AND P0, PT, R6, RZ, PT ;
+        /*11f0*/              @!P0 BRA `(.L_x_3) ;
+        /*1200*/                   IMAD.WIDE R8, R7, R2, c[0x0][0x168] ;
+        /*1210*/                   IMAD.WIDE R10, R7, R2, c[0x0][0x170] ;
+.L_x_9:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*1220*/                   LDG.E R13, [R8.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 114
+        /*1230*/                   LDG.E R3, [R10.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 113
+        /*1240*/                   IADD3 R6, R6, -0x1, RZ ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 115
+        /*1250*/                   IMAD.WIDE R12, R13, R2, c[0x0][0x178] ;
+        /*1260*/                   LDG.E R12, [R12.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 113
+        /*1270*/                   ISETP.NE.AND P0, PT, R6, RZ, PT ;
+        /*1280*/                   IMAD.WIDE R8, R2, c[0x0][0x160], R8 ;
+        /*1290*/                   IMAD.WIDE R10, R2, c[0x0][0x160], R10 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 116
+        /*12a0*/                   IADD3 R3, R12, R3, RZ ;
+        /*12b0*/                   IMNMX R14, R3, R14, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 113
+        /*12c0*/               @P0 BRA `(.L_x_9) ;
+.L_x_3:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 121
+        /*12d0*/                   LEA R2, P0, R5, c[0x0][0x180], 0x2 ;
+        /*12e0*/                   LEA.HI.X R3, R5, c[0x0][0x184], R4, 0x2, P0 ;
+        /*12f0*/                   STG.E [R2.64], R14 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 123
+        /*1300*/                   EXIT ;
+.L_x_10:
+        /*1310*/                   BRA `(.L_x_10);
+        /*1320*/                   NOP;
+        /*1330*/                   NOP;
+        /*1340*/                   NOP;
+        /*1350*/                   NOP;
+        /*1360*/                   NOP;
+        /*1370*/                   NOP;
+        /*1380*/                   NOP;
+        /*1390*/                   NOP;
+        /*13a0*/                   NOP;
+        /*13b0*/                   NOP;
+        /*13c0*/                   NOP;
+        /*13d0*/                   NOP;
+        /*13e0*/                   NOP;
+        /*13f0*/                   NOP;
+.L_x_25:
+
+
+//--------------------- .text._Z24spmv_min_dot_plus_kerneliPiS_S_S_S_ --------------------------
+	.section	.text._Z24spmv_min_dot_plus_kerneliPiS_S_S_S_,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=32"
+	.align	128
+
+
+
+
+        .global         _Z24spmv_min_dot_plus_kerneliPiS_S_S_S_
+        .type           _Z24spmv_min_dot_plus_kerneliPiS_S_S_S_,@function
+        .size           _Z24spmv_min_dot_plus_kerneliPiS_S_S_S_,(.L_x_26 - _Z24spmv_min_dot_plus_kerneliPiS_S_S_S_)
+        .other          _Z24spmv_min_dot_plus_kerneliPiS_S_S_S_,@"STO_CUDA_ENTRY STV_DEFAULT"
+_Z24spmv_min_dot_plus_kerneliPiS_S_S_S_:
+.text._Z24spmv_min_dot_plus_kerneliPiS_S_S_S_:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 70
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 74
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   S2R R3, SR_TID.X ;
+        /*0030*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 76
+        /*0040*/                   ISETP.GE.AND P0, PT, R0, c[0x0][0x160], PT ;
+        /*0050*/               @P0 EXIT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 78
+        /*0060*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x4 ;
+        /*0070*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0080*/                   IMAD.WIDE R4, R0, R3, c[0x0][0x168] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 79
+        /*0090*/                   LDG.E R2, [R4.64+0x4] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 78
+        /*00a0*/                   LDG.E R8, [R4.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 82
+        /*00b0*/                   IMAD.WIDE R16, R0, R3, c[0x0][0x180] ;
+        /*00c0*/                   LDG.E R16, [R16.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 83
+        /*00d0*/                   BSSY B0, `(.L_x_11) ;
+        /*00e0*/                   ISETP.GT.AND P0, PT, R2, R8, PT ;
+        /*00f0*/              @!P0 BRA `(.L_x_12) ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 84
+        /*0100*/                   IMAD.IADD R4, R2, 0x1, -R8 ;
+        /*0110*/                   LOP3.LUT R5, RZ, R8, RZ, 0x33, !PT ;
+        /*0120*/                   BSSY B1, `(.L_x_13) ;
+        /*0130*/                   LOP3.LUT P1, R9, R4, 0x3, RZ, 0xc0, !PT ;
+        /*0140*/                   IADD3 R5, R2, R5, RZ ;
+        /*0150*/                   ISETP.GE.U32.AND P0, PT, R5, 0x3, PT ;
+        /*0160*/                   IMAD.MOV.U32 R5, RZ, RZ, R8 ;
+        /*0170*/              @!P1 BRA `(.L_x_14) ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 83
+        /*0180*/                   IMAD.WIDE R4, R8, R3, c[0x0][0x170] ;
+        /*0190*/                   IMAD.WIDE R6, R8, R3, c[0x0][0x178] ;
+        /*01a0*/                   MOV R15, R5 ;
+        /*01b0*/                   IMAD.MOV.U32 R12, RZ, RZ, R4 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 84
+        /*01c0*/                   MOV R4, R9 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 83
+        /*01d0*/                   IMAD.MOV.U32 R10, RZ, RZ, R6 ;
+        /*01e0*/                   IMAD.MOV.U32 R13, RZ, RZ, R7 ;
+        /*01f0*/                   IMAD.MOV.U32 R5, RZ, RZ, R8 ;
+.L_x_15:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 84
+        /*0200*/                   IMAD.MOV.U32 R8, RZ, RZ, R12 ;
+        /*0210*/                   MOV R9, R15 ;
+        /*0220*/                   LDG.E R6, [R8.64] ;
+        /*0230*/                   IMAD.MOV.U32 R8, RZ, RZ, R10 ;
+        /*0240*/                   IMAD.MOV.U32 R9, RZ, RZ, R13 ;
+        /*0250*/                   LDG.E R11, [R8.64] ;
+        /*0260*/                   IMAD.WIDE R6, R6, R3, c[0x0][0x180] ;
+        /*0270*/                   LDG.E R6, [R6.64] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 83
+        /*0280*/                   IADD3 R4, R4, -0x1, RZ ;
+        /*0290*/                   ISETP.NE.AND P1, PT, R4, RZ, PT ;
+        /*02a0*/                   IADD3 R12, P2, R12, 0x4, RZ ;
+        /*02b0*/                   IADD3 R10, P3, R10, 0x4, RZ ;
+        /*02c0*/                   IADD3 R5, R5, 0x1, RZ ;
+        /*02d0*/                   IMAD.X R15, RZ, RZ, R15, P2 ;
+        /*02e0*/                   IMAD.X R13, RZ, RZ, R13, P3 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 84
+        /*02f0*/                   IADD3 R11, R6, R11, RZ ;
+        /*0300*/                   IMNMX R16, R11, R16, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 83
+        /*0310*/               @P1 BRA `(.L_x_15) ;
+.L_x_14:
+        /*0320*/                   BSYNC B1 ;
+.L_x_13:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 84
+        /*0330*/              @!P0 BRA `(.L_x_12) ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 83
+        /*0340*/                   IADD3 R4, R2, -R5, RZ ;
+        /*0350*/                   IMAD.WIDE R6, R5, R3, c[0x2][0x0] ;
+        /*0360*/                   BSSY B1, `(.L_x_16) ;
+        /*0370*/                   ISETP.GT.AND P1, PT, R4, 0xc, PT ;
+        /*0380*/                   IADD3 R12, P0, R6.reuse, c[0x0][0x178], RZ ;
+        /*0390*/                   IADD3 R14, P2, R6, c[0x0][0x170], RZ ;
+        /*03a0*/                   IADD3.X R13, R7, c[0x0][0x17c], RZ, P0, !PT ;
+        /*03b0*/                   IADD3.X R15, R7, c[0x0][0x174], RZ, P2, !PT ;
+        /*03c0*/                   PLOP3.LUT P0, PT, PT, PT, PT, 0x80, 0x0 ;
+        /*03d0*/              @!P1 BRA `(.L_x_17) ;
+        /*03e0*/                   PLOP3.LUT P0, PT, PT, PT, PT, 0x8, 0x0 ;
+        /*03f0*/                   IADD3 R4, R2, -0xc, RZ ;
+.L_x_18:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 84
+        /*0400*/                   LDG.E R8, [R14.64+-0x8] ;
+        /*0410*/                   LDG.E R10, [R14.64+-0x4] ;
+        /*0420*/                   LDG.E R18, [R14.64] ;
+        /*0430*/                   LDG.E R26, [R14.64+0x4] ;
+        /*0440*/                   LDG.E R6, [R14.64+0x8] ;
+        /*0450*/                   LDG.E R17, [R12.64+-0x8] ;
+        /*0460*/                   LDG.E R22, [R14.64+0xc] ;
+        /*0470*/                   LDG.E R20, [R14.64+0x10] ;
+        /*0480*/                   LDG.E R28, [R14.64+0x14] ;
+        /*0490*/                   LDG.E R25, [R12.64+0x4] ;
+        /*04a0*/                   LDG.E R23, [R12.64+0x8] ;
+        /*04b0*/                   LDG.E R21, [R12.64+0xc] ;
+        /*04c0*/                   LDG.E R24, [R14.64+0x24] ;
+        /*04d0*/                   IMAD.WIDE R8, R8, R3, c[0x0][0x180] ;
+        /*04e0*/                   IMAD.WIDE R10, R10, R3.reuse, c[0x0][0x180] ;
+        /*04f0*/                   LDG.E R8, [R8.64] ;
+        /*0500*/                   LDG.E R10, [R10.64] ;
+        /*0510*/                   IMAD.WIDE R18, R18, R3, c[0x0][0x180] ;
+        /*0520*/                   LDG.E R18, [R18.64] ;
+        /*0530*/                   LDG.E R11, [R12.64+-0x4] ;
+        /*0540*/                   IMAD.WIDE R26, R26, R3, c[0x0][0x180] ;
+        /*0550*/                   LDG.E R19, [R12.64] ;
+        /*0560*/                   LDG.E R26, [R26.64] ;
+        /*0570*/                   IMAD.WIDE R6, R6, R3, c[0x0][0x180] ;
+        /*0580*/                   LDG.E R9, [R6.64] ;
+        /*0590*/                   IMAD.WIDE R6, R22, R3, c[0x0][0x180] ;
+        /*05a0*/                   IMAD.IADD R17, R8, 0x1, R17 ;
+        /*05b0*/                   LDG.E R8, [R14.64+0x18] ;
+        /*05c0*/                   IMNMX R22, R17, R16, PT ;
+        /*05d0*/                   LDG.E R17, [R6.64] ;
+        /*05e0*/                   LDG.E R16, [R14.64+0x1c] ;
+        /*05f0*/                   IMAD.IADD R27, R10, 0x1, R11 ;
+        /*0600*/                   IMAD.WIDE R10, R20, R3, c[0x0][0x180] ;
+        /*0610*/                   LDG.E R20, [R12.64+0x10] ;
+        /*0620*/                   IMNMX R27, R22, R27, PT ;
+        /*0630*/                   LDG.E R22, [R14.64+0x20] ;
+        /*0640*/                   IADD3 R18, R18, R19, RZ ;
+        /*0650*/                   IMAD.WIDE R6, R28, R3, c[0x0][0x180] ;
+        /*0660*/                   LDG.E R11, [R10.64] ;
+        /*0670*/                   IMNMX R29, R27, R18, PT ;
+        /*0680*/                   LDG.E R28, [R14.64+0x28] ;
+        /*0690*/                   LDG.E R18, [R6.64] ;
+        /*06a0*/                   LDG.E R27, [R12.64+0x14] ;
+        /*06b0*/                   LDG.E R19, [R14.64+0x2c] ;
+        /*06c0*/                   IMAD.IADD R25, R26, 0x1, R25 ;
+        /*06d0*/                   LDG.E R26, [R14.64+0x30] ;
+        /*06e0*/                   LDG.E R10, [R14.64+0x34] ;
+        /*06f0*/                   IMAD.IADD R9, R9, 0x1, R23 ;
+        /*0700*/                   IMNMX R29, R29, R25, PT ;
+        /*0710*/                   LDG.E R7, [R12.64+0x18] ;
+        /*0720*/                   IMNMX R29, R29, R9, PT ;
+        /*0730*/                   IMAD.WIDE R8, R8, R3, c[0x0][0x180] ;
+        /*0740*/                   IADD3 R21, R17, R21, RZ ;
+        /*0750*/                   LDG.E R8, [R8.64] ;
+        /*0760*/                   IMAD.WIDE R16, R16, R3, c[0x0][0x180] ;
+        /*0770*/                   IMNMX R29, R29, R21, PT ;
+        /*0780*/                   LDG.E R6, [R16.64] ;
+        /*0790*/                   LDG.E R9, [R12.64+0x1c] ;
+        /*07a0*/                   IMAD.WIDE R22, R22, R3, c[0x0][0x180] ;
+        /*07b0*/                   IMAD.IADD R25, R11, 0x1, R20 ;
+        /*07c0*/                   IMAD.WIDE R20, R24, R3.reuse, c[0x0][0x180] ;
+        /*07d0*/                   LDG.E R11, [R22.64] ;
+        /*07e0*/                   LDG.E R24, [R12.64+0x20] ;
+        /*07f0*/                   IMAD.WIDE R16, R28, R3, c[0x0][0x180] ;
+        /*0800*/                   IMNMX R29, R29, R25, PT ;
+        /*0810*/                   LDG.E R25, [R20.64] ;
+        /*0820*/                   LDG.E R28, [R12.64+0x24] ;
+        /*0830*/                   LDG.E R16, [R16.64] ;
+        /*0840*/                   IMAD.IADD R20, R18, 0x1, R27 ;
+        /*0850*/                   IMAD.WIDE R18, R19, R3.reuse, c[0x0][0x180] ;
+        /*0860*/                   LDG.E R27, [R12.64+0x28] ;
+        /*0870*/                   IMAD.WIDE R22, R26, R3.reuse, c[0x0][0x180] ;
+        /*0880*/                   IMNMX R29, R29, R20, PT ;
+        /*0890*/                   LDG.E R18, [R18.64] ;
+        /*08a0*/                   IMAD.WIDE R20, R10, R3, c[0x0][0x180] ;
+        /*08b0*/                   LDG.E R26, [R12.64+0x2c] ;
+        /*08c0*/                   LDG.E R22, [R22.64] ;
+        /*08d0*/                   LDG.E R10, [R12.64+0x30] ;
+        /*08e0*/                   LDG.E R20, [R20.64] ;
+        /*08f0*/                   LDG.E R17, [R12.64+0x34] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 83
+        /*0900*/                   IADD3 R14, P1, R14, 0x40, RZ ;
+        /*0910*/                   IADD3 R5, R5, 0x10, RZ ;
+        /*0920*/                   IMAD.X R15, RZ, RZ, R15, P1 ;
+        /*0930*/                   ISETP.GE.AND P1, PT, R5, R4, PT ;
+        /*0940*/                   IADD3 R12, P2, R12, 0x40, RZ ;
+        /*0950*/                   IADD3.X R13, RZ, R13, RZ, P2, !PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 84
+        /*0960*/                   IADD3 R8, R8, R7, RZ ;
+        /*0970*/                   IMNMX R8, R29, R8, PT ;
+        /*0980*/                   IMAD.IADD R9, R6, 0x1, R9 ;
+        /*0990*/                   IMNMX R8, R8, R9, PT ;
+        /*09a0*/                   IMAD.IADD R11, R11, 0x1, R24 ;
+        /*09b0*/                   IMNMX R8, R8, R11, PT ;
+        /*09c0*/                   IADD3 R25, R25, R28, RZ ;
+        /*09d0*/                   IMNMX R8, R8, R25, PT ;
+        /*09e0*/                   IMAD.IADD R27, R16, 0x1, R27 ;
+        /*09f0*/                   IMNMX R8, R8, R27, PT ;
+        /*0a00*/                   IMAD.IADD R7, R18, 0x1, R26 ;
+        /*0a10*/                   IMNMX R7, R8, R7, PT ;
+        /*0a20*/                   IADD3 R10, R22, R10, RZ ;
+        /*0a30*/                   IMNMX R7, R7, R10, PT ;
+        /*0a40*/                   IMAD.IADD R20, R20, 0x1, R17 ;
+        /*0a50*/                   IMNMX R16, R7, R20, PT ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 83
+        /*0a60*/              @!P1 BRA `(.L_x_18) ;
+.L_x_17:
+        /*0a70*/                   BSYNC B1 ;
+.L_x_16:
+        /*0a80*/                   IMAD.IADD R4, R2, 0x1, -R5 ;
+        /*0a90*/                   BSSY B1, `(.L_x_19) ;
+        /*0aa0*/                   ISETP.GT.AND P1, PT, R4, 0x4, PT ;
+        /*0ab0*/              @!P1 BRA `(.L_x_20) ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 84
+        /*0ac0*/                   LDG.E R6, [R14.64+-0x8] ;
+        /*0ad0*/                   LDG.E R28, [R14.64+-0x4] ;
+        /*0ae0*/                   LDG.E R20, [R14.64] ;
+        /*0af0*/                   LDG.E R26, [R14.64+0x4] ;
+        /*0b00*/                   LDG.E R8, [R14.64+0x8] ;
+        /*0b10*/                   LDG.E R10, [R14.64+0xc] ;
+        /*0b20*/                   LDG.E R18, [R14.64+0x10] ;
+        /*0b30*/                   LDG.E R24, [R14.64+0x14] ;
+        /*0b40*/                   LDG.E R17, [R12.64+-0x8] ;
+        /*0b50*/                   LDG.E R23, [R12.64+-0x4] ;
+        /*0b60*/                   LDG.E R25, [R12.64] ;
+        /*0b70*/                   LDG.E R27, [R12.64+0x4] ;
+        /*0b80*/                   IMAD.WIDE R6, R6, R3, c[0x0][0x180] ;
+        /*0b90*/                   IMAD.WIDE R28, R28, R3.reuse, c[0x0][0x180] ;
+        /*0ba0*/                   LDG.E R4, [R6.64] ;
+        /*0bb0*/                   IMAD.WIDE R20, R20, R3.reuse, c[0x0][0x180] ;
+        /*0bc0*/                   LDG.E R22, [R28.64] ;
+        /*0bd0*/                   LDG.E R20, [R20.64] ;
+        /*0be0*/                   IMAD.WIDE R6, R26, R3, c[0x0][0x180] ;
+        /*0bf0*/                   IMAD.WIDE R8, R8, R3.reuse, c[0x0][0x180] ;
+        /*0c00*/                   LDG.E R26, [R6.64] ;
+        /*0c10*/                   IMAD.WIDE R10, R10, R3.reuse, c[0x0][0x180] ;
+        /*0c20*/                   LDG.E R28, [R12.64+0x8] ;
+        /*0c30*/                   IMAD.WIDE R18, R18, R3.reuse, c[0x0][0x180] ;
+        /*0c40*/                   LDG.E R9, [R8.64] ;
+        /*0c50*/                   LDG.E R10, [R10.64] ;
+        /*0c60*/                   IMAD.WIDE R6, R24, R3, c[0x0][0x180] ;
+        /*0c70*/                   LDG.E R29, [R12.64+0xc] ;
+        /*0c80*/                   LDG.E R18, [R18.64] ;
+        /*0c90*/                   LDG.E R21, [R12.64+0x10] ;
+        /*0ca0*/                   LDG.E R6, [R6.64] ;
+        /*0cb0*/                   LDG.E R24, [R12.64+0x14] ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 83
+        /*0cc0*/                   IADD3 R14, P2, R14, 0x20, RZ ;
+        /*0cd0*/                   PLOP3.LUT P0, PT, PT, PT, PT, 0x8, 0x0 ;
+        /*0ce0*/                   IADD3 R5, R5, 0x8, RZ ;
+        /*0cf0*/                   IADD3 R12, P1, R12, 0x20, RZ ;
+        /*0d00*/                   IMAD.X R15, RZ, RZ, R15, P2 ;
+        /*0d10*/                   IMAD.X R13, RZ, RZ, R13, P1 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 84
+        /*0d20*/                   IMAD.IADD R17, R4, 0x1, R17 ;
+        /*0d30*/                   IADD3 R22, R22, R23, RZ ;
+        /*0d40*/                   IMNMX R17, R16, R17, PT ;
+        /*0d50*/                   IMAD.IADD R20, R20, 0x1, R25 ;
+        /*0d60*/                   IMNMX R17, R17, R22, PT ;
+        /*0d70*/                   IMNMX R17, R17, R20, PT ;
+        /*0d80*/                   IMAD.IADD R26, R26, 0x1, R27 ;
+        /*0d90*/                   IMNMX R17, R17, R26, PT ;
+        /*0da0*/                   IADD3 R28, R9, R28, RZ ;
+        /*0db0*/                   IMNMX R17, R17, R28, PT ;
+        /*0dc0*/                   IMAD.IADD R10, R10, 0x1, R29 ;
+        /*0dd0*/                   IMNMX R10, R17, R10, PT ;
+        /*0de0*/                   IMAD.IADD R21, R18, 0x1, R21 ;
+        /*0df0*/                   IMNMX R10, R10, R21, PT ;
+        /*0e00*/                   IADD3 R7, R6, R24, RZ ;
+        /*0e10*/                   IMNMX R16, R10, R7, PT ;
+.L_x_20:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 83
+        /*0e20*/                   BSYNC B1 ;
+.L_x_19:
+        /*0e30*/                   ISETP.LT.OR P0, PT, R5, R2, P0 ;
+        /*0e40*/              @!P0 BRA `(.L_x_12) ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 84
+        /*0e50*/                   LDG.E R4, [R14.64+-0x8] ;
+        /*0e60*/                   LDG.E R6, [R14.64+-0x4] ;
+        /*0e70*/                   LDG.E R8, [R14.64] ;
+        /*0e80*/                   LDG.E R10, [R14.64+0x4] ;
+        /*0e90*/                   LDG.E R17, [R12.64+-0x8] ;
+        /*0ea0*/                   LDG.E R19, [R12.64+-0x4] ;
+        /*0eb0*/                   LDG.E R21, [R12.64] ;
+        /*0ec0*/                   LDG.E R15, [R12.64+0x4] ;
+        /*0ed0*/                   IMAD.WIDE R4, R4, R3, c[0x0][0x180] ;
+        /*0ee0*/                   IMAD.WIDE R6, R6, R3.reuse, c[0x0][0x180] ;
+        /*0ef0*/                   LDG.E R4, [R4.64] ;
+        /*0f00*/                   IMAD.WIDE R8, R8, R3.reuse, c[0x0][0x180] ;
+        /*0f10*/                   LDG.E R6, [R6.64] ;
+        /*0f20*/                   IMAD.WIDE R10, R10, R3, c[0x0][0x180] ;
+        /*0f30*/                   LDG.E R8, [R8.64] ;
+        /*0f40*/                   LDG.E R10, [R10.64] ;
+        /*0f50*/                   IADD3 R17, R4, R17, RZ ;
+        /*0f60*/                   IMAD.IADD R2, R6, 0x1, R19 ;
+        /*0f70*/                   IMNMX R17, R16, R17, PT ;
+        /*0f80*/                   IMAD.IADD R21, R8, 0x1, R21 ;
+        /*0f90*/                   IMNMX R2, R17, R2, PT ;
+        /*0fa0*/                   IADD3 R15, R10, R15, RZ ;
+        /*0fb0*/                   IMNMX R2, R2, R21, PT ;
+        /*0fc0*/                   IMNMX R16, R2, R15, PT ;
+.L_x_12:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 83
+        /*0fd0*/                   BSYNC B0 ;
+.L_x_11:
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 88
+        /*0fe0*/                   IMAD.WIDE R2, R0, R3, c[0x0][0x188] ;
+        /*0ff0*/                   STG.E [R2.64], R16 ;
+	//## File "/workspace/prefetch/gpu-app-collection/src/cuda/pannotia/sssp/kernel.cu", line 90
+        /*1000*/                   EXIT ;
+.L_x_21:
+        /*1010*/                   BRA `(.L_x_21);
+        /*1020*/                   NOP;
+        /*1030*/                   NOP;
+        /*1040*/                   NOP;
+        /*1050*/                   NOP;
+        /*1060*/                   NOP;
+        /*1070*/                   NOP;
+        /*1080*/                   NOP;
+        /*1090*/                   NOP;
+        /*10a0*/                   NOP;
+        /*10b0*/                   NOP;
+        /*10c0*/                   NOP;
+        /*10d0*/                   NOP;
+        /*10e0*/                   NOP;
+        /*10f0*/                   NOP;
+.L_x_26:

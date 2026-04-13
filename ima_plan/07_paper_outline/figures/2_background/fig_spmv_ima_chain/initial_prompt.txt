@@ -1,0 +1,133 @@
+CRITICAL EXACT SPELLING — use ONLY these exact terms, do NOT invent alternatives:
+- "SpMV" (Sparse Matrix-Vector multiplication)
+- "CSR" (Compressed Sparse Row format)
+- "IMA" (Indirect Memory Access)
+- "row_off[]" (row offset array)
+- "A_col[]" (column index array)
+- "A_val[]" (non-zero value array)
+- "x[]" (dense input vector)
+- "y[]" (dense output vector)
+- "index load" (NOT "indirect load", NOT "index fetch")
+- "data load" (NOT "value load")
+- "stride-1" (NOT "sequential", NOT "linear")
+- "scattered" (NOT "random access")
+
+============================================================
+Create a PROFESSIONAL publication-quality academic diagram for a
+computer architecture paper targeting MICRO/ISCA/HPCA conferences.
+============================================================
+
+## Figure Type
+Worked Example: Indirect Memory Access (IMA) Pattern Arising from CSR Format in SpMV
+
+## Purpose
+Illustrate how the IMA pattern A[B[j]] arises naturally from the CSR
+sparse storage format used in SpMV. The figure must make it visually
+obvious that:
+1. Iteration j walks stride-1 through A_col[]
+2. Each A_col[j] value is used as an index into x[]
+3. The resulting access pattern on x[] is scattered (NOT stride-1)
+This is the root cause of IMA on GPUs.
+
+## Visual Style: 中性高对比学术风 (Neutral High-Contrast Academic)
+
+### MUST follow:
+- White background, clean and professional
+- NO title text in the figure (title goes in LaTeX caption)
+- NO Chinese characters, all English
+- Arrays drawn as horizontal sequences of rectangular cells
+- Cells with uniform size (square-ish, ~30pt)
+- Cell borders: 1.0pt solid black
+- Cell fill color:
+  * A_col[] cells: light blue fill #AED6F1 (sequential/regular access)
+  * x[] cells: light purple fill #D7BDE2 with accessed cells darker purple #A569BD
+  * row_off[] cells: light gray fill #D5DBDB
+  * A_val[] cells: light yellow fill #F9E79F
+- Values inside cells: monospace font, 9pt, bold, dark color #2C3E50
+- Array names (labels above cells): sans-serif, 9pt, bold, dark #2C3E50
+- Arrows:
+  * Sequential iteration arrow (j iterating): medium green #27AE60, 1.5pt solid, small triangle head
+  * Indirection arrows (from A_col value to x cell): red #C0392B, 1.5pt solid curved, small triangle head
+- Small code box with SpMV inner loop:
+  * Light gray background #ECF0F1
+  * Black 1pt border
+  * Monospace font 9pt
+  * 4 lines of C code
+- NO shadows, NO gradients, NO 3D effects
+- Bottom legend showing arrow colors
+
+### MUST NOT include:
+- Title text at the top
+- Text paragraphs or long explanations inside the figure
+- Shadows, gradients, 3D perspective
+- Chinese text
+- Rainbow colors (stick to the 4-color palette above)
+
+## Components to Include
+
+### Component 1: Small code snippet box (top of figure)
+- Light gray background box with black border
+- 4 lines of C code, monospace 9pt:
+  ```
+  for (j = row_off[i]; j < row_off[i+1]; j++)
+      y[i] += A_val[j] * x[ A_col[j] ];
+  ```
+- Highlight "A_col[j]" in red and "x[...]" in purple
+- Label above code: "SpMV inner loop" (sans-serif bold 8pt)
+
+### Component 2: CSR data structure arrays (middle of figure, main visualization)
+
+Arrange 3 horizontal arrays stacked vertically:
+
+**Array 1 — A_col[] (light blue #AED6F1):**
+- 10 cells with values: 1, 4, 7, 2, 5, 9, 0, 6, 3, 8
+- Array label on the left: "A_col[]" (bold, 9pt)
+- Below label: small text "column indices (stride-1)"
+- A horizontal green arrow below the array pointing right, labeled "j →" showing stride-1 iteration
+
+**Array 2 — x[] (light purple #D7BDE2, accessed cells darker #A569BD):**
+- 10 cells with values: x0, x1, x2, x3, x4, x5, x6, x7, x8, x9
+- Array label on the left: "x[]" (bold, 9pt)
+- Below label: small text "dense input vector (scattered access)"
+- The cells at positions 1, 4, 7, 2, 5, 9, 0, 6, 3, 8 should be filled with DARKER purple #A569BD to show they are accessed
+
+### Component 3: Indirection arrows (the critical visual)
+Draw RED curved arrows from each A_col[] cell to the corresponding x[] cell:
+- From A_col[0]=1 → x[1]
+- From A_col[1]=4 → x[4]
+- From A_col[2]=7 → x[7]
+- From A_col[3]=2 → x[2]
+- From A_col[4]=5 → x[5]
+- (show at least 5 arrows to make the scatter pattern obvious)
+- Arrows should curve outward so they don't overlap
+- Arrow color: red #C0392B, 1.5pt solid
+
+### Component 4: Annotation labels
+- Label on A_col[]: "① index load: B[j]" (red italic text, 8pt)
+- Label on x[]: "② data load: A[B[j]]" (red italic text, 8pt)
+- A large curly bracket or annotation on the right grouping both arrays, labeled "IMA chain: serial dependency" (bold 9pt)
+
+## Layout
+- Direction: top to bottom vertical flow
+- Top: code snippet (small, ~20% of figure)
+- Middle: A_col[] array with j→ arrow (~25%)
+- Middle-bottom: x[] array (~25%)
+- Connection: red curved indirection arrows between A_col[] and x[] (~25%)
+- Bottom: legend explaining arrow colors (~5%)
+- Aspect ratio: 3:4 (taller than wide, for single-column paper layout)
+
+## Bottom Legend (one horizontal line)
+- Green arrow → "stride-1 iteration (j)"
+- Red arrow → "IMA indirection"
+- Dark purple cell → "accessed"
+- Light purple cell → "not accessed"
+
+## Additional Requirements
+- Make the SCATTER pattern on x[] visually obvious — the accessed cells
+  should be spread across the array, not clustered
+- The red indirection arrows should clearly connect specific A_col values
+  to specific x positions (not generic arrows)
+- Use only the 5 specified colors: light blue, light/dark purple, light gray,
+  light yellow, red, green, black
+- Everything must be readable when printed at 3.5 inches width
+- NO title anywhere in the image

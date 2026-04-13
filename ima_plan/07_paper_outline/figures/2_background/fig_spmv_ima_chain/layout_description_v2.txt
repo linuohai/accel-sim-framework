@@ -1,0 +1,65 @@
+Here is the optimized layout description for the 4-panel SpMV/CSR/IMA figure, designed for a 16:9 double-column academic format. Coordinates are given in a normalized [0, 100] grid where X=0 is left, X=100 is right, Y=0 is top, and Y=100 is bottom.
+
+### 1. Panel Bounding Boxes
+*   **Panel (a) Sparse matrix M**: `[X: 2, Y: 5, W: 42, H: 40]`
+*   **Panel (b) CSR encoding**: `[X: 52, Y: 5, W: 46, H: 40]`
+*   **Panel (c) SpMV kernel**: `[X: 2, Y: 50, W: 42, H: 42]`
+*   **Panel (d) Runtime access pattern**: `[X: 52, Y: 50, W: 46, H: 42]`
+
+### 2. Inside Each Panel — Exact Element Positions
+**Panel (a) Sparse Matrix M**
+*   Label: "(a) Sparse matrix M" at `[X: 2, Y: 5]`
+*   Grid: 4x8 cells centered in panel `[X: 5, Y: 12, W: 36, H: 25]`. Cell width=4.5, height=6.
+*   Non-zero cells (Light Blue #AED6F1): `(row 0, col 1) = 5`, `(row 0, col 5) = 2`, `(row 1, col 3) = 4`, `(row 2, col 0) = 7`, `(row 3, col 6) = 8`, `(row 3, col 7) = 3`.
+*   Zero cells (White): Filled with "·" (light gray).
+
+**Panel (b) CSR Arrays**
+*   Label: "(b) CSR encoding" at `[X: 52, Y: 5]`
+*   `row_off[]`: `[X: 52, Y: 15, W: 25, H: 6]`, 5 cells `[0, 2, 3, 4, 6]`. Light Gray #D5DBDB.
+*   `A_col[]`: `[X: 52, Y: 27, W: 30, H: 6]`, 6 cells `[1, 5, 3, 0, 6, 7]`. Light Blue #AED6F1.
+*   `A_val[]`: `[X: 52, Y: 39, W: 30, H: 6]`, 6 cells `[5, 2, 4, 7, 8, 3]`. Light Yellow #F9E79F.
+
+**Panel (c) Code Block**
+*   Label: "(c) SpMV kernel" at `[X: 2, Y: 50]`
+*   Code Box: `[X: 2, Y: 56, W: 42, H: 34]`, Light Gray #ECF0F1 background.
+*   Line Numbers: X=3, Y=58 to 90 (spacing=4.5).
+*   Code Text: X=6, aligned with line numbers.
+*   **Red Box**: Tightly around `x[ A_col[j] ]` on line 6 `[X: 18, Y: 78.5, W: 18, H: 5]`. Red #C0392B, 1.5pt border, no fill.
+*   Red Arrow: From Red Box right edge `[X: 36, Y: 81]` pointing right to `[X: 44, Y: 81]`, text "IMA chain: x[A_col[j]]".
+
+**Panel (d) Runtime Access Pattern**
+*   Label: "(d) Runtime access pattern" at `[X: 52, Y: 50]`
+*   `A_col[]` strip: `[X: 52, Y: 60, W: 46, H: 6]`. Cells: `... | 1 | 5 | 3 | 0 | 6 | 7 | ...`. Light Blue #AED6F1.
+*   `x[]` strip: `[X: 52, Y: 84, W: 46, H: 6]`. Cells: `... | x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | ...`.
+*   Accessed `x[]` cells (Dark Purple #A569BD, white text): x1, x3, x5, x6, x7. Unaccessed (Light Purple #D7BDE2): x0, x2, x4.
+
+### 3. Inter-Panel Flow Arrows
+*   **(a) → (b)**: Thick black curved arrow from `[X: 44, Y: 25]` to `[X: 51, Y: 18]`. Control point at `[X: 48, Y: 15]`. Label "CSR encoding".
+*   **(b) & (c) → (d)**: Thin dashed black arrow from `A_col[]` in (b) `[X: 67, Y: 46]` down to `[X: 67, Y: 58]` in (d). Thin dashed black arrow from (c) red box `[X: 44, Y: 81]` curving to `[X: 51, Y: 63]` in (d).
+
+### 4. Intra-Panel Indirection Arrows (Panel d)
+5 Red #C0392B curved arrows (1.5pt) from `A_col[]` bottom edge to `x[]` top edge. Route smoothly to avoid crossing:
+*   **Arrow A**: `A_col[1]` → `x1` (Slight downward curve)
+*   **Arrow C**: `A_col[3]` → `x3` (Direct downward curve)
+*   **Arrow B**: `A_col[5]` → `x5` (Arch down to the right, routing above Arrow C)
+*   **Arrow D**: `A_col[6]` → `x6` (Arch down to the right)
+*   **Arrow E**: `A_col[7]` → `x7` (Direct diagonal down)
+*(Note: A_col value '0' is skipped as requested to prevent crossing/clutter).*
+
+### 5. Bottom Legend
+*   Horizontal strip at `[X: 5, Y: 96, W: 90, H: 4]`.
+*   5 items evenly spaced at X=10, 28, 46, 64, 82.
+*   Each item: 3x3 colored square (or red arrow) + 7pt sans-serif text.
+
+### 6. Typography Sizes
+*   Panel Labels (a-d): 10pt Sans-serif Bold, Dark #2C3E50.
+*   Array Labels: 9pt Sans-serif Bold.
+*   Matrix/Array Values: 9pt Monospace.
+*   Code Text: 9pt Monospace. Line numbers: 8pt Monospace.
+*   Sub-labels/Annotations: 7pt Sans-serif Italic, Gray.
+*   Red annotations: 8pt Sans-serif Italic/Bold, Red #C0392B.
+
+### 7. Critical Visual Clarity Notes
+*   **Whitespace**: Maintain a clear 8% vertical gap between top (a/b) and bottom (c/d) panels, and a 6% horizontal gap between left (a/c) and right (b/d) panels.
+*   **Red Box Visibility**: Ensure the red box in (c) has NO fill so the code remains perfectly legible. The 1.5pt border must snap exactly to the text bounds.
+*   **Arrow Routing**: In panel (d), vary the peak heights of the curved arrows. Arrow B (5→x5) should arc higher than Arrow C (3→x3) to prevent tangling. Drop the arrowheads exactly on the top border of the `x[]` cells.

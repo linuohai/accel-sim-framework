@@ -1,0 +1,49 @@
+**Prompt for nano-banana-pro:**
+
+**Global Settings:**
+*   **Canvas:** 16:9 aspect ratio, 1K resolution.
+*   **Style:** Flat 2D, white background (#FFFFFF), 4-6pt rounded corners on all boxes. No shadows, gradients, or 3D effects. Clean academic MICRO/ISCA/HPCA style.
+
+**Layout Structure:**
+
+**Level 1: SASS Code (Top 15%, Y: 5-20%)**
+*   **Label:** "SpMV SASS Code (x16 Unrolled)" (Dark gray, bold, 15pt, top-left).
+*   **Code Box:** Light gray (#F0F0F0) fill, 5% L/R margins.
+*   **Content:** 4 lines, 10pt monospace:
+    *   `PC 0x0480: IMAD.WIDE R8, R9, R16, c[0x0][0x180]  // unroll copy 1`
+    *   `PC 0x0490: IMAD.WIDE R26, R27, R16, c[0x0][0x180] // unroll copy 2`
+    *   `PC 0x04b0: IMAD.WIDE R12, R13, R16, c[0x0][0x180] // unroll copy 3`
+    *   `... x16 total copies ...`
+*   **Transition:** Downward arrow ({LOGIC} color) labeled "CD detects 16 IMA chains".
+
+**Level 2: Chain Table (Next 30%, Y: 25-55%)**
+*   **Label:** "Chain Table (CT) - 16 entries from SpMV" ({STORAGE} color, bold, 14pt).
+*   **Table:** Full width. 3px white grid gaps.
+    *   **Header:** {STORAGE} fill, white bold text: `index_PC | data_PC | tt_idx[] | num_targets | stride | stride_valid`
+    *   **Rows 1-4:** White fill, dark monospace text.
+        *   `0x0460 | 0x04a0 | [0] | 1 | 64 | check`
+        *   `0x0470 | 0x04c0 | [0] | 1 | 64 | check`
+        *   `0x0490 | 0x04d0 | [0] | 1 | 64 | check`
+        *   `0x04b0 | 0x04f0 | [0] | 1 | 64 | check`
+*   **Footer:** Italic gray text "... all 16 entries have tt_idx = [0] ...".
+*   **Transition:** Multiple downward arrows converging from `tt_idx` column. Label: "16 to 1 convergence" ({LOGIC} color).
+
+**Level 3: Target Table & Logic (Next 30%, Y: 60-90%)**
+*   **LEFT HALF (X: 5-48%):**
+    *   **Label:** "Target Table (TT) - 1 shared entry" ({STORAGE}, bold, 13pt).
+    *   **Table:** Header ({STORAGE} fill, white text): `base_addr | scale | valid`. Row 1: `c[0x0][0x180] | 4 | check`.
+    *   **Text:** "ONE entry for ALL 16 PCs" (bold, {KEY} color). "Shared across entire SM (all warps)" (italic, {STORAGE} color).
+*   **RIGHT HALF (X: 52-95%):**
+    *   **Formula Box:** {KEY} fill, white text. Line 1: "data_addr = base_addr + index_value x scale" (14pt bold). Line 2: "= c[0x180] + col_idx x 4" (12pt).
+    *   **Example Boxes:** 3 stacked white boxes, {KEY} borders, monospace text:
+        *   `col_idx=0x1A3F -> addr=base+0x68FC`
+        *   `col_idx=0x2B10 -> addr=base+0xAC40`
+        *   `col_idx=0x0C44 -> addr=base+0x3110`
+
+**Bottom Legend (Bottom 5%, Y: 95%)**
+*   **Layout:** Centered, horizontal.
+*   **Items:** 
+    *   {STORAGE} square + "Storage"
+    *   {LOGIC} square + "Logic"
+    *   {KEY} square + "Key Formula"
+    *   {SUCCESS} square + "Validation"

@@ -1,0 +1,58 @@
+Here is the verified, finalized, and highly specific rendering prompt ready for nano-banana-pro. It strictly adheres to MICRO/ISCA/HPCA publication standards, ensuring high contrast, flat design, and exact content placement.
+
+***
+
+**Prompt for nano-banana-pro:**
+
+**Global Settings:**
+*   **Canvas:** 16:9 aspect ratio, 1K resolution.
+*   **Style:** Flat 2D vector graphics, pure white background (#FFFFFF). Strictly NO shadows, NO gradients, NO 3D effects, and NO visual clutter. Clean academic computer architecture style (MICRO/ISCA/HPCA).
+*   **Shapes:** 4-6pt rounded corners on all bounding boxes and tables.
+*   **Typography:** Sans-serif for labels/headers (Helvetica/Arial style), monospace for code/addresses (Courier/Consolas style). All text must be crisp and highly legible.
+
+**Layout Structure:**
+
+**Level 1: SASS Code (Top 15%, Y: 5-20%)**
+*   **Label:** "SpMV SASS Code (x16 Unrolled)" (Dark gray #333333, bold sans-serif, 15pt, aligned top-left).
+*   **Code Box:** Light gray (#F0F0F0) solid fill, 5% left/right margins.
+*   **Content:** 4 lines, 10pt dark gray monospace text, left-aligned:
+    *   `PC 0x0480: IMAD.WIDE R8, R9, R16, c[0x0][0x180]  // unroll copy 1`
+    *   `PC 0x0490: IMAD.WIDE R26, R27, R16, c[0x0][0x180] // unroll copy 2`
+    *   `PC 0x04b0: IMAD.WIDE R12, R13, R16, c[0x0][0x180] // unroll copy 3`
+    *   `... x16 total copies ...`
+*   **Transition:** A single, clean downward-pointing arrow (Solid #C0714A color) centered below the box. Label next to arrow: "CD detects 16 IMA chains" (11pt, #C0714A, sans-serif).
+
+**Level 2: Chain Table (Next 30%, Y: 25-55%)**
+*   **Label:** "Chain Table (CT) - 16 entries from SpMV" (#6B8E6B color, bold sans-serif, 14pt, aligned top-left).
+*   **Table:** Full width (5% L/R margins). Flat design with 3px pure white (#FFFFFF) grid gaps between cells.
+    *   **Header Row:** #6B8E6B solid fill, pure white (#FFFFFF) bold sans-serif text: `index_PC | data_PC | tt_idx[] | num_targets | stride | stride_valid`
+    *   **Rows 1-4:** Pure white (#FFFFFF) fill, dark gray (#333333) monospace text.
+        *   Row 1: `0x0460 | 0x04a0 | [0] | 1 | 64 | [Green Check Mark]`
+        *   Row 2: `0x0470 | 0x04c0 | [0] | 1 | 64 | [Green Check Mark]`
+        *   Row 3: `0x0490 | 0x04d0 | [0] | 1 | 64 | [Green Check Mark]`
+        *   Row 4: `0x04b0 | 0x04f0 | [0] | 1 | 64 | [Green Check Mark]`
+        *   *Note on Check Marks:* Must be drawn as flat vector check marks using the success color #3A7D44.
+*   **Footer:** Italic gray text centered below table: "... all 16 entries have tt_idx = [0] ...".
+*   **Transition:** Multiple downward arrows converging from the `tt_idx` column into a single point below. Label: "16 to 1 convergence" (11pt, #C0714A color, sans-serif).
+
+**Level 3: Target Table & Logic (Next 30%, Y: 60-90%)**
+*   **LEFT HALF (X: 5-48%):**
+    *   **Label:** "Target Table (TT) - 1 shared entry" (#6B8E6B color, bold sans-serif, 13pt).
+    *   **Table:** 3px white grid gaps. Header (#6B8E6B solid fill, white bold text): `base_addr | scale | valid`. Row 1 (White fill, dark monospace text): `c[0x0][0x180] | 4 | [Green Check Mark #3A7D44]`.
+    *   **Text Below Table:** 
+        *   Line 1: "ONE entry for ALL 16 PCs" (bold sans-serif, #5B7DB1 color). 
+        *   Line 2: "Shared across entire SM (all warps)" (italic sans-serif, #6B8E6B color).
+*   **RIGHT HALF (X: 52-95%):**
+    *   **Formula Box:** #5B7DB1 solid fill, pure white (#FFFFFF) text. Centered content. Line 1: "data_addr = base_addr + index_value x scale" (14pt bold monospace). Line 2: "= c[0x180] + col_idx x 4" (12pt monospace).
+    *   **Example Boxes:** 3 vertically stacked boxes below the formula. Pure white (#FFFFFF) fill, 2px solid #5B7DB1 borders. Dark gray monospace text:
+        *   Box 1: `col_idx=0x1A3F -> addr=base+0x68FC`
+        *   Box 2: `col_idx=0x2B10 -> addr=base+0xAC40`
+        *   Box 3: `col_idx=0x0C44 -> addr=base+0x3110`
+
+**Bottom Legend (Bottom 5%, Y: 95%)**
+*   **Layout:** Centered horizontally, items spaced evenly.
+*   **Items:** (Each consists of a 12x12px solid colored square followed by 11pt dark gray sans-serif text)
+    *   [Square #6B8E6B] "Storage"
+    *   [Square #C0714A] "Logic"
+    *   [Square #5B7DB1] "Key Formula"
+    *   [Square #3A7D44] "Validation"

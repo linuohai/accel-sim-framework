@@ -1,0 +1,77 @@
+Here is the OPTIMIZED LAYOUT DESCRIPTION for the 2-panel single-column figure (4:3 aspect ratio).
+
+### 1. Global Canvas & Panel Bounding Boxes
+*   **Canvas Size:** 800px width x 600px height (4:3 aspect ratio, equivalent to ~3.5" x 2.6" at 225 DPI).
+*   **Background:** White (`#FFFFFF`). No borders, no shadows.
+*   **Panel (a) Bounding Box:** (x: 0, y: 0, w: 100%, h: 42%) — Top section.
+*   **Panel (b) Bounding Box:** (x: 0, y: 45%, w: 100%, h: 55%) — Bottom section.
+*   **Whitespace Budget:** 3% vertical gap between Panel (a) and Panel (b). 5% padding on left/right margins.
+
+---
+
+### 2. Panel (a) SASS Chain (Top 42%)
+**Panel Label:** "(a) SASS Chain for x[A_col[j]]" at (x: 5%, y: 4%), 10pt bold dark (`#2C3E50`), sans-serif.
+
+**Instruction Boxes (Centered horizontally):**
+*   **Box 1 (Top):** (x: 25%, y: 10%, w: 50%, h: 8%). Background `#ECF0F1`, 1pt black border, 4pt radius.
+    *   Text: `LDG.E.SYS  R10, [R6]` (Monospace 10pt dark). Centered in box.
+    *   Left Circle ①: (x: 20%, y: 14%). 16pt dark circle, white bold "1".
+    *   Right Label: (x: 77%, y: 14%). "index load" (9pt italic dark gray).
+*   **Box 2 (Middle):** (x: 25%, y: 24%, w: 50%, h: 8%). Same style.
+    *   Text: `IMAD.WIDE  R12, R10, 0x8, c[0x0][0x178]` (Monospace 10pt dark).
+    *   Left Circle ②: (x: 20%, y: 28%).
+    *   Right Label: (x: 77%, y: 28%). "address compute".
+*   **Box 3 (Bottom):** (x: 25%, y: 38%, w: 50%, h: 8%). Same style.
+    *   Text: `LDG.E.SYS  R14, [R12]` (Monospace 10pt dark).
+    *   Left Circle ③: (x: 20%, y: 42%).
+    *   Right Label: (x: 77%, y: 42%). "data load".
+
+**Red Arrows (Connecting Boxes):**
+*   **Arrow 1:** From bottom-center of Box 1 (x: 50%, y: 18%) to top-center of Box 2 (x: 50%, y: 24%). Solid red (`#C0392B`), 1.5pt, small triangular head.
+    *   Label right of arrow: (x: 52%, y: 21%). "R10 carries loaded index" (8pt italic red `#C0392B`).
+*   **Arrow 2:** From bottom-center of Box 2 (x: 50%, y: 32%) to top-center of Box 3 (x: 50%, y: 38%). Same style.
+    *   Label right of arrow: (x: 52%, y: 35%). "R12 carries computed address" (8pt italic red `#C0392B`).
+
+---
+
+### 3. Panel (b) IMAD.WIDE Operand Decomposition (Bottom 55%)
+**Panel Label:** "(b) IMAD.WIDE Operand Decomposition" at (x: 5%, y: 50%), 10pt bold dark (`#2C3E50`), sans-serif.
+
+**Main Instruction Display (y: 60%, centered horizontally):**
+*   **Opcode:** `IMAD.WIDE` at (x: 10%, y: 60%). 11pt bold dark monospace.
+*   **Operand 1 (R12):** Box at (x: 28%, y: 58%, w: 8%, h: 6%). Fill `#7B68AE` (Purple). Text `R12` (10pt bold white monospace).
+*   **Comma:** at (x: 37%, y: 60%).
+*   **Operand 2 (R10):** Box at (x: 40%, y: 58%, w: 8%, h: 6%). Fill `#C0392B` (Red). Text `R10` (10pt bold white monospace).
+*   **Comma:** at (x: 49%, y: 60%).
+*   **Operand 3 (0x8):** Box at (x: 52%, y: 58%, w: 8%, h: 6%). Fill `#D4A843` (Amber). Text `0x8` (10pt bold white monospace).
+*   **Comma:** at (x: 61%, y: 60%).
+*   **Operand 4 (c[0x0][0x178]):** Box at (x: 64%, y: 58%, w: 26%, h: 6%). Fill `#5AA469` (Green). Text `c[0x0][0x178]` (10pt bold white monospace).
+
+**Callout Lines (y: 64% to y: 72%):**
+Thin gray lines (`#95A5A6`, 0.8pt) dropping straight down from the horizontal center of each colored operand box.
+*   Line 1: x: 32%
+*   Line 2: x: 44%
+*   Line 3: x: 56%
+*   Line 4: x: 77%
+
+**Explanation Blocks (y: 74% to 95%):**
+Arranged horizontally. Each has a colored square bullet (3x3 px) matching its operand color. Text is 8pt dark (`#2C3E50`), sans-serif, left-aligned.
+*   **Block 1 (Purple):** (x: 25%, y: 74%, w: 18%).
+    *   Bullet: `#7B68AE`
+    *   Text: "output\naddress of x[A_col[j]]"
+*   **Block 2 (Red):** (x: 44%, y: 74%, w: 15%).
+    *   Bullet: `#C0392B`
+    *   Text: "index value\nfrom ① at runtime"
+*   **Block 3 (Amber):** (x: 60%, y: 74%, w: 18%).
+    *   Bullet: `#D4A843`
+    *   Text: "scale factor\nsizeof(double)\ncompile-time immediate"
+*   **Block 4 (Green):** (x: 79%, y: 74%, w: 20%).
+    *   Bullet: `#5AA469`
+    *   Text: "base pointer of x[]\nkernel parameter\nconstant memory"
+
+*(Note: Block X positions are slightly offset from exact callout centers to prevent text overlap, particularly for the wider text blocks).*
+
+### 4. Typography & Visual Emphasis
+*   **Font Families:** Monospace (e.g., Courier New, Consolas) for all SASS instructions and hex values. Sans-serif (e.g., Arial, Helvetica) for all labels, annotations, and explanations.
+*   **Color Linking:** The red `#C0392B` is used for the R10 box in Panel (b), the R10 arrow in Panel (a), and the R10 arrow label. This creates a strong visual link reinforcing the data dependency flow.
+*   **Dominance:** Panel (b) is given more vertical space (55%) and uses high-contrast colored boxes against a white background to immediately draw the reader's eye to the operand decomposition.

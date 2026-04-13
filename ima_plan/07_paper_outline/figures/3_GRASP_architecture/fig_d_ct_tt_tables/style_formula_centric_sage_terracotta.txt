@@ -1,0 +1,48 @@
+Here is the finalized, optimized rendering prompt for nano-banana-pro, strictly adhering to MICRO/ISCA/HPCA academic style guidelines. I have updated the table headers to use solid color fills with white text to ensure compliance with your readability and styling rules.
+
+***
+
+**[System Settings & Canvas]**
+Aspect Ratio: 16:9
+Resolution: 1K (1920x1080)
+Background: Solid White (#FFFFFF)
+Global Style: Clean academic computer architecture diagram (MICRO/ISCA/HPCA style). Flat 2D vector graphic. NO drop shadows, NO gradients, NO 3D effects. All bounding boxes have 4-6pt rounded corners. Line weights are crisp and uniform (1.5pt to 2pt). Text must be perfectly legible, strictly adhering to the specified colors and fonts.
+
+**[Top Strip: y=0% to 18%]**
+- Text Element: At x=5%, y=5%, left-aligned. Text: "SpMV SASS — x16 Unrolled IMAD.WIDE". Font: Dark gray (#333333), Bold, 16pt, Sans-serif.
+- Horizontal Box Array: Centered horizontally at y=10%. Four light gray (#F0F0F0) filled rectangles with 1.5pt dark gray borders, spaced evenly.
+  - Box 1 Text: "PC 0x0480: IMAD.WIDE R8, R9, R16, c[0x180]" (Monospace, 10pt, dark gray #333333).
+  - Box 2 Text: "PC 0x0490: IMAD.WIDE R26, R27, R16, c[0x180]" (Monospace, 10pt, dark gray #333333).
+  - Box 3 Text: "PC 0x04b0: ..." (Monospace, 10pt, dark gray #333333).
+  - Box 4 Text: "... x16 total" (Italic, 10pt, dark gray #333333).
+- Annotation: A thin black (#000000) curly brace facing upwards, spanning the entire width of the 4 boxes directly below them at y=15%. Centered below the brace, text: "All share same base + scale" (Italic, 11pt, dark gray #333333).
+
+**[Center Panel: x=30% to 70%, y=25% to 60%]**
+- Main Formula Box: Large rounded rectangle centered at y=30%. Fill color: #5B7DB1. Border: None. Text: "data_addr = base_addr + index_value x scale" (White #FFFFFF, Bold, 20pt, Sans-serif, centered).
+- Sub-boxes: Three vertically stacked rounded rectangles directly below the main formula box (y=40% to 55%). Fill: White (#FFFFFF). Border: 2pt solid #5B7DB1.
+  - Sub-box 1 Text: "base=c[0x180], idx=0x1A3F, scale=4 -> addr=base+0x68FC" (Monospace, 10pt, black #000000).
+  - Sub-box 2 Text: "base=c[0x180], idx=0x2B10, scale=4 -> addr=base+0xAC40" (Monospace, 10pt, black #000000).
+  - Sub-box 3 Text: "base=c[0x180], idx=0x0C44, scale=4 -> addr=base+0x3110" (Monospace, 10pt, black #000000).
+
+**[Left Panel: x=2.5% to 27.5%, y=25% to 60%]**
+- Table Header Box: Centered at top of panel (y=22%), spanning the width of the table below. Fill color: #6B8E6B. Border: None. Text: "Chain Table (CT)" (White #FFFFFF, Bold, 13pt, Sans-serif, centered).
+- Table Structure: Stacked grid directly below the header with 3px white gaps between cells. Fill: White (#FFFFFF). Border: 1.5pt solid #6B8E6B.
+  - Row 1 (Split horizontally): Left cell text "index_PC: 0x0460" | Right cell text "data_PC: 0x04a0" (Sans-serif, 10pt, black).
+  - Row 2 (Split into thirds): Left cell "tt_idx: [0]" | Middle cell "stride: 64" | Right cell "valid: ✓" (Check-mark icon strictly in #3A7D44 color).
+- Arrow: A curved arrow (color: #C0714A, 2pt stroke) originating from the right edge of Row 1, pointing rightwards to the "index_value" text inside the Center Main Formula Box. Arrow label above curve: "index_value from index load" (10pt, Sans-serif, #C0714A).
+- Footer Text: Centered below the table at y=55%. Text: "x16 entries, all tt_idx=[0]" (Italic, 10pt, dark gray #333333).
+
+**[Right Panel: x=72.5% to 97.5%, y=25% to 60%]**
+- Table Header Box: Centered at top of panel (y=22%), spanning the width of the table below. Fill color: #6B8E6B. Border: None. Text: "Target Table (TT)" (White #FFFFFF, Bold, 13pt, Sans-serif, centered).
+- Table Structure: Stacked grid directly below the header with 3px white gaps between cells. Fill: White (#FFFFFF). Border: 1.5pt solid #6B8E6B.
+  - Row 1 (Full width): "base_addr: c[0x0][0x180]" (Sans-serif, 10pt, black).
+  - Row 2 (Split horizontally): Left cell "scale: 4" | Right cell "valid: ✓" (Check-mark icon strictly in #3A7D44 color).
+- Arrow: A curved arrow (color: #C0714A, 2pt stroke) originating from the left edge of the TT table, pointing leftwards to the "base_addr" and "scale" text inside the Center Main Formula Box. Arrow label above curve: "base_addr, scale from TT" (10pt, Sans-serif, #C0714A).
+- Footer Text: Centered below the table at y=55%. Line 1: "1 entry shared by all 16 CTs" (Regular, 10pt, dark gray #333333). Line 2: "Shared across entire SM (all warps)" (Bold, 10pt, dark gray #333333).
+
+**[Bottom Legend: y=95%, Centered horizontally]**
+- Layout: Horizontal row of items spaced equally, centered at the bottom of the canvas.
+- Item 1: Solid square filled with #6B8E6B + Text "Storage" (11pt, Sans-serif, black).
+- Item 2: Solid square filled with #C0714A + Text "Logic" (11pt, Sans-serif, black).
+- Item 3: Solid square filled with #5B7DB1 + Text "Key Formula" (11pt, Sans-serif, black).
+- Item 4: Solid square filled with #3A7D44 + Text "Validation" (11pt, Sans-serif, black).

@@ -16,213 +16,125 @@
 %   \usepackage{multirow}
 %   \usepackage{amssymb}       % for \checkmark
 %   \usepackage[table]{xcolor} % for \rowcolor (optional)
+%
+% 表格出现顺序对应 LaTeX 自动表号：
+%   Table 1 = tab:cpu-cost   (defined inline in main.tex §2)
+%   Table 2 = tab:grasp-budget  (§3.6 Hardware Overhead)
+%   Table 3 = tab:gpu-config    (§4 Block 1 Simulation)
+%   Table 4 = tab:algorithms    (§4 Block 2 — kernels first per writer's plan)
+%   Table 5 = tab:datasets      (§4 Block 2 — datasets last per writer's plan)
 % ============================================================================
 
 
+% [Removed 2026-04-08] Template 2 (tab:prefetcher-config) — §4 lists baselines
+% as an inline numbered list (1)–(4); hardware cost lives in §5.5.
+
+% [Removed 2026-04-08] Template 4 (tab:ima-patterns) — §4 plan does NOT use
+% per-workload IMA Pattern (I/II/III/IV) mapping (Insight 8 taxonomy lacks a
+% clean per-workload ground truth).
+
+% [Removed 2026-04-08] Template 6 (tab:performance) — §5.1 placeholder only;
+% the real result figure/table will be generated when §5 is written.
+
+
+% [Moved 2026-04-08] Template 5 (tab:grasp-budget) is now defined inline in
+% main.tex §5.5 Hardware Cost. LaTeX floats do not travel backwards, and
+% \input{table_templates} sits near the end of §3 — loading the table here
+% caused it to float into §3 instead of §5.5.
+
+
 % ────────────────────────────────────────────────────────────────────────────
-% Template 1: Simulator Configuration (模拟器参数配置)
-% 用途：Methodology 节中描述 baseline GPU 配置
-% 参考：DMP TABLE II, Snake TABLE I, Tyche TABLE I
+% Template 1 (rebuilt 2026-04-08): Simulator and target GPU configuration
+% 用途：§4 Methodology Block 1 (Simulation) — 替代 inline GPU 参数描述
+% 数据源：gpu-simulator/gpgpu-sim/configs/tested-cfgs/SM80_A100/gpgpusim.config
+%        gpu-simulator/gpgpu-sim/version (GPGPU-Sim 4.2.0)
+% L1D 标注 "adaptive"：static 配置 32 KB，但 unified 192 KB - 64 KB shmem = 128 KB
 % ────────────────────────────────────────────────────────────────────────────
 
 \begin{table}[t]
-  \caption{Baseline GPU configuration.}
+  \caption{Simulator and target GPU configuration.}
   \label{tab:gpu-config}
   \centering
   \small
   \begin{tabular}{@{}ll@{}}
     \toprule
-    \textbf{Parameter}          & \textbf{Value} \\
+    \textbf{Parameter} & \textbf{Value} \\
     \midrule
-    GPU Model                   & NVIDIA A100 (SM80) \\
-    \# SMs                      & 108 \\
-    Warp Schedulers / SM        & 4 (GTO) \\
-    Max Warps / SM              & 64 \\
-    Max CTAs / SM               & 32 \\
-    Clock Frequency             & 1.41\,GHz \\
+    Simulator                  & Accel-Sim v1.3.0~\cite{khairy2020accelsim} (trace-driven) \\
+    Performance model          & GPGPU-Sim 4.2.0 \\
+    Configuration profile      & \texttt{tested-cfgs/SM80\_A100} \\
     \midrule
-    L1 D-Cache / SM             & 192\,KB, 128B line, 48-way \\
-    L1 MSHRs / SM               & 256 entries \\
-    L2 Cache (shared)           & 40\,MB, 128B line, 16-way \\
-    L2 MSHRs / partition        & 128 entries \\
+    GPU model                  & NVIDIA A100 (SM80) \\
+    Streaming multiprocessors  & 108 \\
+    Warps / SM                 & 64 \\
+    Threads / warp             & 32 \\
+    Warp schedulers / SM       & 4 (LRR) \\
+    Max CTAs / SM              & 32 \\
+    Registers / SM             & 65{,}536 \\
+    Core clock                 & 1.41\,GHz \\
     \midrule
-    DRAM                        & HBM2, 40 channels \\
-    DRAM Bandwidth              & 2039\,GB/s (peak) \\
-    Interconnect                & Crossbar, 1.41\,GHz \\
+    L1 D-cache / SM            & 128\,KB, 128\,B sectors (adaptive) \\
+    L1 MSHRs / SM              & 512 entries \\
+    L2 cache (shared)          & 40\,MB, 128\,B line, 16-way \\
+    DRAM                       & HBM2, 40 channels \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 
 % ────────────────────────────────────────────────────────────────────────────
-% Template 2: Prefetcher Comparison (Baseline 对比配置)
-% 用途：列出所有对比的 prefetcher 及其硬件开销
-% 参考：DMP TABLE III — "Configuration of Evaluated Prefetchers"
+% Template 7: Algorithm List (§4 Block 2 — kernels first per writer's plan)
+% 用途：列出 9 个算法，按 Suite 用 \cmidrule 分组
 % ────────────────────────────────────────────────────────────────────────────
 
 \begin{table}[t]
-  \caption{Configuration of evaluated prefetchers.}
-  \label{tab:prefetcher-config}
+  \caption{Evaluated graph and irregular kernels.}
+  \label{tab:algorithms}
   \centering
   \small
-  \begin{tabular}{@{}lccc@{}}
+  \begin{tabular}{@{}clll@{}}
     \toprule
-    \textbf{Prefetcher} & \textbf{Configuration} & \textbf{Category} & \textbf{Storage} \\
+    \textbf{\#} & \textbf{Algorithm} & \textbf{Suite} & \textbf{Domain} \\
     \midrule
-    \textbf{GRASP (ours)}
-      & \begin{tabular}[c]{@{}c@{}}8-entry CT, 4-entry TT,\\16-entry PRB, $d$=4\end{tabular}
-      & HW & 1.2\,KB \\
-    \addlinespace
-    Stride-INTRA~\cite{}
-      & 32-entry stride table / SM
-      & HW & 0.5\,KB \\
-    \addlinespace
-    Spare Reg.~\cite{}
-      & 2-step: stride index + pair table
-      & SW-HW & 0.8\,KB \\
-    \addlinespace
-    Snake~\cite{}
-      & 16-entry chain table, $L$=4
-      & HW & 1.0\,KB \\
-    \addlinespace
-    No Prefetch
-      & ---
-      & --- & --- \\
+    1 & BFS    & \multirow{6}{*}{Gardenia~\cite{xu2019gardenia}} & Graph traversal \\
+    2 & SSSP   &                                                  & Shortest path \\
+    3 & BC     &                                                  & Centrality \\
+    4 & CC     &                                                  & Connected components \\
+    5 & SpMV   &                                                  & Sparse linear algebra \\
+    6 & VC     &                                                  & Vertex cover \\
+    \cmidrule(lr){1-4}
+    7 & MIS    & \multirow{2}{*}{Pannotia~\cite{che2013pannotia}} & Maximal independent set \\
+    8 & Color  &                                                  & Graph coloring \\
+    \cmidrule(lr){1-4}
+    9 & MST    & LonestarGPU~\cite{burtscher2012irregular}        & Minimum spanning tree \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 
 % ────────────────────────────────────────────────────────────────────────────
-% Template 3: Benchmark / Dataset List (数据集参数)
-% 用途：列出评估用的图数据集及其规模
-% 参考：DMP TABLE V — "Real-world Datasets for Evaluation"
-%       Magellan — benchmark table with Names, Description, #V, #E
+% Template 3: Dataset List (§4 Block 2 — datasets last per writer's plan)
+% 用途：列出评估用的图数据集，按 Source 用 \cmidrule 分组
 % ────────────────────────────────────────────────────────────────────────────
 
 \begin{table}[t]
-  \caption{Graph datasets used for evaluation.}
+  \caption{Evaluation datasets.}
   \label{tab:datasets}
   \centering
   \small
   \begin{tabular}{@{}lrrll@{}}
     \toprule
-    \textbf{Dataset} & \textbf{$|V|$} & \textbf{$|E|$ (dir)} & \textbf{$|E|$ (sym)} & \textbf{Domain} \\
+    \textbf{Dataset} & \textbf{$|V|$} & \textbf{$|E|$} & \textbf{Domain} & \textbf{Source} \\
     \midrule
-    cit-Patents       & 3.77M &  16.5M & $\sim$33M   & Citation  \\
-    web-Google        &  916K &   5.1M & $\sim$8.6M  & Web       \\
-    flickr            &  821K &   9.8M & $\sim$19.6M & Social    \\
-    roadNet-CA        & 1.97M &   2.8M & 2.8M        & Roads     \\
-    \midrule
-    soc-LiveJournal1  & 4.85M &    69M & $\sim$138M  & Social    \\
-    \bottomrule
-  \end{tabular}
-  \vspace{2pt}
-  \parbox{\columnwidth}{\footnotesize
-   Top 4 datasets form the primary evaluation; soc-LiveJournal1 is
-   used for scalability analysis (BFS, SpMV only).
-   All sourced from SNAP~\cite{} / NetworkRepository~\cite{}.
-  }
-\end{table}
-
-
-% ────────────────────────────────────────────────────────────────────────────
-% Template 4: Kernel Feature Matrix (算法 × IMA 模式 checkmark)
-% 用途：展示每个 benchmark 包含哪些 IMA pattern 类型
-% 参考：DMP TABLE IV — "Kernel Configurations" with checkmarks
-% ────────────────────────────────────────────────────────────────────────────
-
-\begin{table}[t]
-  \caption{IMA pattern types present in each benchmark kernel.}
-  \label{tab:ima-patterns}
-  \centering
-  \small
-  \begin{tabular}{@{}llrccc@{}}
-    \toprule
-    \textbf{Benchmark} & \textbf{Category}
-      & \textbf{Chains}
-      & \multicolumn{3}{c}{\textbf{Datasets}} \\
-    \cmidrule(l){4-6}
-      & & & \textbf{cit-P} & \textbf{web-G} & \textbf{flickr} \\
-    \midrule
-    BFS    & Graph traversal  &  7 & \checkmark$^\dagger$ & \checkmark$^\dagger$ & \checkmark$^\dagger$ \\
-    SSSP   & Graph traversal  &  7 & \checkmark$^\dagger$ & \checkmark$^\dagger$ & \checkmark$^\dagger$ \\
-    BC     & Graph traversal  & 19 & \checkmark$^\dagger$ & \checkmark$^\dagger$ & \checkmark$^\dagger$ \\
-    CC     & Graph traversal  &  6 & \checkmark & \checkmark & \checkmark \\
-    SpMV   & Sparse LinAlg    & 29 & \checkmark & \checkmark & \checkmark \\
-    PR     & Sparse LinAlg    & 57 & \checkmark$^\dagger$ & \checkmark$^\dagger$ & \checkmark$^\dagger$ \\
-    VC     & Graph coloring   & 34 & \checkmark & \checkmark & $\times$ \\
-    SymGS  & Sparse smoother  &  2 & \checkmark$^\dagger$ & \checkmark$^\dagger$ & $\times$ \\
-    \bottomrule
-  \end{tabular}
-  \vspace{2pt}
-  \parbox{\columnwidth}{\footnotesize
-   \textbf{Chains}: number of IMA chains detected via \texttt{LDG}$\to$\texttt{IMAD.WIDE}$\to$\texttt{LDG} in SASS.
-   $^\dagger$Dual-variant: both directed and symmetric inputs evaluated; best selected.
-   $\times$: excluded due to \texttt{MAXCOLOR} overflow.
-   All algorithms also run on roadNet-CA (omitted for space).
-  }
-\end{table}
-
-
-% ────────────────────────────────────────────────────────────────────────────
-% Template 5: GRASP Hardware Budget (硬件预算分解)
-% 用途：展示 GRASP 各组件的 entry 数和存储开销
-% 参考：DMP TABLE III 的 "Configuration" 列展开为独立表
-% ────────────────────────────────────────────────────────────────────────────
-
-\begin{table}[t]
-  \caption{GRASP storage budget breakdown (per SM).}
-  \label{tab:grasp-budget}
-  \centering
-  \small
-  \begin{tabular}{@{}lcrc@{}}
-    \toprule
-    \textbf{Component} & \textbf{Entries} & \textbf{Bits/Entry} & \textbf{Total} \\
-    \midrule
-    CD (Chain Detector)   & 4-deep FIFO & 64  & 32\,B  \\
-    CT (Chain Table)      & 8           & 96  & 96\,B  \\
-    TT (Target Table)     & 4           & 80  & 40\,B  \\
-    IST (Stride Tracker)  & 8           & 48  & 48\,B  \\
-    PRB (Prefetch Buffer) & 16          & 128 & 256\,B \\
-    ACU                   & 1           & 128 & 16\,B  \\
-    TC (Throttle Ctrl)    & 1           & 32  & 4\,B   \\
-    \midrule
-    \textbf{Total}        &             &     & \textbf{492\,B} \\
+    cit-Patents       & 3.77\,M & 16.5\,M & Citation       & \multirow{5}{*}{SNAP~\cite{leskovec2014snap}} \\
+    web-Google        &  916\,K &  5.1\,M & Web            &                                                 \\
+    flickr            &  821\,K &  9.8\,M & Social         &                                                 \\
+    roadNet-CA        & 1.97\,M &  2.8\,M & Roads          &                                                 \\
+    soc-LiveJournal1  & 4.85\,M & 69.0\,M & Social         &                                                 \\
+    \cmidrule(lr){1-5}
+    ecology1          & 1.00\,M &  2.0\,M & 2D grid        & SuiteSparse~\cite{davis2011suitesparse}        \\
+    \cmidrule(lr){1-5}
+    rmat-12           & 4.10\,K & 29.7\,K & RMAT           & LonestarGPU~\cite{burtscher2012irregular}      \\
     \bottomrule
   \end{tabular}
 \end{table}
-
-
-% ────────────────────────────────────────────────────────────────────────────
-% Template 6: Performance Summary (主结果表, full-width)
-% 用途：跨所有 workload 汇总 IPC / speedup / prefetch 指标
-% 参考：通常作为 full-width table* 跨两栏
-% ────────────────────────────────────────────────────────────────────────────
-
-\begin{table*}[t]
-  \caption{Performance comparison across all benchmarks (IPC and speedup over no-prefetch baseline).}
-  \label{tab:performance}
-  \centering
-  \small
-  \begin{tabular}{@{}l*{5}{r}r@{}}
-    \toprule
-    & \multicolumn{5}{c}{\textbf{Speedup over No Prefetch}} & \\
-    \cmidrule(lr){2-6}
-    \textbf{Benchmark}
-      & \textbf{Stride} & \textbf{Spare Reg.} & \textbf{Snake} & \textbf{GRASP}
-      & \textbf{Ideal L1D} & \textbf{Base IPC} \\
-    \midrule
-    BFS     & 1.04$\times$ & 1.08$\times$ & 1.06$\times$ & \textbf{1.32$\times$} & 1.75$\times$ & 30.3 \\
-    SSSP    & 1.04$\times$ & 1.08$\times$ & 1.05$\times$ & \textbf{1.42$\times$} & 2.46$\times$ & 34.6 \\
-    BC      & 1.03$\times$ & 1.06$\times$ & 1.04$\times$ & \textbf{1.25$\times$} & 3.04$\times$ & 44.7 \\
-    CC      & 1.00$\times$ & 1.01$\times$ & 1.00$\times$ & \textbf{1.15$\times$} & 2.22$\times$ & --- \\
-    SpMV    & 1.00$\times$ & 1.02$\times$ & 1.01$\times$ & \textbf{1.05$\times$} & 2.31$\times$ & 152.0 \\
-    PR      & ---          & ---          & ---          & ---                    & ---          & --- \\
-    VC      & ---          & ---          & ---          & ---                    & ---          & --- \\
-    SymGS   & ---          & ---          & ---          & ---                    & ---          & --- \\
-    \midrule
-    \textbf{Gmean} & ---$\times$ & ---$\times$ & ---$\times$ & \textbf{---$\times$} & ---$\times$ & --- \\
-    \bottomrule
-  \end{tabular}
-\end{table*}

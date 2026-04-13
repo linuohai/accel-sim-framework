@@ -1,0 +1,79 @@
+Here is the ENHANCED, rendering-ready specification, reviewed and upgraded for strict MICRO/ISCA/HPCA publication standards. 
+
+I have applied architectural diagram best practices: enforcing strict orthogonal grid alignment, applying the exact typography rules (Bold Abbreviation + Regular Full Name), and structuring the instructions so a vector graphics engine (or human designer using TikZ/Visio/Illustrator) can execute it flawlessly.
+
+---
+
+# ENHANCED ARCHITECTURE FIGURE SPECIFICATION
+**Target:** Top-tier Computer Architecture Conference (MICRO/ISCA/HPCA)
+**Style:** Neutral High-Contrast Academic (Flat, 2D, Print-Friendly)
+
+## 1. GLOBAL RENDER DIRECTIVES
+*   **Canvas:** 16:9 aspect ratio, white background.
+*   **Prohibitions:** NO shadows, NO gradients, NO 3D effects, NO title, NO Chinese characters.
+*   **Typography:** Sans-serif (Helvetica/Arial). Minimum 8pt. Parameter names in exact Title Case. 
+*   **Label Format:** All component boxes MUST use the format: **[ABBREVIATION]** (Bold) on line 1, [Full Name] (Regular) on line 2. All text inside colored boxes MUST be WHITE.
+*   **Shapes:** All functional boxes must have 4-6pt rounded corners.
+*   **Borders:** External hardware (L1 D-Cache, Left/Right Panel bounding boxes) use dark border `#2C3E50` (1.5pt).
+
+## 2. COLOR & STROKE DICTIONARY
+*   **Logic Units:** Fill `#7B68AE` (Medium Purple), Text: White.
+*   **Storage Units:** Fill `#4472C4` (Medium Blue), Text: White.
+*   **Actions/Samplers:** Fill `#D4A843` (Amber Gold), Text: White.
+*   **Metrics/Success:** Fill `#5AA469` (Green), Text: White.
+*   **External Hardware:** Fill `#FFFFFF` (White), Border: `#2C3E50`, Text: `#2C3E50`.
+*   **Data Flow Edges:** Solid Black, 1.5pt, small triangular arrowhead.
+*   **Control/Feedback Edges:** Dashed Gray `#95A5A6`, 1.5pt, small triangular arrowhead.
+*   **Exempt Prefetch Edges:** Dashed Green `#2D8653`, 1.5pt, small triangular arrowhead.
+
+## 3. COMPONENT PLACEMENT & CONTENT (X, Y Center Points)
+*(0%, 0% is top-left; 100%, 100% is bottom-right)*
+
+### Left Panel: "Without Throttle" (Bounding Box: X:2%-30%, Y:5%-85%, dashed border)
+*   **GRASP** (X: 16%, Y: 15%): `#7B68AE`. Text: "**GRASP**\nGraph Prefetcher"
+*   **L1 D-Cache** (X: 16%, Y: 40%): `#FFFFFF`. Text: "**L1**\nData Cache". 
+    *   *Sub-component:* **MSHR** inside L1, filled with `#E74C3C` (Red) to visually indicate severe congestion.
+*   **Cache Pollution** (X: 16%, Y: 62%): `#D4A843`. Text: "Cache Pollution" (Overlay with 3 small Red 'X' marks).
+*   **Demand Miss Latency** (X: 16%, Y: 78%): `#FFFFFF` box, red text. Text: "Demand Miss Latency ↑"
+
+### Right Panel: "Dynamic Throttle (Mode 5)" (Bounding Box: X:32%-98%, Y:5%-85%, solid border)
+*Top Row (Y: 25% - Data Entry & Control)*
+*   **GRASP** (X: 38%, Y: 25%): `#7B68AE`. Text: "**GRASP**\nGraph Prefetcher"
+*   **Suppress Gate** (X: 55%, Y: 25%): `#D4A843`. Text: "**SG**\nSuppress Gate"
+*   **PQ** (X: 75%, Y: 25%): `#4472C4`. Text: "**PQ**\nPrefetch Queue"
+*   **TC** (X: 55%, Y: 12%): `#7B68AE`. Text: "**TC**\nThrottle Controller"
+*   **Cooldown** (X: 40%, Y: 12%): `#4472C4`. Text: "**Timer**\nCooldown Duration"
+
+*Middle Row (Y: 45% - Storage)*
+*   **L1 D-Cache** (X: 75%, Y: 45%): `#FFFFFF` (Large Box). Text: "**L1**\nData Cache".
+    *   *Sub-components inside:* **MSHR** (White fill, no congestion), **Useful Count**, **Useless Count**.
+
+*Bottom Row (Y: 70% - Feedback Loop)*
+*   **Sampler** (X: 75%, Y: 70%): `#D4A843`. Text: "**SWS**\nSliding Window Sampler"
+*   **Accuracy** (X: 55%, Y: 70%): `#5AA469`. Text: "**WA**\nWindow Accuracy\nΔUseful / (ΔUseful + ΔUseless)"
+*   **Mapper** (X: 38%, Y: 70%): `#7B68AE`. Text: "**TM**\nThreshold Mapper\n(Low Acc → Tight)\n(High Acc → Loose)"
+
+## 4. ORTHOGONAL ROUTING & NUMBERED STEPS
+*All sequence numbers ①-⑥ are white text inside black circles, placed over the midpoint of their respective arrows.*
+
+**Left Panel (Chaotic Flow):**
+*   **GRASP → L1 D-Cache:** 5 overlapping, squiggly/chaotic Solid Black arrows. Label: "DATA_PF (excessive)".
+*   **L1 → Pollution → Latency:** Straight Solid Black arrows downward.
+
+**Right Panel (Clean Orthogonal Feedback Loop):**
+*   **① GRASP → Suppress Gate:** Solid Black arrow rightward. Label: "DATA_PF".
+*   **② Suppress Gate → PQ:** Solid Black arrow rightward.
+*   **③ PQ → L1 D-Cache:** Solid Black arrow downward.
+*   **④ L1 D-Cache → Sampler:** Dashed Gray `#95A5A6` arrow downward. Label: "Useful/Useless Deltas".
+*   **⑤ Sampler → Accuracy → Mapper:** Solid Black arrows leftward.
+*   **⑥ Mapper → TC:** Solid Black arrow. Routes UP from X:38%, Y:70% to Y:12%, then RIGHT to X:45% (TC). Label: "Effective Threshold".
+*   **TC → Suppress Gate:** Dashed Gray `#95A5A6` arrow downward. Label: "Allow/Suppress".
+*   **GRASP → PQ (Bypass):** Dashed Green `#2D8653` arrow. Routes UP from GRASP to Y:18%, RIGHT over the Suppress Gate, DOWN to PQ. Label: "INDEX_PF (exempt)".
+*   **TC ↔ Cooldown:** Short bidirectional Dashed Gray arrow between X:40% and X:55% at Y:12%.
+
+## 5. LEGEND (Bounding Box: X:10%-90%, Y:92%-98%)
+Horizontal layout, centered at the bottom of the canvas.
+*   [Solid Black Arrow] = Data Flow
+*   [Dashed Green Arrow] = Index Prefetch (Exempt)
+*   [Dashed Gray Arrow] = Control / Feedback Signal
+*   [Red 'X' Mark] = Suppressed DATA_PF

@@ -1,0 +1,35 @@
+Generate a technical architecture diagram for an academic computer architecture paper (MICRO/ISCA/HPCA style). The image must have a strictly flat design, white background (#FFFFFF), no shadows, no gradients, no 3D effects, and no grid coordinates or meta-text. Use sans-serif fonts (Arial/Helvetica) for standard text and monospace fonts for hex values. Ensure high information density and crisp, legible text. Canvas dimensions are 16:9 (1024x576px).
+
+**1. CENTRAL TIMELINE**
+Draw a thick black horizontal arrow (stroke-width: 4px) across the middle from left to right, ending with an arrowhead pointing right. Label it "Time →" in 14pt bold text at the far right.
+Place 6 filled black circular nodes (16px diameter) along this timeline:
+- Node 1: Label below "Demand Load\n(cycle T)" (12pt, center-aligned).
+- Node 2: Label below "IPU Triggers\n(cycle T)" (12pt, center-aligned).
+- Node 3: Label below "PRB Alloc + Index PF\n(cycle T+1)" (12pt, center-aligned).
+- Node 4: Label above "Index Fill\n(cycle T+560)" (12pt, center-aligned).
+- Node 5: Label above "ACU+DPU\n(cycle T+561)" (12pt, center-aligned).
+- Node 6: Label above "Data PF Fill\n(cycle T+1120)" (12pt, center-aligned).
+
+**2. LATENCY BARS (Above Timeline)**
+- Bar 1 (Node 1 to 4): Draw a dashed line (2px, color: #3A7D44) connecting the nodes above the timeline. Add text "~560 cycles (index PF in-flight)" centered above it in 11pt, color #3A7D44.
+- Bar 2 (Node 5 to 6): Draw a dashed line (2px, color: #C0714A) connecting the nodes above the timeline. Add text "~560 cycles (data PF in-flight)" centered above it in 11pt, color #C0714A.
+
+**3. PANELS ABOVE TIMELINE (Connected via vertical black lines to Nodes 1-3)**
+All panels have a 1px solid black border. Tables inside panels must have headers colored with the panel's background color, white data cells, and white gaps between fields.
+- **Panel A (CT Lookup):** Above Node 1. Background: #6B8E6B. Header: "CT Lookup" (bold, 12pt). Content: "PC 0x0650, addr = 0xA000". Table (3 cols, 2 rows): Headers [stride_valid, iter_stride, tt_idx], Data [true, 16, [0]].
+- **Panel B (IPU):** Above Node 2. Background: #C0714A. Header: "IPU" (bold, 12pt). Content: "pf_addr = 0xA000 + 1×16\n= 0xA010".
+- **Panel C (PRB Entry [0]):** Above Node 3. Background: #6B8E6B. Header: "PRB Entry [0]" (bold, 12pt). Table 1 (6 cols): Headers [valid, warp, tt_idx, targets, sector, remaining], Data [true, 10, [0], 1, 0xA010, 1]. Text below: "sector_data[0]:". Table 2 (3 cols): Headers [sector_addr, candidate.data_addr, dispatched], Data [0xA010, (pending fill), false].
+
+**4. PANELS BELOW TIMELINE (Connected via vertical black lines to Nodes 4-6)**
+- **Panel D (Index Fill Returns):** Below Node 4. Background: #FFFFFF. Header: "Index Fill Returns" (bold, 12pt). Content: "L2/DRAM → L1: sector 0xA010", "column_indices[offset+4] = 42857" (Highlight "42857" in #5B7DB1), "PRB[0].remaining-- → release".
+- **Panel E (ACU + DPU):** Below Node 5. Background: #C0714A. Header: "ACU + DPU" (bold, 12pt). Content: "ACU reads TT[0]:". Table (2 cols): [base: dists_base (c[0x178]), scale: 4]. Text: "data_addr = dists_base + 42857 × 4\n= dists_base + 0x29FA4" (Highlight "0x29FA4" in #5B7DB1). Text: "DPU: queue Data PF @ dists_base+0x29FA4". Table (3 cols): [idx_addr: 0xA010, data_addr: base+0x29FA4, chain_id: 0].
+- **Panel F (Result):** Below Node 6. Background: #3A7D44. Header: "Result" (bold, 12pt, white text). Content (white text): "Data fills L1\nLater: PC 0x0680 LDG dists[42857]\n→ L1 HIT!" (bold).
+
+**5. BOTTOM LEGEND**
+At the bottom center, create a horizontal legend row (11pt font):
+- Square filled with #6B8E6B + "Storage"
+- Square filled with #C0714A + "Logic"
+- Square filled with #5B7DB1 + "Key data"
+- Square filled with #3A7D44 + "Result"
+- Dashed line colored #3A7D44 + "Index PF path"
+- Dashed line colored #C0714A + "Data PF path"

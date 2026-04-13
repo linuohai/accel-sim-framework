@@ -1,0 +1,89 @@
+Generate a high-resolution, top-tier computer architecture conference (MICRO/ISCA/HPCA) diagram based on the following strict rendering specification. The canvas is a 16:9 aspect ratio (1920x1080 conceptual pixels) designed for an IEEE double-column format. 
+
+**GLOBAL STYLE RULES (STRICTLY ENFORCED):**
+- **Color Palette:** Storage/Load units = SATURATED BLUE #2B5EA7; Logic/Compute units = SATURATED PURPLE #6C3483; Key steps/Actions = AMBER GOLD #D4A843; Other/Background = GRAY #BDC3C7; External/Tables = WHITE fill with #2C3E50 border.
+- **Borders & Text:** ALL colored boxes MUST have a crisp 1.5pt solid BLACK outline (not matching the fill color). ALL text inside colored boxes MUST be WHITE and bold. 
+- **Typography:** Use Times New Roman for all labels and standard text. Use Monospace (Courier) STRICTLY for the SASS code block.
+- **Effects:** NO titles, NO shadows, NO gradients, NO 3D effects. Flat, high-contrast academic style, print-friendly in grayscale.
+
+**LAYOUT & COMPONENT SPECIFICATION (Percentage-based Coordinates):**
+
+**1. Time Markers (Background Anchors):**
+- Draw vertical dashed gray lines from Y: 18% to Y: 87% at X: 25% (t₀), X: 45% (t₁), X: 65% (t₂), and X: 85% (t₃).
+
+**2. LAYER 1: SASS Source Code Snippet (Y: 2% - 15%)**
+- **Label:** X: 2%, Y: 8% ("SASS Code", Times New Roman, gray italic).
+- **Code Box:** X: 15% to 65%, Y: 2% to 15% (Light gray #F5F5F5 fill, rounded corners, 1.5pt black outline).
+  - Line 1 (Y: 4%): `FADD R1, R2, 3.0` (Monospace, Gray #BDC3C7)
+  - Line 2 (Y: 6.5%): `LDG.E R5, [R24]       ; Index Load` (Monospace, Blue #2B5EA7 bold, 3pt left bar)
+  - Line 3 (Y: 9%): `FADD R4, R3, R1` (Monospace, Gray #BDC3C7)
+  - Line 4 (Y: 11.5%): `IMAD.WIDE R2, R5, 8, R0  ; Addr Compute` (Monospace, Purple #6C3483 bold, 3pt left bar)
+  - Line 5 (Y: 14%): `LDG.E R3, [R2]        ; Data Load` (Monospace, Amber #D4A843 bold, 3pt left bar)
+- **Grouping Brace:** X: 66%, Y: 6.5% to 14% (Right-facing curly brace, black).
+- **Brace Label:** X: 68%, Y: 10% ("IMA Chain Pattern", Times New Roman, black).
+
+**3. LAYER 2: Warp Execution Timeline (Y: 18% - 58%)**
+- **Lane Backgrounds:** Warp 2 & 3 lanes (Y: 38% to 58%) have a full-width #FAFAFA background rectangle.
+- **Lane Labels (X: 2% to 14%, Times New Roman):**
+  - Warp 0 (Y: 23%): "Warp 0\n(TRACKED)" (Blue #2B5EA7 bold)
+  - Warp 1 (Y: 33%): "Warp 1\n(TRACKED)" (Blue #2B5EA7 bold)
+  - Warp 2 (Y: 43%): "Warp 2" (Gray #95A5A6)
+  - Warp 3 (Y: 53%): "Warp 3" (Gray #95A5A6)
+- **Instruction Blocks (Rounded Rectangles, 1.5pt BLACK outline, WHITE bold text):**
+  - *Warp 0, t₀:* X: 20% to 30%, Y: 20% to 26% (Blue #2B5EA7, "LDG R5, [R24]")
+  - *Warp 1, t₀:* X: 20% to 30%, Y: 30% to 36% (Gray #BDC3C7, "ALU OP")
+  - *Warp 2, t₀-t₁:* X: 32% to 42%, Y: 40% to 46% (Gray #BDC3C7, "ALU OP")
+  - *Warp 3, t₀-t₁:* X: 32% to 42%, Y: 50% to 56% (Gray #BDC3C7, "BRANCH")
+  - *Warp 0, t₁:* X: 40% to 50%, Y: 20% to 26% (Purple #6C3483, "IMAD.WIDE R2, R5, ...")
+  - *Warp 1, t₁:* X: 40% to 50%, Y: 30% to 36% (Gray #BDC3C7, "LDG R7, [R8]")
+  - *Warp 2, t₁-t₂:* X: 52% to 62%, Y: 40% to 46% (Gray #BDC3C7, "FADD R1, R2, 3")
+  - *Warp 0, t₂:* X: 60% to 70%, Y: 20% to 26% (Amber #D4A843, "LDG R3, [R2]")
+  - *Warp 3, t₂:* X: 60% to 70%, Y: 50% to 56% (Gray #BDC3C7, "FMA R9, ...")
+- **Annotation Box:** X: 75% to 95%, Y: 19% to 23% (Light gray #F5F5F5 fill, 1.5pt black outline, black text: "CD monitors only 2 tracked warps").
+
+**4. LAYER 3: CD FIFO State Evolution (Y: 62% - 87%)**
+- **t₀ State (X: 25% center):**
+  - Step Circle ①: X: 21%, Y: 65% (Black border, white fill, black text)
+  - Label: X: 25%, Y: 65% ("Push", black bold)
+  - FIFO Entry: X: 20% to 30%, Y: 70% to 80% (Blue #2B5EA7, 1.5pt black outline, white text: "LOAD_RESULT\ndst=R5, pc=0x640")
+- **t₁ State (X: 45% center):**
+  - Step Circle ②: X: 38%, Y: 65%
+  - Label: X: 45%, Y: 65% ("Match + Push", black bold)
+  - Entry 1: X: 36% to 44%, Y: 70% to 80% (Blue #2B5EA7, 1.5pt black outline, white text: "LOAD_RESULT\ndst=R5")
+  - Entry 2: X: 46% to 54%, Y: 70% to 80% (Purple #6C3483, 1.5pt black outline, white text: "IMA_ADDR_COMPUTE\ndst=R2, idx_pc=0x640")
+- **t₂ State (X: 65% center):**
+  - Step Circle ③: X: 58%, Y: 65%
+  - Label: X: 65%, Y: 65% ("Match → CHAIN CONFIRMED", black bold)
+  - Banner: X: 58% to 72%, Y: 70% to 80% (Amber #D4A843, 1.5pt black outline, white bold text: "CHAIN CONFIRMED!")
+  - Checkmark: X: 74%, Y: 75% (Green ✓)
+- **t₃ State (X: 85% center):**
+  - Step Circle ④: X: 80%, Y: 65%
+  - Label: X: 85%, Y: 65% ("Write Tables", black bold)
+  - CT Table: X: 78% to 84%, Y: 70% to 80% (White fill, 1.5pt black outline, black text: "CT\nidx_pc=0x640\ndata_pc=0x690")
+  - TT Table: X: 86% to 92%, Y: 70% to 80% (White fill, 1.5pt black outline, black text: "TT\n(base, scale)")
+
+**5. ARROW ROUTING:**
+- **Code ↔ Runtime Mapping (Gray dashed #808080 arrows):**
+  - From SASS Line 2 down to Warp 0 t₀ block.
+  - From SASS Line 4 down to Warp 0 t₁ block.
+  - From SASS Line 5 down to Warp 0 t₂ block.
+- **CD Tracking Flow (Black solid #2C3E50 arrows):**
+  - From bottom-center of Warp 0 t₀ block down to top-center of t₀ FIFO entry.
+  - From bottom-center of Warp 0 t₁ block down to top-center of t₁ Entry 2.
+  - From bottom-center of Warp 0 t₂ block down to top-center of t₂ "CHAIN CONFIRMED" banner.
+- **Intra-Layer Logic (Gray italic curved arrows):**
+  - t₁: Curve from Entry 1 right edge to Entry 2 left edge. Text: "src R5 matches dst R5" (below curve).
+  - t₂: Curve from left of banner to banner left edge. Text: "src R2 matches dst R2".
+- **Table Write (Amber dashed arrow):** From right edge of "CHAIN CONFIRMED" banner to left edges of CT and TT tables.
+
+**6. LEGEND (Y: 90% - 98%, FULL WIDTH 5% - 95%)**
+- **Top Sub-row (Y: 92%):**
+  - X: 10% (Blue #2B5EA7 Square, 1.5pt black outline + "Index Load (LDG)")
+  - X: 35% (Purple #6C3483 Square, 1.5pt black outline + "Addr Compute (IMAD.WIDE)")
+  - X: 60% (Amber #D4A843 Square, 1.5pt black outline + "Data Load (LDG)")
+  - X: 85% (Gray #BDC3C7 Square, 1.5pt black outline + "Other Instructions")
+- **Bottom Sub-row (Y: 96%):**
+  - X: 10% (Black solid arrow + "CD Tracking")
+  - X: 35% (Gray dashed arrow + "Code ↔ Runtime Mapping")
+  - X: 60% (Circles ①②③④ + "Detection Steps")
+  - X: 85% (Green ✓ + "Chain Confirmed")

@@ -1,0 +1,62 @@
+Here is the **ENHANCED Rendering-Ready Specification**, reviewed and upgraded for strict MICRO/ISCA/HPCA publication standards. 
+
+I have refined the visual hierarchy, enforced strict semantic typography, and optimized the prompt for a vector-like, high-contrast academic aesthetic.
+
+***
+
+# ENHANCED FIGURE SPECIFICATION: GRASP Architecture Layout
+
+**Target Format:** IEEE Double-Column (7.0 inches wide), 16:9 Aspect Ratio, Vector-Graphic Style (Flat, Crisp, High-Contrast).
+**Global Style Constraints:** NO shadows, NO gradients, NO 3D effects, NO title text. Pure flat design. 
+
+### 1. Spatial Layout & Bounding Boxes (16:9 Grid)
+*   **Software Plane (Top, Light Gray `#F5F5F5` fill, 4pt rounded corners):**
+    *   **SpMV CUDA Source:** `[X: 0%-40%, Y: 0%-32%]`
+    *   **SASS Assembly:** `[X: 44%-100%, Y: 0%-32%]` (Top-aligned with CUDA box).
+*   **Bridging Logic (Middle):**
+    *   **Formula Bar:** `[X: 44%-100%, Y: 34%-42%]` (Centered under SASS, white fill, 1pt black border).
+*   **Hardware Plane (Bottom, White fill, 1.5pt solid black borders):**
+    *   **Chain Table (CT):** `[X: 0%-66%, Y: 45%-92%]`
+    *   **Target Table (TT):** `[X: 72%-100%, Y: 45%-70%]`
+    *   **Iteration Stride Tracker (IST):** `[X: 72%-100%, Y: 75%-92%]`
+*   **Footer:**
+    *   **Legend:** `[X: 0%-100%, Y: 96%-100%]` (Horizontal layout, bottom edge).
+
+### 2. Strict Color & Semantic Palette
+*   **CT Header (Storage):** Solid BLUE `#2B5EA7`, WHITE bold text.
+*   **TT Header (Specialized Storage):** Solid PURPLE `#6C3483`, WHITE bold text *(Intentional override to distinguish from CT)*.
+*   **IST Header (Logic):** Solid PURPLE `#6C3483`, WHITE bold text.
+*   **CT Sub-columns (Tinted Backgrounds, Black Text):**
+    *   Identification: Light Blue `#E8F0FE`
+    *   Target Mapping: Light Purple `#F0E8F8`
+    *   Stride Learning: Light Gold `#FFF8E1`
+*   **Valid Bits:** Small filled GREEN `#5AA469` squares.
+*   **Table Data Rows:** Pure WHITE background, BLACK text, 0.5pt gray gridlines.
+
+### 3. Typography Rules
+*   **Headers/Labels:** 9pt Helvetica/Arial (Sans-serif), Bold.
+*   **Table Data/Annotations:** 7pt Helvetica/Arial (Sans-serif), Regular.
+*   **Code/Hex Values (SASS/CUDA/PCs):** 8pt Consolas/Courier (Monospace).
+*   *Note: All text must be perfectly legible when printed at 7.0" width.*
+
+### 4. Arrow Routing & The "Convergence Zone" (CRITICAL)
+*   **Primary Visual (CT → TT Convergence):** 
+    *   **Style:** 1.5pt thick, SOLID BLACK lines, sharp triangular arrowheads.
+    *   **Routing:** Draw 3 distinct horizontal lines originating from CT rows 0, 1, and 2 (right edge). Route them across the 6% whitespace gap. Merge them into a *single arrowhead* pointing directly at TT Row 0.
+    *   **Annotation:** Place text "16 CT entries → 1 TT entry (many-to-one)" centered above these lines.
+*   **SASS → CT (PC Mapping):** 1.0pt SOLID BLACK lines. Route from SASS PCs (`0x03d0`, `0x03e0`) down/left to CT `Index PC` column. Insert numbered circles ① and ② (White fill, black border, black text) on the lines.
+*   **SASS → TT (Operands):** 1.0pt DASHED GRAY lines. Route from `c[0x180]` and `R16` in SASS straight down to the Formula Bar, then down to TT `Base Address` and `Scale`.
+*   **IST → CT (Feedback):** 1.0pt SOLID BLACK line. Route left from IST to CT `Iter Stride` column.
+*   **CUDA → SASS:** 1.0pt DASHED GRAY line pointing right.
+
+### 5. Internal Table Sizing
+*   **Chain Table (66% total width):**
+    *   Identification (20%): `Valid`, `Index PC`
+    *   Target Mapping (40%): `tt_idx[0]`, `tt_idx[1]`, `tt_idx[2]`, `tt_idx[3]`
+    *   Stride Learning (40%): `Iter Stride`, `Confidence`
+*   **Target Table (28% total width):**
+    *   `Idx` (15%), `V` (15%), `Target Descriptor` (70% - containing Base Address, Scale).
+
+### 6. Grayscale & Print Compliance Check
+*   Ensure the contrast between the BLUE `#2B5EA7` (CT) and PURPLE `#6C3483` (TT) headers is distinguishable in grayscale (Purple will map slightly darker than Blue).
+*   The 6% horizontal gap between CT and TT must contain absolutely no background fills or gridlines—only the stark black convergence arrows.

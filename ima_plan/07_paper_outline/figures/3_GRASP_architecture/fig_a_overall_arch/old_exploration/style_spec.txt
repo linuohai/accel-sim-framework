@@ -1,0 +1,91 @@
+Here is the **FINAL ENHANCED RENDERING-READY SPECIFICATION**, optimized and rigorously verified for top-tier computer architecture conferences (ISCA/MICRO/HPCA). 
+
+I have enhanced the spatial constraints, tightened the routing logic to prevent line crossings, and added explicit AI rendering safeguards to ensure perfect typographic and geometric compliance with the strict "中性高对比学术风" (Neutral high-contrast academic style).
+
+***
+
+# ENHANCED PROMPT FOR IMAGE RENDERING ENGINE
+
+**SYSTEM INSTRUCTIONS & VISUAL STYLE (CRITICAL CONSTRAINTS):**
+Generate a 2D, flat, professional academic computer architecture block diagram in a 16:9 aspect ratio (optimized for IEEE double-column width).
+- **PROHIBITED ELEMENTS:** ABSOLUTELY NO 3D effects, shadows, gradients, glowing edges, curved lines, wavy lines, or titles at the top of the image.
+- **BACKGROUND:** Pure white (`#FFFFFF`).
+- **TYPOGRAPHY:** Arial or Helvetica only. Component labels must strictly follow the format: **"Abbreviation (Full Name)"**. Abbreviations are 10pt Bold; Full Names are 8pt Regular. 
+  - Text inside colored boxes (Blue/Purple) MUST be pure WHITE. 
+  - Text inside white boxes/backgrounds MUST be DARK `#2C3E50`.
+- **GEOMETRY:** All boxes must have rounded corners (4-6pt radius). 
+- **ROUTING:** Lines must be 1.0-1.5pt thickness. **Orthogonal (Manhattan) routing ONLY** (strictly 90-degree horizontal/vertical turns). Arrowheads must be small, sharp, and triangular.
+
+**STRICT COLOR PALETTE:**
+- **Storage Units Fill:** MEDIUM BLUE `#4472C4`
+- **Logic Units Fill:** MEDIUM PURPLE `#7B68AE`
+- **External/Existing Hardware Fill:** PURE WHITE `#FFFFFF` with DARK BORDER `#2C3E50` (1.5pt)
+- **Top Band Background:** LIGHT GRAY `#F5F5F5`
+- **GRASP Region Border:** DASHED GRAY `#BFBFBF` (2pt thick)
+- **Green Dashed Arrows:** `#2D8653` (Index Prefetch)
+- **Red Dashed Arrows:** `#C0392B` (Data Prefetch)
+- **Gray Dashed Arrows:** `#95A5A6` (Control)
+- **Black Solid Arrows:** `#000000` (Training/Data)
+
+---
+
+### 1. MACRO LAYOUT & HIERARCHY (6 Columns A-F, 5 Rows 1-5)
+The canvas is divided into two primary horizontal bands separated by a 5% vertical routing gap:
+
+*   **TOP BAND (Rows 1-4, 75% height):** Light gray `#F5F5F5` background. Label "Streaming Multiprocessor (SM)" in dark text at the top-left corner.
+    *   **Left Region (Cols A-B, 30% width):** SM core internals.
+    *   **Right Region (Cols C-F, 65% width):** Bounded by a dashed gray `#BFBFBF` rectangle. Label "**GRASP**" (all caps, bold) at the top-right corner inside this box.
+        *   *Sub-region C (30% of GRASP width):* Bounded by a faint dotted line, labeled "Chain Detection" at the top center.
+        *   *Sub-region D-F (70% of GRASP width):* Bounded by a faint dotted line, labeled "Prefetch Generation" at the top center.
+*   **BOTTOM BAND (Row 5, 20% height):** Pure white background.
+
+### 2. EXACT COMPONENT PLACEMENT & SIZING
+**External SM Components (White fill, Dark border, Dark text):**
+*   **[A1] Warp Scheduler**: Standard box, top-left.
+*   **[A2] Issue Stage**: Standard box, directly below Warp Scheduler.
+*   **[A3-A4] L1 D-Cache**: Large box, spanning rows 3 and 4. Inside this box, place a smaller gray sub-box labeled "MSHR" embedded in the bottom-right corner.
+*   **[A5-F5] L2 Cache**: Very wide box, spanning the entire bottom row across all columns, centered.
+
+**GRASP - Chain Detection (Col C):**
+*   **[C1] CD (Chain Detector)**: Purple `#7B68AE` box, white text.
+*   **[C2] CT (Chain Table)**: Large Blue `#4472C4` box, white text. Inside, embed a smaller Blue box labeled "IST (Iteration Stride Tracker)".
+*   **[C3] TT (Target Table)**: Blue `#4472C4` box, white text, directly below CT.
+
+**GRASP - Prefetch Generation (Cols D, E, F):**
+*   **[E1] IPU (Index Prefetch Unit)**: Purple `#7B68AE` box, white text.
+*   **[D2] PRB (Prefetch Request Buffer)**: Blue `#4472C4` box, white text.
+*   **[E3] ACU (Address Computation Unit)**: Purple `#7B68AE` box, white text.
+*   **[E4] DPU (Data Prefetch Unit)**: Purple `#7B68AE` box, white text.
+*   **[F3-F4] PQ (Prefetch Queue)**: Tall, narrow vertical Blue `#4472C4` box, white text, placed on the far right edge of the GRASP box.
+*   **[D4] TC (Throttle Controller)**: Small Purple `#7B68AE` box, white text, placed near the bottom left of the generation region.
+
+### 3. ARROW ROUTING & LABELS (Strictly 90-degree turns)
+*All text labels on arrows must be 8pt, matching the arrow color, with an opaque white background halo to prevent line-crossing interference.*
+
+1.  **Issue Stage [A2] → CD [C1]**: BLACK SOLID, routed right and up. Label: "issued instructions (PC, dst_reg, src_regs)". Add circled number **①**.
+2.  **CD [C1] → CT [C2]**: BLACK SOLID, routed straight down. Label: "chain entry".
+3.  **CD [C1] → TT [C3]**: BLACK SOLID, routed down (bypassing CT cleanly on the left). Label: "tt_idx".
+4.  **CT/IST [C2] → IPU [E1]**: GRAY DASHED, routed right and up. Label: "chain + stride info".
+5.  **IPU [E1] → PRB [D2]**: GREEN DASHED, routed down and left. Label: "index prefetch". Add circled number **②**.
+6.  **PRB [D2] → L1 D-Cache [A3]**: GREEN DASHED, routed straight left. Label: "to L1/L2". Add circled number **③**.
+7.  **L1 D-Cache [A3] → ACU [E3]**: GREEN DASHED, routed right. Label: "fill completion (index value)". Add circled number **④**.
+8.  **ACU [E3] → DPU [E4]**: BLACK SOLID, routed straight down. (No label).
+9.  **DPU [E4] → PQ [F3]**: RED DASHED, routed straight right. Label: "data prefetch request". Add circled number **⑤**.
+10. **PQ [F4] → L1 D-Cache [A4]**: RED DASHED, routed left (routed cleanly below ACU/DPU to avoid intersections). Label: "data PF injection".
+11. **TC [D4] → MSHR (inside L1) [A4]**: GRAY DASHED, routed straight left. Label: "monitor MSHR / suppress prefetches".
+12. **L1 D-Cache [A4] → L2 Cache [A5]**: BLACK SOLID, routed straight down across the gap. Label: "Req".
+13. **L2 Cache [B5] → L1 D-Cache [B4]**: BLACK SOLID, routed straight up across the gap. Label: "Rsp".
+
+### 4. BOTTOM LEGEND
+Create a single horizontal row at the very bottom of the figure (below L2 Cache) with the following elements evenly spaced:
+*   [Blue Square `#4472C4`] Storage (CT, TT, PRB, IST, PQ)
+*   [Purple Square `#7B68AE`] Logic (CD, IPU, DPU, ACU, TC)
+*   [White Square, Dark Border] External (SM, L1, L2)
+*   [Black Solid Line] Training path
+*   [Green Dashed Line `#2D8653`] Index prefetch path
+*   [Red Dashed Line `#C0392B`] Data prefetch path
+*   [Gray Dashed Line `#95A5A6`] Control
+
+### 5. CRITICAL SPELLING & TEXT VERIFICATION (DO NOT ALTER):
+Ensure exact character matching for:
+Streaming Multiprocessor (SM), Chain Detector (CD), Chain Table (CT), Target Table (TT), Iteration Stride Tracker (IST), Index Prefetch Unit (IPU), Data Prefetch Unit (DPU), Prefetch Request Buffer (PRB), Address Computation Unit (ACU), Throttle Controller (TC), Prefetch Queue (PQ), L1 D-Cache, MSHR, L2 Cache, Prefetch, GRASP.

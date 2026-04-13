@@ -1,0 +1,54 @@
+Here is the **Optimized Layout Description** for the Dynamic Throttle Control Timeline, tailored for a high-quality MICRO/ISCA/HPCA paper using matplotlib.
+
+### 1. Figure Size
+*   **Dimensions**: 7.0 inches (width) × 3.5 inches (height) — spans the full text width of a standard IEEE/ACM double-column format, ensuring the timeline is legible.
+*   **Aspect Ratio**: 2:1.
+
+### 2. GridSpec Ratios
+*   **Rows**: 2 (Top chart, Bottom chart).
+*   **Height Ratios**: `height_ratios=[2.2, 1.0]` (approx. 69% top, 31% bottom).
+*   **Spacing**: `hspace=0.1` (tight vertical spacing to emphasize the shared X-axis).
+
+### 3. Margins (Figure Fractions)
+*   **Left**: `0.07` (just enough for Y-axis labels).
+*   **Right**: `0.82` (leaves an 18% margin on the right for parameter labels and the mapping annotation box).
+*   **Top**: `0.92` (minimal top whitespace).
+*   **Bottom**: `0.18` (leaves room for the X-axis labels and a single-row legend).
+
+### 4. Curve Styling
+*   **MSHR Occupancy (Top)**: Color `#1f77b4` (Matplotlib Blue), `linewidth=1.5`, `linestyle='-'`, `zorder=3`.
+*   **Effective Threshold (Top)**: Color `#d62728` (Matplotlib Red), `linewidth=2.0`, `linestyle='--'`, `zorder=4`.
+*   **Without Throttle Baseline (Top)**: Color `#7f7f7f` (Gray), `linewidth=1.2`, `linestyle=':'`, `alpha=0.7`, `zorder=2`.
+*   **Window Accuracy (Bottom)**: Line color `#2ca02c` (Matplotlib Green), `linewidth=1.5`. Fill under curve: color `#2ca02c`, `alpha=0.2`, `zorder=2`.
+
+### 5. Shading (Cooldown Regions)
+*   **Style**: `ax.axvspan()` or `fill_between()` for specific X intervals.
+*   **Color**: `#ff9896` (Light pastel red).
+*   **Alpha**: `0.25` (subtle, does not obscure the blue MSHR line).
+*   **Edge**: `linewidth=0` (no harsh borders on the shading).
+
+### 6. Annotation Placement & Details
+*   **DATA_PF Suppressed**: Place inside the widest cooldown region. Coordinates (data): `x=center_of_cooldown`, `y=75`. `fontsize=8`, `color='#8c564b'`, `ha='center'`, `va='center'`. Add a small '❌' prefix.
+*   **INDEX_PF (Always Active)**: Place in a non-throttled region where MSHR is low. Coordinates (data): `x=early_cycle_region`, `y=15`. `fontsize=8`, `color='#2ca02c'`, `ha='center'`. Add a small '✅' prefix.
+*   **Cooldown Duration Bracket**: Use `ax.annotate('', xy=(x1, 95), xytext=(x2, 95), arrowprops=dict(arrowstyle='|-|', color='black', lw=1.0))`. Add text "Cooldown" above it at `y=98`, `fontsize=8`.
+*   **Causal Arrows**: Draw 1-2 vertical dashed arrows (`color='black'`, `alpha=0.5`, `linestyle='--'`, `lw=1.0`) from a sharp drop in the bottom accuracy chart pointing up to the corresponding drop in the top threshold line.
+
+### 7. Reference Lines
+*   **Top Chart (Threshold High 90% / Low 50%)**: `color='#7f7f7f'`, `linestyle=':'`, `linewidth=1.0`, `alpha=0.8`, `zorder=1`.
+*   **Bottom Chart (Accuracy High 60% / Low 30%)**: `color='#7f7f7f'`, `linestyle=':'`, `linewidth=1.0`, `alpha=0.8`, `zorder=1`.
+
+### 8. Right-Side Labels & Mapping Box
+*   **Reference Labels**: Place exactly at the Y-values of the reference lines, but outside the plot area. Use `ax.text(1.02, 90, 'Threshold High', transform=ax.get_yaxis_transform(), fontsize=8, va='center')`. (Do this for all 4 reference lines).
+*   **Mapping Box**: Place in the right margin area spanning the gap between the two charts. `fig.text(0.84, 0.5, "Mapping:\nLow Acc → Tight Thresh\nHigh Acc → Loose Thresh", fontsize=8, bbox=dict(facecolor='white', edgecolor='#cccccc', boxstyle='round,pad=0.4'))`.
+
+### 9. Legend
+*   **Position**: Bottom of the figure, shared across both charts. `fig.legend(...)`
+*   **Coordinates**: `loc='lower center'`, `bbox_to_anchor=(0.45, 0.02)`.
+*   **Layout**: `ncol=4` (single row: MSHR, Eff. Threshold, Accuracy, Cooldown).
+*   **Style**: `fontsize=8`, `frameon=False`, `handlelength=2.0`.
+
+### 10. What to OMIT (Corrections from V1)
+*   **OMIT** the separate "activity strip" at the top/bottom (it wastes vertical space and duplicates the cooldown shading).
+*   **OMIT** dual background colors (keep the main axes background pure white `#FFFFFF` to ensure the cooldown shading pops).
+*   **OMIT** large, heavy borders on the mapping box (use a light gray `#cccccc` edge or no edge to keep it from drawing the eye away from the data).
+*   **OMIT** repeating the "DATA_PF Suppressed" text in every single cooldown region. Label it once clearly, and let the shading imply the rest.

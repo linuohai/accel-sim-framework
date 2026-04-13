@@ -1,0 +1,94 @@
+CRITICAL SPELLING: "Chain Table (CT)", "Target Table (TT)", "Index Prefetch Unit (IPU)", "Data Prefetch Unit (DPU)", "Prefetch Request Buffer (PRB)", "Address Computation Unit (ACU)", "Prefetch Queue (PQ)", "L1 D-Cache", "L2 Cache", "Prefetch", "GRASP"
+
+Style: Academic paper figure (MICRO/ISCA/HPCA). White background, NO title, NO shadows, NO gradients. Black 1.5pt outlines, 4-6pt rounded corners, sans-serif font. 16:9 aspect. VERY HIGH information density.
+
+COLORS:
+- Storage (CT/PRB/TT/PQ headers): ROYAL BLUE #2B5EA7, white text
+- Logic (IPU/ACU+DPU): VIVID PURPLE #6C3483 (grape/violet), white text — BOTH SAME
+- Highlighted/active: AMBER #D4A843
+- Inactive: LIGHT GRAY #BDC3C7, gray text
+- Result: GREEN #5AA469, white text
+- External (L1, L2): White, black border
+- Stage 1 background: very light blue tint #E8F0FF
+- Stage 2 background: very light amber tint #FFF8E1
+
+LAYOUT: Two tinted rectangular regions stacked vertically with a thin timeline separating them.
+- Upper region (light blue): "STAGE 1: INDEX PREFETCH" label at TOP-LEFT corner
+- Lower region (light amber): "STAGE 2: DATA PREFETCH" label at TOP-LEFT corner
+
+TIMELINE: Thick black horizontal line between the two regions, with "Time →" at right end. 6 nodes.
+- Nodes 1,2,3 labels ABOVE timeline (inside Stage 1 region): "Demand Load (T)", "IPU Triggers (T)", "PRB Alloc (T+1)"
+- Nodes 4,5,6 labels BELOW timeline (inside Stage 2 region): "Index Fill (T+560)", "ACU+DPU (T+561)", "Data PF Fill (T+1120)"
+- Green dashed bar (#27AE60) above Node1→Node4: "~560 cycles (index PF in-flight)"
+- Red dashed bar (#C0392B) above Node5→Node6: "~560 cycles (data PF in-flight)"
+
+=== STAGE 1: INDEX PREFETCH (upper region) ===
+
+Panel A — CT (Chain Table) [BLUE header]:
+Below header, annotation: "PC 0x03d0 triggers on demand sectors: 0x4860, 0x4880"
+Table columns: index_pc | tt_idx | K | stride | valid
+Row 1 [AMBER]: 0x03d0 | [0] | 1 | 64 | Y
+Row 2 [GRAY]: 0xA120 | [0,1] | 2 | 16 | Y
+Row 3 [GRAY]: 0xB340 | [0,1,2] | 3 | 4 | N
+
+Panel B — IPU (Index Prefetch Unit) [PURPLE, EXTRA WIDE]:
+Header: "IPU (Index Prefetch Unit)" white text
+Left side — "8 predicted addrs (demand + stride 64B):" then list all 8 REAL addresses vertically:
+  0x48A4, 0x48AC, 0x48B4 (from S0 positions 1,3,5)
+  0x48C0, 0x48C4, 0x48C8, 0x48CC, 0x48D4 (from S1 positions 0,1,2,3,5)
+Center — Arrow labeled "coalesce by 32B sector"
+Right side — Two output sector boxes:
+  S0: 0x48A0, 3 addrs, mask 00101010
+  S1: 0x48C0, 5 addrs, mask 00101111
+Bottom-right: "Track S0 →" arrow to PRB
+
+Panel C — PRB (Prefetch Request Buffer) [BLUE header]:
+Columns: # | tt_idx | remaining (note: "inflight sectors")
+Entry 0 [AMBER]: [0] | 1
+Entry 1: [0,1] | 4
+Entry 2: [0] | 2
+
+Mem Request box [GREEN outline, right of PRB]:
+Title: "Mem Request"
+Fields: "sector: 0x48A0" / "mask: 00101010" / "PRB idx: 0"
+Green dashed arrow → L1 D-Cache [white box, SMALLER]
+Below L1, downward arrow labeled "MISS" → L2 Cache [white box, LARGER than L1]
+
+=== STAGE 2: DATA PREFETCH (lower region) ===
+
+Panel D — Sector Data [white, wide]:
+Title: "Sector 0x48A0 returned (8 × 4B)"
+8 cells horizontal row:
+Pos 0: 42 [GRAY] | Pos 1: 181,064 [AMBER] | Pos 2: 0 [GRAY] | Pos 3: 269,280 [AMBER] | Pos 4: 7,891 [GRAY] | Pos 5: 16,176 [AMBER] | Pos 6: 0 [GRAY] | Pos 7: 103,445 [GRAY]
+Below: "Active: positions 1, 3, 5 (mask 00101010)"
+AMBER outline box: "Fill carries PRB entry ID → lookup TT via tt_idx"
+"PRB[0].remaining-- → 0 → release"
+
+Panel E — ACU + DPU [PURPLE, same as IPU]:
+ACU section:
+"ACU reads TT[0]:"
+TT table:
+  TT[0] [AMBER]: 0x7FC4B7C20000 (x[]) | scale 4
+  TT[1] [GRAY]: y[] base | scale 4
+  TT[2] [GRAY]: z[] base | scale 8
+Formula: "data_addr = TT.base + idx_val × TT.scale"
+Example: "e.g. 0x7FC4B7C20000 + 181,064 × 4 = 0xCD0D20"
+DPU section:
+"DPU: 3 data addrs → 3 different sectors (IMA divergent)"
+0xCD0D20, 0xD26F80, 0xC2FCC0
+Red dashed arrows → PQ
+
+PQ (Prefetch Queue) [BLUE header, bottom-right]:
+FIFO vertical stack:
+| 0xCD0D20 |
+| 0xD26F80 |
+| 0xC2FCC0 |
+
+Panel F — Result [GREEN]:
+"All 3 data PF → L1 HIT:"
+"0xCD0D20 ✓  0xD26F80 ✓  0xC2FCC0 ✓"
+"Later: demand loads → all L1 HIT!"
+
+LEGEND: Blue=Storage, Purple=Logic, Amber=Active, Gray=Inactive, Green=Result, Green dashed=Index PF, Red dashed=Data PF
+
+ARROWS: CT→Node1 black down. IPU→Node2 black down. PRB→Node3 black down. IPU→PRB green dashed right. PRB→MemReq→L1 green dashed right. L1→L2 black down "MISS". Node4→D black down. Node5→E black down. Node6→F black down. DPU→PQ red dashed.

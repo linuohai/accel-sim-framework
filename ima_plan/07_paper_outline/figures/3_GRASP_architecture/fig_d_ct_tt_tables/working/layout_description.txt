@@ -1,0 +1,43 @@
+**OPTIMIZED LAYOUT DESCRIPTION**
+
+**Canvas Setup**
+Create a 16:9 aspect ratio canvas with a pure white background. Use Times New Roman for all standard text and labels, and Monospace (Courier) for all code, hex addresses, and register names. Minimum font size is 8 pt. All borders and outlines are black, 1–1.5 pt thickness. Do not use any shadows, gradients, or 3D effects.
+
+**1. Optimized Component Positions (Percentage-based)**
+*   **SpMV CUDA Source:** Top-left, spanning X: 2% to 50%, Y: 2% to 30%. Light gray (#F5F5F5) rounded box.
+*   **Target Table (TT):** Bottom-left of the top region, spanning X: 2% to 50%, Y: 35% to 60%.
+*   **SASS Assembly:** Right side, spanning X: 55% to 98%, Y: 2% to 60%. Light gray (#F5F5F5) rounded box.
+*   **Formula Bar:** Centered horizontally, spanning X: 25% to 75%, Y: 62% to 68%. Light background (#EBF5FB) with a subtle 0.5 pt border.
+*   **Chain Table (CT):** Bottom-left/center, spanning X: 2% to 70%, Y: 72% to 98%.
+*   **IST Block:** Bottom-right, spanning X: 75% to 98%, Y: 72% to 98%. Light gray (#F5F5F5) rounded box.
+
+**2. Spacing Recommendations**
+Maintain a 5% horizontal gap between the left column (CUDA/TT) and the right column (SASS). Maintain a 5% vertical gap between the CUDA block and the TT. Leave a clear 4% vertical buffer above and below the centered formula to allow arrow routing. Ensure a 5% horizontal gap between the CT and the IST block.
+
+**3. Table Layout (DMP-Style Grouped Headers)**
+*   **Target Table (TT):** Left-aligned bold title "Target Table (TT)" with gray italic subtitle "8 entries". Small gray text "addr prefix: 0x7FC4B7" above. Header row has a PURPLE (#6C3483) background with white bold text. Columns: Valid, Base Address, Scale. Use solid GREEN (#5AA469) squares for Valid cells.
+*   **Chain Table (CT):** Left-aligned bold title "Chain Table (CT)" with gray italic subtitle "32 entries". Small gray text "addr prefix: 0x7FC4D0DA" above. Use a two-layer DMP-style header with a BLUE (#2B5EA7) background and white bold text. The top layer contains group names spanning multiple sub-columns, separated by 2 px white gaps:
+    *   Group 1: "Identification" (Spans: Valid, Index PC)
+    *   Group 2: "Target Mapping" (Spans: TT Index [0], [1], [2], K)
+    *   Group 3: "Stride Learning (IST)" (Spans: Stride Obs [0], [1], Iter Stride, Stride Valid)
+    Data rows have a white background, black text, and 1 pt borders. Use solid GREEN (#5AA469) squares for Valid/Stride Valid cells (leave empty for row 3 Stride Valid).
+
+**4. Arrow Routing**
+*   **CUDA to SASS:** A gray dashed arrow (#808080) pointing right from the CUDA block to the SASS block, labeled "compiles to" in gray italic.
+*   **SASS to CT:** Solid black arrows originating from SASS lines (1) and (2) routing DOWNWARD, bypassing the formula on the right, connecting to CT Row 1 and Row 2 "Index PC" cells. Label them "①" and "②".
+*   **CT to TT:** Solid black arrows originating from the CT "TT Index [0]" column routing UPWARD-LEFT, converging into a single arrow that points to the TT. Place Annotation 1 ("16 CT entries → 1 TT entry") in bold black text near this convergence.
+*   **SASS to TT:** Gray dashed arrows from "c[0x180]" in the SASS IMAD.WIDE instructions routing LEFT to the TT "Base Address" column, and from "R16" routing LEFT to the TT "Scale" column.
+*   **Formula to TT:** Short arrows pointing UP from the blue "base" text to the TT "Base Address" column, and from the purple "scale" text to the TT "Scale" column.
+*   **IST to CT:** A solid black arrow pointing LEFT from the IST block to the CT "Iter Stride" / "Stride Valid" columns.
+
+**5. Visual Hierarchy & Styling**
+*   **Titles:** 11-12 pt bold.
+*   **Code/Tables:** 9-10 pt monospace.
+*   **Labels/Annotations:** 8-9 pt bold.
+*   **CUDA Highlights:** "Aj[offset]" in BLUE (#2B5EA7) with "Index Load" below. "x[...]" in AMBER (#D4A843) with "Data Load" below.
+*   **SASS Highlights:** Lines marked (1) and (2) are colored: LDG.E lines are BLUE (#2B5EA7) bold, IMAD.WIDE lines are PURPLE (#6C3483) bold, final LDG.E lines are AMBER (#D4A843) bold. All other code lines are GRAY (#BDC3C7).
+*   **SASS Brackets:** Right-side brackets grouping instructions: Lines 1-5 labeled "IMA Index Load" (Blue), Lines 6-9 labeled "Addr Generation" (Purple), Lines 10-13 labeled "IMA Data Load" (Amber).
+*   **Formula:** LaTeX-style "Addr_{target} = base + scale × index". "base" and "index" in BLUE (#2B5EA7), "scale" in PURPLE (#6C3483).
+
+**6. IST Block Placement & Annotations**
+Place the IST block in the bottom-right. Title: "IST" (bold), subtitle: "Iteration Stride Tracker" (small gray). Content includes A1, A2, stride calculation, and the text "★ Any warp can contribute". Place Annotation 2 ("stride = 16 elements × 4 B = 64 B") in bold black text with a thin pointing line near the CT stride area or IST block.

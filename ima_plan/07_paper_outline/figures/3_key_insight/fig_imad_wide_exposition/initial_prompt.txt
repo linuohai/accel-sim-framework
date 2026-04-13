@@ -1,0 +1,171 @@
+CRITICAL EXACT SPELLING — use ONLY these exact terms, do NOT invent alternatives:
+- "LDG.E.SYS" (NOT "LDG.E", NOT "LDG.SYS", NOT "LD.G.E.SYS")
+- "IMAD.WIDE" (NOT "IMAD", NOT "IMAD.W", NOT "IMADWIDE")
+- "R10", "R12", "R14", "R6" (exact register names)
+- "c[0x0][0x178]" (exact constant memory operand format — square brackets, hex)
+- "0x8" (exact scale immediate — hex with lowercase x)
+- "A_col[j]", "x[A_col[j]]", "x[]", "A_col[]"
+- "index load", "address compute", "data load"
+- "base pointer", "scale factor", "index value", "output"
+- "constant memory", "kernel parameter", "compile-time immediate"
+- "sizeof(double)"
+
+============================================================
+Create a PROFESSIONAL publication-quality academic diagram for a
+computer architecture paper targeting MICRO/ISCA/HPCA conferences.
+============================================================
+
+## Figure Type
+"Key Insight" figure: IMAD.WIDE operand decomposition showing how a single
+SASS instruction encodes ALL parameters needed for IMA data prefetch.
+
+## Purpose
+Demonstrate that the SASS instruction `IMAD.WIDE` contains four operands
+that exactly match the four parameters a prefetcher needs to predict the
+data load address:
+1. Destination register (output address)
+2. Source register for index (data dependency)
+3. Scale immediate (element size, compile-time constant)
+4. Constant memory operand (data array base pointer, kernel-lifetime constant)
+
+This is the "zero-inference" insight — a prefetcher reading this instruction
+at issue stage gets ALL four pieces of information in one observation.
+
+## Visual Style: Neutral High-Contrast Academic
+
+- White background, NO title text anywhere
+- NO Chinese characters, all English
+- Monospace font for all SASS instructions, register names, hex values
+- Sans-serif for labels, annotations, callouts
+- NO shadows, gradients, 3D effects
+- Clean vector-style rendering
+
+## Aspect Ratio
+4:3 (landscape-ish, slightly wider than tall).
+Target use: single-column width ~3.5 inches, ~2.5 inches tall in the paper.
+
+## Overall Layout (2 panels stacked vertically)
+Top 40%: Panel (a) SASS Chain
+Bottom 60%: Panel (b) IMAD.WIDE Operand Decomposition
+
+============================================================
+## Panel (a) — SASS Chain for x[A_col[j]]  (top 40%)
+============================================================
+
+Three instruction boxes stacked vertically, connected by red arrows showing
+register dependency flow.
+
+**Box 1 (top)**: Rounded rectangle, light gray #ECF0F1 background, black
+1pt border, rounded corners 4pt. Inside in monospace 10pt dark text:
+    `LDG.E.SYS  R10, [R6]`
+To the LEFT of the box, a numbered step circle "①" (16pt dark circle with
+white bold "1" inside). To the RIGHT of the box in 9pt italic dark gray:
+"index load"
+
+**Box 2 (middle)**: Same style as Box 1. Content:
+    `IMAD.WIDE  R12, R10, 0x8, c[0x0][0x178]`
+Left: numbered circle "②". Right: "address compute"
+
+**Box 3 (bottom)**: Same style. Content:
+    `LDG.E.SYS  R14, [R12]`
+Left: numbered circle "③". Right: "data load"
+
+**Red arrows between boxes** (solid red #C0392B, 1.5pt, small triangular heads):
+- Arrow from bottom of Box 1 → top of Box 2, with label on the right side:
+  "R10 carries loaded index" (8pt italic red)
+- Arrow from bottom of Box 2 → top of Box 3, with label on the right side:
+  "R12 carries computed address" (8pt italic red)
+
+Panel label at top: "(a) SASS Chain for x[A_col[j]]" (10pt bold dark)
+
+============================================================
+## Panel (b) — IMAD.WIDE Operand Decomposition  (bottom 60%)
+============================================================
+
+This is the CORE VISUAL of the figure. Show the IMAD.WIDE instruction
+with each of its four operands highlighted in a different background color
+and connected to explanatory callouts below.
+
+**Main instruction display** (horizontally centered):
+
+Draw the instruction as a single horizontal line with each operand in its
+own colored rounded box:
+
+    IMAD.WIDE   [R12]   ,   [R10]   ,   [0x8]   ,   [c[0x0][0x178]]
+
+Where each operand is drawn as a small rounded rectangle (2pt corner radius)
+with 1pt black border. Fill colors:
+- "R12" box: PURPLE #7B68AE fill with WHITE monospace 10pt bold text
+- "R10" box: RED #C0392B fill with WHITE monospace 10pt bold text
+  (note: this RED matches the arrow color in Panel (a), reinforcing that
+  R10 is the value flowing from the index load)
+- "0x8" box: AMBER YELLOW #D4A843 fill with WHITE monospace 10pt bold text
+- "c[0x0][0x178]" box: GREEN #5AA469 fill with WHITE monospace 10pt bold text
+
+The opcode "IMAD.WIDE" itself (outside the boxes) is in dark monospace 11pt bold.
+Commas between operands are in dark 10pt regular.
+
+**Four callout lines** dropping DOWN from each operand box:
+Each callout is a thin gray line (0.8pt #95A5A6) that drops straight down
+from the center of the operand box to its explanation text below.
+
+**Four explanation blocks** arranged in a horizontal row below the instruction:
+
+Block 1 (under R12, purple theme):
+- Small purple square bullet
+- Text in 8pt dark:
+    "output"
+    "address of x[A_col[j]]"
+
+Block 2 (under R10, red theme):
+- Small red square bullet
+- Text:
+    "index value"
+    "from ① at runtime"
+
+Block 3 (under 0x8, yellow theme):
+- Small yellow square bullet
+- Text:
+    "scale factor"
+    "sizeof(double)"
+    "compile-time immediate"
+
+Block 4 (under c[0x0][0x178], green theme):
+- Small green square bullet
+- Text:
+    "base pointer of x[]"
+    "kernel parameter"
+    "constant memory"
+
+Panel label at top of panel (b): "(b) IMAD.WIDE Operand Decomposition" (10pt bold dark)
+
+============================================================
+## Color Palette (MUST use exactly these colors)
+============================================================
+
+- Purple (R12, output): #7B68AE
+- Red (R10, index dep): #C0392B
+- Amber Yellow (0x8, scale): #D4A843
+- Green (c[...], base): #5AA469
+- Instruction box background (Panel a): Light Gray #ECF0F1
+- Instruction box border: Black, 1pt
+- Register flow arrows (Panel a): Red #C0392B (matches R10 theme)
+- Callout lines (Panel b): Light Gray #95A5A6, 0.8pt
+- All other text: Dark #2C3E50
+- Background: White
+
+============================================================
+## Critical Rendering Requirements
+============================================================
+
+1. The SASS instructions in Panel (a) MUST be rendered in a clear monospace
+   font with ALL characters legible — particularly the dot-separated
+   mnemonics "LDG.E.SYS" and "IMAD.WIDE" and the hex operand "c[0x0][0x178]"
+2. The four operands in Panel (b) MUST be visibly separated by colored
+   backgrounds (the color coding is the core pedagogical point)
+3. The R10 reference in Panel (b) and the R10 arrow in Panel (a) should use
+   the same red color to reinforce the "register value flowing" metaphor
+4. NO title text
+5. NO shadows, gradients, 3D
+6. The entire figure must be self-contained (no external references)
+7. Print-readable at 3.5 inch width (single column)

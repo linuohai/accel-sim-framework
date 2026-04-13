@@ -1,0 +1,31 @@
+**Optimized Component Positions**
+Place a gray rounded box in the top-left area containing the SpMV CUDA source code. Below this, in the mid-left area, position the Target Table (TT) with a purple header. On the right side, occupying the full height of the upper area, place a tall gray rounded box containing the SASS Assembly code. 
+
+Below these upper components, center a mathematical formula horizontally. 
+
+In the lower area of the figure, place the Chain Table (CT) with a blue header on the left side, spanning the majority of the width. On the far right of the lower area, place the Iteration Stride Tracker (IST) inside a blue-outlined box.
+
+**Spacing Recommendations**
+Maintain a compact, print-friendly layout suitable for a double-column IEEE format. Use consistent vertical padding between the upper boxes, the formula, and the lower tables. Leave sufficient horizontal whitespace between the left-side components (CUDA code, TT) and the right-side SASS Assembly to accommodate routing arrows. Ensure thin vertical gaps between grouped columns within the tables to cleanly separate logical fields.
+
+**Grouping Strategy**
+*   **CUDA Source:** Gray #F5F5F5 rounded box, no border. Monospace code. Underline `Aj[offset]` in blue #2B5EA7 labeled "Index Load". Underline `x[...]` in amber #D4A843 labeled "Data Load".
+*   **Target Table (TT):** Purple #6C3483 header with white bold text "Target Table (TT)" and gray italic "Entry 0". Group columns into "Valid" and "Base Address | Scale". Use a green #5AA469 square for the valid bit.
+*   **SASS Assembly:** Gray #F5F5F5 rounded box. Monospace code. Color specific lines marked (1) and (2): `LDG.E` index loads in blue #2B5EA7, `IMAD.WIDE` in purple #6C3483, and `LDG.E` data loads in amber #D4A843. All other code lines are gray. Add right-side brackets grouping the operations: blue "IMA Index Load", purple "Addr Generation", amber "IMA Data Load".
+*   **Formula:** Centered LaTeX math: $Addr_{data} = base + scale \cdot index$. Color "base" and "scale" purple #6C3483, and "index" blue #2B5EA7. Use a proper multiplication dot.
+*   **Chain Table (CT):** Blue #2B5EA7 header with white bold text "Chain Table (CT)" and gray italic "32 entries". Group columns with spanning sub-headers: "Identification" (Valid | Index PC), "Target Mapping" (tt_idx[0] | Num Targets), and "Stride Learning" (Iter Stride | Stride Valid). Use green squares for valid bits.
+*   **IST Block:** Blue #2B5EA7 outlined box, light background. Text detailing PC 0x03d0 stride calculation (A2 - A1 = 64 B).
+
+**Arrow Routing**
+1.  Route a gray dashed arrow from the CUDA Source box rightward to the SASS Assembly box, labeled "compiles to" in italic.
+2.  Route gray dashed arrows from the `c[0x180]` and `R16` operands in the SASS `IMAD.WIDE` lines leftward to the Base Address and Scale cells of the TT.
+3.  Route black solid arrows from the blue SASS index load lines (`/*03d0*/` and `/*03e0*/`) downward to the corresponding first two rows of the CT, labeled (1) and (2).
+4.  Route black solid arrows from the `tt_idx[0]` column of the CT upward and leftward, converging into a single point at TT Entry 0. Place bold text "16 CT entries -> 1 TT entry" near this convergence using a thin pointing line (no background box).
+5.  Route short upward arrows from the "base" and "scale" terms in the formula directly to the corresponding TT cells.
+6.  Route a solid arrow from the left edge of the IST block leftward into the "Iter Stride" column of the CT. Place bold text "Stride = 64B (x16 unroll x 4B/element)" near the CT stride column with a thin pointing line (no background box).
+
+**Visual Hierarchy**
+Use 1-1.5pt black outlines for structural clarity. The white background ensures contrast. The distinct header colors (Purple #6C3483 for TT, Blue #2B5EA7 for CT) establish a clear visual separation between the two hardware tables. The color-coding of the SASS assembly text (Blue, Purple, Amber) directly ties the software instructions to the hardware mechanisms and the formula variables, guiding the reader's eye through the execution flow.
+
+**Aspect Ratio**
+16:9, optimized for a 7.0-inch width IEEE double-column format. Use Times New Roman for standard text and Courier for all code and hex values. No shadows, no gradients, no title.
