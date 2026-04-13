@@ -1,22 +1,23 @@
 # IMA Prefetch 研究索引
 
-> 自动生成: 2026-04-03 23:30 | 由 /update-ima-index 生成
+> 自动生成: 2026-04-04 16:30 | 由 /update-ima-index 生成
+> 最近手动更新: 2026-04-08（§6 Related Work 落地到 main.tex，新增 24 条 bib entries）
 
 ## 研究总体状态
 
-当前处于 **Phase 5 优化迭代 + Phase 6 大规模评估 + Phase 7 论文撰写**。**Throttle Control DSE 已完成**：tc_mode=4 Cooldown Timer 框架实现并经 9-workload 验证，推荐配置 T40C200（thr=40, cd=200），SpMV +3.47%, BFS/SSSP +0.37%, 0/9 退化。核心发现：IPC 提升来自 MSHR 拥塞缓解 + cache pollution 减少，而非 miss 数量减少。4 类图数据集 + 6 算法（PR 已移除）的评估 95% 完成。**论文大纲已定稿**：§1-§7 完整大纲 + 17 figures + 4 tables（`paper_structure.md`）。SOTA baseline 5 种已完成。最终目标：投稿 MICRO 2026。
+当前处于 **Phase 5 优化迭代 + Phase 6 大规模评估（含新 Benchmark 扩展）+ Phase 7 论文撰写**。**新 Benchmark 扩展进行中**：从 Pannotia + LonestarGPU 引入 5 个新算法（MIS、Color、SP、DMR、MST），涵盖图算法、约束求解、计算几何 3 个领域，证明 GRASP 跨 benchmark 泛化性。Golden CSV 扩展 105→205 chains（含 IMAD.WIDE.U32 修复）。14 个 NVBit trace 已生成（8 GPU 并行）。**已知 blocker**：GRASP CD 在新 benchmark 上 `global_reads=0`（chain 未被运行时检测到），debug 模式 segfault，需 GDB 定位。Throttle T40C200 已完成。4 类图数据集 + 6 Gardenia 算法评估数据完整。论文工程全面就绪。最终目标：投稿 MICRO 2026。
 
 ## 各阶段状态
 
 | Phase | 名称 | 状态 | 关键产出 | 最近更新 |
 |-------|------|------|----------|----------|
-| 01 | IMA 特征化与分类 | 🔄 进行中 | SASS 依赖链分析 + L1 miss breakdown (51-84%) + 4 类 IMA pattern | 2026-03-29 |
-| 02 | 相关工作调研 | 🔄 进行中 | CPU 8 篇 + GPU 9 篇 + 论文重组为 6 个子目录 | 2026-03-30 |
+| 01 | IMA 特征化与分类 | 🔄 进行中 | SASS 依赖链分析 + L1 miss breakdown (51-84%) + 4 类 IMA pattern + **新 benchmark SASS 分析** | 2026-04-04 |
+| 02 | 相关工作调研 | 🔄 进行中 | CPU 8 篇 + GPU 9 篇 + 6 个子目录 + **CCF-A 分类索引** (14/30 篇) | 2026-04-04 |
 | 03 | 性能天花板 | 🔄 部分完成 | ima_high ideal L1D: 1.75x-3.04x speedup | 2026-03-14 |
 | 04 | GRASP Prefetcher 设计 | 🔄 设计框架已定 | GRASP 设计框架 + `small_1sm_cta5` 时序证据 | 2026-03-28 |
-| 05 | GPGPU-Sim 实现 | 🔄 **Throttle DSE 完成** | CT/CD fix + Throttle T40C200 + 5 SOTA baseline | 2026-04-03 |
-| 06 | 评估方案 | 🔄 **4 类图 x 6 算法大规模评估** | benchmark suite + experiment_results.md + 28 NVBit traces + ~140 仿真 | 2026-04-03 |
-| 07 | 论文大纲 | 🔄 **权威大纲已定稿** | `paper_structure.md`（§1-§7 + 17fig + 4tab）+ 11 insight + LaTeX 模板 | 2026-04-03 |
+| 05 | GPGPU-Sim 实现 | 🔄 **新 Benchmark 扩展 + Throttle DSE** | Golden CSV 205 chains + IMAD.WIDE.U32 fix + Throttle T40C200 | 2026-04-04 |
+| 06 | 评估方案 | 🔄 **Gardenia 完整 + 新 Benchmark 进行中** | 6 Gardenia 算法完整 + 5 新算法 trace 生成 + 仿真中 | 2026-04-04 |
+| 07 | 论文大纲 | 🔄 **论文工程全面就绪** | main.tex（§1-§9 骨架）+ 6 表格 + 绘图系统 + **writing_rules/**（7 §指南）+ 写作计划 | 2026-04-04 |
 
 ## 关键发现
 
@@ -58,6 +59,20 @@
 
 > 完整数据（含 dir 变体、Timeliness、Coverage、Accuracy、source log）-> `06_evaluation_plan/experiment_results.md`
 > PR 已移除（全场 -0.5%~0%，单次仿真 12-38h）。VC/flickr crash 因 MAXCOLOR=128。Ideal L1D 仅对 load 生效。
+
+## 新 Benchmark 扩展（Pannotia + LonestarGPU）
+
+| 算法 | 来源 | 领域 | Chains | 数据集 | Trace 状态 | 仿真状态 |
+|------|------|------|:------:|--------|:----------:|:--------:|
+| **MIS** | Pannotia | 图（独立集） | 10 | SNAP ×4 | ✅ 4 traces | ⏳ baseline+GRASP |
+| **Color** | Pannotia | 图（着色） | 10 | SNAP ×3 (+flickr 失败) | ✅ 3 traces | ⏳ baseline+GRASP |
+| **SP** | LonestarGPU | 约束求解 | 22 | CNF ×3 sizes | ✅ 3 traces | ⏳ baseline+GRASP |
+| **DMR** | LonestarGPU | 计算几何 | 56 | 250k + r1M | ✅ 1 (+1 生成中) | ⏳ baseline+GRASP |
+| **MST** | LonestarGPU | 图（生成树） | 1 | SNAP ×4 | ✅ 4 traces | ⏳ no-harm test |
+
+> **已知 blocker**：GRASP CD 在新 benchmark 上 `global_reads=0`——chain 未被运行时检测到。debug 模式在 mis2 kernel 上 segfault。需 GDB 定位根因后才能获得有效 speedup 数据。
+> BH (Barnes-Hut) 因 A100 架构不兼容放弃。Color flickr 因 kernel 数过多（791+）放弃 trace。
+> 工具链：`convert_snap_datasets.py`（MTX→METIS+Galois .gr）、`generate_traces_8gpu.sh`（8 GPU 并行 trace）、`extract_ima_chains.py`（已修复 IMAD.WIDE.U32 匹配）。
 
 ## GRASP 组件命名映射
 
@@ -120,7 +135,7 @@ GRASP 仿真输出行：
 | 改 IMA chain 定义 | `ima_pair_table/golden/*.csv`（改后必须重跑回归测试） |
 | 改 SOTA baseline | `sota_baseline/README.md` + 对应 `baseline_*.cc` |
 | 改实验基础设施 | `traceL1` 脚本 + `CLAUDE.md` "运行仿真" section |
-| 写论文图表 | `07_paper_outline/plot_style/plot_util.py` + `CLAUDE.md` "绘图规范" |
+| 写论文图表 | `07_paper_outline/README.md` + `plot_style/plot_util.py` + `CLAUDE.md` "绘图规范" |
 | Debug GRASP miss root cause | `debug/README.md`（5 阶段 + structural miss 分类） |
 
 ## SOTA Baseline 状态
@@ -140,7 +155,7 @@ GRASP 仿真输出行：
 | **EXPERIMENT SUMMARY** | `traceL1` 仿真后自动写入 log 末尾，含 status/kernels/IPC |
 | **Baseline Registry** | `06_evaluation_plan/baseline_registry.csv`，baseline 不重跑 |
 | **回归测试** | `grasp_regression.sh check`（默认 --quick ~34min，--full ~44min） |
-| **Golden Chain CSV** | `ima_pair_table/golden/strict_selected_chain_instances.csv`（105 chains, PR 删除后） |
+| **Golden Chain CSV** | `ima_pair_table/golden/strict_selected_chain_instances.csv`（**205 chains**: 6 Gardenia + 5 新 benchmark，含 IMAD.WIDE.U32 修复） |
 | **输出规范** | `06_evaluation_plan/output_specification.md` |
 | **实验结果** | `06_evaluation_plan/experiment_results.md`（唯一集中数据源） |
 | **批量实验** | `run_batch_experiments.sh` / `run_ideal_l1d.sh` |
@@ -153,14 +168,15 @@ GRASP 仿真输出行：
 ## 目录详情
 
 ### 01_ima_characterization/
-- **状态**: 核心分析完成
+- **状态**: 核心分析完成 + **新 benchmark SASS 分析**（Pannotia MIS/Color + LonestarGPU MST/DMR/SP/PTA）
 - **关键文件**: `sass_analysis/README.md`, `l1_miss_breakdown/analysis.md`
-- **最近修改**: 2026-03-29
+- **新增**: `sass_analysis/new_benchmarks_sm80/`（10 cubin + 10 sass + `find_ima_chains.py` + `convert_snap_datasets.py`）, `lonestargpu/`（cloned repo）, `pannotia/`（cloned repo）
+- **最近修改**: 2026-04-04
 
 ### 02_related_work/
 - **状态**: 论文收集完成（CPU 8 + GPU 9），重组为 6 个子目录
-- **关键文件**: `gpu_prefetcher_impl_provenance.md`
-- **最近修改**: 2026-03-30
+- **关键文件**: `gpu_prefetcher_impl_provenance.md`, **`venue_classification.md`**（CCF-A 14 篇 / 其他 16 篇）
+- **最近修改**: 2026-04-04
 
 ### 04_prefetcher_design/
 - **状态**: 设计框架已定，时序证据持续回填
@@ -171,18 +187,23 @@ GRASP 仿真输出行：
 - **状态**: GRASP +35.5% + Throttle T40C200 + CT/CD bug fix + 5 SOTA baseline + debug 方法学
 - **子目录**: `regression/`, `grasp_ablation/`, `sota_baseline/`, `ima_pair_table/`（含 `golden/`）, `grasp_real_diag/`, `chain_extraction/`, `debug/`, `grasp_metrics/`, **`dse_throttle_control/`**（完成: T40C200 推荐 + 6 CSV + extract_metrics.sh）
 - **新增（2026-04-03）**: Throttle DSE 完成。tc_mode=4 Cooldown Timer 9-workload 验证通过。
-- **最近修改**: 2026-04-03
+- **新增（2026-04-04）**: `chain_extraction/extract_ima_chains.py` IMAD.WIDE.U32 prefix match 修复。Golden CSV 105→205 chains（+100 新 benchmark chains）。`new_benchmark_chains_binary.csv` 从实际二进制提取。
+- **最近修改**: 2026-04-04
 
 ### 06_evaluation_plan/
-- **状态**: **4 类图 x 6 算法大规模评估** (PR 已移除, 38 workloads)
-- **关键文件**: `benchmark_suite.md`, `experiment_results.md`（唯一集中数据源）, `experiment_timing.md`, `output_specification.md`
+- **状态**: **评估数据完整**（Coverage% 全补齐，38 workloads，PR 已移除）
+- **关键文件**: `benchmark_suite.md`, `experiment_results.md`（唯一集中数据源，全指标）, `experiment_timing.md`, `output_specification.md`
 - **批量脚本**: `run_batch_experiments.sh`, `run_ideal_l1d.sh`
-- **最近修改**: 2026-04-03
+- **最近修改**: 2026-04-04
 
 ### 07_paper_outline/
-- **状态**: **权威大纲已定稿** + abstract + insight 清单 + academic 绘图 + LaTeX 模板
-- **关键文件**: **`paper_structure.md`**（§1-§7 完整大纲，基于 9 篇 CCF-A 论文结构分析）, `insight.md`（11 insights）, `introduction.md`, `abstract.md`
-- **最近修改**: 2026-04-03
+- **状态**: **论文工程全面就绪** — LaTeX 骨架 + 表格 + 绘图系统 + 写作规则体系 + 导览 README
+- **LaTeX 工程**: `latex_template/main.tex`（GRASP 论文 §1-§9 骨架 + Abstract）, `table_templates.tex`（6 张 booktabs 三线表）, `sample-base.bib`（待填充）
+- **绘图系统**: `plot_style/academic.mplstyle` + `plot_util.py`（CB10 调色板, HATCHES, legend helpers）+ `figure_prompts.md`（架构图/流程图等 6 种 prompt）
+- **写作规则**: `writing_rules/`（7 个 section 专用指南 §1-§7 + figure_design.md）+ `plan.md`（写作流程与顺序）+ `introduction_golden_rules.md`（8 讲提炼）
+- **素材文件**: `paper_structure.md`, `insight.md`（11 insights）, `abstract.md`（Draft v2, 170 词）
+- **导览**: **`README.md`**（文件地图 + 写作流程 + 编译命令）
+- **最近修改**: 2026-04-04
 
 ## 实现阻塞项
 
@@ -243,7 +264,8 @@ GRASP 仿真输出行：
 - **Accuracy 过低（22.8% in inf-all）**: 资源放大无效，需算法层面减少无效预取
 - **PT miss (~33K 不变)**: addr_map 覆盖不完整，MQ/MSHR 放大无法改善
 - **SpMV x16 展开使 stride 学习失效**: 需设计层面解决
-- **论文撰写（active）**: 大纲已定稿，下一步按 §3 Design -> §2 Background -> §5 Evaluation 优先级填充内容
+- **🔴 GRASP CD 新 benchmark 检测失败**: `global_reads=0` + debug segfault in mis2 → 需 GDB 定位（所有新 benchmark GRASP 结果暂时无效）
+- **论文撰写（active）**: 工程全面就绪，按 `plan.md` 顺序撰写正文
 - **Spare Register SpMV 实验待完成**
 - **Speculative stride BC 退化 -8.6% 根因待查**
-- **回归测试待跑**: Throttle DSE 代码改动未提交
+- **回归测试待跑**: Throttle DSE + 新 benchmark chain 扩展的代码改动未提交

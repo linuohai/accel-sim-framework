@@ -73,3 +73,17 @@ gtc_report/
 ima_plan/weekly_report/
 scripts/
 run_flashinfer_decode_compare.sh
+
+# 根目录临时/大型数据
+250k.2.out.*
+partial.cnf
+sp_sol.dat
+trace_gen_*.txt
+
+# 备份文件
+*.csv.bak
+*.csv.bak.*
+
+# LaTeX 编译产物（补充 — 已编译 PDF/TXT）
+ima_plan/07_paper_outline/latex_template/main.pdf
+ima_plan/07_paper_outline/latex_template/main.txt

@@ -251,7 +251,7 @@ accel-sim-framework/
 | L1 Trace | `-l1_trace_enable 1 -l1_trace_path <path>` | `gpu-simulator/gpgpu-sim/doc/l1_trace.md` |
 | Issue Trace | `-issue_trace_enable 1`（建议 `--issue-trace-compress gzip`） | `gpu-simulator/gpgpu-sim/doc/issue_trace.md` |
 | N-Level 调度器 | `./traceL1 -nl` | `gpu-simulator/gpgpu-sim/doc/n_level_warp_scheduler.md` |
-| Speculative Stride | `-grasp_speculative_stride N`（默认 0=关闭）+ chain CSV `stride_hint` 列 | `ima_plan/05_implementation/dse_ct_reset_policy.md` |
+| Speculative Stride | `--grasp-speculative-stride N` 或 `-grasp_speculative_stride N`（默认 0=关闭）+ chain CSV `stride_hint` 列。CC/VC stride_hint 已于 2026-04-03 从 SASS 分析补齐 | `ima_plan/05_implementation/dse_ct_reset_policy.md` |
 | Throttle Cooldown | `-grasp_tc_mode 4 -grasp_tc_mshr_threshold 40 -grasp_tc_cooldown 200`（默认 mode=0 thr=80） | `ima_plan/05_implementation/dse_throttle_control/README.md` |
 | Sim Args Passthrough | `--sim-args "<raw gpgpusim options>"`（traceL1 额外参数透传） | traceL1 脚本内 `EXTRA_SIM_ARGS` |
 
