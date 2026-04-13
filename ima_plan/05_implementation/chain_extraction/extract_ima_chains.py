@@ -166,13 +166,13 @@ def find_ima_chains(
             mid_instr = instrs[j]
 
             # Read-invalidation: if a non-IMAD.WIDE instruction reads idx_dest, stop
-            if mid_instr.opcode != "IMAD.WIDE" and _reads_reg(mid_instr, idx_dest):
+            if not mid_instr.opcode.startswith("IMAD.WIDE") and _reads_reg(mid_instr, idx_dest):
                 break
             # Also stop if idx_dest is overwritten
-            if _writes_reg(mid_instr, idx_dest) and mid_instr.opcode != "IMAD.WIDE":
+            if _writes_reg(mid_instr, idx_dest) and not mid_instr.opcode.startswith("IMAD.WIDE"):
                 break
 
-            if mid_instr.opcode != "IMAD.WIDE":
+            if not mid_instr.opcode.startswith("IMAD.WIDE"):
                 continue
 
             addr_regs = RE_REG.findall(mid_instr.operands)

@@ -529,6 +529,25 @@ declare -A TRACE_MAP=(
     ["bc_web_dir"]="bc_linear_base/mtx___data_web_Google_0_0_506742/traces/kernelslist.g"
     ["pr_web_dir"]="pr_base/mtx___data_web_Google_0/traces/kernelslist.g"
 
+    # --- Variant sweep: web-Google sym=1 (14 implementation variants vs baselines) ---
+    ["bfs_topo_web_sym"]="bfs_topo_base/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["bfs_lb_web_sym"]="bfs_linear_lb/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["sssp_lb_web_sym"]="sssp_linear_lb/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["sssp_topo_web_sym"]="sssp_topo_base/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["bc_lb_web_sym"]="bc_linear_lb/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["bc_topo_web_sym"]="bc_topo_base/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["bc_hlb_web_sym"]="bc_hybrid_lb/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["cc_affo_web_sym"]="cc_afforest/mtx___data_web_Google_1_0_0/traces/kernelslist.g"
+    ["cc_warp_web_sym"]="cc_warp/mtx___data_web_Google_1_0_0/traces/kernelslist.g"
+    ["cc_part_web_sym"]="cc_partition/mtx___data_web_Google_1_0_0/traces/kernelslist.g"
+    ["spmv_warp_web_sym"]="spmv_warp/mtx___data_web_Google_1_0_0/traces/kernelslist.g"
+    ["spmv_tile_web_sym"]="spmv_tiling/mtx___data_web_Google_1_0_0/traces/kernelslist.g"
+    ["vc_topo_web_sym"]="vc_topo_base/mtx___data_web_Google_1_0_0/traces/kernelslist.g"
+    ["vc_bits_web_sym"]="vc_linear_bitset/mtx___data_web_Google_1_0_0/traces/kernelslist.g"
+    # --- Variant sweep: source=0 re-traces (for topo-driven variants to validate source-CTA alignment) ---
+    ["bfs_topo_s0_web_sym"]="bfs_topo_base/mtx___data_web_Google_1_0_0_src0/traces/kernelslist.g"
+    ["sssp_topo_s0_web_sym"]="sssp_topo_base/mtx___data_web_Google_1_0_0_src0/traces/kernelslist.g"
+
 
     # flash attention
     ["fa"]="fa/NO_ARGS/traces/kernelslist.g"
@@ -611,6 +630,47 @@ declare -A TRACE_MAP=(
     ["pagerank"]="pagerank/__data_coAuthorsDBLP_graph_1/traces/kernelslist.g"
     ["pagerank_spmv"]="pagerank_spmv/NO_ARGS/traces/kernelslist.g"
     ["l1_bw_32f"]="l1_bw_32f/NO_ARGS/traces/kernelslist.g"
+
+    # === Pannotia MIS (SNAP datasets) ===
+    ["pann_mis_cit"]="pann_mis_cit-Patents/traces/kernelslist.g"
+    ["pann_mis_web"]="pann_mis_web-Google/traces/kernelslist.g"
+    ["pann_mis_flickr"]="pann_mis_flickr/traces/kernelslist.g"
+    ["pann_mis_road"]="pann_mis_roadNet-CA/traces/kernelslist.g"
+
+    # === Pannotia Color (SNAP datasets) ===
+    ["pann_color_cit"]="pann_color_cit-Patents/traces/kernelslist.g"
+    ["pann_color_web"]="pann_color_web-Google/traces/kernelslist.g"
+    ["pann_color_road"]="pann_color_roadNet-CA/traces/kernelslist.g"
+
+    # === LonestarGPU MST (SNAP datasets) ===
+    ["ls_mst_cit"]="ls_mst_cit-Patents/traces/kernelslist.g"
+    ["ls_mst_web"]="ls_mst_web-Google/traces/kernelslist.g"
+    ["ls_mst_flickr"]="ls_mst_flickr/traces/kernelslist.g"
+    ["ls_mst_road"]="ls_mst_roadNet-CA/traces/kernelslist.g"
+
+    # === LonestarGPU non-graph algorithms ===
+    ["ls_sp"]="ls_sp_small/traces/kernelslist.g"
+    ["ls_sp_med"]="ls_sp_med/traces/kernelslist.g"
+    ["ls_sp_42k3"]="ls_sp_42k_3/traces/kernelslist.g"
+    ["ls_sp_42k5"]="ls_sp_42k_5/traces/kernelslist.g"
+    ["ls_dmr_r1m"]="ls_dmr_r1m/traces/kernelslist.g"
+    ["ls_pta"]="ls_pta_ex/traces/kernelslist.g"
+    ["ls_dmr"]="ls_dmr_250k/traces/kernelslist.g"
+    ["ls_dmr_25k"]="ls_dmr_25k/traces/kernelslist.g"
+    ["ls_dmr_25k_tiny"]="ls_dmr_25k_tiny/traces/kernelslist.g"
+    ["ls_dmr_25k_kc1"]="ls_dmr_25k_kc1/traces/kernelslist.g"
+    ["ls_dmr_25k_kr28"]="ls_dmr_25k_kr28/traces/kernelslist.g"
+    ["ls_mst_flickr_k3"]="ls_mst_flickr_k3/traces/kernelslist.g"
+    ["ls_mst_flickr_k3only"]="ls_mst_flickr_k3only/traces/kernelslist.g"
+    # small default datasets
+    ["pann_mis_eco"]="pann_mis_ecology1/traces/kernelslist.g"
+    ["pann_mis_g3"]="pann_mis_g3circuit/traces/kernelslist.g"
+    ["pann_color_eco"]="pann_color_ecology1/traces/kernelslist.g"
+    ["pann_color_g3"]="pann_color_g3circuit/traces/kernelslist.g"
+    ["ls_mst_rmat12"]="ls_mst_rmat12/traces/kernelslist.g"
+    ["ls_mst_usany"]="ls_mst_usany/traces/kernelslist.g"
+    ["ls_mst_2d2e20"]="ls_mst_2d2e20/traces/kernelslist.g"
+    ["ls_mst_usafla"]="ls_mst_usafla/traces/kernelslist.g"
 )
 
 # n_level warp alloc 文件映射（默认使用 trace_key，gto 使用 <trace_key>gto）
@@ -1439,6 +1499,34 @@ if [ ${PIPESTATUS[0]} -eq 0 ]; then
                 if(tda>0)printf "(%.1f%%)",100.0*tdrf/tda
                 printf " data_got_data=%d",tdgd}')
 
+            # GRASP_BOTTLENECK: theoretical vs actual, 绝对计数全 SM 求和
+            grasp_bottleneck=$(grep "^GRASP_BOTTLENECK SM" "$log_file" | awk '{
+                split($2,a,":"); gsub(/SM/,"",a[1]); sm=a[1]
+                for(i=3;i<=NF;i++){
+                    if($i=="|") continue
+                    split($i,kv,"=")
+                    if(kv[1]=="idx_theory")it[sm]=kv[2]+0
+                    if(kv[1]=="idx_generated")ig[sm]=kv[2]+0
+                    if(kv[1]=="idx_accepted")iac[sm]=kv[2]+0
+                    if(kv[1]=="idx_rfail")irf[sm]=kv[2]+0
+                    if(kv[1]=="idx_retried")ire[sm]=kv[2]+0
+                    if(kv[1]=="data_theory")dt[sm]=kv[2]+0
+                    if(kv[1]=="data_enqueued")deq[sm]=kv[2]+0
+                    if(kv[1]=="data_accepted")dac[sm]=kv[2]+0
+                    if(kv[1]=="data_rfail")drf[sm]=kv[2]+0
+                    if(kv[1]=="data_retried")dre[sm]=kv[2]+0
+                    if(kv[1]=="tc_suppressed")tcs[sm]=kv[2]+0
+                    if(kv[1]=="no_throttle")nt[sm]=kv[2]+0}
+            } END {tit=0;tig=0;tiac=0;tirf=0;tire=0;tdt=0;tdeq=0;tdac=0;tdrf=0;tdre=0;ttcs=0;tnt=0
+                for(s in it){tit+=it[s];tig+=ig[s];tiac+=iac[s];tirf+=irf[s];tire+=ire[s];
+                             tdt+=dt[s];tdeq+=deq[s];tdac+=dac[s];tdrf+=drf[s];tdre+=dre[s];
+                             ttcs+=tcs[s];tnt=nt[s]}
+                printf "idx_theory=%d idx_generated=%d idx_accepted=%d",tit,tig,tiac
+                if(tit>0)printf "(%.1f%%)",100.0*tiac/tit
+                printf " idx_rfail=%d idx_retried=%d | data_theory=%d data_enqueued=%d data_accepted=%d",tirf,tire,tdt,tdeq,tdac
+                if(tdt>0)printf "(%.1f%%)",100.0*tdac/tdt
+                printf " data_rfail=%d data_retried=%d | tc_suppressed=%d no_throttle=%d",tdrf,tdre,ttcs,tnt}')
+
             # 8. 计算 coverage = 1 - grasp_data_misses / baseline_data_misses
             local registry="$BASE_DIR/ima_plan/06_evaluation_plan/baseline_registry.csv"
             if [ -f "$registry" ] && [ -n "$grasp_ima_misses" ]; then
@@ -1472,6 +1560,9 @@ if [ ${PIPESTATUS[0]} -eq 0 ]; then
                 echo "storage(max): $grasp_storage"
                 echo "rfail: $grasp_rfail"
                 echo "funnel: $grasp_funnel"
+                if [ -n "$grasp_bottleneck" ]; then
+                    echo "bottleneck: $grasp_bottleneck"
+                fi
                 if [ -n "$ima_timeliness_line" ]; then
                     echo "timeliness: $ima_timeliness_line"
                 fi
@@ -1496,6 +1587,9 @@ if [ ${PIPESTATUS[0]} -eq 0 ]; then
             echo "  storage(max): $grasp_storage"
             echo "  rfail: $grasp_rfail"
             echo "  funnel: $grasp_funnel"
+            if [ -n "$grasp_bottleneck" ]; then
+                echo "  bottleneck: $grasp_bottleneck"
+            fi
             if [ -n "$ima_timeliness_line" ]; then
                 echo "  timeliness: $ima_timeliness_line"
             fi
