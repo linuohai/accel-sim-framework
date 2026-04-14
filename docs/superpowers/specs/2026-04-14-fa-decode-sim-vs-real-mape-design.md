@@ -17,31 +17,34 @@
 
 ### FA — flash attention prefill (7 configs)
 
-固定：head_dim=128, causal=on, B×H=32, dtype=fp16
+固定：dtype=fp16，调用 `gpu-app-collection/flash_attention/fa.py --batch_size B --seqlen S --nheads H --d D`
 
-| # | seq_len | head_dim | B×H | 类别 |
-|---|---------|----------|-----|------|
-| 1 | 512 | 128 | 32 | seq 主轴 |
-| 2 | 1024 | 128 | 32 | seq 主轴 |
-| 3 | 2048 | 128 | 32 | seq 主轴 |
-| 4 | 4096 | 128 | 32 | seq 主轴（复用现有 fa4k trace 如可用） |
-| 5 | 8192 | 128 | 32 | seq 主轴 |
-| 6 | 2048 | 64 | 32 | head_dim sensitivity |
-| 7 | 2048 | 128 | 8 | 并发度 sensitivity |
+| # | batch | seqlen (S) | nheads (H) | head_dim (D) | 类别 |
+|---|-------|------------|------------|--------------|------|
+| 1 | 1 | 512 | 32 | 128 | seq 主轴 |
+| 2 | 1 | 1024 | 32 | 128 | seq 主轴 |
+| 3 | 1 | 2048 | 32 | 128 | seq 主轴 |
+| 4 | 1 | 4096 | 32 | 128 | seq 主轴（复用现有 `fa4k` trace） |
+| 5 | 1 | 8192 | 32 | 128 | seq 主轴 |
+| 6 | 1 | 2048 | 32 | 64  | head_dim sensitivity |
+| 7 | 1 | 2048 | 8  | 128 | 并发度 sensitivity（CTA 总数从 32 → 8） |
 
 ### Decode — flashinfer decode (7 configs)
 
-固定：head_dim=128, num_q_heads=32, num_kv_heads=32, dtype=fp16
+固定：head_dim=128, num_heads=32, page_size=16, dtype=fp16, mode=paged
+调用 `gpu-app-collection/src/cuda/flashinfer_decode/flashinfer_decode.py --batch B --seqlen-k K --num-heads 32 --num-kv-heads KH --head-dim 128`
 
-| # | KV_len | batch | GQA (kv_heads) | 类别 |
-|---|--------|-------|----------------|------|
-| 8  | 512  | 1  | 32 | KV 主轴（复用 fi_dec_512） |
-| 9  | 1024 | 1  | 32 | KV 主轴 |
-| 10 | 2048 | 1  | 32 | KV 主轴 |
-| 11 | 4096 | 1  | 32 | KV 主轴（复用 fi_dec_4k） |
-| 12 | 2048 | 8  | 32 | batch sensitivity |
-| 13 | 2048 | 32 | 32 | batch sensitivity |
-| 14 | 2048 | 1  | 8  | GQA sensitivity |
+| # | batch (B) | seqlen_k (K) | num_heads | num_kv_heads (KH) | 类别 |
+|---|-----------|--------------|-----------|--------------------|------|
+| 8  | 1  | 512  | 32 | 32 | KV 主轴（尝试复用 `fi_dec_512`，但其默认 kv_heads=8，可能需重抓） |
+| 9  | 1  | 1024 | 32 | 32 | KV 主轴 |
+| 10 | 1  | 2048 | 32 | 32 | KV 主轴 |
+| 11 | 1  | 4096 | 32 | 32 | KV 主轴（尝试复用 `fi_dec_4k`） |
+| 12 | 8  | 2048 | 32 | 32 | batch sensitivity |
+| 13 | 32 | 2048 | 32 | 32 | batch sensitivity |
+| 14 | 1  | 2048 | 32 | 8  | GQA sensitivity (4:1) |
+
+> 现有 `fi_dec_512` / `fi_dec_4k` trace 的 `num_kv_heads` 默认值为 8（非 32），若口径不一致则必须重抓；提交 trace 前先核对抓取时的 config 参数。
 
 **预期瓶颈迁移**：
 - FA：seq 512 → compute-bound（low arithmetic intensity 但 per-CTA work 小），seq 8k → DRAM BW-bound
@@ -81,27 +84,88 @@ config (i) ──► accel-sim tracer ──► SASS trace (kernelslist.g)
 | SM busy | `gpu_tot_ipc / peak_ipc` | `sm__throughput.avg.pct_of_peak_sustained_elapsed` | yes |
 | Stall 分布 | `warp_issue_idle breakdown` | `smsp__average_warp_latency_per_inst_issued` + stall reason 分桶 | Spearman / overlap@3 |
 
-**瓶颈分类决策（方案 D 的定性部分）**：
+**瓶颈分类决策（方案 D 的定性部分，阈值先用当前定义，拿到数据后再调）**：
 - **Compute-bound**: SM busy ≥ 70% 且 DRAM util < 50%
 - **Memory BW-bound**: DRAM util ≥ 70%
 - **Latency-bound**: SM busy < 50% 且 DRAM util < 50%（warp 等内存但 BW 没满）
 - **Mixed**: 其他
 
-两边各自按上述阈值打标签，输出 14×2 的一致性矩阵。
+两边各自按上述阈值打标签，输出 14×2 的一致性矩阵。**阈值为初始 tentative 值**，拿到 14 个 config 实测数据后检查分布（如大部分点都落在 "Mixed" 则阈值太严、反之太松），再调整定版。
 
-## 5. 产出文件
+## 5. 产出：数据文件、表格与图表
 
-1. **`ncu_metrics.csv`** — 14 行 × ncu 指标列
-2. **`sim_metrics.csv`** — 14 行 × sim 指标列（对齐列名）
-3. **`mape_report.md`** — 每个指标的 MAPE 表 + 瓶颈分类一致性矩阵 + 每 config top-3 stall reason 对比
-4. **`fig_roofline_fa.pdf`** — FA 7 config 在 roofline 上的位置（sim 和 real 叠画）
-5. **`fig_roofline_decode.pdf`** — Decode 7 config 同上
-6. **`fig_mape_per_metric.pdf`** — 每个指标的 MAPE 分布（bar chart）
+### 5.1 数据文件（原始 ground truth）
+
+1. **`ncu_metrics.csv`** — 14 行 × ncu 指标列（per-kernel 展平，若多 kernel 则按 duration-weighted 聚合）
+2. **`sim_metrics.csv`** — 14 行 × sim 指标列（列名与 ncu 对齐）
+3. **`merged_metrics.csv`** — 两边并排，加 `*_mape` 和 `*_rel_err` 列，供绘图与 mape_report.md 读入
+
+### 5.2 原始数据表格（写入 `mape_report.md`）
+
+用户要求：报告必须包含完整原始数据，不只是结论。
+
+- **Table 1 — Raw Metrics (14 × ~12 列)**：config_id / workload / param / `sim_IPC` / `real_IPC` / `sim_runtime_ms` / `real_runtime_ms` / `sim_dram_util` / `real_dram_util` / `sim_l1_hit` / `real_l1_hit` / `sim_l2_hit` / `real_l2_hit` / `sim_sm_busy` / `real_sm_busy`
+- **Table 2 — MAPE Summary**：每个指标一行，`MAPE / median_abs_err / max_abs_err / #configs_within_20%`
+- **Table 3 — Bottleneck Classification Matrix**：14 行，`sim_class` / `real_class` / `agree?`
+
+### 5.3 图表规格（≥2 张多子图，混合图型，遵循 plot_util.py 风格）
+
+严格遵循 `ima_plan/07_paper_outline/plot_style/` 规范（`apply_style()` + `CB10` + PDF+SVG + `constrained_layout`）。
+
+按 `ima_plan/skills/paper-figure/` 的两阶段流程：
+- **Phase 1（原型）**：先用默认风格出 PNG 原型，**用户打分后再定稿**
+- **Phase 2（定稿）**：用户确认后改成 `plot_util.py` 风格输出 PDF+SVG
+
+计划图表清单（有意混合 scatter / line / heatmap / bar / matrix 五种图型）：
+
+| Fig | 类型 | 子图 | 描述 |
+|-----|------|------|------|
+| **Fig 1 — Roofline Overlay** ⭐ | Scatter + 折线 | **2 子图** (a) FA \| (b) Decode | 每个 config 一对点（sim, real），用短连线配对；背景是 A100 roofline（compute ceiling + DRAM BW ceiling）。**视觉第一眼就能看出"两者是否落在同一 regime"** |
+| **Fig 2 — Metric MAPE Breakdown** ⭐ | 混合 bar + 误差棒 | **6 子图 (2×3)** | 每个子图一个指标（IPC / runtime / DRAM util / L1 hit / L2 hit / SM busy），X 轴 14 个 config，Y 轴相对误差%。配色：FA 配色 vs Decode 配色分组 |
+| **Fig 3 — Bottleneck Trajectory** | Line plot | 单图 | X = seq/KV 主轴（log scale），Y = DRAM util%，四条线（FA-sim, FA-real, Decode-sim, Decode-real），展示瓶颈如何随输入规模迁移 |
+| **Fig 4 — Stall Reason Heatmap** | Heatmap | **2 子图** (a) sim \| (b) real | 行 = 14 configs, 列 = top-K stall reasons（归一化到 100%）。对称放置可直观看出分布差异 |
+| **Fig 5 — Classification Agreement Matrix** | 离散网格 | 单图 | 14 行 × 2 列（sim / real），单元格用不同颜色+符号表示 4 类 bottleneck 标签，不一致行加红框 |
+
+**满足用户要求**：
+- ≥2 张多子图 → Fig 1、Fig 2、Fig 4 共 3 张
+- 非纯柱状图 → scatter / line / heatmap / matrix 占多数，bar 仅 Fig 2
+- 包含 roofline → Fig 1
+
+### 5.4 目录结构
 
 实验产出根目录：`result/sim_vs_real_mape/`（与现有 `result/log/`、`result/plot/` 平级）
-- `ncu_metrics.csv`、`sim_metrics.csv`、`mape_report.md`、`fig_*.pdf` 都落在此目录
-- 脚本与 analysis notebook：`result/sim_vs_real_mape/scripts/`
-- 与 `ima_plan/` 隔离（本工作非 IMA 研究）
+
+```
+result/sim_vs_real_mape/
+├── scripts/
+│   ├── gen_configs.py              # 枚举 14 configs 并生成 trace/ncu/sim 调用参数
+│   ├── run_tracer.sh               # accel-sim tracer 驱动
+│   ├── run_ncu.sh                  # ncu 驱动
+│   ├── run_sim.sh                  # GPGPU-Sim 并行驱动
+│   ├── collect_metrics.py          # 解析 ncu csv + sim log → merged_metrics.csv
+│   ├── classify_bottleneck.py      # 打瓶颈标签
+│   ├── fig1_roofline.py            # 生产版
+│   ├── fig2_mape_breakdown.py
+│   ├── fig3_trajectory.py
+│   ├── fig4_stall_heatmap.py
+│   ├── fig5_classification_matrix.py
+│   └── _proto_*.py                 # Phase 1 原型脚本（带 _proto 前缀）
+├── traces/                         # symlink 到实际 accel-sim trace 目录
+├── ncu_out/
+│   └── cfg_{01..14}.ncu-rep        # ncu 原始输出
+├── sim_logs/
+│   └── cfg_{01..14}.log
+├── ncu_metrics.csv
+├── sim_metrics.csv
+├── merged_metrics.csv
+├── mape_report.md                  # 含 Table 1/2/3
+└── figures/
+    ├── _proto_fig{1..5}.png        # 原型（打分用）
+    ├── fig{1..5}.pdf               # 定稿
+    └── fig{1..5}.svg
+```
+
+与 `ima_plan/` 隔离（本工作非 IMA 研究）。
 
 ## 6. 时间预算（今日）
 
@@ -120,8 +184,19 @@ config (i) ──► accel-sim tracer ──► SASS trace (kernelslist.g)
 - **Risk 2**：ncu full section 时间远超预期。**回退**：退到 `--set speed-of-light` 单 section，丢弃 stall reason 细粒度对比，保留 A/B/D 部分。
 - **Risk 3**：sim 跑不完（某些 config kernel 太大）。**回退**：用 `--max-completed-cta` 限 CTA 数，ncu 也同步限（需确认 ncu 能否按 CTA 截断，通常不行 → 改用小 seq 点替代）。
 
-## 8. 开放项（今天开工前需确认）
+## 8. 开放项确认（今日开工前）
 
-- [ ] A100 是否空闲独占（ncu + tracer 需要）
-- [ ] 现有 `fa4k` / `fi_dec_512` / `fi_dec_4k` trace 是否可复用（如果 FA/flashinfer 源码未变可直接用）
-- [ ] FA 源码 `gpu-app-collection/flash_attention/fa.py` 是否已支持参数化 seq_len / head_dim 入参
+- [x] **A100 独占** — 用户确认可独占
+- [x] **现有 trace 复用** — 用户确认 `fa4k` 可直接用于 config #4；`fi_dec_512` / `fi_dec_4k` 若抓取时 `--num-kv-heads=8` 则与本 spec 口径不一致（本 spec 取 kv_heads=32），开工时读取现有 trace metadata 核对后决定
+- [x] **源码参数化** — 已核实：`fa.py` 支持 `--batch_size/--seqlen/--nheads/--d`；`flashinfer_decode.py` 支持 `--batch/--seqlen-k/--num-heads/--num-kv-heads/--head-dim/--page-size`，无需改源码
+
+## 9. 用户偏好 / 显式约束
+
+来自 brainstorm 对话的显式要求，后续 implementation plan 必须遵守：
+
+1. **图表不能全是柱状图** — 至少混 scatter / line / heatmap / matrix
+2. **至少 2 张多子图 figure**（本 spec 设计了 3 张）
+3. **要有 roofline 图**
+4. **报告要含原始数据表格**，不只是结论
+5. **图表走 prototype → 用户打分 → 定稿 两阶段**（paper-figure skill 流程）
+6. **今日完成** — 时间预算 6-8h
