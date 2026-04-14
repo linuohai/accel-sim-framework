@@ -322,16 +322,23 @@ Expected: log ends with normal GPGPU-Sim shutdown lines (`GPGPU-Sim: ** STATS **
 
 ---
 
-## Task 5: Bulk run tracer for configs 2..14 (serial, ~1-2h)
+## Task 5: Bulk run tracer for configs 2..14 (8-GPU parallel, ~30-45min)
 
-- [ ] **Step 1: Launch**
+- [ ] **Step 1: Launch with GPU rotation**
+
+8 A100s available — assign each config to a GPU via `CUDA_VISIBLE_DEVICES = (cfg_id - 1) % 8`. Run 8 parallel workers via xargs:
 
 ```bash
 cd /workspace/prefetch
-for id in 2 3 4 5 6 7 8 9 10 11 12 13 14; do
-    echo "=== TRACER cfg $id ==="
-    time ./result/sim_vs_real_mape/scripts/run_tracer.sh "$id" 2>&1 | tail -5
-done 2>&1 | tee result/sim_vs_real_mape/tracer_bulk.log
+seq 2 14 | xargs -n1 -P8 -I{} bash -c '
+  ID={};
+  GPU=$(( (ID - 1) % 8 ));
+  echo "=== TRACER cfg $ID on GPU $GPU ==="
+  CUDA_VISIBLE_DEVICES=$GPU \
+    ./result/sim_vs_real_mape/scripts/run_tracer.sh "$ID" \
+    > result/sim_vs_real_mape/traces/tracer_cfg_${ID}.out 2>&1
+  echo "[cfg $ID] exit=$?"
+'  2>&1 | tee result/sim_vs_real_mape/tracer_bulk.log
 ```
 
 - [ ] **Step 2: Verify all 14 succeeded**
@@ -350,16 +357,24 @@ All 14 must print `OK`. If any `MISSING`, debug before proceeding — do not sil
 
 ---
 
-## Task 6: Bulk run ncu for configs 2..14 (serial, ~1-2h)
+## Task 6: Bulk run ncu for configs 2..14 (8-GPU parallel, ~30-45min)
 
-- [ ] **Step 1: Launch** (GPU exclusive; must run after tracing finishes)
+- [ ] **Step 1: Launch with GPU rotation** (must run after tracing finishes)
 
 ```bash
-for id in 2 3 4 5 6 7 8 9 10 11 12 13 14; do
-    echo "=== NCU cfg $id ==="
-    time ./result/sim_vs_real_mape/scripts/run_ncu.sh "$id" 2>&1 | tail -3
-done 2>&1 | tee result/sim_vs_real_mape/ncu_bulk.log
+cd /workspace/prefetch
+seq 2 14 | xargs -n1 -P8 -I{} bash -c '
+  ID={};
+  GPU=$(( (ID - 1) % 8 ));
+  echo "=== NCU cfg $ID on GPU $GPU ==="
+  CUDA_VISIBLE_DEVICES=$GPU \
+    ./result/sim_vs_real_mape/scripts/run_ncu.sh "$ID" \
+    > result/sim_vs_real_mape/ncu_out/ncu_cfg_${ID}.out 2>&1
+  echo "[cfg $ID] exit=$?"
+'  2>&1 | tee result/sim_vs_real_mape/ncu_bulk.log
 ```
+
+Note: ncu serializes profile sessions per-GPU automatically, so 8 distinct GPUs = 8 truly parallel ncu instances.
 
 - [ ] **Step 2: Verify all CSVs non-empty**
 
