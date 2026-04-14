@@ -120,16 +120,18 @@ config (i) ──► accel-sim tracer ──► SASS trace (kernelslist.g)
 
 | Fig | 类型 | 子图 | 描述 |
 |-----|------|------|------|
-| **Fig 1 — Roofline Overlay** ⭐ | Scatter + 折线 | **2 子图** (a) FA \| (b) Decode | 每个 config 一对点（sim, real），用短连线配对；背景是 A100 roofline（compute ceiling + DRAM BW ceiling）。**视觉第一眼就能看出"两者是否落在同一 regime"** |
-| **Fig 2 — Metric MAPE Breakdown** ⭐ | 混合 bar + 误差棒 | **6 子图 (2×3)** | 每个子图一个指标（IPC / runtime / DRAM util / L1 hit / L2 hit / SM busy），X 轴 14 个 config，Y 轴相对误差%。配色：FA 配色 vs Decode 配色分组 |
-| **Fig 3 — Bottleneck Trajectory** | Line plot | 单图 | X = seq/KV 主轴（log scale），Y = DRAM util%，四条线（FA-sim, FA-real, Decode-sim, Decode-real），展示瓶颈如何随输入规模迁移 |
-| **Fig 4 — Stall Reason Heatmap** | Heatmap | **2 子图** (a) sim \| (b) real | 行 = 14 configs, 列 = top-K stall reasons（归一化到 100%）。对称放置可直观看出分布差异 |
-| **Fig 5 — Classification Agreement Matrix** | 离散网格 | 单图 | 14 行 × 2 列（sim / real），单元格用不同颜色+符号表示 4 类 bottleneck 标签，不一致行加红框 |
+| **Fig 1 — Roofline Overlay** ⭐ | Scatter + 折线 | **2 子图** (a) FA \| (b) Decode | 每个 config 一对点（sim, real），用短连线配对；背景是 A100 roofline（compute ceiling + DRAM BW ceiling）。视觉第一眼就能看出两者是否落在同一 regime |
+| **Fig 2 — Metric MAPE Breakdown** ⭐ | bar + 误差线 | **6 子图 (2×3)** | 每个子图一个指标（IPC / runtime / DRAM util / L1 hit / L2 hit / SM busy），X 轴 14 个 config，Y 轴相对误差%；FA/Decode 用不同颜色；红虚线标 ±20% 合格线 |
+| **Fig 3 — Bottleneck Trajectory** | Line plot | 单图 | X = seq/KV 主轴（log scale），Y = util%，sim/real × FA/Decode 多线叠画，展示瓶颈如何随输入规模迁移；BW-bound 区域用红色 shading |
+| **Fig 4 — Stall Composition (Stacked)** | Stacked bar | 单图（14×2 组邻接柱） | 每个 config 两条邻接柱：左 Sim (实色)、右 Real (hatch)，每条柱按 top-5 stall reason 分段堆叠到 100%。颜色 = stall 类别，可直接肉眼比"每个类别在两侧占比是否接近" |
+
+**Table 3**（bottleneck 分类一致性矩阵）原计划为 Fig 5，现改为 `mape_report.md` 中的纯表格，不再出图（14 行 × 列：sim_class / real_class / agree?）。
 
 **满足用户要求**：
-- ≥2 张多子图 → Fig 1、Fig 2、Fig 4 共 3 张
-- 非纯柱状图 → scatter / line / heatmap / matrix 占多数，bar 仅 Fig 2
-- 包含 roofline → Fig 1
+- ≥2 张多子图 → Fig 1、Fig 2 共 2 张 ✓
+- 非纯柱状图 → scatter (Fig 1) / line (Fig 3) / stacked bar (Fig 4) / bar (Fig 2) 4 种图型 ✓
+- 包含 roofline → Fig 1 ✓
+- 原始数据表格 → `mape_report.md` Table 1/2/3 ✓
 
 ### 5.4 目录结构
 
@@ -147,8 +149,7 @@ result/sim_vs_real_mape/
 │   ├── fig1_roofline.py            # 生产版
 │   ├── fig2_mape_breakdown.py
 │   ├── fig3_trajectory.py
-│   ├── fig4_stall_heatmap.py
-│   ├── fig5_classification_matrix.py
+│   ├── fig4_stall_stacked.py
 │   └── _proto_*.py                 # Phase 1 原型脚本（带 _proto 前缀）
 ├── traces/                         # symlink 到实际 accel-sim trace 目录
 ├── ncu_out/
@@ -160,9 +161,9 @@ result/sim_vs_real_mape/
 ├── merged_metrics.csv
 ├── mape_report.md                  # 含 Table 1/2/3
 └── figures/
-    ├── _proto_fig{1..5}.png        # 原型（打分用）
-    ├── fig{1..5}.pdf               # 定稿
-    └── fig{1..5}.svg
+    ├── _proto_fig{1..4}.png        # 原型（打分用）
+    ├── fig{1..4}.pdf               # 定稿
+    └── fig{1..4}.svg
 ```
 
 与 `ima_plan/` 隔离（本工作非 IMA 研究）。
