@@ -96,3 +96,16 @@ L2_total_cache_accesses = 19415040
 ## Confidence
 
 **HIGH**. Log format is mature, stable, and complete. No surprises expected in SC.6 implementation. SC.1's WINSN_TOTAL addition is a separate, scoped task.
+
+## SC.3 Concern (2026-04-17): DRAM_UTIL_BINS often zero
+
+After SC.2+SC.3, smoke verify on v1 cfg_01 shows `DRAM_UTIL_BINS: 0 0 0 0 0 0 0 0 0 0 (total=0)` — expected for small workload.
+
+But independently grepping v1 cfg_03 (FA-7B-s2k) baseline log shows `dram_util_bins: 0 0 0 0 0 0 0 0 0 0` ALSO all zero, despite v1 reverse-derived DRAM util being non-zero (~50% per old metric). This means the sim's internal bin accumulation logic likely doesn't trigger as expected for typical workloads.
+
+**Implication for SC.6**: parser must handle zero-total bins gracefully:
+- If total > 0: use weighted util (preferred per Step C decision)
+- If total == 0: fall back to v1's reverse-derive `(rd+wr)*32B/runtime/1555`
+- Document the fallback in parser comments
+
+**Future investigation** (not blocking v2): why dram_util_bins doesn't populate on FA workloads — may be a sim bug or specific to certain DRAM scheduler configs. Can be SC.X+ deferred.
