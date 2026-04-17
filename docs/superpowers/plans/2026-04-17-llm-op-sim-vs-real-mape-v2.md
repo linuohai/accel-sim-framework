@@ -577,6 +577,45 @@ git commit -m "feat(v2): add 41-cfg matrix generator + CSV (FA 11 + Decode 13 + 
 **Files:**
 - Create: `result/sim_vs_real_mape_v2/scripts/run_tracer.sh`
 
+#### Task 2.1 强制约束: NVBit Kernel 过滤（v2 新增, 防 cfg_13 类失败）
+
+**背景**: cfg_13 失败根因是 PyTorch `DistributionNormal` 等 init kernel 进入了 sim。v2 强制启用 NVBit `DYNAMIC_KERNEL_RANGE` 在 trace 阶段过滤 kernel。
+
+**机制**: `util/tracer_nvbit/tracer_tool/tracer_tool.cu:109` 读取 `DYNAMIC_KERNEL_RANGE` env，语法 `<id_range>@<regex1>,<regex2> ...`，例如 `DYNAMIC_KERNEL_RANGE=".*BatchDecode.*"` 只 trace 名字含 BatchDecode 的 kernel。
+
+**两阶段流程（每算子首次必跑 Discovery）**:
+
+- [ ] **Stage 1: Discovery（每算子一次性，记录到 PREREQ_LOG.md）**
+  ```bash
+  # 不设 DYNAMIC_KERNEL_RANGE → 全量 trace 一次
+  bash run_tracer.sh --discovery <cfg_id>
+  # 输出 result/sim_vs_real_mape_v2/discovery/<cfg_id>/kernelslist.g
+  cat result/sim_vs_real_mape_v2/discovery/<cfg_id>/kernelslist.g | sort -u
+  # 人工/脚本识别哪些是目标 kernel、哪些是 PyTorch init 噪声
+  # 把目标 kernel 名 + 派生 regex 写入 PREREQ_LOG.md "Kernel Discovery 表"
+  ```
+
+- [ ] **Stage 2: Filter（每 cfg 跑）**
+  ```bash
+  # configs.csv 新增列 kernel_regex
+  DYNAMIC_KERNEL_RANGE="<csv 中读到的 regex>" bash run_tracer.sh --filter <cfg_id>
+  ```
+
+- [ ] **Stage 3: Verify（强制至少 2/3 通过）**
+  - kernel 数量校验: `wc -l filtered/kernelslist.g` 必须等于 discovery 中目标 kernel 数
+  - kernel 名 sanity: `grep -v -E "<expected_substring>" kernelslist.g` 必须为空
+  - 总指令数 sanity: sim 后 `gpu_tot_sim_insn` 与 discovery 累加目标 kernel 指令数在 ±5% 内（事后做）
+
+**Fallback (regex 漏抓时)**: 若 Stage 3 失败，改用精确 kernel ID range（例如 `DYNAMIC_KERNEL_RANGE="50-50@.*"`）兜底。ID 来自 discovery 阶段记录。
+
+**`run_tracer.sh` 实现要点**:
+- 必须支持 `--discovery` 和 `--filter` 两种模式
+- `--filter` 模式从 `configs.csv` 读 `kernel_regex` 列
+- 每次 trace 后自动跑 verification 脚本，fail 则非零退出
+
+**`gen_configs.py` (Task 1.1) 调整**:
+- `configs.csv` 新增列 `kernel_regex`，初始填 placeholder `TBD`，由 Discovery 阶段填充
+
 - [ ] **Step 1: 读 v1 run_tracer.sh 作 baseline**
 
 ```bash
