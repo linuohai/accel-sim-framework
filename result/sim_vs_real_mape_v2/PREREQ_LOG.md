@@ -109,3 +109,21 @@ But independently grepping v1 cfg_03 (FA-7B-s2k) baseline log shows `dram_util_b
 - Document the fallback in parser comments
 
 **Future investigation** (not blocking v2): why dram_util_bins doesn't populate on FA workloads — may be a sim bug or specific to certain DRAM scheduler configs. Can be SC.X+ deferred.
+
+## Task 0.2 工具链验证（2026-04-17）
+
+| 工具 | 版本 | 状态 |
+|---|---|---|
+| flash_attn | 2.4.2 | OK — `flash_attn_func(q, k, v, causal=True)` 在 GQA(qh=32, kvh=8) + bf16 下成功，输出 `torch.Size([1, 128, 32, 128]) torch.bfloat16` |
+| flashinfer | 0.6.2; page_size 参数: yes | OK — `BatchDecodeWithPagedKVCacheWrapper.plan(...)` 签名第 7 个位置参数即 `page_size`（confirmed via help docstring & example） |
+| vLLM | 未装 | fallback to flash_attn `rms_norm` — `import vllm` 抛 `ModuleNotFoundError: No module named 'vllm'` |
+
+**决策**:
+- FA 算子: 用 `flash_attn.flash_attn_func`（confirmed working）
+- Decode 算子: `flashinfer.decode.BatchDecodeWithPagedKVCacheWrapper`，page_size 参数可在 `plan(...)` 中直接传入，无需改 wrapper
+- RMSNorm 算子: **fallback flash_attn `rms_norm`**（vLLM 未安装；Task 0.6 需在 RMSNorm 实现里用 `flash_attn.ops.triton.layer_norm.rms_norm` 或等价 path）
+
+**附注**:
+- Probe 命令均在容器 `/workspace/prefetch` 下用系统 `python3` 直接运行，未触发 GPU OOM
+- 未修改 `fa.py` / `flashinfer_decode.py` / 其他算子代码
+- vLLM 缺失不影响 FA / decode 路径，只影响 RMSNorm 选型，由 Task 0.6 处理 fallback
