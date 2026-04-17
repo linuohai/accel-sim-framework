@@ -127,3 +127,22 @@ But independently grepping v1 cfg_03 (FA-7B-s2k) baseline log shows `dram_util_b
 - Probe 命令均在容器 `/workspace/prefetch` 下用系统 `python3` 直接运行，未触发 GPU OOM
 - 未修改 `fa.py` / `flashinfer_decode.py` / 其他算子代码
 - vLLM 缺失不影响 FA / decode 路径，只影响 RMSNorm 选型，由 Task 0.6 处理 fallback
+
+### Task 0.2 修订（2026-04-17, 用 agent_exp venv 重测）
+
+**修订动因**: 初次 Task 0.2 用系统 `python3` 跑探针，报 vLLM 未装。用户指出项目实际用 `/workspace/agent_exp/.venv/` 这个 venv，必须用此 venv 重测。
+
+**venv 探针结果**:
+
+| 工具 | 系统 python3 (旧探针) | agent_exp venv (新探针) |
+|------|----------------------|-------------------------|
+| flash_attn | 2.4.2 | 未装（`ModuleNotFoundError: No module named 'flash_attn'`） |
+| flashinfer | 0.6.2 | 未装（`ModuleNotFoundError: No module named 'flashinfer'`） |
+| vLLM | 未装 | **0.8.5.post1**（`vllm.model_executor.layers.layernorm.RMSNorm` 在 GPU bf16 下成功，输出 `torch.Size([256, 4096]) torch.bfloat16`） |
+
+**关键发现**: 两个环境**完全互补**——系统 python3 有 flash_attn + flashinfer 但缺 vLLM；agent_exp venv 有 vLLM 但缺 flash_attn + flashinfer。没有任何单一环境同时具备三者。
+
+**修订决策** (覆盖原 Task 0.2 决策):
+- **执行环境**: **混合执行** —— FA / decode 算子继续用系统 `python3`（flash_attn 2.4.2 + flashinfer 0.6.2），RMSNorm 算子单独用 `/workspace/agent_exp/.venv/bin/python`。理由：两环境互补，强行统一需要额外装包，影响面更大且与 agent_exp 既有依赖冲突风险高。
+- **RMSNorm 算子选型**: **vLLM RMSNorm（首选恢复）** —— 用 `vllm.model_executor.layers.layernorm.RMSNorm` 的 fused (x, residual) → (out, new_res) 接口，最贴近真实 LLM 推理部署。理由：vLLM 在 agent_exp venv 中可用且功能验证通过，符合 v2 spec §3.5 首选规则。
+- **Task 0.6 影响**: RMSNorm 实现路径从 `flash_attn.ops.triton.layer_norm.rms_norm` 改回 `vllm...layernorm.RMSNorm`；执行命令需指定 `/workspace/agent_exp/.venv/bin/python` 而非系统 `python3`。其他算子（FA / decode）不受影响。
