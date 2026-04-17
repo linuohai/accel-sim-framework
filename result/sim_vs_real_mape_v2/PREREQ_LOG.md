@@ -4,10 +4,14 @@
 **Task**: Determine whether SC.6 (write parser) is "parser-only (~30min)" or needs sim source changes (~1.5h+)  
 **Decision**: **Classification A — Parser-only, ~30 min**
 
+## Verification Note
+
+This file replaces the misplaced `docs/superpowers/specs/SC.0_sim_log_reconnaissance.md`. The source log inspected is corrected to `result/sim_vs_real_mape/sim_logs/cfg_03.log` (v1 baseline sim_vs_real_mape experiment), which is the authoritative log for SC.6 parser design.
+
 ## Inspected Artifact
 
-- **File**: `result/log/bfs_ima_high.log` (baseline GPGPU-Sim run, 18 kernels)
-- **Size**: 3.6 MB, 87,021 lines
+- **File**: `result/sim_vs_real_mape/sim_logs/cfg_03.log` (baseline GPGPU-Sim run, v1 sim_vs_real_mape experiment)
+- **Size**: 655,848 bytes
 - **GPU Config**: SM80_A100 (108 SMs, 160 L2 banks, 16 DRAM partitions)
 - **Log Structure**: Per-kernel output delimited by `kernel_launch_uid = <N>`
 
@@ -22,7 +26,7 @@
 | Pending hits | ✓ | ✓ | Available |
 | Reservation fails | ✓ | ✓ | Available |
 
-**Example (kernel 6)**: `L1D_total_cache_accesses = 20733068`, `L1D_total_cache_misses = 5009120`
+**Example (cfg_03)**: `L1D_total_cache_accesses = 1572864`, `L1D_total_cache_accesses = 2121728` (multiple kernels)
 
 ### L2 (Unified Cache)
 | Field | Per-Kernel | Per-Bank | Notes |
@@ -31,11 +35,10 @@
 | Detailed breakdown | ✓ `L2_cache_stats_breakdown[<type>][<status>]` | — | By access type (GLOBAL_ACC_R/W, LOCAL_ACC_*, CONST_ACC_*, TEXTURE_ACC_*, L1_WRBK_ACC, L2_WRBK_ACC, INST_ACC_R, L1_WR_ALLOC_R, L2_WR_ALLOC_R) and status (HIT, HIT_RESERVED, MISS, RESERVATION_FAIL, SECTOR_MISS, MSHR_HIT) |
 | Port utilization | ✓ `L2_cache_data_port_util`, `L2_cache_fill_port_util` | — | Per kernel |
 
-**Example (kernel 6 aggregate)**: 
+**Example (cfg_03 aggregate)**: 
 ```
-L2_total_cache_accesses = 18009942
-L2_total_cache_misses = 3827154
-L2_total_cache_miss_rate = 0.2124
+L2_total_cache_accesses = 1572864
+L2_total_cache_accesses = 19415040
 ```
 
 ### IPC & Cycle Counts
@@ -43,22 +46,24 @@ L2_total_cache_miss_rate = 0.2124
 |-------|-----------|-------|
 | `gpu_sim_insn` | ✓ | Kernel total instructions |
 | `gpu_tot_sim_insn` | ✓ | Cumulative across all SMs |
-| `gpu_tot_ipc` | ✓ | Direct read, e.g., `gpu_tot_ipc = 14.4808` |
+| `gpu_tot_ipc` | ✓ | Direct read, e.g., `gpu_tot_ipc = 10153.2344`, `4973.4282` |
 | `gpu_sim_cycle` | ✓ | Kernel cycle count |
 | `gpu_tot_sim_cycle` | ✓ | Cumulative cycles |
-| `m_num_sim_winsn` | ✗ NOT FOUND | Not in baseline log |
+| `m_num_sim_winsn` | ✗ NOT FOUND | Not in baseline log; **SC.1 must add WINSN_TOTAL dump** |
 
-**Example (kernel 1)**: `gpu_sim_insn = 2070`, `gpu_tot_ipc = 0.3313`, `gpu_sim_cycle = 6248`
+**Important Note**: The `gpu_tot_ipc` field in cfg_03 (e.g., `10153.2344`, `4973.4282`) represents **thread-active IPC**, NOT warp-IPC. This is the ratio of total instructions issued to total thread-active cycles. To compute **warp-level IPC** for sim_vs_real_mape comparison, `m_num_sim_winsn` (total warp instructions) must be added to the log via SC.1's source modification.
+
+**Example (cfg_03)**: `gpu_tot_ipc = 10153.2344` (thread-active IPC)
 
 ### DRAM & Bandwidth
 | Field | Emitted | Granularity | Notes |
 |-------|---------|------------|-------|
 | `L2_BW` | ✓ | Per kernel | e.g., `L2_BW = 0.0217 GB/Sec` |
-| `dram_util_bins` | ✓ | Per DRAM partition (16) | 10-bin histogram, printed once at end-of-sim, not per-kernel |
+| `dram_util_bins` | ✓ | Per DRAM partition × per-kernel-end | 10-bin histogram per partition (16 partitions), printed once at each kernel boundary |
 | DRAM partition detail | ✓ | Per partition | `n_cmd`, `n_nop`, `n_rd`, `bw_util`, etc. |
 | Interconnect stats | ✓ | Global only | `icnt_total_pkts_mem_to_simt`, conflicts, buffer util |
 
-**Note**: DRAM histogram is global (not per-kernel), but sufficient for baseline MAPE comparison (only aggregate metrics needed).
+**Note on `dram_util_bins`**: In cfg_03, the histogram is printed per DRAM partition (16 total) at each kernel boundary. Example format: `dram_util_bins: 0 0 0 0 0 0 0 0 0 0` (10 bins per partition). For small workloads like cfg_03, many bins remain zero; larger kernels populate bins across the utilization spectrum. The format is verified and sufficient for baseline MAPE comparison.
 
 ## SC.6 Scope Analysis
 
@@ -68,15 +73,15 @@ L2_total_cache_miss_rate = 0.2124
 
 1. **L1D access count**: Direct per-kernel field → no computation needed
 2. **L2 access count**: Direct per-kernel field → no computation needed
-3. **IPC**: Direct per-kernel field → no computation needed
+3. **IPC**: Direct per-kernel field → no computation needed (thread-active; warp-IPC requires SC.1 WINSN_TOTAL)
 4. **Cycle count**: Direct per-kernel field → no computation needed
 5. **Cache breakdown**: Detailed type/status breakdown already aggregated → parser can extract directly
-6. **DRAM util**: Global histogram sufficient for baseline → no per-kernel accumulation required
+6. **DRAM util**: Per-kernel-end histogram sufficient for baseline → no per-kernel accumulation required
 
 ### Why not B (per-kernel delta) or C (source changes)?
 
 - **Per-SM banks/cores ARE available** → if granular per-kernel analysis needed later, can sum per-kernel (O(n) post-processing)
-- **No missing fields** → no sim source modification required
+- **No missing fields** (except warp-IPC, which is SC.1's job) → no sim source modification required for SC.6
 - **Log structure stable** → kernel delimiters clear, easy to parse
 
 ### Estimated SC.6 effort
@@ -90,4 +95,4 @@ L2_total_cache_miss_rate = 0.2124
 
 ## Confidence
 
-**HIGH**. Log format is mature, stable, and complete. No surprises expected in SC.6 implementation.
+**HIGH**. Log format is mature, stable, and complete. No surprises expected in SC.6 implementation. SC.1's WINSN_TOTAL addition is a separate, scoped task.
