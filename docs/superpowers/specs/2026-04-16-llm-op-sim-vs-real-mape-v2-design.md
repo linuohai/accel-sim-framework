@@ -384,17 +384,18 @@ input: `(M, hidden)` 残差 + `(M, hidden)` 主路径，输出 `(M, hidden)`
 
 ---
 
-## 7. Step C：指标修订（待下一轮讨论的开放问题）
+## 7. Step C：指标修订（v2 决定，已收敛）
 
-> 这一节是**待讨论项**，不是 v2 决定项。规模化跑实验前必须收敛。
+> 决定于 2026-04-17，作为 Phase 0.5 在 v2 bulk 实验前实施。详见 plan §Phase 0.5。
 
-| 指标 | 现状 | 问题 | 修订方向（待确认） |
-|---|---|---|---|
-| **IPC** | sim: `gpu_sim_insn / cycle ÷ (108·32)` 是 thread 级近似 | 系统偏低 10-30%（不计 predication） | 切到 `m_num_sim_winsn`（per-SM warp 计数器，已存在但只写 visualizer），加 `gpu_print_stat()` dump 钩子 |
-| **DRAM util** | sim: `(rd+wr)·32B / runtime / 1555 GB/s` 反推 | 假设 burst 永远 32B，与 NCU 协议层定义不等价 | 切到 sim 内部 `dram_util_bins[10]`（cycle-level 活跃直方图），与 NCU `dram__throughput.pct_of_peak_sustained_elapsed` 语义对齐 |
-| **Cache (L1/L2)** | 仅 hit rate % | 信息不足；rate 在 access count 极小时无意义 | 加 access count（`l1tex__t_sectors.sum`, `lts__t_sectors.sum`），让 hit rate 成为带 weight 的指标 |
-| **Issue stage** | 仅 stall 7 桶分类（display only） | 缺 issue 速率、active warps、eligible warps 等 | 加 `smsp__inst_issued.avg.per_cycle_active`, `smsp__warps_active.avg.pct_of_peak_sustained_active`, eligible warps 等 |
-| **SM Busy** | v1 已 drop（sim 只有静态 occupancy） | 保持 drop（无对应动态 metric） | 不变 |
+| 指标 | v1 现状 | 问题 | v2 修订方向 | v2 状态 |
+|---|---|---|---|---|
+| **IPC** | sim: `gpu_sim_insn / cycle ÷ (108·32)` thread 级近似 | 系统偏低 10-30%（不计 predication） | sim 加 `WINSN_TOTAL:` per-kernel dump（累加 `m_num_sim_winsn`）；parser 用 `winsn / cycle / 432` 算 warp-IPC | ✅ Phase 0.5 SC.1 |
+| **DRAM util** | sim: `(rd+wr)·32B / runtime / 1555` 反推 | 假设 burst 永远 32B，与 NCU 协议层不等价 | sim 加 `DRAM_UTIL_BINS:` per-kernel dump（10 bins）；parser 加权平均 → 与 NCU `dram__throughput.pct_of_peak_sustained_elapsed` 语义对齐 | ✅ Phase 0.5 SC.2 |
+| **Cache (L1/L2)** | 仅 hit rate % | 在 access count 极小时无意义（如 GEMM 只读权重 1 次，0% hit rate 实属噪音） | NCU 加 `l1tex__t_sectors.sum`, `l1tex__t_sectors_pipe_lsu_mem_global_op_{ld,st}.sum`, `l1tex__t_sectors_hit.sum`, `lts__t_sectors.sum`, `lts__t_sectors_op_{read,write}.sum`；sim 解析现有 access count 字段 | ✅ Phase 0.5 SC.4-6 |
+| **Issue execution rate** | 无 | 缺执行节奏指标 | NCU 加 `smsp__inst_executed.avg.per_cycle_active`（execution rate）；不加 issue/eligible/active warps（v1 已 drop SM busy、issue 阶段语义不对齐） | ⭕ Phase 0.5 SC.4-5（仅 1 项） |
+| **Stall reasons** | sim 3-4 桶 + NCU 17 项，display-only 不算 MAPE | sim 分类基于内部 issue 决策路径（架构实现选择），NCU 17 项基于硬件事件枚举——**两套体系本质不同，强映射会引入 artifact** | **不对齐**。两边各画一套 stacked bar 让读者看 shape distribution，但不计 MAPE | ❌ 保持 v1 处理 |
+| **SM Busy** | v1 已 drop（sim 只有静态 occupancy） | 无对应动态 metric | 保持 drop | ❌ 不变 |
 
 ---
 
@@ -419,7 +420,7 @@ input: `(M, hidden)` 残差 + `(M, hidden)` 主路径，输出 `(M, hidden)`
 
 ## 9. Open Issues（v2 未决）
 
-1. **Step C 指标修订方案**：用户已表态要做，但 sim 改动需求需进一步定义（IPC warp 计数器 dump 钩子位置、DRAM bins 解析格式、Cache access count 提取、Issue 阶段 metrics 增加）。是否在 v2 内先做指标修订再跑实验，还是 v2 跑完后再做？
+1. ~~**Step C 指标修订方案**~~ → **RESOLVED 2026-04-17**：4 项中 IPC + DRAM + Cache 全做（Phase 0.5 SC.1-SC.8）；Issue stage 仅加 `smsp__inst_executed.avg.per_cycle_active` 一项；Stall reasons 不对齐（架构实现 vs 硬件事件，强映射有 artifact）保持 v1 display-only。详见 §7。
 2. **cfg_13 排查窗口**：v2 一开始投入 ≤30min 人工排查时间。若超时则归"困难"，加入 §6 失败档案 + deferred queue。
 3. **vLLM 是否安装**：当前环境是否已装 vLLM（用于 RMSNorm impl）？若未装，需先 `pip install vllm` 或 fallback 到 flash_attn `rms_norm` + 手写 add（v2 需在 prereq 验证）
 4. **flashinfer page_size 参数化**：当前 `flashinfer_decode.py` 默认 page_size=16，需验证脚本是否能传 page_size 参数（D8/D9 cfg 依赖此能力）

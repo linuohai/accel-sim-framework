@@ -418,6 +418,433 @@ git commit -m "feat(rmsnorm): add bf16 fused_add_rmsnorm via vLLM (with flash_at
 
 ---
 
+---
+
+## Phase 0.5: Step C Metric Revisions (BEFORE Phase 1 bulk)
+
+> Decided 2026-04-17 (spec §7 update + Open Issue 1 resolved). Implements 3 of 4 Step C items + drops stall alignment as architectural artifact.
+
+### Task SC.0: Reconnaissance — what does v1 sim log already emit?
+
+**Files:** None (read-only)
+
+- [ ] **Step 1: Grep v1 sim log for cache/IPC related fields**
+
+```bash
+cd /workspace/prefetch
+LOG="result/sim_vs_real_mape/sim_logs/cfg_03.log"
+[ -f "$LOG" ] || LOG=$(ls result/sim_vs_real_mape/sim_logs/*.log | head -1)
+echo "=== sim log: $LOG ==="
+grep -E "gpgpu_n_l1_cache|gpgpu_n_l2_cache|l1d.*access|l1d.*miss|l2.*access|l2.*miss|num_sim_winsn|warp_inst|dram_util_bins|gpu_tot_issued" "$LOG" | head -40
+```
+
+Expected output documented in `result/sim_vs_real_mape_v2/PREREQ_LOG.md` under §SC.0:
+- Which cache fields exist per-SM / per-kernel / aggregate?
+- Whether `m_num_sim_winsn` is dumped anywhere
+- Whether `dram_util_bins` is dumped anywhere
+
+- [ ] **Step 2: Decide SC.6 scope**
+
+Based on Step 1 findings:
+- If sim already prints L1/L2 access count per-kernel: SC.6 is **parser-only** (~30min)
+- If sim only prints aggregate: SC.6 needs **per-kernel delta computation** (~1h)
+- If sim doesn't print at all: SC.6 needs **sim source change too** (+1h, escalate to user)
+
+- [ ] **Step 3: Document findings in PREREQ_LOG.md**
+
+Append to `result/sim_vs_real_mape_v2/PREREQ_LOG.md`:
+
+```markdown
+## SC.0 Reconnaissance (2026-04-17)
+
+### Cache fields in sim log
+- L1: <field names found, granularity (per-SM/per-kernel/aggregate)>
+- L2: <same>
+
+### IPC warp counter
+- m_num_sim_winsn dumped: <yes/no/where>
+
+### DRAM util
+- dram_util_bins dumped: <yes/no/where>
+
+### SC.6 scope decision
+- <parser-only / +per-kernel delta / +sim source change>
+```
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add result/sim_vs_real_mape_v2/PREREQ_LOG.md
+git commit -m "chore(v2): SC.0 reconnaissance — sim log field inventory for Step C"
+```
+
+### Task SC.1: Add WINSN_TOTAL per-kernel dump to GPGPU-Sim
+
+**Files:**
+- Modify: `gpu-simulator/gpgpu-sim/src/gpgpu-sim/gpu-sim.cc` (find per-kernel summary print location)
+
+- [ ] **Step 1: Locate per-kernel summary print site**
+
+```bash
+grep -n "kernel.*done\|gpu_print_stat\|print_simulation_time\|kernel_finished" gpu-simulator/gpgpu-sim/src/gpgpu-sim/gpu-sim.cc | head -20
+```
+
+Expected: identifies the function that runs at each kernel boundary (likely `gpu_sim_thread()` end or `print_simulation_time()`).
+
+- [ ] **Step 2: Add WINSN_TOTAL: aggregator print**
+
+In the per-kernel summary location (after each kernel's `gpu_sim_cycle` print), add:
+
+```cpp
+// SC.1: warp-level instruction counter aggregation across SMs
+{
+    unsigned long long winsn_total = 0;
+    for (unsigned i = 0; i < m_shader_config->num_shader(); i++) {
+        winsn_total += m_shader_stats->m_num_sim_winsn[i];
+    }
+    printf("WINSN_TOTAL: %llu\n", winsn_total);
+}
+```
+
+(Replace `m_shader_stats` / `m_shader_config` with the correct accessor in the function context — implementer to verify.)
+
+- [ ] **Step 3: Skip rebuild here (batched in SC.3)**
+
+Note edits but don't rebuild yet — SC.3 will rebuild after SC.1+SC.2 both done.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add gpu-simulator/gpgpu-sim/src/gpgpu-sim/gpu-sim.cc
+git commit -m "feat(sim): SC.1 add WINSN_TOTAL per-kernel dump (aggregate m_num_sim_winsn)"
+```
+
+### Task SC.2: Add DRAM_UTIL_BINS per-kernel dump to GPGPU-Sim
+
+**Files:**
+- Modify: `gpu-simulator/gpgpu-sim/src/gpgpu-sim/dram.cc` (or wherever per-kernel DRAM stat print is invoked)
+
+- [ ] **Step 1: Locate dram_util_bins print site**
+
+```bash
+grep -n "dram_util_bins" gpu-simulator/gpgpu-sim/src/gpgpu-sim/dram.cc
+```
+
+Expected: locations at lines 783 and 817 (per session memory).
+
+- [ ] **Step 2: Add machine-parseable DRAM_UTIL_BINS print near per-kernel dram stats**
+
+Modify the existing `dram_util_bins:` print (line 783-784 or 817) to ALSO emit a normalized line:
+
+```cpp
+// SC.2: machine-parseable bins for parser
+unsigned total_cycles = 0;
+for (unsigned i = 0; i < 10; i++) total_cycles += dram_util_bins[i];
+fprintf(simFile, "DRAM_UTIL_BINS: ");
+for (unsigned i = 0; i < 10; i++) fprintf(simFile, "%u ", dram_util_bins[i]);
+fprintf(simFile, "(total=%u)\n", total_cycles);
+```
+
+This new line lives alongside the existing histogram print. Parser will use the new `DRAM_UTIL_BINS:` line.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add gpu-simulator/gpgpu-sim/src/gpgpu-sim/dram.cc
+git commit -m "feat(sim): SC.2 add DRAM_UTIL_BINS machine-parseable dump"
+```
+
+### Task SC.3: Rebuild GPGPU-Sim
+
+**Files:** None (build only)
+
+- [ ] **Step 1: Setup environment + build**
+
+```bash
+cd /workspace/prefetch
+source ./gpu-simulator/setup_environment.sh release
+make -j -C ./gpu-simulator/ 2>&1 | tail -30
+```
+
+Expected: build succeeds, `accel-sim.out` regenerated.
+
+- [ ] **Step 2: Verify binary updated**
+
+```bash
+ls -la gpu-simulator/bin/release/accel-sim.out
+```
+
+Expected: mtime ~ now.
+
+- [ ] **Step 3: Quick smoke — re-run v1 cfg_01 and verify new lines appear**
+
+```bash
+./result/sim_vs_real_mape/scripts/run_sim.sh 1 2>&1 | tail -30
+grep -E "WINSN_TOTAL|DRAM_UTIL_BINS" result/sim_vs_real_mape/sim_logs/cfg_01.log | head
+```
+
+Expected: both `WINSN_TOTAL:` and `DRAM_UTIL_BINS:` lines present.
+
+- [ ] **Step 4: Commit (if any build artifacts tracked)**
+
+If accel-sim.out is gitignored, no commit needed. Otherwise:
+
+```bash
+git status gpu-simulator/bin/release/accel-sim.out
+# only commit if status indicates change is tracked
+```
+
+### Task SC.4: Update run_ncu.sh metrics list
+
+**Files:**
+- Modify: `result/sim_vs_real_mape_v2/scripts/run_ncu.sh` (already created in Phase 2)
+
+- [ ] **Step 1: Find current --metrics line**
+
+```bash
+grep -n "metrics" result/sim_vs_real_mape_v2/scripts/run_ncu.sh
+```
+
+- [ ] **Step 2: Replace metrics list to include 5 cache + 1 execution rate (SC.4 final list)**
+
+Edit the `--metrics` arg in run_ncu.sh. Final metrics:
+
+```bash
+--metrics \
+  sm__throughput.avg.pct_of_peak_sustained_elapsed,\
+  dram__throughput.avg.pct_of_peak_sustained_elapsed,\
+  l1tex__t_sector_hit_rate.pct,\
+  lts__t_sector_hit_rate.pct,\
+  smsp__inst_executed.avg.per_cycle_active,\
+  l1tex__t_sectors.sum,\
+  l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum,\
+  l1tex__t_sectors_pipe_lsu_mem_global_op_st.sum,\
+  l1tex__t_sectors_hit.sum,\
+  lts__t_sectors.sum,\
+  lts__t_sectors_op_read.sum,\
+  lts__t_sectors_op_write.sum
+```
+
+(plus existing v1 metrics for runtime, IPC stall reasons — keep as-is for stall display-only).
+
+- [ ] **Step 3: Smoke ncu on F3**
+
+```bash
+./result/sim_vs_real_mape_v2/scripts/run_ncu.sh F3
+head -3 result/sim_vs_real_mape_v2/ncu/F3_FA_7B_s2k.csv
+```
+
+Expected: CSV columns include the new sectors / inst_executed metrics.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add result/sim_vs_real_mape_v2/scripts/run_ncu.sh
+git commit -m "feat(v2): SC.4 add 5 cache sector metrics + inst_executed rate to ncu"
+```
+
+### Task SC.5: Update parse_ncu.py for new metrics
+
+**Files:**
+- Modify: `result/sim_vs_real_mape_v2/scripts/parse_ncu.py`
+
+- [ ] **Step 1: Add new field extraction**
+
+In the parser's per-kernel field dict, add:
+
+```python
+new_fields = {
+    "l1_sectors_total":    "l1tex__t_sectors.sum",
+    "l1_sectors_load":     "l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum",
+    "l1_sectors_store":    "l1tex__t_sectors_pipe_lsu_mem_global_op_st.sum",
+    "l1_sectors_hit":      "l1tex__t_sectors_hit.sum",
+    "l2_sectors_total":    "lts__t_sectors.sum",
+    "l2_sectors_read":     "lts__t_sectors_op_read.sum",
+    "l2_sectors_write":    "lts__t_sectors_op_write.sum",
+    "exec_rate_per_cycle": "smsp__inst_executed.avg.per_cycle_active",
+}
+```
+
+Iterate the row dict using these mappings, write to per-kernel JSON.
+
+- [ ] **Step 2: Smoke**
+
+```bash
+python3 result/sim_vs_real_mape_v2/scripts/parse_ncu.py F3
+python3 -c "import json; d=json.load(open('result/sim_vs_real_mape_v2/parsed/F3_FA_7B_s2k_ncu.json')); print({k:v for k,v in d.items() if 'sector' in k or 'exec' in k})"
+```
+
+Expected: JSON contains all 8 new fields with non-null values.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add result/sim_vs_real_mape_v2/scripts/parse_ncu.py
+git commit -m "feat(v2): SC.5 parse 5 cache sector metrics + execution rate from ncu"
+```
+
+### Task SC.6: Update parse_sim.py for WINSN/DRAM_BINS/cache count
+
+**Files:**
+- Modify: `result/sim_vs_real_mape_v2/scripts/parse_sim.py`
+
+- [ ] **Step 1: Parse WINSN_TOTAL → warp-IPC**
+
+In per-kernel block, add:
+
+```python
+m = re.search(r"WINSN_TOTAL:\s+(\d+)", block)
+winsn_total = int(m.group(1)) if m else None
+warp_ipc_per_scheduler = (winsn_total / cycle_total / 432.0) if winsn_total else None  # 108 SMs × 4 schedulers
+```
+
+Replace the old thread-active IPC computation with this `warp_ipc_per_scheduler` as the primary IPC metric.
+
+- [ ] **Step 2: Parse DRAM_UTIL_BINS → weighted util %**
+
+```python
+m = re.search(r"DRAM_UTIL_BINS:\s+([\d\s]+?)\s*\(total=(\d+)\)", block)
+if m:
+    bins = list(map(int, m.group(1).split()))   # 10 ints
+    total = int(m.group(2))
+    # Weighted average: bin i represents 10*i % to 10*(i+1) % util range; midpoint = 10i+5
+    weighted_pct = sum((10 * i + 5) * bins[i] for i in range(10)) / total if total else 0.0
+    dram_util_pct = weighted_pct
+```
+
+Replace the old `(rd+wr)*32B/runtime/1555` reverse-derivation with this `dram_util_pct` as primary.
+
+- [ ] **Step 3: Parse cache access counts (depends on SC.0 outcome)**
+
+If SC.0 found per-kernel cache fields: extract directly. Otherwise compute deltas between kernel boundaries. Implementer fills based on SC.0's PREREQ_LOG.md decision.
+
+- [ ] **Step 4: Smoke on cfg_03**
+
+```bash
+python3 result/sim_vs_real_mape_v2/scripts/parse_sim.py 3   # using v1 cfg id since we use v1 log for now
+# OR
+python3 result/sim_vs_real_mape_v2/scripts/parse_sim.py F3  # if F3 trace+sim already done in Phase 3
+cat <output JSON> | python3 -m json.tool | grep -E "ipc|dram_util|sector|cache"
+```
+
+Expected: warp-IPC value reasonable (NCU NCU: 0.4-1.5 typical), dram_util_pct in 0-100 range.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add result/sim_vs_real_mape_v2/scripts/parse_sim.py
+git commit -m "feat(v2): SC.6 parse WINSN_TOTAL, DRAM_UTIL_BINS, cache access count from sim log"
+```
+
+### Task SC.7: Update collect_metrics.py + classify_bottleneck.py
+
+**Files:**
+- Modify: `result/sim_vs_real_mape_v2/scripts/collect_metrics.py`
+- Modify: `result/sim_vs_real_mape_v2/scripts/classify_bottleneck.py`
+
+- [ ] **Step 1: Add new columns to merged_metrics.csv schema**
+
+In collect_metrics.py, add new column pairs (sim_X, real_X) for:
+- `l1_sectors_total`, `l1_sectors_hit`, `l1_hit_rate_weighted` (= hit/total)
+- `l2_sectors_total`, `l2_sectors_hit`, `l2_hit_rate_weighted`
+- `exec_rate_per_cycle` (NCU only — sim can use winsn-based equivalent)
+
+Also for primary metrics (now upgraded):
+- `ipc_warp` (replaces `ipc` thread-based)
+- `dram_util_weighted` (replaces `dram_util` reverse-derived)
+
+- [ ] **Step 2: Update classify_bottleneck.py thresholds (optional, may stay same)**
+
+Verify thresholds still make sense for new IPC scale (warp-IPC has range 0-1 per scheduler, vs old thread-IPC 0-32 per scheduler). May need 1/32 scaling.
+
+- [ ] **Step 3: Smoke**
+
+```bash
+python3 result/sim_vs_real_mape_v2/scripts/collect_metrics.py
+head -3 result/sim_vs_real_mape_v2/parsed/merged_metrics.csv
+```
+
+Expected: header has new columns; values populated.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add result/sim_vs_real_mape_v2/scripts/collect_metrics.py result/sim_vs_real_mape_v2/scripts/classify_bottleneck.py
+git commit -m "feat(v2): SC.7 collect_metrics + classify_bottleneck use new IPC/DRAM/cache metrics"
+```
+
+### Task SC.8: Smoke validation on v1 cfg_03
+
+**Files:** None (validation only)
+
+**Goal:** Verify Step C revisions actually improved metrics on a known v1 datapoint.
+
+- [ ] **Step 1: Re-run v1 cfg_03 with new sim binary**
+
+```bash
+cd /workspace/prefetch
+./result/sim_vs_real_mape/scripts/run_sim.sh 3
+```
+
+This regenerates `result/sim_vs_real_mape/sim_logs/cfg_03.log` with new WINSN_TOTAL + DRAM_UTIL_BINS lines.
+
+- [ ] **Step 2: Re-parse with v2 parser (point at v1 log temporarily)**
+
+```bash
+# Quick validation script
+python3 -c "
+import sys
+sys.path.insert(0, 'result/sim_vs_real_mape_v2/scripts')
+from parse_sim import parse_sim_log
+import json
+result = parse_sim_log('result/sim_vs_real_mape/sim_logs/cfg_03.log', kernel_filter='flash_fwd')
+print(json.dumps(result, indent=2))
+"
+```
+
+- [ ] **Step 3: Compare to v1 ground truth (cfg_03 NCU data)**
+
+```bash
+# v1 NCU data for cfg_03
+cat result/sim_vs_real_mape/parsed/cfg_03_ncu.json | python3 -m json.tool | grep -E "ipc|dram_util"
+```
+
+- [ ] **Step 4: Verify IPC MAPE improvement**
+
+Compute: `|sim_ipc_warp - ncu_ipc| / ncu_ipc * 100`
+
+Expected: <34% (v1 baseline). Target: ~5-15%.
+
+- [ ] **Step 5: Verify DRAM util MAPE improvement**
+
+Compute: `|sim_dram_weighted - ncu_dram_pct|` (absolute pp).
+
+Expected: <52pp (v1 baseline). Target: ~5-20pp.
+
+- [ ] **Step 6: Document findings in PREREQ_LOG.md**
+
+Append to `result/sim_vs_real_mape_v2/PREREQ_LOG.md`:
+
+```markdown
+## SC.8 Smoke Validation (2026-04-17, v1 cfg_03 with new sim + parsers)
+
+| Metric | v1 sim | v1 NCU | v1 MAPE | v2 sim | v2 MAPE | Δ |
+|---|---|---|---|---|---|---|
+| IPC | <v1> | <ncu> | 34% | <v2> | <new> | <improvement> |
+| DRAM util | <v1> | <ncu> | 52pp | <v2> | <new> | <improvement> |
+
+**Decision**: <improvement is acceptable / regression / needs more work>
+```
+
+- [ ] **Step 7: Commit + Phase 0.5 done marker**
+
+```bash
+git add result/sim_vs_real_mape_v2/PREREQ_LOG.md
+git commit -m "chore(v2): SC.8 smoke validation passes — Step C metrics improved on cfg_03"
+```
+
+---
+
 ## Phase 1: Configuration Generation
 
 ### Task 1.1: Create v2 directory scaffolding + gen_configs.py
