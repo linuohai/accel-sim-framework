@@ -381,6 +381,7 @@ input: `(M, hidden)` 残差 + `(M, hidden)` 主路径，输出 `(M, hidden)`
 | v1 cfg_05 | FA-s8k (B=1, H=32, D=128) | NVBit | seq=8k → trace 体积爆炸 + instrument overhead 不可控 | **困难（工具链）** | **P1: FA seq ≤ 4k** |
 | v1 cfg_12 | DEC-k2k-B8 | sim | batch=8 × H=32 = 256 attn 实例，sim 单线程 CTA 调度太慢（>4h） | **简单（性能，非错误）** | **P1: decode 总 CTA ≤ ~3000（B × H ≤ 256）** |
 | v1 cfg_13 | DEC-k2k-B32 | sim | bail at kernel-198 (CatArrayBatchedCopy) 没到主 kernel | **未明** | 投入不超过 30 分钟的**人工排查时间**（包括读 sim log、定位 bail kernel-198 是什么、检查 trace 完整性；**不含实验运行时间**）。若该时间窗内无法定位 root cause，则归"困难"类，加入 §6 失败档案，并在 deferred queue 标注"sim 多 kernel 序列前置失败" |
+| | | | | | **最终归类（2026-04-17 排查）**: **困难（工具链）** — kernel-198 实际是 PyTorch `DistributionNormal` (curand normal generator, grid=864, block=256, ~221k threads)，trace 完整 (49.4MB)，sim 在 kernel-198 内已跑 ~143 亿条 warp-insn；log 末尾既无 EXPERIMENT SUMMARY 也无 crash/error/OOM 信息（静默被外部 kill），属 sim 长时运行 + 外部 timeout/OOM kill 的工具链瓶颈，非可修复 bug。**v2 永久排除**：B≥32 decode multi-kernel sequence 在 prereq 层面剔除（避免触发 PyTorch curand init 类巨型 kernel）。 |
 
 ---
 
