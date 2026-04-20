@@ -34,7 +34,11 @@ else
         echo "[cfg $CFG_ID] FATAL: kernel_regex is '$kernel_regex' — run --discovery first, then populate configs.csv"
         exit 2
     fi
-    KERNEL_RANGE="$kernel_regex"
+    # NVBit syntax: <id_range>@<regex>. Wrap raw regex with "0-@" (open-ended ID
+    # range from kernel 0). Without this prefix NVBit tries std::stoull on the
+    # whole regex and throws — the exception surfaces as PyTorch RuntimeError
+    # because NVBit's callback fires inside cuCtxCreate.
+    KERNEL_RANGE="0-@${kernel_regex}"
 fi
 
 mkdir -p "$OUT_DIR/traces"
