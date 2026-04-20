@@ -807,7 +807,13 @@ git commit -m "feat(v2): add run_ncu.sh for 4 workloads + Step C cache/exec_rate
 
 ---
 
-## Phase 3: Smoke Tests（4 个代表 cfg，1 per 算子）
+## Phase 3: Smoke Tests（4 个代表 cfg，1 per 算子）— **已完成 ✅ (2026-04-20)**
+
+> 4 cfg（F3/D3/G4/R2）trace + sim + ncu 全通过，MAPE 计算 + kernel set validation 全 ✅。
+> 结果总结: `result/sim_vs_real_mape_v2/PHASE3_SMOKE_RESULTS.md`
+> MAPE 摘要: cycle 25.9-40.2% | winsn 0-5.5% | dram 2.7-30.4%
+> Phase 3 期间额外修复 7 个 blocker（NVBit regex 语法、SIGPIPE、DRAM bins 源码 bug、kernel leak、Decode-vs-Prefill kernel 命名、vLLM cold-start、多 kernel 归因）
+
 
 ### Task 3.1: Smoke FA (cfg F3 = FA-7B-s2k)
 
