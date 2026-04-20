@@ -13,12 +13,40 @@ import argparse
 import csv
 import os
 import re
+import subprocess
 import sys
+from pathlib import Path
 
 A100_CLOCK_HZ = 1.41e9
 A100_NUM_SM = 108
 A100_SCHEDULERS_PER_SM = 4
 A100_DRAM_PEAK_GBPS = 1555
+
+
+def get_sim_kernel_names(trace_root, cfg_tag):
+    """Read each .traceg.xz first line to get mangled kernel name. Order
+    follows kernelslist.g (the post-filtered list sim will actually run)."""
+    tdir = Path(trace_root) / cfg_tag / "traces"
+    klist = tdir / "kernelslist.g"
+    if not klist.exists():
+        return []
+    names = []
+    for line in klist.read_text().splitlines():
+        line = line.strip()
+        if not line.endswith(".traceg.xz"):
+            continue
+        xz_path = tdir / line
+        if not xz_path.exists():
+            continue
+        try:
+            out = subprocess.check_output(["xzcat", str(xz_path)], stderr=subprocess.DEVNULL)
+            first = out.decode(errors="ignore").split("\n", 1)[0]
+            m = re.search(r"kernel name = (\S+)", first)
+            if m:
+                names.append(m.group(1))
+        except Exception:
+            pass
+    return names
 
 
 def parse_sim_log(path):
@@ -109,6 +137,7 @@ def main():
     ap.add_argument("--cfg-csv", default="/workspace/prefetch/result/sim_vs_real_mape_v2/scripts/configs.csv")
     ap.add_argument("--sim-dir", default="/workspace/prefetch/result/sim_vs_real_mape_v2/sim_logs")
     ap.add_argument("--ncu-dir", default="/workspace/prefetch/result/sim_vs_real_mape_v2/ncu_out")
+    ap.add_argument("--trace-dir", default="/workspace/prefetch/result/sim_vs_real_mape_v2/traces")
     ap.add_argument("ids", nargs="*", default=["F3", "D3", "G4", "R2"])
     args = ap.parse_args()
 
@@ -174,7 +203,10 @@ def main():
               f"{sim['sim_winsn']:>12,} {ncu['ncu_winsn_sum']:>12,.0f} {fmt_mape(winsn_mape):>8} "
               f"{sim_dram_util:>9.2f}% {ncu['ncu_dram_thru_pct']:>9.2f}% {fmt_mape(dram_mape):>8}")
 
-    print("\n--- per-cfg detail ---")
+    print("\n" + "=" * 80)
+    print("KERNEL SET VALIDATION (sim kernelslist.g vs NCU regex-filtered rows)")
+    print("=" * 80)
+    all_ok = True
     for cid in args.ids:
         if cid not in cfgs:
             continue
@@ -184,17 +216,61 @@ def main():
         ncu_csv = os.path.join(args.ncu_dir, f"{cfg_tag}.csv")
         if not os.path.exists(ncu_csv):
             continue
+
+        sim_names = get_sim_kernel_names(args.trace_dir, cfg_tag)
         ncu_res = parse_ncu_csv(ncu_csv, kregex)
-        if ncu_res[0] is None:
-            continue
-        ncu, all_k = ncu_res
-        print(f"\n  {cid} ({cfg_tag}) regex='{kregex}'")
-        print(f"    NCU total kernel rows: {len(all_k)}, matched: {ncu['matched_count']}")
-        for n in ncu["matched_names"]:
-            print(f"      target: {n}")
-        nontarget = [k for k in all_k if not re.compile(kregex).search(k)]
-        for n in nontarget[:5]:
-            print(f"      NOISE : {n[:80]}")
+        ncu, all_k = ncu_res if ncu_res[0] else ({"matched_count": 0, "matched_names": []}, [])
+
+        # Demangle sim mangled names for uniform comparison with NCU demangled.
+        def demangle(name):
+            if not name.startswith("_Z"):
+                return name
+            try:
+                return subprocess.check_output(["c++filt", name], stderr=subprocess.DEVNULL).decode().strip()
+            except Exception:
+                return name
+
+        sim_demangled = [demangle(n) for n in sim_names]
+        ncu_demangled = list(ncu["matched_names"])
+
+        sim_count = len(sim_names)
+        ncu_count = ncu["matched_count"]
+
+        # Validation rule: every sim kernel must match the regex after demangle
+        # AND sim_count must equal ncu_count. This is the strict "same set" check.
+        pat = re.compile(kregex)
+        sim_regex_ok = [bool(pat.search(n)) for n in sim_demangled]
+
+        count_ok = (sim_count == ncu_count)
+        all_sim_match = all(sim_regex_ok) if sim_regex_ok else False
+        overall_ok = count_ok and all_sim_match
+
+        if not overall_ok:
+            all_ok = False
+
+        status = "✅" if overall_ok else "❌"
+        print(f"\n  {status} {cid} ({cfg_tag}) regex='{kregex}'")
+        print(f"      Sim side: {sim_count} kernel(s)  |  NCU side: {ncu_count} matched / {len(all_k)} total")
+        for n, ok in zip(sim_demangled, sim_regex_ok):
+            mark = "✓" if ok else "✗"
+            print(f"        {mark} sim: {n[:90]}")
+        for n in ncu_demangled:
+            print(f"        ✓ ncu: {n[:90]}")
+        if not count_ok:
+            print(f"      ⚠ COUNT MISMATCH: sim={sim_count} vs ncu={ncu_count}")
+        if not all_sim_match:
+            leaked = [n for n, ok in zip(sim_demangled, sim_regex_ok) if not ok]
+            print(f"      ⚠ SIM-SIDE LEAK: {len(leaked)} kernel(s) did not match regex after demangle:")
+            for n in leaked:
+                print(f"          {n[:90]}")
+        if ncu_res[0]:
+            nontarget = [k for k in all_k if not pat.search(k)]
+            if nontarget:
+                print(f"      (NCU noise kernels filtered out: {len(nontarget)})")
+
+    print("\n" + "=" * 80)
+    print(f"OVERALL VALIDATION: {'✅ ALL CONSISTENT' if all_ok else '❌ SOME MISMATCH — MAPE ABOVE MAY BE MISLEADING'}")
+    print("=" * 80)
 
 
 if __name__ == "__main__":

@@ -94,6 +94,32 @@ if [ ! -f traces/kernelslist.g ]; then
     exit 3
 fi
 
+# Post-filter: NVBit sometimes leaks non-matching kernels into the trace
+# (name-resolution timing). Re-filter kernelslist.g with the same regex
+# used for NCU parsing, so sim and NCU see the exact same kernel set.
+if [ "$MODE" = "--filter" ]; then
+    TMP=$(mktemp)
+    KEEP=0
+    DROP=0
+    while IFS= read -r line; do
+        if [[ "$line" == *.traceg.xz ]]; then
+            kname=$(xzcat "traces/$line" 2>/dev/null | head -1 \
+                    | sed -nE 's/.*kernel name = ([^ ,]+).*/\1/p')
+            if [[ -n "$kname" && "$kname" =~ $kernel_regex ]]; then
+                echo "$line" >> "$TMP"
+                KEEP=$((KEEP+1))
+            else
+                DROP=$((DROP+1))
+                echo "[cfg $CFG_ID] post-filter DROP: $line -> $kname"
+            fi
+        else
+            echo "$line" >> "$TMP"
+        fi
+    done < "traces/kernelslist.g"
+    mv "$TMP" "traces/kernelslist.g"
+    echo "[cfg $CFG_ID] post-filter: kept $KEEP kernel, dropped $DROP"
+fi
+
 KCOUNT=$(wc -l < traces/kernelslist.g)
 echo "[cfg $CFG_ID] done. mode=$MODE kernelslist.g has $KCOUNT kernels"
 echo "[cfg $CFG_ID] output: $OUT_DIR/traces/kernelslist.g"
