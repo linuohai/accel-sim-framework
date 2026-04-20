@@ -103,8 +103,12 @@ if [ "$MODE" = "--filter" ]; then
     DROP=0
     while IFS= read -r line; do
         if [[ "$line" == *.traceg.xz ]]; then
-            kname=$(xzcat "traces/$line" 2>/dev/null | head -1 \
-                    | sed -nE 's/.*kernel name = ([^ ,]+).*/\1/p')
+            # head -1 closes stdin early → xzcat gets SIGPIPE → exit 141. With
+            # pipefail+set-e that kills the script. Wrap in a subshell that
+            # disables pipefail, and absorb any remaining non-zero.
+            kname=$(set +o pipefail; \
+                    xzcat "traces/$line" 2>/dev/null | head -1 \
+                    | sed -nE 's/.*kernel name = ([^ ,]+).*/\1/p' || true)
             if [[ -n "$kname" && "$kname" =~ $kernel_regex ]]; then
                 echo "$line" >> "$TMP"
                 KEEP=$((KEEP+1))
