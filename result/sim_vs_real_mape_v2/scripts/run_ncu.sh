@@ -49,7 +49,7 @@ sudo -E -n ncu --set speed-of-light \
     --section MemoryWorkloadAnalysis \
     --section WarpStateStats \
     --section SchedulerStats \
-    --metrics sm__throughput.avg.pct_of_peak_sustained_elapsed,dram__throughput.avg.pct_of_peak_sustained_elapsed,smsp__inst_executed.avg.per_cycle_active,l1tex__t_sectors.sum,l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum,l1tex__t_sectors_pipe_lsu_mem_global_op_st.sum,l1tex__t_sectors_hit.sum,lts__t_sectors.sum,lts__t_sectors_op_read.sum,lts__t_sectors_op_write.sum \
+    --metrics sm__throughput.avg.pct_of_peak_sustained_elapsed,dram__throughput.avg.pct_of_peak_sustained_elapsed,smsp__inst_executed.avg.per_cycle_active,smsp__inst_executed.sum,gpc__cycles_elapsed.avg,l1tex__t_sectors.sum,l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum,l1tex__t_sectors_pipe_lsu_mem_global_op_st.sum,l1tex__t_sectors_hit.sum,lts__t_sectors.sum,lts__t_sectors_op_read.sum,lts__t_sectors_op_write.sum \
     --target-processes all \
     --replay-mode kernel \
     -f -o "${OUT_REP%.ncu-rep}" \
