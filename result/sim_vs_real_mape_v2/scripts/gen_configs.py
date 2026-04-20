@@ -60,6 +60,22 @@ ROWS = [
     ("R5", "rmsnorm", "RMS-70B-M1024",        "", "", "", "", "", "", "", "", "", 1024, 8192, "TBD", "R5_RMS_70B_M1024"),
 ]
 
+# Workload → NVBit DYNAMIC_KERNEL_RANGE regex, derived from Phase 3 Discovery
+# (2026-04-19; F3/D3/G4/R2 kernelslist.g manual inspection).
+# decode → flashinfer.*: catches BatchPrefillWithPagedKVCacheKernel
+# (chosen by flashinfer when use_tensor_cores=1) + PersistentVariableLengthMergeStates.
+WORKLOAD_REGEX = {
+    "fa":      r".*flash_fwd.*",
+    "decode":  r".*flashinfer.*",
+    "gemm":    r".*gemm.*",
+    "rmsnorm": r".*fused_add_rms_norm.*",
+}
+
+ROWS = [
+    tuple(WORKLOAD_REGEX[r[1]] if v == "TBD" else v for v in r)
+    for r in ROWS
+]
+
 HEADER = ["id", "workload", "label", "seq", "batch", "nheads", "kv_heads", "head_dim",
           "page_size", "M", "K", "N", "rms_M", "rms_hidden", "kernel_regex", "cfg_tag"]
 
