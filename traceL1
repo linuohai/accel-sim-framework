@@ -519,6 +519,42 @@ declare -A TRACE_MAP=(
     ["pagerank"]="pagerank/__data_coAuthorsDBLP_graph_1/traces/kernelslist.g"
     ["pagerank_spmv"]="pagerank_spmv/NO_ARGS/traces/kernelslist.g"
     ["l1_bw_32f"]="l1_bw_32f/NO_ARGS/traces/kernelslist.g"
+
+    # SOTA 全量实验 trace key（新命名，从主仓库同步）
+    # cit-Patents
+    ["bfs_cit_dir"]="bfs_linear_base/mtx___data_cit_Patents_0_0_3569341/traces/kernelslist.g"
+    ["sssp_cit_dir"]="sssp_linear_base/mtx___data_cit_Patents_0_0_3569341/traces/kernelslist.g"
+    ["bc_cit_dir"]="bc_linear_base/mtx___data_cit_Patents_0_0_3569341/traces/kernelslist.g"
+    ["cc_cit_sym"]="cc_base/mtx___data_cit_Patents_1_0/traces/kernelslist.g"
+    ["spmv_cit_sym"]="spmv_base/mtx___data_cit_Patents_1_0/traces/kernelslist.g"
+    ["vc_cit_sym"]="vc_linear_base/mtx___data_cit_Patents_1_0/traces/kernelslist.g"
+    # web-Google
+    ["bfs_web_sym"]="bfs_linear_base/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["sssp_web_sym"]="sssp_linear_base/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["bc_web_sym"]="bc_linear_base/mtx___data_web_Google_1_0_506742/traces/kernelslist.g"
+    ["cc_web_sym"]="cc_base/mtx___data_web_Google_1_0/traces/kernelslist.g"
+    ["spmv_web_sym"]="spmv_base/mtx___data_web_Google_1_0/traces/kernelslist.g"
+    ["vc_web_sym"]="vc_linear_base/mtx___data_web_Google_1_0/traces/kernelslist.g"
+    # flickr
+    ["bfs_flickr_sym"]="bfs_linear_base/mtx___data_flickr_1_0_1586/traces/kernelslist.g"
+    ["sssp_flickr_sym"]="sssp_linear_base/mtx___data_flickr_1_0_1586/traces/kernelslist.g"
+    ["bc_flickr_sym"]="bc_linear_base/mtx___data_flickr_1_0_1586/traces/kernelslist.g"
+    ["cc_flickr_sym"]="cc_base/mtx___data_flickr_1_0/traces/kernelslist.g"
+    ["spmv_flickr_sym"]="spmv_base/mtx___data_flickr_1_0/traces/kernelslist.g"
+    # roadNet-CA
+    ["bfs_road_sym"]="bfs_linear_base/mtx___data_roadNet_CA_1_0_562818/traces/kernelslist.g"
+    ["sssp_road_sym"]="sssp_linear_base/mtx___data_roadNet_CA_1_0_562818/traces/kernelslist.g"
+    ["bc_road_sym"]="bc_linear_base/mtx___data_roadNet_CA_1_0_562818/traces/kernelslist.g"
+    ["cc_road_sym"]="cc_base/mtx___data_roadNet_CA_1_0/traces/kernelslist.g"
+    ["spmv_road_sym"]="spmv_base/mtx___data_roadNet_CA_1_0/traces/kernelslist.g"
+    ["vc_road_sym"]="vc_linear_base/mtx___data_roadNet_CA_1_0/traces/kernelslist.g"
+    # soc-LiveJournal1
+    ["bfs_socLJ_sym"]="bfs_linear_base/mtx___data_soc_LiveJournal1_1_0_10009/traces/kernelslist.g"
+    ["spmv_socLJ_sym"]="spmv_base/mtx___data_soc_LiveJournal1_1_0/traces/kernelslist.g"
+    # Extended benchmarks (Pannotia + LonestarGPU)
+    ["pann_mis_flickr"]="pann_mis_flickr/traces/kernelslist.g"
+    ["ls_mst_rmat12"]="ls_mst_rmat12/traces/kernelslist.g"
+    ["pann_color_eco"]="pann_color_ecology1/traces/kernelslist.g"
 )
 
 # n_level warp alloc 文件映射（默认使用 trace_key，gto 使用 <trace_key>gto）

@@ -84,6 +84,7 @@ unsigned inst_trace_t::get_datawidth_from_opcode(
 
 kernel_trace_t::kernel_trace_t(const std::string &filePath)
     : pipeReader(filePath) {
+  trace_path = filePath;
   kernel_name = filePath;
   shmem_base_addr = 0;
   local_base_addr = 0;
@@ -209,8 +210,13 @@ bool inst_trace_t::parse_from_string(std::string trace, unsigned trace_version,
       std::vector<long long> deltas;
       // read addresses as base address and deltas
       ss >> std::hex >> base_address;
+      bool first_active_seen = false;
       for (int s = 0; s < WARP_SIZE; s++) {
         if (mask_bits.test(s)) {
+          if (!first_active_seen) {
+            first_active_seen = true;
+            continue;
+          }
           long long delta = 0;
           ss >> std::dec >> delta;
           deltas.push_back(delta);
@@ -220,7 +226,7 @@ bool inst_trace_t::parse_from_string(std::string trace, unsigned trace_version,
     }
   }
 
-  ss >> imm;
+  ss >> std::dec >> imm;
 
   // Finish Parsing
 

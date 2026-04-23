@@ -82,6 +82,14 @@ target_link_libraries(accel-sim.out PUBLIC cuda ptxsim gpgpusim intersim accelwa
 target_link_libraries(accel-sim.out PUBLIC -lm -lz -lGL -pthread)
 target_link_libraries(accel-sim.out PUBLIC trace-driven trace-parser)
 
+add_executable(baseline-snake-unit-test baseline_snake_unit_test.cc)
+target_link_libraries(baseline-snake-unit-test PUBLIC ptxsim gpgpusim intersim accelwattch entrypoint cuda)
+target_link_libraries(baseline-snake-unit-test PUBLIC -lm -lz -lGL -pthread)
+target_link_libraries(baseline-snake-unit-test PUBLIC trace-driven trace-parser)
+
+add_executable(trace-parser-unit-test trace_parser_unit_test.cc)
+target_link_libraries(trace-parser-unit-test PUBLIC trace-parser)
+
 pybind11_add_module(accel_sim ./accel-sim.cc ./python_wrapper/python_wrapper.cc)
 target_link_libraries(accel_sim PRIVATE cuda ptxsim gpgpusim intersim accelwattch entrypoint)
 target_link_libraries(accel_sim PRIVATE trace-driven trace-parser)

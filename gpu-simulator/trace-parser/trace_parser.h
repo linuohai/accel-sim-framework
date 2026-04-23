@@ -1,6 +1,7 @@
 // developed by Mahmoud Khairy, Purdue Univ
 
 #include <assert.h>
+#include <bitset>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -112,6 +113,7 @@ class PipeReader {
 struct kernel_trace_t {
   kernel_trace_t(const std::string &filePath);
 
+  std::string trace_path;
   std::string kernel_name;
   unsigned kernel_id;
   unsigned grid_dim_x;

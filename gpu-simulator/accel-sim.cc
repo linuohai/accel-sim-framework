@@ -37,6 +37,31 @@ accel_sim_framework::accel_sim_framework(int argc, const char **argv) {
   init();
 }
 
+accel_sim_framework::~accel_sim_framework() {
+  // NOTE: trace-driven kernels are owned by accel_sim_framework (not by
+  // stream_manager), but GPGPU-Sim may keep internal references longer than
+  // accel_sim_framework::cleanup() expects. To avoid use-after-free, finished
+  // kernels are moved to retired_kernels and freed here.
+  for (trace_kernel_info_t *k : kernels_info) {
+    if (!k) continue;
+    function_info *entry = k->entry();
+    delete k;
+    delete entry;
+  }
+  kernels_info.clear();
+
+  for (trace_kernel_info_t *k : retired_kernels) {
+    if (!k) continue;
+    function_info *entry = k->entry();
+    delete k;
+    delete entry;
+  }
+  retired_kernels.clear();
+
+  delete m_gpgpu_sim;
+  delete m_gpgpu_context;
+}
+
 void accel_sim_framework::simulation_loop() {
   // for each kernel
   // load file
@@ -138,8 +163,7 @@ void accel_sim_framework::cleanup(unsigned finished_kernel) {
         }
       }
       tracer.kernel_finalizer(k->get_trace_info());
-      delete k->entry();
-      delete k;
+      retired_kernels.push_back(k);
       kernels_info.erase(kernels_info.begin() + j);
       if (!m_gpgpu_sim->cycle_insn_cta_max_hit() && m_gpgpu_sim->active())
         break;
@@ -198,6 +222,7 @@ gpgpu_sim *accel_sim_framework::gpgpu_trace_sim_init_perf_model(
     trace_config *m_config) {
   srand(1);
   print_splash();
+  const bool debug_config_reg = getenv("ACCELSIM_DEBUG_CONFIG_REG") != NULL;
 
   option_parser_t opp = option_parser_create();
 
@@ -212,13 +237,26 @@ gpgpu_sim *accel_sim_framework::gpgpu_trace_sim_init_perf_model(
       opp);  // register GPU microrachitecture options
   m_config->reg_options(opp);
 
+  if (debug_config_reg) {
+    m_gpgpu_context->the_gpgpusim->g_the_gpu_config->debug_dump_config_pointers(
+        stderr, "before_cmdline");
+  }
+
   option_parser_cmdline(opp, argc, argv);  // parse configuration options
+  if (debug_config_reg) {
+    m_gpgpu_context->the_gpgpusim->g_the_gpu_config->debug_dump_config_pointers(
+        stderr, "after_cmdline");
+  }
   fprintf(stdout, "GPGPU-Sim: Configuration options:\n\n");
   option_parser_print(opp, stdout);
   // Set the Numeric locale to a standard locale where a decimal point is a
   // "dot" not a "comma" so it does the parsing correctly independent of the
   // system environment variables
   assert(setlocale(LC_NUMERIC, "C"));
+  if (debug_config_reg) {
+    m_gpgpu_context->the_gpgpusim->g_the_gpu_config->debug_dump_config_pointers(
+        stderr, "before_init");
+  }
   m_gpgpu_context->the_gpgpusim->g_the_gpu_config->init();
   m_gpgpu_context->the_gpgpusim->g_the_gpu_config->set_trace_model(true);
 
