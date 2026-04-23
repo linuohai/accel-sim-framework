@@ -1,6 +1,6 @@
 env-setup/
 gpu-app-collection/
-hw_run/
+hw_run
 sim_run_*
 *.DS_Store*
 *.csv
@@ -28,3 +28,4 @@ result/issue_trace/plot/script/_pydeps
 analyze/*
 result/*
 skills/*.bashrc
+gpgpu_inst_stats.txt
