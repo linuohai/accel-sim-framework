@@ -1,0 +1,167 @@
+{
+  "_comment": "Migration manifest for GRASP research environment. SHA values marked <TBD> will be filled in after source-machine Git preparation (MIGRATION.md §4.1). Machines reading this file must handle <TBD> values by halting with a clear error.",
+  "version": "1.0",
+  "created": "2026-04-23",
+  "docker": {
+    "image": "ghcr.io/linuohai/accel-sim-framework:migration-20260423",
+    "registry": "ghcr.io",
+    "size_gb_estimate": 28,
+    "base_image": "nvcr.io/nvidia/pytorch:24.08-py3",
+    "entrypoint": "/opt/nvidia/nvidia_entrypoint.sh",
+    "workdir": "/workspace/prefetch",
+    "required_run_args": [
+      "--gpus all",
+      "--network host",
+      "--shm-size 64m",
+      "--ipc host",
+      "--privileged",
+      "--cap-add sys_ptrace",
+      "--security-opt seccomp=unconfined",
+      "--security-opt label=disable"
+    ],
+    "env_changes_at_commit": {
+      "PIP_INDEX_URL": "https://pypi.org/simple/",
+      "ACCEL_SIM_HOME": "/workspace/prefetch"
+    }
+  },
+  "repos": {
+    "accel-sim-framework": {
+      "url": "https://github.com/linuohai/accel-sim-framework.git",
+      "path": ".",
+      "role": "parent",
+      "branches": {
+        "dev": {
+          "sha": "<TBD-after-prep>",
+          "description": "主线；GRASP 实验脚本、ima_plan/、migration/"
+        },
+        "mape": {
+          "sha": "<TBD-after-prep>",
+          "description": "dev + MAPE v2 相关 commit"
+        },
+        "exp/sota_stride": {
+          "sha": "<TBD-after-prep>",
+          "description": "对应 worktrees/sota_stride 工作区"
+        }
+      }
+    },
+    "gpgpu-sim_distribution": {
+      "url": "https://github.com/linuohai/gpgpu-sim_distribution.git",
+      "path": "gpu-simulator/gpgpu-sim",
+      "role": "nested-independent-clone",
+      "branches": {
+        "dev": {
+          "sha": "<TBD-after-prep>",
+          "description": "主仿真器；含 GRASP 源码 (grasp_*.{h,cc})"
+        },
+        "mape": {
+          "sha": "<TBD-after-prep>",
+          "description": "dev + WINSN_TOTAL / DRAM_UTIL_BINS per-kernel dump commits"
+        },
+        "exp/sota_stride": {
+          "sha": "<TBD-after-prep>",
+          "description": "Snake / CAPS / SpareReg baseline 源码；对应 worktrees/sota_stride/gpu-simulator/gpgpu-sim"
+        }
+      }
+    },
+    "gpu-app-collection": {
+      "url": "https://github.com/linuohai/gpu-app-collection.git",
+      "path": "gpu-app-collection",
+      "role": "nested-independent-clone",
+      "branches": {
+        "dev": {
+          "sha": "<TBD-after-prep>",
+          "description": "所有 48 个 modified 改动 commit 到此（build fix + 新 workload 支持，选项 C）"
+        }
+      }
+    },
+    "gardenia": {
+      "url": "https://github.com/linuohai/gardenia.git",
+      "path": "gpu-app-collection/gardenia",
+      "role": "nested-independent-clone",
+      "branches": {
+        "master": {
+          "sha": "<TBD-after-prep>",
+          "description": "图算法实现（BFS/SSSP/CC/BC/SpMV/VC）"
+        }
+      }
+    }
+  },
+  "upstream_readonly": {
+    "pannotia": {
+      "url": "https://github.com/pannotia/pannotia.git",
+      "path": "ima_plan/01_ima_characterization/pannotia",
+      "ref": "16c1f09",
+      "branch": "master",
+      "description": "Pannotia benchmark suite (upstream, no local modifications)"
+    },
+    "lonestargpu": {
+      "url": "https://github.com/IntelligentSoftwareSystems/GaloisGPU.git",
+      "path": "ima_plan/01_ima_characterization/lonestargpu",
+      "ref": "31302b6",
+      "branch": "master",
+      "description": "LoneStar GPU benchmarks (upstream, no local modifications)"
+    },
+    "pybind11": {
+      "url": "https://github.com/pybind/pybind11.git",
+      "path": "gpu-simulator/extern/pybind11",
+      "ref": "1dc7620",
+      "branch": "master",
+      "description": "Python C++ bindings (upstream third-party dependency)"
+    }
+  },
+  "mini_trace_bundle": {
+    "_comment": "Traces bundled into Docker image at /opt/prefetch_staging/traces_mini.tar. Extract to /workspace/prefetch/hw_run/traces/device-0/12.6/. Allows smoke test and basic GRASP-vs-baseline comparison without GPU. Not sufficient for paper-level reproduction.",
+    "dataset": "flickr",
+    "size_gb_estimate": 8,
+    "workloads_covered": [
+      {"name": "bfs_flickr_sym",   "trace_subpath": "bfs_linear_base/mtx___data_flickr_1_0_1586"},
+      {"name": "bfs_flickr_dir",   "trace_subpath": "bfs_linear_base/mtx___data_flickr_0_0_1586"},
+      {"name": "sssp_flickr_sym",  "trace_subpath": "sssp_linear_base/mtx___data_flickr_1_0_1586"},
+      {"name": "sssp_flickr_dir",  "trace_subpath": "sssp_linear_base/mtx___data_flickr_0_0_1586"},
+      {"name": "bc_flickr_sym",    "trace_subpath": "bc_linear_base/mtx___data_flickr_1_0_1586"},
+      {"name": "bc_flickr_dir",    "trace_subpath": "bc_linear_base/mtx___data_flickr_0_0_1586"},
+      {"name": "cc_flickr_sym",    "trace_subpath": "cc_base/mtx___data_flickr_1_0"},
+      {"name": "spmv_flickr_sym",  "trace_subpath": "spmv_base/mtx___data_flickr_1_0"}
+    ],
+    "excluded_from_mini": [
+      "vc_flickr_sym (not in paper)",
+      "symgs_flickr (not in paper)"
+    ]
+  },
+  "staging_paths": {
+    "_comment": "Paths inside Docker image for data that gets extracted to <HOST_PREFETCH_PATH> mount on target machine.",
+    "data_dirs": {
+      "source_in_image": "/opt/prefetch_staging/data_dirs.tar.xz",
+      "extract_to": "/workspace/prefetch/gpu-app-collection/",
+      "expected_size_gb": 7.8
+    },
+    "gardenia_datasets": {
+      "source_in_image": "/opt/prefetch_staging/gardenia_datasets.tar.xz",
+      "extract_to": "/workspace/prefetch/gpu-app-collection/gardenia/",
+      "expected_size_gb": 5.1
+    },
+    "traces_mini": {
+      "source_in_image": "/opt/prefetch_staging/traces_mini.tar",
+      "extract_to": "/workspace/prefetch/hw_run/traces/device-0/12.6/",
+      "expected_size_gb": 8.0
+    }
+  },
+  "smoke_test": {
+    "command": "./traceL1 --max-completed-cta 50 bfs_flickr_sym migration_smoke",
+    "verify": "grep 'status=COMPLETE' result/log/migration_smoke.log"
+  },
+  "paper_trace_targets": {
+    "_comment": "Full paper-level trace set. Regenerated by migration/regenerate_traces.sh on machines with A100 GPUs. Not bundled with Docker image due to size.",
+    "total_size_gb_estimate": 67.5,
+    "subdirectory_count": 70,
+    "parent_workloads": [
+      "bfs_linear_base", "bfs_linear_lb", "bfs_topo_base",
+      "sssp_linear_base", "sssp_linear_lb", "sssp_topo_base",
+      "bc_linear_base", "bc_linear_lb", "bc_topo_base", "bc_hybrid_lb",
+      "cc_base", "cc_afforest", "cc_partition", "cc_warp",
+      "spmv_base", "spmv_cusparse", "spmv_tiling", "spmv_warp",
+      "vc_linear_base", "vc_linear_bitset", "vc_topo_base",
+      "symgs_base"
+    ]
+  }
+}
