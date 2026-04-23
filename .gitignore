@@ -87,3 +87,7 @@ trace_gen_*.txt
 # LaTeX 编译产物（补充 — 已编译 PDF/TXT）
 ima_plan/07_paper_outline/latex_template/main.pdf
 ima_plan/07_paper_outline/latex_template/main.txt
+
+# ---- Migration prep (2026-04-23) ----
+RohuWmuRbET2.yaml.bak.*
+docker_cfg.md
