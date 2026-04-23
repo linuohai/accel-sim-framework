@@ -1,5 +1,5 @@
 {
-  "_comment": "Migration manifest for GRASP research environment. SHA values marked <TBD> will be filled in after source-machine Git preparation (MIGRATION.md §4.1). Machines reading this file must handle <TBD> values by halting with a clear error.",
+  "_comment": "Migration manifest for GRASP research environment (2026-04-23). All branch SHAs filled. dev.sha is pre-manifest commit; clone dev branch tip on new machine to include this manifest itself.",
   "version": "1.0",
   "created": "2026-04-23",
   "docker": {
@@ -31,15 +31,15 @@
       "role": "parent",
       "branches": {
         "dev": {
-          "sha": "<TBD-after-prep>",
+          "sha": "425a113",
           "description": "主线；GRASP 实验脚本、ima_plan/、migration/"
         },
         "mape": {
-          "sha": "<TBD-after-prep>",
+          "sha": "cfc5455",
           "description": "dev + MAPE v2 相关 commit"
         },
         "exp/sota_stride": {
-          "sha": "<TBD-after-prep>",
+          "sha": "7fa495a",
           "description": "对应 worktrees/sota_stride 工作区"
         }
       }
@@ -50,15 +50,15 @@
       "role": "nested-independent-clone",
       "branches": {
         "dev": {
-          "sha": "<TBD-after-prep>",
+          "sha": "50c84b3",
           "description": "主仿真器；含 GRASP 源码 (grasp_*.{h,cc})"
         },
         "mape": {
-          "sha": "<TBD-after-prep>",
+          "sha": "50c84b3",
           "description": "dev + WINSN_TOTAL / DRAM_UTIL_BINS per-kernel dump commits"
         },
         "exp/sota_stride": {
-          "sha": "<TBD-after-prep>",
+          "sha": "43a191d",
           "description": "Snake / CAPS / SpareReg baseline 源码；对应 worktrees/sota_stride/gpu-simulator/gpgpu-sim"
         }
       }
@@ -69,7 +69,7 @@
       "role": "nested-independent-clone",
       "branches": {
         "dev": {
-          "sha": "<TBD-after-prep>",
+          "sha": "eeb4e13c",
           "description": "所有 48 个 modified 改动 commit 到此（build fix + 新 workload 支持，选项 C）"
         }
       }
@@ -80,7 +80,7 @@
       "role": "nested-independent-clone",
       "branches": {
         "master": {
-          "sha": "<TBD-after-prep>",
+          "sha": "e2d35af",
           "description": "图算法实现（BFS/SSSP/CC/BC/SpMV/VC）"
         }
       }
@@ -114,14 +114,38 @@
     "dataset": "flickr",
     "size_gb_estimate": 8,
     "workloads_covered": [
-      {"name": "bfs_flickr_sym",   "trace_subpath": "bfs_linear_base/mtx___data_flickr_1_0_1586"},
-      {"name": "bfs_flickr_dir",   "trace_subpath": "bfs_linear_base/mtx___data_flickr_0_0_1586"},
-      {"name": "sssp_flickr_sym",  "trace_subpath": "sssp_linear_base/mtx___data_flickr_1_0_1586"},
-      {"name": "sssp_flickr_dir",  "trace_subpath": "sssp_linear_base/mtx___data_flickr_0_0_1586"},
-      {"name": "bc_flickr_sym",    "trace_subpath": "bc_linear_base/mtx___data_flickr_1_0_1586"},
-      {"name": "bc_flickr_dir",    "trace_subpath": "bc_linear_base/mtx___data_flickr_0_0_1586"},
-      {"name": "cc_flickr_sym",    "trace_subpath": "cc_base/mtx___data_flickr_1_0"},
-      {"name": "spmv_flickr_sym",  "trace_subpath": "spmv_base/mtx___data_flickr_1_0"}
+      {
+        "name": "bfs_flickr_sym",
+        "trace_subpath": "bfs_linear_base/mtx___data_flickr_1_0_1586"
+      },
+      {
+        "name": "bfs_flickr_dir",
+        "trace_subpath": "bfs_linear_base/mtx___data_flickr_0_0_1586"
+      },
+      {
+        "name": "sssp_flickr_sym",
+        "trace_subpath": "sssp_linear_base/mtx___data_flickr_1_0_1586"
+      },
+      {
+        "name": "sssp_flickr_dir",
+        "trace_subpath": "sssp_linear_base/mtx___data_flickr_0_0_1586"
+      },
+      {
+        "name": "bc_flickr_sym",
+        "trace_subpath": "bc_linear_base/mtx___data_flickr_1_0_1586"
+      },
+      {
+        "name": "bc_flickr_dir",
+        "trace_subpath": "bc_linear_base/mtx___data_flickr_0_0_1586"
+      },
+      {
+        "name": "cc_flickr_sym",
+        "trace_subpath": "cc_base/mtx___data_flickr_1_0"
+      },
+      {
+        "name": "spmv_flickr_sym",
+        "trace_subpath": "spmv_base/mtx___data_flickr_1_0"
+      }
     ],
     "excluded_from_mini": [
       "vc_flickr_sym (not in paper)",
@@ -143,7 +167,7 @@
     "traces_mini": {
       "source_in_image": "/opt/prefetch_staging/traces_mini.tar",
       "extract_to": "/workspace/prefetch/hw_run/traces/device-0/12.6/",
-      "expected_size_gb": 8.0
+      "expected_size_gb": 8
     }
   },
   "smoke_test": {
@@ -155,13 +179,29 @@
     "total_size_gb_estimate": 67.5,
     "subdirectory_count": 70,
     "parent_workloads": [
-      "bfs_linear_base", "bfs_linear_lb", "bfs_topo_base",
-      "sssp_linear_base", "sssp_linear_lb", "sssp_topo_base",
-      "bc_linear_base", "bc_linear_lb", "bc_topo_base", "bc_hybrid_lb",
-      "cc_base", "cc_afforest", "cc_partition", "cc_warp",
-      "spmv_base", "spmv_cusparse", "spmv_tiling", "spmv_warp",
-      "vc_linear_base", "vc_linear_bitset", "vc_topo_base",
+      "bfs_linear_base",
+      "bfs_linear_lb",
+      "bfs_topo_base",
+      "sssp_linear_base",
+      "sssp_linear_lb",
+      "sssp_topo_base",
+      "bc_linear_base",
+      "bc_linear_lb",
+      "bc_topo_base",
+      "bc_hybrid_lb",
+      "cc_base",
+      "cc_afforest",
+      "cc_partition",
+      "cc_warp",
+      "spmv_base",
+      "spmv_cusparse",
+      "spmv_tiling",
+      "spmv_warp",
+      "vc_linear_base",
+      "vc_linear_bitset",
+      "vc_topo_base",
       "symgs_base"
     ]
-  }
+  },
+  "_sha_note": "dev 分支的 SHA 是 manifest commit 之前的 HEAD；新机器 clone dev 分支 tip 会得到本 manifest 以及这些 SHA 对应的代码"
 }
