@@ -8,7 +8,7 @@ set -euo pipefail
 # ================================================================
 # 配置
 # ================================================================
-IMAGE_TAG="${IMAGE_TAG:-ghcr.io/linuohai/accel-sim-framework:migration-20260423}"
+IMAGE_TAG="${IMAGE_TAG:-ghcr.io/linuohai/grasp:migration-20260423}"
 CONTAINER_NAME="${CONTAINER_NAME:-prefetch-env}"
 NO_GPU="${NO_GPU:-0}"
 
@@ -197,7 +197,7 @@ Usage:
 
 环境变量:
     HOST_PREFETCH_PATH   bootstrap 模式必需，目标机器宿主代码根路径
-    IMAGE_TAG            镜像 tag（默认 ghcr.io/linuohai/accel-sim-framework:migration-20260423）
+    IMAGE_TAG            镜像 tag（默认 ghcr.io/linuohai/grasp:migration-20260423）
     CONTAINER_NAME       容器名（默认 prefetch-env）
     NO_GPU               =1 跳过 --gpus all（无 GPU 机器）
 EOF

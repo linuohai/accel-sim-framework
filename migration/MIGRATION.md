@@ -10,7 +10,7 @@
 
 迁移产出 3 类交付物：
 
-1. **Docker 镜像** `ghcr.io/linuohai/accel-sim-framework:migration-20260423`
+1. **Docker 镜像** `ghcr.io/linuohai/grasp:migration-20260423`
    - 基于 NGC PyTorch 24.08 (CUDA 12.6 + cuDNN 9.3 + TensorRT 10.3)
    - 内置 NVBit、已压缩的 IMA 数据集、mini flickr trace 包
    - 预计大小：~28 GB
@@ -259,7 +259,7 @@ git push origin HEAD:exp/sota_stride
 **一键命令**：
 ```bash
 bash migration/docker-bootstrap.sh prepare-and-push shn \
-    ghcr.io/linuohai/accel-sim-framework:migration-20260423
+    ghcr.io/linuohai/grasp:migration-20260423
 ```
 
 关键细节：
@@ -294,7 +294,7 @@ cd "$HOST_PREFETCH_PATH"
 ### 5.3 宿主：拉 Docker 镜像
 
 ```bash
-docker pull ghcr.io/linuohai/accel-sim-framework:migration-20260423
+docker pull ghcr.io/linuohai/grasp:migration-20260423
 ```
 
 下载时间取决于网络；~28 GB 在 100 Mbps 下约 40 min。

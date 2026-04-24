@@ -17,7 +17,7 @@ set -euo pipefail
 : "${HOST_PREFETCH_PATH:?需要 HOST_PREFETCH_PATH=/path/on/host}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-IMAGE_TAG="${IMAGE_TAG:-ghcr.io/linuohai/accel-sim-framework:migration-20260423}"
+IMAGE_TAG="${IMAGE_TAG:-ghcr.io/linuohai/grasp:migration-20260423}"
 CONTAINER_NAME="${CONTAINER_NAME:-prefetch-env}"
 NO_GPU="${NO_GPU:-0}"
 
